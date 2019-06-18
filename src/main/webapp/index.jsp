@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,8 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1 align="center">인덱스페이지</h1>
-	<jsp:forward page="/WEB-INF/views/main/adminMain.jsp"/>
-	<%-- <jsp:forward page="/WEB-INF/views/main/main.jsp"/> --%>
+
+	<jsp:forward page="WEB-INF/views/myPage/myTravel.jsp" />
+	
 </body>
 </html>

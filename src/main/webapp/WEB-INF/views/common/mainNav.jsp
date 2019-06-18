@@ -31,7 +31,7 @@
             </span>
             <span>동행찾기</span>
          </a> 
-            <a class="navbar-item is-hidden-tablet button is-info is-rounded" href="#" target="_blank"> 
+            <a class="navbar-item is-hidden-tablet button is-info is-rounded" href="loginForm.me" target="_blank"> 
                <span class="icon"> 
                   <i class="fa fa-user"></i>
                </span>
@@ -78,7 +78,7 @@
                      </a>
                   </p>
                   <p class="control">
-                     <a class="button is-info is-rounded" href="#"> 
+                     <a class="button is-info is-rounded" href="loginForm.me"> 
                         <span class="icon"><i class="fa fa-user"></i></span> 
                         <span>LOG IN</span>
                      </a>
@@ -88,7 +88,7 @@
          </div>
       </div>
    </nav>
-   <br><br><br><br><br>
+   <br><br><br>
    
    <!-- 본문 -->
    <!-- <section class="section">
