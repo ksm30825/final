@@ -44,7 +44,7 @@
 <body>
 	<div class="columns is-vcentered" >
 		<div class="column" style="margin-left:40px;">
-			<span class="icon is-large has-text-info" id="userEditBtn" data-tooltip="회원정보 수정">
+			<span class="icon is-large has-text-info" id="userEditBtn" data-tooltip="회원정보 수정" onclick="location.href='updateMemberForm.me'">
 				<i class="fas fa-3x fa-user-edit"></i>
 			</span>&nbsp;&nbsp;
 			<span class="title is-3">홍길동</span>
