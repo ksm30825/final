@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+.AllChatList td { padding : 10px; }
+ 
+#joinMenu i{
+	color: black;
+}
+	
+#joinMenu label{
+	color: black;
+}
+
+#footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:70px;   
+    padding : 0; margin: 0;
+    border-top : 1px solid lightgray;
+}
+
+.AllChatTitle { width: 75%;}
