@@ -135,5 +135,7 @@
 			    step(1);
 			});
 		</script>
+		<li><a href="adminMain.ad">관리자페이지</a></li>
+  	<li><a href="myPage.mp">마이페이지</a></li>
 </body>
 </html>

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,16 +13,14 @@
        max-height: 100% !important;
    }
    /* .navbar-menu>.navbar-start>.navbar-item {
-   	display:inline-block !important;
+      display:inline-block !important;
    } */
    
 </style>
 
 </head>
 <body>
-	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
-
-   <nav class="navbar is-white is-fixed-top" style="border-bottom:1px solid skyblue">
+   <nav class="navbar is-info is-fixed-top" style="border-bottom:1px solid skyblue">
       <div class="navbar-brand">
          <a class="navbar-item" href="index.jsp"> 
             <img src="resources/images/logo1.png" width="70px" height="70px">
@@ -34,7 +31,7 @@
             </span>
             <span>동행찾기</span>
          </a> 
-            <a class="navbar-item is-hidden-tablet button is-info is-rounded" href="loginForm.me" target="_blank"> 
+            <a class="navbar-item is-hidden-tablet button is-info is-rounded" href="#" target="_blank"> 
                <span class="icon"> 
                   <i class="fa fa-user"></i>
                </span>
@@ -46,44 +43,43 @@
       </div>
       <div id="mainNav" class="navbar-menu">
          <div class="navbar-start">
-            <a class="navbar-item is-active" href="#"> <strong>일정만들기</strong> </a>
-            <a class="navbar-item" href="#"> <strong>여행일정</strong> </a>
+            <a class="navbar-item is-active" href="#"> <strong>회원관리</strong> </a>
             <div class="navbar-item has-dropdown is-hoverable">
-               <a class="navbar-link " href="#"> <strong>여행지</strong> </a>
+               <a class="navbar-link" href="#"> <strong>고객센터관리</strong> </a>
                <div class="navbar-dropdown ">
-                  <a class="navbar-item " href="#"> 아시아 </a> 
-                  <a class="navbar-item " href="#"> 유럽 </a> 
-                  <a class="navbar-item " href="#"> 등등 </a> 
-                  <a class="navbar-item " href="#"> 등등 </a> 
-                  <a class="navbar-item " href="#"> 등등 </a> 
-                  <a class="navbar-item " href="#"> 등등 </a> 
-                  <a class="navbar-item " href="#"> 등등 </a>
-                  <hr class="navbar-divider">
-                  <div class="navbar-item">
-                     <div>
-                        이건모지
-                        <p class="has-text-info is-size-6-desktop">???</p>
-                     </div>
-                  </div>
+                     <a class="navbar-item " href="adminNoticeList.ad"> 공지사항 </a> 
+                     <a class="navbar-item " href="adminMoreQuestionList.ad"> 자주묻는 질문 </a>
+                     <a class="navbar-item " href="oneToOneList.ad"> 1:1 문의 </a> 
+               </div>
+           </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+               <a class="navbar-link " href="#"> <strong>게시판관리</strong> </a>
+               <div class="navbar-dropdown ">
+                  <a class="navbar-item " href="noticeControlList.ad"> 게시판 </a> 
+                  <a class="navbar-item " href="#"> 여행지 </a> 
                </div>
             </div>
-            <a class="navbar-item" href="travelRequest.tr"> <strong>여행의뢰</strong> </a>
-            <a class="navbar-item " href="noticeList.cc"> <strong>고객센터</strong> </a>
+            <a class="navbar-item" href="reportControlList.ad"> <strong>신고관리</strong> </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                 <a class="navbar-link " href="#"> <strong>정산관리</strong> </a>
+                 <div class="navbar-dropdown ">
+                  <a class="navbar-item " href="#"> 결제 내역 관리 </a> 
+                  <a class="navbar-item " href="#"> 포인트 내역 관리 </a>
+                     <a class="navbar-item" href="#" style="font-size:0.8em;margin-left:7%;" > 환불 관리</a>
+                  <a class="navbar-item " href="#"> 수익금 내역 관리 </a>
+                     <a class="navbar-item" href="#" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
+                </div>
+             </div>
+            <a class="navbar-item " href="#"> <strong>통계관리</strong> </a>
          </div>
          <div class="navbar-end">
             
             <div class="navbar-item">
                <div class="field is-grouped">
                   <p class="control">
-                     <a id="chatBtn" class="button is-rounded"  onclick = "showPopup()"> 
-                        <i class="fas fa-comments"></i>
-                        <span>동행찾기</span>
-                     </a>
-                  </p>
-                  <p class="control">
-                     <a class="button is-info is-rounded" href="loginForm.me"> 
+                     <a class="button is-info is-rounded" href="#"> 
                         <span class="icon"><i class="fa fa-user"></i></span> 
-                        <span>LOG IN</span>
+                        <span>LOG OUT</span>
                      </a>
                   </p>
                </div>
@@ -117,7 +113,7 @@
           $navbarBurgers.forEach(function ($el) {
               $el.addEventListener('click', () => {
 
-                 // Get the target from the "data-target" attribute
+                 //Get the target from the "data-target" attribute
                  var target = $el.dataset.target;
                  var $target = document.getElementById(target);
 
@@ -127,11 +123,6 @@
 
                });
           });
-        }
-        
-        
-        function showPopup(){
-       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left=100, top=50");        	
         }
    </script>
 </body>
