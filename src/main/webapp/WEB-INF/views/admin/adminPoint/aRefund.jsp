@@ -24,13 +24,13 @@
 </style>
 </head>
 <body>
-	<jsp:include page="../common/adminMainNav.jsp"/>
+	<jsp:include page="../../common/adminMainNav.jsp"/>
 	<section class="section">
 		<div class="container" style="width:90%;height:100%;">
-			<div style="width:100%;font-size:25px;color:#209cee;">환급 내역</div>
+			<div style="width:100%;font-size:25px;color:#209cee;">환불 내역</div>
          <div style="width:100%;height:100%;">
          	<div>
-         		<div class="field has-addons" style="width:900;float:right;">
+         		<div class="field has-addons" style="width:320px;float:right;">
 					<p class="control">
 						<a class="button is-primary" style="width:40px;height:20px;">
 							<i class='fas fa-search' style='font-size:15px'></i>
@@ -39,18 +39,14 @@
 					<p class="control">
 						<input class="input is-primary" type="text" placeholder="회원ID를 검색하세요" style="width:150px;height:20px;">
 					</p>
-					<div class="select is-small is-primary" style="display:inline-block;float:right;margin-left:2px;">
+					<div class="select is-small is-primary" style="display:inline-block;float:right;">
 			            <select name="chargeSelect" style="height:20px;">
-			              <option>환급신청상태</option>
-			              <option>신청</option>
-			              <option>지급완료</option>
+			              <option>--환불승인상태--</option>
+			              <option>대기중</option>
+			              <option>승인</option>
+			              <option>거절</option>
 			            </select>
 			        </div>
-			        <input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;">
-					<i class='far fa-calendar-alt' style='font-size:20px;color:purple;margin-right:2px;'></i>~
-					<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;">
-					<i class='far fa-calendar-alt' style='font-size:20px;color:purple;'></i>
-			        <a class="button is-primary" style="width:70px;height:20px;margin-left:2px;">다운로드</a>
 				</div>
 			</div>
          	<div style="width:100%;height:25px;"></div>
@@ -61,31 +57,78 @@
 					<tr style="background:#ccccff;">
 						<th width="3%"> No. </th>
 						<th width="5%"> 아이디 </th>
-						<th width="5%"> 총수익금 </th>
-						<th width="5%"> 환급신청수익금 </th>
-						<th width="10%"> 환급신청일 </th>
-						<th width="10%"> 환급신청상태 </th>
+						<th width="5%"> 닉네임 </th>
+						<th width="5%"> 구매일 </th>
+						<th width="10%"> 구매한 게시글 </th>
+						<th width="10%"> 사용한 포인트 </th>
+						<th width="8%"> 환불 사유 </th>
+						<th width="16%"> 환불 승인 </th>
+						<th width="10%"> 환불 승인 상태 </th>
 					</tr>
 				</thead>
 				<tbody id="aPointTBody">
 					<tr>
 						<td> 1 </td>
 						<td> user01 </td>
-						<td> 320,000 </td>
-						<td> 310,000 </td>
+						<td> skdafj </td>
 						<td> 19.06.10 </td>
+						<td> 18 </td>
+						<td> 400P </td>
+						<td> 이 사람이.. </td>
 						<td>
-							<a class="button is-primary" style="width:70px;height:20px;"> 신청 </a>
+							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
+							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
+						</td>
+						<td>
+							<a class="button is-primary" style="width:70px;height:20px;"> 대기중 </a>
 						</td>
 					</tr>
 					<tr>
-						<td> 1 </td>
+						<td> 2 </td>
 						<td> user02 </td>
-						<td> 290,000 </td>
-						<td> 10,000 </td>
-						<td> 19.04.10 </td>
+						<td> sknnn </td>
+						<td> 19.06.05 </td>
+						<td> 18 </td>
+						<td> 400P </td>
+						<td> 이 사람이.. </td>
 						<td>
-							<a class="button is-primary" style="width:70px;height:20px;"> 지급완료 </a>
+							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
+							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
+						</td>
+						<td>
+							<a class="button is-primary" style="width:70px;height:20px;"> 대기중 </a>
+						</td>
+					</tr>
+					<tr>
+						<td> 3 </td>
+						<td> user02 </td>
+						<td> sknnn </td>
+						<td> 19.06.03 </td>
+						<td> 3 </td>
+						<td> 300P </td>
+						<td> 이 사람이.. </td>
+						<td>
+							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
+							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
+						</td>
+						<td>
+							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
+						</td>
+					</tr>
+					<tr>
+						<td> 4 </td>
+						<td> user01 </td>
+						<td> skdafj </td>
+						<td> 19.04.10 </td>
+						<td> 18 </td>
+						<td> 400P </td>
+						<td> 이 사람이.. </td>
+						<td>
+							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
+							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
+						</td>
+						<td>
+							<a class="button is-danger" style="width:70px;height:20px;"> 거절 </a>
 						</td>
 					</tr>
 				</tbody>
@@ -113,7 +156,6 @@
 				<section class="modal-card-body">
 					<textarea placeholder="환불사유를 입력해주세요" cols="85" rows="15" style="resize:none;"></textarea>
 				</section>
-				
 				<footer class="modal-card-foot">
 					<div style="margin-left:auto;margin-right:auto;">
 						<a class="button is-success" style="border-radius:5px; height:25px;width:60px;"> 예 </a>

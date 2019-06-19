@@ -24,10 +24,10 @@
 </style>
 </head>
 <body>
-	<jsp:include page="../common/adminMainNav.jsp"/>
+	<jsp:include page="../../common/adminMainNav.jsp"/>
 	<section class="section">
 		<div class="container" style="width:90%;height:100%;">
-			<div style="width:100%;font-size:25px;color:#209cee;">환불 내역</div>
+			<div style="width:100%;font-size:25px;color:#209cee;">수익금 내역</div>
          <div style="width:100%;height:100%;">
          	<div>
          		<div class="field has-addons" style="width:320px;float:right;">
@@ -39,14 +39,7 @@
 					<p class="control">
 						<input class="input is-primary" type="text" placeholder="회원ID를 검색하세요" style="width:150px;height:20px;">
 					</p>
-					<div class="select is-small is-primary" style="display:inline-block;float:right;">
-			            <select name="chargeSelect" style="height:20px;">
-			              <option>--환불승인상태--</option>
-			              <option>대기중</option>
-			              <option>승인</option>
-			              <option>거절</option>
-			            </select>
-			        </div>
+					<a class="button is-primary is-outlined" style="width:120px;height:20px;margin-left:2%;">환급내역 보러가기</a>
 				</div>
 			</div>
          	<div style="width:100%;height:25px;"></div>
@@ -56,14 +49,11 @@
 				<thead>
 					<tr style="background:#ccccff;">
 						<th width="3%"> No. </th>
-						<th width="5%"> 아이디 </th>
-						<th width="5%"> 닉네임 </th>
-						<th width="5%"> 구매일 </th>
-						<th width="10%"> 구매한 게시글 </th>
-						<th width="10%"> 사용한 포인트 </th>
-						<th width="8%"> 환불 사유 </th>
-						<th width="16%"> 환불 승인 </th>
-						<th width="10%"> 환불 승인 상태 </th>
+						<th width="15%"> 아이디 </th>
+						<th width="15%"> 닉네임 </th>
+						<th width="20%"> 수익금 </th>
+						<th width="20%"> 수익발생일 </th>
+						<th width="20%"> 수익발생글 </th>
 					</tr>
 				</thead>
 				<tbody id="aPointTBody">
@@ -71,64 +61,40 @@
 						<td> 1 </td>
 						<td> user01 </td>
 						<td> skdafj </td>
+						<td> 32,100 </td>
 						<td> 19.06.10 </td>
-						<td> 18 </td>
-						<td> 400P </td>
-						<td> 이 사람이.. </td>
 						<td>
-							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
-							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
-						</td>
-						<td>
-							<a class="button is-primary" style="width:70px;height:20px;"> 대기중 </a>
+							<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
 						</td>
 					</tr>
 					<tr>
-						<td> 2 </td>
-						<td> user02 </td>
-						<td> sknnn </td>
-						<td> 19.06.05 </td>
-						<td> 18 </td>
-						<td> 400P </td>
-						<td> 이 사람이.. </td>
-						<td>
-							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
-							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
-						</td>
-						<td>
-							<a class="button is-primary" style="width:70px;height:20px;"> 대기중 </a>
-						</td>
-					</tr>
-					<tr>
-						<td> 3 </td>
-						<td> user02 </td>
-						<td> sknnn </td>
-						<td> 19.06.03 </td>
-						<td> 3 </td>
-						<td> 300P </td>
-						<td> 이 사람이.. </td>
-						<td>
-							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
-							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
-						</td>
-						<td>
-							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
-						</td>
-					</tr>
-					<tr>
-						<td> 4 </td>
+						<td> 1 </td>
 						<td> user01 </td>
 						<td> skdafj </td>
-						<td> 19.04.10 </td>
-						<td> 18 </td>
-						<td> 400P </td>
-						<td> 이 사람이.. </td>
+						<td> 32,100 </td>
+						<td> 19.06.10 </td>
 						<td>
-							<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
-							<a class="button is-danger" style="width:70px;height:20px;"> 환불거절 </a>
+							<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
 						</td>
+					</tr>
+					<tr>
+						<td> 1 </td>
+						<td> user01 </td>
+						<td> skdafj </td>
+						<td> 32,100 </td>
+						<td> 19.06.10 </td>
 						<td>
-							<a class="button is-danger" style="width:70px;height:20px;"> 거절 </a>
+							<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
+						</td>
+					</tr>
+					<tr>
+						<td> 1 </td>
+						<td> user01 </td>
+						<td> skdafj </td>
+						<td> 32,100 </td>
+						<td> 19.06.10 </td>
+						<td>
+							<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
 						</td>
 					</tr>
 				</tbody>
