@@ -72,4 +72,79 @@
 		<url-pattern>*.po</url-pattern>
 	</servlet-mapping>
 	
+	
+	<!-- 여행 의뢰 -->
+	<servlet>
+		<servlet-name>travelRequest</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/travelRequest-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>travelRequest</servlet-name>
+		<url-pattern>*.tr</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 마이페이지 -->
+	<servlet>
+		<servlet-name>myPage</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/myPage-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>myPage</servlet-name>
+		<url-pattern>*.mp</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 고객센터 -->
+	<servlet>
+		<servlet-name>callCenter</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/callCenter-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>callCenter</servlet-name>
+		<url-pattern>*.cc</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 관리자 -->
+	<!-- <servlet>
+		<servlet-name>admin</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/admin-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>admin</servlet-name>
+		<url-pattern>*.ad</url-pattern>
+	</servlet-mapping> -->
+	
+	<!-- 신고 및 문의 -->
+	<servlet>
+		<servlet-name>penalty</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/travelRequest-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>penalty</servlet-name>
+		<url-pattern>*.pe</url-pattern>
+	</servlet-mapping>
 </web-app>
