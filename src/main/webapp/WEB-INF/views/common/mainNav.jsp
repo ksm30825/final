@@ -62,7 +62,7 @@
             		data-target="#newTravelModal" onclick="$('#travelInfoModal').toggleClass('is-active')"> 
             		<strong>일정만들기</strong> 
             	</a>
-            	<a class="navbar-item" href="#"> <strong>여행일정</strong> </a>
+            	<a class="navbar-item" href="travelList.trv"> <strong>여행일정</strong> </a>
             	<div class="navbar-item has-dropdown is-hoverable">
                		<a class="navbar-link " href="#"> <strong>여행지</strong> </a>
                		<div class="navbar-dropdown ">
@@ -83,6 +83,9 @@
 				</div>
             	<a class="navbar-item"> <strong>여행의뢰</strong> </a>
             	<a class="navbar-item " href="#"> <strong>고객센터</strong> </a>
+              <!--임시-->
+              <a class="navbar-item " href="myPageMain.me"> <strong>임시 마이페이지</strong> </a>
+              <a class="navbar-item " href="aPayment.ad"> <strong>임시 관리자페이지</strong> </a>
 			</div>
         	<div class="navbar-end">
             
