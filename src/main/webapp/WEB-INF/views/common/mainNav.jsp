@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +21,8 @@
 
 </head>
 <body>
+	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
+
    <nav class="navbar is-white is-fixed-top" style="border-bottom:1px solid skyblue">
       <div class="navbar-brand">
          <a class="navbar-item" href="index.jsp"> 
@@ -66,13 +69,15 @@
             </div>
             <a class="navbar-item"> <strong>여행의뢰</strong> </a>
             <a class="navbar-item " href="#"> <strong>고객센터</strong> </a>
+            <a class="navbar-item " href="myPageMain.me"> <strong>임시 마이페이지</strong> </a>
+            <a class="navbar-item " href="aPayment.ad"> <strong>임시 관리자페이지</strong> </a>
          </div>
          <div class="navbar-end">
             
             <div class="navbar-item">
                <div class="field is-grouped">
                   <p class="control">
-                     <a id="chatBtn" class="button is-rounded"> 
+                     <a id="chatBtn" class="button is-rounded"  onclick = "showPopup()"> 
                         <i class="fas fa-comments"></i>
                         <span>동행찾기</span>
                      </a>
@@ -88,7 +93,7 @@
          </div>
       </div>
    </nav>
-   <br><br><br>
+   <br><br><br><br><br>
    
    <!-- 본문 -->
    <!-- <section class="section">
@@ -124,6 +129,11 @@
 
                });
           });
+        }
+        
+        
+        function showPopup(){
+       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left=100, top=50");        	
         }
    </script>
 </body>

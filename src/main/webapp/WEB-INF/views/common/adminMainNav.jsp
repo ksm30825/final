@@ -7,6 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Travel Interface</title>
 <link rel="stylesheet" href="resources/css/bulmaswatch.min.css">
+<link rel="stylesheet" type="text/css" href="/ti/resources/css/semantic.min.css">
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <style>
    .navbar-item img {
@@ -63,11 +66,11 @@
             <div class="navbar-item has-dropdown is-hoverable">
            		<a class="navbar-link " href="#"> <strong>정산관리</strong> </a>
            		<div class="navbar-dropdown ">
-                  <a class="navbar-item " href="#"> 결제 내역 관리 </a> 
-                  <a class="navbar-item " href="#"> 포인트 내역 관리 </a>
-                  	<a class="navbar-item" href="#" style="font-size:0.8em;margin-left:7%;" > 환불 관리</a>
-                  <a class="navbar-item " href="#"> 수익금 내역 관리 </a>
-                  	<a class="navbar-item" href="#" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
+                  <a class="navbar-item " href="aPayment.ad"> 결제 내역 관리 </a> 
+                  <a class="navbar-item " href="allAdPoint.po"> 포인트 내역 관리 </a>
+                  	<a class="navbar-item" href="allAdRefund.po" style="font-size:0.8em;margin-left:7%;" > 환불 관리</a>
+                  <a class="navbar-item " href="allAdProceeds.po"> 수익금 내역 관리 </a>
+                  	<a class="navbar-item" href="allAdRebate.po" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
                 </div>
           	</div>
             <a class="navbar-item " href="#"> <strong>통계관리</strong> </a>
