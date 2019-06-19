@@ -46,11 +46,11 @@
 			              <option>지급완료</option>
 			            </select>
 			        </div>
-			        <a class="button is-primary" style="width:70px;height:20px;margin-left:2px;">다운로드</a>
 			        <input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;">
 					<i class='far fa-calendar-alt' style='font-size:20px;color:purple;margin-right:2px;'></i>~
 					<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;">
 					<i class='far fa-calendar-alt' style='font-size:20px;color:purple;'></i>
+			        <a class="button is-primary" style="width:70px;height:20px;margin-left:2px;">다운로드</a>
 				</div>
 			</div>
          	<div style="width:100%;height:25px;"></div>

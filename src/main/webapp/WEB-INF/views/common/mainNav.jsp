@@ -69,6 +69,8 @@
             </div>
             <a class="navbar-item"> <strong>여행의뢰</strong> </a>
             <a class="navbar-item " href="#"> <strong>고객센터</strong> </a>
+            <a class="navbar-item " href="myPageMain.me"> <strong>임시 마이페이지</strong> </a>
+            <a class="navbar-item " href="aPayment.ad"> <strong>임시 관리자페이지</strong> </a>
          </div>
          <div class="navbar-end">
             
@@ -91,7 +93,7 @@
          </div>
       </div>
    </nav>
-   <br><br><br>
+   <br><br><br><br><br>
    
    <!-- 본문 -->
    <!-- <section class="section">

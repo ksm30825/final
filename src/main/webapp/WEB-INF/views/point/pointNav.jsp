@@ -27,7 +27,7 @@
 				    <thead>
 				    	<tr style="height:30px;">
 					        <th style="border-right:1px solid lightgray;"> 포인트관리 </th>
-					        <th colspan="2"> &nbsp;&nbsp;&nbsp;수익금관리 </th>
+					        <th colspan="2"> <a href="allRebate.po">&nbsp;&nbsp;&nbsp;수익금관리</a> </th>
 					    </tr>
 				    </thead>
 				    <tbody>
@@ -40,5 +40,6 @@
 	    	</div>
 	   	</div>
     </section>
+    
 </body>
 </html>
