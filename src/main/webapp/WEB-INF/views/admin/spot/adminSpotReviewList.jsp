@@ -8,7 +8,5 @@
 </head>
 <body>
 
-	<jsp:include page="../common/mainNav.jsp" />
-	
 </body>
 </html>
