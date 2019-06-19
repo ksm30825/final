@@ -9,7 +9,7 @@
 	.field-label {
 		margin-right:1.0rem !important;
 	}
-	#form {
+	.form {
 		width:80% !important;
 		margin:0 auto;
 	}
@@ -23,7 +23,8 @@
 				<jsp:include page="../common/myPageHeader.jsp" />
 			</section>	
 			<section class="section" id="form">
-				  <h3 class="title"> 계정 정보 수정 </h3>
+				  <h3 class="title" align="center"> 계정 정보 수정 </h3>
+			      <hr>
 			      <div class="field is-horizontal">
 			        <div class="field-body">
 				        <div class="field-label is-normal">

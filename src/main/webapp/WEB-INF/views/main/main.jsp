@@ -45,6 +45,7 @@
 </style>
 </head>
 <body>
+
 	<jsp:include page = "../common/mainNav.jsp"/>
 	
 	<!-- <section class="section" id="content"> -->
@@ -131,6 +132,7 @@
 			            step((index + 1) % count);
 			        });
 			    }
+
 	
 			    step(1);
 			});
