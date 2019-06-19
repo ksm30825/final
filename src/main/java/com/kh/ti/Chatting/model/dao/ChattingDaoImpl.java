@@ -1,5 +1,8 @@
 package com.kh.ti.Chatting.model.dao;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class ChattingDaoImpl implements ChattingDao{
 
 	//채팅방 만들기 - 지원
