@@ -50,19 +50,19 @@
             <div class="navbar-item has-dropdown is-hoverable">
 	            <a class="navbar-link" href="#"> <strong>고객센터관리</strong> </a>
 	            <div class="navbar-dropdown ">
-	                  <a class="navbar-item " href="#"> 공지사항 </a> 
-	                  <a class="navbar-item " href="#"> 자주묻는 질문 </a>
-	                  <a class="navbar-item " href="#"> 1:1 문의 </a> 
+	                  <a class="navbar-item " href="adminNoticeList.ad"> 공지사항 </a> 
+	                  <a class="navbar-item " href="adminMoreQuestionList.ad"> 자주묻는 질문 </a>
+	                  <a class="navbar-item " href="oneToOneList.ad"> 1:1 문의 </a> 
 	            </div>
 	        </div>
             <div class="navbar-item has-dropdown is-hoverable">
                <a class="navbar-link " href="#"> <strong>게시판관리</strong> </a>
                <div class="navbar-dropdown ">
-                  <a class="navbar-item " href="#"> 게시판 </a> 
+                  <a class="navbar-item " href="noticeControlList.ad"> 게시판 </a> 
                   <a class="navbar-item " href="#"> 여행지 </a> 
                </div>
             </div>
-            <a class="navbar-item"> <strong>신고관리</strong> </a>
+            <a class="navbar-item" href="reportControlList.ad"> <strong>신고관리</strong> </a>
             <div class="navbar-item has-dropdown is-hoverable">
            		<a class="navbar-link " href="#"> <strong>정산관리</strong> </a>
            		<div class="navbar-dropdown ">

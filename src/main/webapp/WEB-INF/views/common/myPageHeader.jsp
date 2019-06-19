@@ -106,7 +106,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a>
+	        <a href="requestList.mp;">
 	          <span class="icon"><i class="fas fa-award"></i></span>
 	          <span>여행 의뢰</span>
 	        </a>
@@ -118,7 +118,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a>
+	        <a href="paneltyList.pe">
 	          <span class="icon"><i class="far fa-question-circle"></i></span>
 	          <span>나의 문의</span>
 	        </a>

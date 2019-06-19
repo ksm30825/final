@@ -1,5 +1,3 @@
-
-
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   <context-param>
@@ -22,6 +20,7 @@
     <servlet-name>appServlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping> -->
+    <!-- 채팅 -->
   	<servlet>
 		<servlet-name>Chatting</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -34,7 +33,7 @@
 		<servlet-name>Chatting</servlet-name>
 		<url-pattern>*.ch</url-pattern>
 	</servlet-mapping>
-	
+	<!-- 여행 -->
   <servlet>
 		<servlet-name>Travel</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -48,7 +47,7 @@
 		<url-pattern>*.trv</url-pattern>
 	</servlet-mapping>
 	
-	
+	<!-- 필터 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -61,6 +60,7 @@
 			<filter-name>encodingFilter</filter-name>
 			<url-pattern>/*</url-pattern>
 		</filter-mapping>
+  <!-- 회원 -->
 	<servlet>
 		<servlet-name>member</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -73,7 +73,7 @@
 		<servlet-name>member</servlet-name>
 		<url-pattern>*.me</url-pattern>
 	</servlet-mapping>
-	
+	<!-- 관리자 -추후에 뺄 것  -->
 	<servlet>
 		<servlet-name>admin</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -86,7 +86,7 @@
 		<servlet-name>admin</servlet-name>
 		<url-pattern>*.ad</url-pattern>
 	</servlet-mapping>
-	
+	<!-- 포인트 -->
 	<servlet>
 		<servlet-name>point</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -99,7 +99,57 @@
 		<servlet-name>point</servlet-name>
 		<url-pattern>*.po</url-pattern>
 	</servlet-mapping>
-	
+	<!-- 여행 의뢰 -->
+	<servlet>
+		<servlet-name>travelRequest</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/travelRequest-servlet.xml</param-value>
+		</init-param>
+    <servlet-mapping>
+		<servlet-name>travelRequest</servlet-name>
+		<url-pattern>*.tr</url-pattern>
+	</servlet-mapping>
+	</servlet>
+  <!-- 여행 정보 선우 -->
+		<servlet>
+		<servlet-name>myRequest</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/myRequest-servlet.xml</param-value>
+		</init-param>
+	</servlet>  
+	<servlet-mapping>
+		<servlet-name>myRequest</servlet-name>
+		<url-pattern>*.mr</url-pattern>
+	</servlet-mapping>
+	<!-- 고객센터 -->
+	<servlet>
+		<servlet-name>callCenter</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/callCenter-servlet.xml</param-value>
+		</init-param>
+	</servlet>		
+	<servlet-mapping>
+		<servlet-name>callCenter</servlet-name>
+		<url-pattern>*.cc</url-pattern>
+	</servlet-mapping>
+  <!-- 신고 및 문의 -->
+	<servlet>
+		<servlet-name>penalty</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/travelRequest-servlet.xml</param-value>
+		</init-param>
+	</servlet>		
+	<servlet-mapping>
+		<servlet-name>penalty</servlet-name>
+		<url-pattern>*.pe</url-pattern>
+	</servlet-mapping>
 </web-app>
-
 
