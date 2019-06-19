@@ -47,7 +47,7 @@
       <div id="mainNav" class="navbar-menu">
          <div class="navbar-start">
             <a class="navbar-item is-active" href="#"> <strong>일정만들기</strong> </a>
-            <a class="navbar-item" href="#"> <strong>여행일정</strong> </a>
+            <a class="navbar-item" href="travelList.trv"> <strong>여행일정</strong> </a>
             <div class="navbar-item has-dropdown is-hoverable">
                <a class="navbar-link " href="#"> <strong>여행지</strong> </a>
                <div class="navbar-dropdown ">
