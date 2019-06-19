@@ -44,7 +44,7 @@
                      	</a>
             		</p>
             		<p class="control">
-                     	<a class="button is-info is-rounded" href="#"> 
+                     	<a class="button is-info is-rounded" href="loginForm.me"> 
                         	<span class="icon"><i class="fa fa-user"></i></span> 
                         	<span>LOG IN</span>
                     	</a>
@@ -52,6 +52,7 @@
             	</div>
          	</div>
             <div class="navbar-burger burger is-hidden-tablet" data-target="mainNav">
+
                	<span></span> <span></span> <span></span>
            	</div>
 		</div>
@@ -94,7 +95,7 @@
                      		</a>
                   		</p>
                   		<p class="control">
-                     		<a class="button is-info is-rounded" href="#"> 
+                     		<a class="button is-info is-rounded" href="loginForm.me"> 
                         		<span class="icon"><i class="fa fa-user"></i></span> 
                         		<span>LOG IN</span>
                     		</a>
@@ -105,6 +106,7 @@
 		</div>
 	</nav>
    	
+  
    	<jsp:include page="../travel/travelInfoModal.jsp" />
 	
 
