@@ -62,7 +62,7 @@
             		data-target="#newTravelModal" onclick="$('#travelInfoModal').toggleClass('is-active')"> 
             		<strong>일정만들기</strong> 
             	</a>
-            	<a class="navbar-item" href="travelList.trv"> <strong>여행일정</strong> </a>
+            	<a class="navbar-item" href="travelList.tb"> <strong>여행일정</strong> </a>
             	<div class="navbar-item has-dropdown is-hoverable">
                		<a class="navbar-link " href="#"> <strong>여행지</strong> </a>
                		<div class="navbar-dropdown ">
