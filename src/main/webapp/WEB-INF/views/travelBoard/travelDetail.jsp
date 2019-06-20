@@ -66,8 +66,6 @@
 		font-weight: bold;
 	}
 	
-
-	
 	#travelThema {
 		background: lightgray;
 		padding: 1.5em;
@@ -124,7 +122,7 @@
 		margin: 1em;
 	}
 	.markerArea .subtitle.is-1 {
-		padding-left: 1em;
+		padding-left: 0.5em;
 	}
 	.traffic {
 		background: rgb(178, 214, 237);
@@ -195,7 +193,7 @@
 			
 			<!-- 여행 상세일정 -->
 			<section class="section">
-				<div class="container" id="travelDetail">
+				<div class="container travelDetail">
 					<table class="dayTable">
 						<tr>
 							<th class="day"><p align="center">DAY 1</p></th>
@@ -229,6 +227,68 @@
 								<p>0.00km  |  이동수단  |  00시간 00분 소요  |  $ 0.00  /  ￦ 00000</p>
 							</td>
 						</tr>
+						
+						<tr>
+							<td rowspan="2" class="dayNumber">
+								<div class="number">2</div>
+							</td>
+							<td rowspan="2" colspan="1" style="width: 20%;">
+								<div class="photo"></div>
+							</td>
+							<td rowspan="1">
+								<p class="title is-5">장소명</p>
+								<p class="title is-6">장소분류</p>
+							</td>
+							<td rowspan="1" colspan="1" class="markerArea">
+								<a class="subtitle is-1"><i class="fas fa-info-circle"></i></a>
+								<a class="subtitle is-1"><i class="fas fa-map-marker-alt"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" rowspan="1">
+								<span></span>
+							</td>
+						</tr>
+						
+					</table>
+				</div>
+				
+				<br><br><br>
+				
+				<div class="container travelDetail">
+					<table class="dayTable">
+						<tr>
+							<th class="day"><p align="center">DAY 2</p></th>
+							<th class="dayDetail" colspan="3">2019년 00월 00일 (화)<br><span class="city">도시명, 도시명</span></th>
+						</tr>
+						
+						<tr>
+							<td rowspan="2" class="dayNumber">
+								<div class="number">1</div>
+							</td>
+							<td rowspan="2" colspan="1" style="width: 20%;">
+								<div class="photo"></div>
+							</td>
+							<td rowspan="1">
+								<p class="title is-5">장소명</p>
+								<p class="title is-6">장소분류</p>
+							</td>
+							<td rowspan="1" colspan="1" class="markerArea">
+								<a class="subtitle is-1"><i class="fas fa-info-circle"></i></a>
+								<a class="subtitle is-1"><i class="fas fa-map-marker-alt"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" rowspan="1">
+								<span>본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문</span>
+							</td>
+						</tr>
+						<tr class="traffic">
+							<td><p class="title is-3" align="center"><i class="fas fa-ellipsis-h"></i></p></td>
+							<td colspan="3">
+								<p>0.00km</p>
+							</td>
+						</tr>
 					</table>
 				</div>
 			</section>
@@ -242,7 +302,7 @@
 					<p class="title is-4">[ 1000P ]</p>
 					<div id="btnArea">
 						<a class="button is-white">결제하기</a>
-						<a class="button is-dark" style="color: white;" onclick="location.href='travelList.tr'">목록으로</a>
+						<a class="button is-dark" style="color: white;" onclick="location.href='travelList.tb'">목록으로</a>
 					</div>
 				</div>
 			</section>
@@ -271,7 +331,7 @@
 		var userId = "유저번호";
 		
 		$.ajax({
-			url : "travelLikey.tr",
+			url : "travelLikey.tb",
 			data : {num : num, userId : userId},
 			success : function(data) {
 				alert("좋아요 하면 버튼 색 변경할 것");
@@ -287,7 +347,7 @@
 	$(".photo").click(function() {
 		
 		$.ajax({
-			url : "selectGallery.tr",
+			url : "selectGallery.tb",
 			data : {},
 			success : function() {
 				alert("갤러리 모달창 띄우기");

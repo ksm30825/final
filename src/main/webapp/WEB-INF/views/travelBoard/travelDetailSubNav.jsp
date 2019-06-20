@@ -54,7 +54,7 @@
 		
 		<!-- 구매리뷰 -->
 		<div class="container" id="reviewArea" style="display: none;">
-			<jsp:include page="travelDetailSubCalendar.jsp" />
+			<jsp:include page="travelDetailSubReview.jsp" />
 		</div>
 	</section>
 	
@@ -62,8 +62,7 @@
 		$(".subMenu").click(function() {
 			
 			var sub = $(this).children('a').children('span').eq(1).text();
-			console.log(sub);
-			
+				
 			$(".tabs.is-boxed").children('ul').children('li').removeClass();
 			$(".tabs.is-boxed").children('ul').children('li').addClass("subMenu");
 			$(this).addClass("is-active");
@@ -71,12 +70,15 @@
 			if(sub == "일정표") {
 				$("#calendarArea").removeAttr("style");
 				$("#costArea").css("display","none");
+				$("#reviewArea").css("display","none");
 			}
 			if(sub == "가계부") {
 				$("#costArea").removeAttr("style");
 				$("#calendarArea").css("display","none");
+				$("#reviewArea").css("display","none");
 			}
 			if(sub == "구매리뷰") {
+				$("#reviewArea").removeAttr("style");
 				$("#calendarArea").css("display","none");
 				$("#costArea").css("display","none");
 			}

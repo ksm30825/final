@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +21,9 @@
 	#searchIcon {
 		display: inline-block;
 		cursor: pointer;
+	}
+	hr {
+		height: 1px !important;
 	}
 </style>
 </head>
@@ -54,7 +58,7 @@
 
 <script>
 	function searchTravelList() {
-		location.href='searchTravelList.tr';
+		location.href='searchTravelList.tb';
 	}
 </script>
 </html>

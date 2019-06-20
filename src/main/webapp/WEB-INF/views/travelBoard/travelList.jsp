@@ -41,7 +41,7 @@
 	<!-- 본문 -->
 	<div class="columns is-mobile" id="travelListArea" align="center">
 		<div class="column">
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tr?num=게시판번호'">
+			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
 				<div class="travelListImgBox">
 					<img src="">
 				</div>
@@ -68,7 +68,7 @@
 				</table>
 			</div>
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tr?num=게시판번호'">
+			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
 				<div class="travelListImgBox">
 					<img src="">
 				</div>
@@ -95,7 +95,7 @@
 				</table>
 			</div>
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tr?num=게시판번호'">
+			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
 				<div class="travelListImgBox">
 					<img src="">
 				</div>
@@ -122,7 +122,7 @@
 				</table>
 			</div>
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tr?num=게시판번호'">
+			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
 				<div class="travelListImgBox">
 					<img src="">
 				</div>
@@ -149,7 +149,7 @@
 				</table>
 			</div>
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tr?num=게시판번호'">
+			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
 				<div class="travelListImgBox">
 					<img src="">
 				</div>
@@ -176,7 +176,7 @@
 				</table>
 			</div>
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tr?num=게시판번호'">
+			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
 				<div class="travelListImgBox">
 					<img src="">
 				</div>
