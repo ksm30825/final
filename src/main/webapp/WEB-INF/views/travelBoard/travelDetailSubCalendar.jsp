@@ -118,7 +118,7 @@
 		console.log(day);
 		
 		$.ajax({
-			url : "dayMapSelect.tr",
+			url : "dayMapSelect.tb",
 			type : "post",
 			data : {day : day},
 			success : function(data) {
