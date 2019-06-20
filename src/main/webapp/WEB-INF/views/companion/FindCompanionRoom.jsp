@@ -7,8 +7,21 @@
 <title>Insert title here</title>
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/findcompanionRoom.css">
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
+	#makeRoomIcon{
+	font-size : 60px;
+	margin-right : 7px;
+	color: #7ba9f2;
+	}
 	
+	#footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:70px;   
+    padding : 0; margin: 0;
+	}
 </style>
 </head>
 <body>
@@ -32,8 +45,8 @@
 	   </div>
 	  </div>
 	  <div id="footer" >
-	     <div style = "float:right;">
-	     	<i class="fas fa-comment-medical"></i>
+	     <div style = "float:right;" id = "makeRoomBtn">
+	     	<i class="material-icons" id ="makeRoomIcon">add_circle</i>
 	     </div>
 	   </div>
 	  
