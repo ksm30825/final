@@ -7,73 +7,72 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PointController {
 	
-	//임시 마이페이지 메인--수민
-	@RequestMapping("/myPageMain.me")
-	public String myPageMain() {
+	//포인트 전체 페이지
+	@RequestMapping("/pointMainView.po")
+	public String selectPointMainView() {
+		
 		return "point/pointMain";
 	}
 
 	
 	
-	//포인트 충전 전체 내역 테이블--수민
-	@RequestMapping("/allPay.po")
-	public ModelAndView selectAllPay(ModelAndView mv) {
-		
-		return mv;
-	}	
+	
 	//포인트 충전 월 검색 내역 테이블--수민
 	@RequestMapping("/oneMonthPay.po")
-	public ModelAndView searchOneMonthPay(int month, ModelAndView mv) {
+	public ModelAndView searchOneMonthPay(int memberId, int month, ModelAndView mv) {
 		
 		return mv;
+	}
+	//포인트 충전하는 페이지로 이동--수민
+	@RequestMapping("/toPayView.po")
+	public String toPayView(int memberId, String payAmount) {
+		
+		return "point/payment";
+	}
+	//포인트 충전--수민
+	@RequestMapping("/toPay.po")
+	public String toPay(int memberId) {
+		
+		return "point/payment";
 	}
 	
 	
 	
-	//포인트 지급 전체 내역 테이블--수민
-	@RequestMapping("/allRPoint.po")
-	public ModelAndView selectAllRPoint(ModelAndView mv) {
-		
-		return mv;
-	}	
+	
+	
 	//포인트 지급 월 검색 내역 테이블--수민
 	@RequestMapping("/oneMonthRPoint.po")
-	public ModelAndView searchOneMonthRPoint(int month, ModelAndView mv) {
+	public ModelAndView searchOneMonthRPoint(int memberId, int month, ModelAndView mv) {
 		
 		return mv;
 	}
 	//포인트 지급 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(리뷰면 리뷰, 일정작성이면 일정작성)--수민
 	@RequestMapping("/oneBoardRPoint.po")
-	public String selectOneBoardRPoint(int bid) {
+	public String selectOneBoardRPoint(int memberId, int bid) {
 		
 		return "??";
 	}
 	
 	
 	
-	//포인트 사용 전체 내역 테이블--수민
-	@RequestMapping("/allUPoint.po")
-	public ModelAndView selectAllUPoint(ModelAndView mv) {
-		
-		return mv;
-	}	
+
 	//포인트 사용 월 검색 내역 테이블--수민
 	@RequestMapping("/oneMonthUPoint.po")
-	public ModelAndView searchOneMonthUPoint(int month, ModelAndView mv) {
+	public ModelAndView searchOneMonthUPoint(int memberId, int month, ModelAndView mv) {
 		
 		return mv;
 	}
 	//포인트 사용 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(일정작성이면 일정작성, 의뢰면 의뢰글)--수민
 	@RequestMapping("/oneBoardUPoint.po")
-	public String selectOneBoardUPoint(int bid) {
+	public String selectOneBoardUPoint(int memberId, int bid) {
 		
 		return "??";
 	}
 	//포인트 환불 (사용자가 '환불신청' 눌렀을 때 ->환불테이블에 insert된다!)--수민
 	@RequestMapping("/refundUPoint.po")
-	public String insertRefund(int pointId) {
+	public String insertRefund(int memberId, int pointId) {
 		
 		return "??";
 	}
@@ -81,7 +80,7 @@ public class PointController {
 	
 	
 	
-	//수익금 환급신청 + 수익금 달성 전체 조회
+	//수익금 환급신청 + 수익금 달성 전체 조회--수민
 	@RequestMapping("/allRebate.po")//????????????/ModelAndView로 해야 되지 않나?
 	public String selectAllRebate() {
 		
@@ -89,13 +88,13 @@ public class PointController {
 	}
 	//수익금 환급 월 검색 조회--수민
 	@RequestMapping("/oneMonthRebate.po")
-	public ModelAndView searchOneMonthRebate(int month, ModelAndView mv) {
+	public ModelAndView searchOneMonthRebate(int memberId, int month, ModelAndView mv) {
 		
 		return mv;
 	}
-	//수익금 환급 상태 검색 조회
+	//수익금 환급 상태 검색 조회--수민
 	@RequestMapping("/statusRebate.po")
-	public ModelAndView searchStatusRebate(String status, ModelAndView mv) {
+	public ModelAndView searchStatusRebate(int memberId, String status, ModelAndView mv) {
 		
 		return mv;
 	}
@@ -105,14 +104,14 @@ public class PointController {
 	
 	//수익금 달성 월 검색 조회--수민
 	@RequestMapping("/oneMonthProceeds.po")
-	public ModelAndView searchOneMonthProceeds(int month, ModelAndView mv) {
+	public ModelAndView searchOneMonthProceeds(int memberId, int month, ModelAndView mv) {
 		
 		return mv;
 	}
-	//수익금 달성 환급신청 버튼
+	//수익금 달성 환급신청 버튼--수민
 		//->환급내역 테이블에 insert
 	@RequestMapping("/rebateProceeds.po")
-	public String insertRebate(int proceedsId, String pointId) {
+	public String insertRebate(int memberId, int proceedsId, String pointId) {
 		
 		return "??";
 	}
@@ -120,12 +119,16 @@ public class PointController {
 	
 	
 	
-	//멤버테이블에서 누적포인트, 누적 수익금 조회
-	
+	//멤버테이블에서 누적포인트, 누적 수익금 조회--수민
+	@RequestMapping("/pointProceeds.po")
+	public ModelAndView selectPointProceeds(int memberId, ModelAndView mv) {
+		
+		return mv;
+	}
 	
 	
 	//-------------------------------------------------------------------------------------------
-	//임시 관리자페이지
+	//임시 관리자페이지--수민
 	@RequestMapping("/aPayment.ad")
 	public String aPayment() {
 		return "admin/adminPoint/aPayment";
@@ -134,20 +137,20 @@ public class PointController {
 	
 	
 	
-	//결제 전체 내역 테이블
+	//결제 전체 내역 테이블--수민
 	@RequestMapping("/allAdPay.po")
 	public String adSelectAllPayment() {
 		
 		return "admin/adminPoint/aPayment";
 		
 	}	
-	//결제 회원 검색 내역 테이블
+	//결제 회원 검색 내역 테이블--수민
 	@RequestMapping("/oneMemberAdPay.po")
-	public ModelAndView adSearchOneMemberPayment(int memberId, ModelAndView mv) {
+	public ModelAndView adSearchOneMemberPayment(String userName, ModelAndView mv) {
 		
 		return mv;
 	}		
-	//결제 날짜 검색 내역 테이블
+	//결제 날짜 검색 내역 테이블--수민
 	@RequestMapping("/dayAdPay.po")
 	public ModelAndView adSearchDatePayment(String startDate, String endDate, ModelAndView mv) {
 		
@@ -157,15 +160,15 @@ public class PointController {
 	
 	
 	
-	//포인트 전체 내역 테이블
+	//포인트 전체 내역 테이블--수민
 	@RequestMapping("/allAdPoint.po")
 	public String adSelectAllPoint() {
 		
 		return "admin/adminPoint/aPoint";
 	}	
-	//포인트 회원 검색 내역 테이블
+	//포인트 회원 검색 내역 테이블--수민
 	@RequestMapping("/oneMemberAdPoint.po")
-	public ModelAndView adSearchOneMemberPoint(int memberId, ModelAndView mv) {
+	public ModelAndView adSearchOneMemberPoint(String userName, ModelAndView mv) {
 		
 		return mv;
 	}
@@ -173,19 +176,19 @@ public class PointController {
 	
 	
 	
-	//수익금 전체 내역 테이블
+	//수익금 전체 내역 테이블--수민
 	@RequestMapping("/allAdProceeds.po")
 	public String adSelectAllProceeds() {
 		
 		return "admin/adminPoint/aProceeds";
 	}	
-	//수익금 회원 검색 내역 테이블
+	//수익금 회원 검색 내역 테이블--수민
 	@RequestMapping("/oneMemberAdProceeds.po")
-	public ModelAndView adSearchOneMemberProceeds(int memberId, ModelAndView mv) {
+	public ModelAndView adSearchOneMemberProceeds(String userName, ModelAndView mv) {
 		
 		return mv;
 	}
-	//수익금 발생 게시글 조회
+	//수익금 발생 게시글 조회--수민
 	@RequestMapping("/oneBoardAdProceeds.po")
 	public String adSelectOneBoardProceeds(String bid) {
 		
@@ -195,62 +198,71 @@ public class PointController {
 	
 	
 	
-	//수익금 환급 내역 전체 조회
+	//수익금 환급 내역 전체 조회--수민
 	@RequestMapping("/allAdRebate.po")
 	public String adSelectAllRebate() {
 		
 		return "admin/adminPoint/aRebate";
 	}
-	//수익금 환급 회원 검색 조회
+	//수익금 환급 회원 검색 조회--수민
 	@RequestMapping("/oneMemberAdRebate.po")
-	public ModelAndView adSelectOneMemberRebate(int memberId, ModelAndView mv) {
+	public ModelAndView adSelectOneMemberRebate(String userName, ModelAndView mv) {
 		
 		return mv;
 	}
-	//수익금 환급 신청 상태 검색 조회
+	//수익금 환급 신청 상태 검색 조회--수민
 	@RequestMapping("/statusAdRebate.po")
 	public ModelAndView adSelectStatusRebate(String status, ModelAndView mv) {
 		
 		return mv;
 	}
-	//수익금 환급 검색 날짜에 따른 조회
+	//수익금 환급 검색 날짜에 따른 조회--수민
 	@RequestMapping("/dayAdRebate.po")
 	public ModelAndView adSelectDateRebate(String startDate, String endDate, ModelAndView mv) {
 		
 		return mv;
 	}
 	//수익금 환급 한개 상태 변경->update
-		//->member 테이블에 누적수익금 변경
+		//->member 테이블에 누적수익금 변경--수민
+	@RequestMapping("updateOneAdRebate.po")
+	public ModelAndView adUpdateOneRebate(int rebateId, ModelAndView mv) {
+		
+		return mv;
+	}
 	//수익금 환급 전체 상태 변경->update
 		//->member 테이블에 누적수익금 변경
-		//->환급지급상태 한번에 변경
-	
+		//->환급지급상태 한번에 변경--수민
+	@RequestMapping("updateAllAdRebate.po")
+	public ModelAndView adUpdateAllRebate(ModelAndView mv) {
+		
+		return mv;
+	}
 	
 
 	
 	
 	
 	
-	//포인트 환불 전체 내역
+	//포인트 환불 전체 내역--수민
 	@RequestMapping("/allAdRefund.po")
 	public String adSelectAllRefund(String pointId) {
 		
 		return "admin/adminPoint/aRefund";
 	}
-	//포인트 환불 회원 검색 내역
+	//포인트 환불 회원 검색 내역--수민
 	@RequestMapping("/oneMemberAdRefund.po")
-	public ModelAndView adSelectOneMemberRefund(int memberId, ModelAndView mv) {
+	public ModelAndView adSelectOneMemberRefund(String userName, ModelAndView mv) {
 		
 		return mv;
 	}
-	//포인트 환불 상태 검색 내역
+	//포인트 환불 상태 검색 내역--수민
 	@RequestMapping("/statusAdRefund.po")
 	public ModelAndView adSelectStatusRefund(String status, ModelAndView mv) {
 		
 		return mv;
 	}
 	//포인트 환불 승인여부 update 
-		//-> 승인일 경우 멤버테이블의 누적포인트 update
+		//-> 승인일 경우 멤버테이블의 누적포인트 update--수민
 	@RequestMapping("/updateAdRefund.po")
 	public String adUpdateRefund(String pointId) {
 		

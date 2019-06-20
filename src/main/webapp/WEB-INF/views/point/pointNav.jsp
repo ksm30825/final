@@ -18,28 +18,21 @@
 </style>
 </head>
 <body>
-	<%-- <jsp:include page="../common/mainNav.jsp"/>
-	<jsp:include page="../common/myPageHeader.jsp"/> --%>
-	<section class="tableSection">
-	    <div class="container">
-	    	<div class="pointHeader">
-	    		<table id="pointTB"style="width:30%;margin-left:100px;">
-				    <thead>
-				    	<tr style="height:30px;">
-					        <th style="border-right:1px solid lightgray;"> 포인트관리 </th>
-					        <th colspan="2"> <a href="allRebate.po">&nbsp;&nbsp;&nbsp;수익금관리</a> </th>
-					    </tr>
-				    </thead>
-				    <tbody>
-				    	<tr>
-				        	<td style="border-right:1px solid lightgray;"> 포인트 : 3,000P </td>
-				        	<td colspan="2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;수익금 : 319,600</td>
-				        </tr>
-				    </tbody>
-		  		</table>		  		
-	    	</div>
-	   	</div>
-    </section>
+	<div class="tabs is-boxed"style="width:40%;margin-left:80px;">
+		<ul>
+			<li>
+				<a href="pointMainView.po" class="apointPay">
+					<span style="color:red;">&nbsp;<strong style="font-size:30px;">포인트관리</strong><br> 포인트 : 3,000P </span>
+				</a>
+			</li>
+			<li>
+				<a href="allRebate.po" class="apointPay">
+					<span style="color:green;">&nbsp;<strong style="font-size:30px;">수익금관리</strong><br>수익금 : 319,600</span>
+				</a>
+			</li>
+		</ul>
+    </div>
+	
     
 </body>
 </html>
