@@ -148,10 +148,10 @@
 	});
 
 	function myRequest() {
-		location = "myRequestList.mp";
+		location = "myRequestList.mr";
 	}
 	function myPlan() {
-		location = "myRequestPlan.mp";
+		location = "myRequestPlan.mr";
 	}
 </script>
 </html>

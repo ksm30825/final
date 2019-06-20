@@ -91,10 +91,10 @@ textarea {
 <script>
 	$(function() {
 		$(".is-link").click(function() {
-			location = "myInquiryList.pe";
+			location = "myInquiryList.mr";
 		});
 		$(".is-primary").click(function() {
-			location = "myInquiryList.pe";
+			location = "myInquiryList.mr";
 		});
 	});
 </script>
