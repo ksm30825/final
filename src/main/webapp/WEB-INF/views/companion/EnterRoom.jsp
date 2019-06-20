@@ -6,7 +6,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/enterRoom.css">
-
 </head>
 <body>
 	<jsp:include page = "../companion/CompanionMenu.jsp"/>

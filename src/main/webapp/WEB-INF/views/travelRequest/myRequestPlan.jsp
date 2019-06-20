@@ -296,7 +296,7 @@ textarea {
 
 		$(".far").parent().siblings().click(function() {
 			console.log($(this).parents().children("td").eq(0).text());
-			location = "requestDetail.tr";
+			location = "requestPlan.tr";
 		});
 		
 		/* 모달띄우기 */
@@ -333,16 +333,16 @@ textarea {
 	});
 
 	function myRequest() {
-		location = "requestList.mp";
+		location = "myRequestList.mr";
 	}
 	function myPlan() {
-		location = "myRequestPlan.mp";
+		location = "myRequestPlan.mr";
 	}
 	function cancel() {
 		location = location;
 	}
 	function report() {
-		location = "reportList.mp";
+		location = "paneltyList.pe";
 	}
 </script>
 </html>

@@ -33,7 +33,9 @@
       </div>
       <div id="mainNav" class="navbar-menu">
          <div class="navbar-start">
-            <a class="navbar-item" href="#"> <strong>회원관리</strong> </a>
+
+            <a class="navbar-item is-active" href="adminMemberListForm.me"> <strong>회원관리</strong> </a> <!-- href 경로수정(세령) -->
+
             <div class="navbar-item has-dropdown is-hoverable">
 	            <a class="navbar-link " href="#"> <strong>고객센터관리</strong> </a>
 	            <div class="navbar-dropdown ">

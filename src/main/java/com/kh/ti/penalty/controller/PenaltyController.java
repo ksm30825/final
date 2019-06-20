@@ -26,25 +26,4 @@ public class PenaltyController {
 
 		return "panelty/paneltyDetail";
 	}
-
-	// 나의 문의 내역 - 이선우
-	@RequestMapping("myInquiryList.pe")
-	public String selectMyInquiryList() {
-
-		return "inquiry/myInquiryList";
-	}
-
-	// 문의하기 - 이선우
-	@RequestMapping("goInquiry.pe")
-	public String insertGoInquiry() {
-
-		return "inquiry/goInquiry";
-	}
-
-	// 나의 문의 상세보기 - 이선우
-	@RequestMapping("myInquiryDetail.pe")
-	public String selectMyInquiryDetail() {
-
-		return "inquiry/myInquiryDetail";
-	}
 }

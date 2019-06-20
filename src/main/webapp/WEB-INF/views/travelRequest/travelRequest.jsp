@@ -19,9 +19,10 @@
 .message-header {
 	font-size: 1.5em;
 }
+
 .message-header b {
-	margin-right:auto;
-	margin-left:auto;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 .table {
@@ -58,15 +59,22 @@
 </style>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<br><br><br><br>
-	<section class="section" id="delete">
-		<article class="message is-info">
-			<div class="message-header"><b>여행 의뢰 게시판</b></div>
-		</article>
-		<hr><br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<article class="message is-info">
+		<div class="message-header">
+			<b>여행 의뢰 게시판</b>
+		</div>
+	</article>
+	<hr>
+	<br>
+	<section class="section" id="table">
 		<table class="table">
 			<a class="button is-info is-active" href="request.tr"> 의뢰하기 </a>
-			<br><br>
+			<br>
+			<br>
 			<thead>
 				<tr>
 					<th>의뢰번호</th>

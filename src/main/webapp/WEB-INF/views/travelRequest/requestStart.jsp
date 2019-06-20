@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="initial-scale=1.0">
 <meta charset="UTF-8">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -16,7 +17,7 @@ textarea {
 	width: 120%;
 	resize: none !important;
 	border: none;
-	text-align:center;
+	text-align: center;
 }
 
 .introduce {
@@ -34,8 +35,9 @@ textarea {
 #okModal td {
 	border: 1px solid black !important;
 }
+
 th, td {
-	text-align:center !important;
+	text-align: center !important;
 }
 </style>
 </head>
@@ -182,12 +184,12 @@ th, td {
 							</p>
 						</div>
 						<div class="card">
-							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
-								</figure>
-							</div>
+							<!-- <div> -->
+							<figure id="map" class="image is-4by3">
+								<!-- <img src="https://source.unsplash.com/random/800x600"
+										alt="Image"> -->
+							</figure>
+							<!-- </div> -->
 							<div class="card-content">
 								<div class="media">
 									<div class="media-left">
@@ -211,11 +213,11 @@ th, td {
 											</div>
 										</div>
 										<footer class="card-footer">
-											<a class="card-footer-item">중간저장</a> 
-											<a class="card-footer-item" onclick="back();">돌아가기</a>
-											<a class="card-footer-item" data-target="#okModal"
-												onclick="$('#okModal').toggleClass('is-active')">최종 저장</a>
-											<a class="card-footer-item"
+											<a class="card-footer-item">중간저장</a> <a
+												class="card-footer-item" onclick="back();">돌아가기</a> <a
+												class="card-footer-item" data-target="#okModal"
+												onclick="$('#okModal').toggleClass('is-active')">최종 저장</a> <a
+												class="card-footer-item"
 												onclick="$('#loadModal').toggleClass('is-active')">불러오기</a>
 										</footer>
 									</div>
@@ -292,7 +294,8 @@ th, td {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<a type="submit" class="button is-primary" onclick="myRequestPlan();">확인</a> <a class="button"
+				<a type="submit" class="button is-primary"
+					onclick="myRequestPlan();">확인</a> <a class="button"
 					onclick="cancel();">취소</a>
 			</footer>
 		</div>
@@ -359,13 +362,12 @@ th, td {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<a class="button is-primary" onclick="ok();">확인</a> <a class="button"
-					onclick="cancel();">취소</a>
+				<a class="button is-primary" onclick="ok();">확인</a> <a
+					class="button" onclick="cancel();">취소</a>
 			</footer>
 		</div>
 	</div>
-</body>
-<script>
+	<script>
 	$(function() {
 		$(".hover-cyan").click(function() {
 			alert("일정 삭제하시겠습니까?");
@@ -416,5 +418,84 @@ th, td {
 	function cancel() {
 		location = location;
 	}
+	
+	//구글 맵
+	 /* var map;
+	 var service;
+	 var infowindow;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8
+        });
+      } */
+      var map;
+      var service;
+      var infowindow;
+
+      function initMap() {
+        var sydney = new google.maps.LatLng(-33.867, 151.195);
+
+        infowindow = new google.maps.InfoWindow();
+
+        map = new google.maps.Map(
+            document.getElementById('map'), {center: sydney, zoom: 15});
+
+        var request = {
+          query: 'Museum of Contemporary Art Australia',
+          fields: ['name', 'geometry'],
+        };
+
+        var service = new google.maps.places.PlacesService(map);
+
+        service.findPlaceFromQuery(request, function(results, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+              createMarker(results[i]);
+            }
+            map.setCenter(results[0].geometry.location);
+          }
+        });
+      }
 </script>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap&libraries=places"
+		async defer></script>
+
+</body>
 </html>
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap"
+    async defer></script>
+  </body>
+</html> -->

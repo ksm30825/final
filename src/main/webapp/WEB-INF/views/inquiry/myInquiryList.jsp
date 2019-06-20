@@ -55,9 +55,9 @@
 				<div class="columns">
 					<div class="column cal">
 						<div class="buttons">
-							<a class="button is-primary is-rounded" href="goInquiry.pe">문의하기</a>
-							<a class="button is-info is-rounded" href="myInquiryList.pe">나의 문의 내역</a>
-							<a class="button is-link is-rounded" href="reportList.pe">신고내역</a>
+							<a class="button is-primary is-rounded" href="goInquiry.mr">문의하기</a>
+							<a class="button is-info is-rounded" href="myInquiryList.mr">나의 문의 내역</a>
+							<a class="button is-link is-rounded" href="paneltyList.pe">신고내역</a>
 						</div>
 					</div>
 				</div>
@@ -150,7 +150,7 @@
 			.css({"background":"white", "color":"black"});
 		}).click(function () {
 			console.log($(this).parents().children("td").eq(0).text());
-			location = "myInquiryDetail.pe";
+			location = "myInquiryDetail.mr";
 		});
 	});
 </script>
