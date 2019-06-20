@@ -19,13 +19,13 @@
 	.column .columns {
 		margin:0 !important;
 	}
-	
+	.trvCard:hover {
+		cursor:pointer;
+	}
 </style>
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<br><br>
-	
 	
 	<div class="columns is-mobile">
 		<div class="column">
@@ -43,7 +43,7 @@
 			<section class="section" id="cardSection">
 				<div class="columns">
 					<div class="column is-one-third">
-						<div class="card">
+						<div class="card trvCard">
 							<div class="card-image">
 								<figure class="image" style="margin:0">
 									<img src="resources/images/sample1.jpg">
@@ -134,7 +134,11 @@
 		
 		</div>
 	</div>
-
+	<script>
+		$(".trvCard").click(function() {
+			location.href="showSchEditor.trv";
+		});
+	</script>
 
 
 

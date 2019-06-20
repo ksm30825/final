@@ -22,15 +22,25 @@ public class TravelController {
 	@Autowired
 	private TravelService ts;
 
+	@RequestMapping("showTrvEditor.trv")
+	public String showSchEditor() {
+		return "travel/travelEditor";
+	}
+	
+	@RequestMapping("showMyTravel.trv")
+	public String showMyTravel() {
+		return "travel/myTravel";
+	}
+	
 	//새일정작성-민지
-	@RequestMapping("/insertTravel.trv")
+	@RequestMapping("insertTravel.trv")
 	public String insertTravel(Travel trv) {
 		int result = ts.insertTravel(trv);
 		return "";
 	}
 	
 	//동행추가-민지
-	@RequestMapping("/insertCompany.trv")
+	@RequestMapping("insertCompany.trv")
 	public String insertTrvCompany(Travel trv, Member m) {
 		int result = ts.insertTrvCompany(trv, m);
 		return "";
@@ -44,14 +54,14 @@ public class TravelController {
 	}
 	
 	//상세일정추가-민지
-	@RequestMapping("/insertSch.trv")
+	@RequestMapping("insertSch.trv")
 	public String insertTrvSchedule(TrvDay day, TrvSchedule sch, TrvCost cost, Place plc) {
 		int result = ts.insertTrvSchedule(sch, cost, plc);
 		return "";
 	}
 	
 	//가계부 작성-민지
-	@RequestMapping("/insertCost.trv")
+	@RequestMapping("insertCost.trv")
 	public String insertTrvCost(TrvDay day, TrvSchedule sch, TrvCost cost) {
 		int result1 = ts.insertTrvCost(day, cost);
 		int result2 = ts.insertTrvCost(sch, cost);
@@ -59,7 +69,7 @@ public class TravelController {
 	}
 	
 	//상세일정업데이트-민지
-	@RequestMapping("/updateSch.trv")
+	@RequestMapping("updateSch.trv")
 	public String updateTrvSchedule(TrvSchedule sch, Place plc) {
 		int result = ts.updateTrvSchedule(sch, plc);
 		return "";
@@ -74,70 +84,70 @@ public class TravelController {
 	
 	
 	//전체일정조회-민지
-	@RequestMapping("/selectSchList.trv")
+	@RequestMapping("selectSchList.trv")
 	public String selectAllSchList(Travel trv) {
 		HashMap schMap = ts.selectAllSchList(trv);
 		return "";
 	}
 	
 	//인기명소 불러오기-민지
-	@RequestMapping("/selectSpotList.trv")
+	@RequestMapping("selectSpotList.trv")
 	public String selectSpotList(Travel trv) {
 		HashMap spotMap = ts.selectSpotList(trv);
 		return "";
 	}
 	
 	//전체일정정보 수정-민지
-	@RequestMapping("/updateTravel.trv")
+	@RequestMapping("updateTravel.trv")
 	public String updateTravel(Travel trv) {
 		int result = ts.updateTravel(trv);
 		return "";
 	}
 	
 	//작성완료처리-민지
-	@RequestMapping("/completeTravel.trv")
+	@RequestMapping("completeTravel.trv")
 	public String completeTravel(Travel trv) {
 		int result = ts.completeTravel(trv);
 		return "";
 	}
 	
 	//여행일정 삭제-민지
-	@RequestMapping("/deleteTravel.trv")
+	@RequestMapping("deleteTravel.trv")
 	public String deleteTravel(Travel trv) {
 		int result = ts.deleteTravel(trv);
 		return "";
 	}
 	
 	//여행도시삭제-민지
-	@RequestMapping("/deleteCity.trv")
+	@RequestMapping("deleteCity.trv")
 	public String deleteTrvCity(Travel trv, int cityId) {
 		int result = ts.deleteTrvCity(trv, cityId);
 		return "";
 	}
 	
 	//여행동행삭제-민지
-	@RequestMapping("/deleteComp.trv")
+	@RequestMapping("deleteComp.trv")
 	public String deleteTrvComp(Travel trv, int memberId) {
 		int result = ts.deleteTrvComp(trv, memberId);
 		return "";
 	}
 	
 	//여행테마삭제-민지
-	@RequestMapping("/deleteTag.trv")
+	@RequestMapping("deleteTag.trv")
 	public String deleteTrvTag(Travel trv, int tagId) {
 		int result = ts.deleteTrvTag(trv, tagId);
 		return "";
 	}
 	
 	//가계부수정-민지
-	@RequestMapping("/updateCost.trv")
+	@RequestMapping("updateCost.trv")
 	public String updateTrvCost(TrvCost cost) {
 		int result = ts.updateTrvCost(cost);
 		return "";
 	}
 	
 	//가계부삭제-민지
-	@RequestMapping("/deleteCost.trv")
+	@RequestMapping("deleteCost.trv")
 	public String deleteTrvCost(TrvCost cost) {
 		int result = ts.deleteTrvCost(cost);
 		return "";

@@ -88,7 +88,7 @@
 	<div class="tabs is-boxed column" >
 	    <ul>
 	      <li class="is-active">
-	        <a href="#">
+	        <a href="showMyTravel.trv">
 	          <span class="icon"><i class="fas fa-plane"></i></span>
 	          <span>나의 일정</span>
 	        </a>

@@ -58,7 +58,7 @@
 		</div>
       	<div id="mainNav" class="navbar-menu">
          	<div class="navbar-start">
-            	<a class="navbar-item is-active" href="#" 
+            	<a class="navbar-item" href="#" 
             		data-target="#newTravelModal" onclick="$('#travelInfoModal').toggleClass('is-active')"> 
             		<strong>일정만들기</strong> 
             	</a>
@@ -87,8 +87,7 @@
               <a class="navbar-item " href="myPageMain.me"> <strong>임시 마이페이지</strong> </a>
               <a class="navbar-item " href="aPayment.ad"> <strong>임시 관리자페이지</strong> </a>
 			</div>
-        	<div class="navbar-end">
-            
+        	<div class="navbar-end is-hidden-mobile">
             	<div class="navbar-item">
             		<div class="field is-grouped">
                   		<p class="control">
@@ -108,7 +107,7 @@
 			</div>
 		</div>
 	</nav>
-   	
+   	<br><br>
   
    	<jsp:include page="../travel/travelInfoModal.jsp" />
 	
