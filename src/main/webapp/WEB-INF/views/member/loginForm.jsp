@@ -12,6 +12,7 @@
 	  background-position: center;
 	  background-repeat: no-repeat;
 	  background-size: cover;
+	  min-height:700px;
 	}
 	#tabs {
 		width:80%;
@@ -20,6 +21,7 @@
 	#form {
 		width:50%;
 		margin:0 auto;
+		background-color: rgba( 0, 0, 0, 0.5 );
 	}
 	.label {
 		color:white !important;
@@ -44,6 +46,7 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
+	<br><br>
 	<div class="container bg">
 		<section class="section" id="tabs">
 			<div class="tabs is-toggle is-fullwidth is-large">
