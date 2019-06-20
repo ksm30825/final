@@ -87,7 +87,7 @@
 		</div>
 	</div>
 	<br>
-	<div class="tabs is-boxed column" >
+	<div class="tabs is-boxed column myPageMenu" >
 	    <ul>
 	      <li class="is-active">
 	        <a href="showMyTravel.trv">
@@ -127,5 +127,14 @@
 	      </li>
 	    </ul>
  	</div>
+ 	
+ 	<script>
+ 		$(function() {
+	 		$(".myPageMenu li").click(function() {
+				$(this).addClass('is-active');
+				$(this).siblings().removeClass('is-active');
+	 		});
+ 		});
+ 	</script>
 </body>
 </html>
