@@ -108,11 +108,10 @@
 			</div>
 		</div>
 	</nav>
-   	
+   	<br><br>
   
    	<jsp:include page="../travel/travelInfoModal.jsp" />
-	
-
+	<br><br>
 	<script>
         $(function() {
 			var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);

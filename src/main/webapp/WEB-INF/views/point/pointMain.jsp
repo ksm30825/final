@@ -35,9 +35,11 @@
 </head>
 <body>
 	<div id="pt"></div>
-	<jsp:include page="../common/mainNav.jsp"/>
-	<jsp:include page="../common/myPageHeader.jsp"/>
-	<jsp:include page="pointNav.jsp"/>
+	<div style="width:98%;margin-left:auto;margin-right:auto;">
+		<jsp:include page="../common/mainNav.jsp"/>
+		<jsp:include page="../common/myPageHeader.jsp"/>
+		<jsp:include page="pointNav.jsp"/>
+	</div>
 	<section class="tableSection">
 	    <div class="container" style="width:80%;height:100%;border:1px solid #ccccff">
 	    	<table style="width:60%;">
