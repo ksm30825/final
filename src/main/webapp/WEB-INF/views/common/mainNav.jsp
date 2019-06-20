@@ -30,7 +30,7 @@
 </head>
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
-	<nav class="navbar is-white is-fixed-top" style="border-bottom:1px solid skyblue">
+	<nav class="navbar is-white is-fixed-top" style="border-bottom:1px solid skyblue;">
     	<div class="navbar-brand">
         	<a class="navbar-item" href="index.jsp"> 
             	<img src="resources/images/logoWide.png" width="120px">
@@ -107,7 +107,9 @@
 			</div>
 		</div>
 	</nav>
+
    	<br><br>
+
   
    	<jsp:include page="../travel/travelInfoModal.jsp" />
 	
