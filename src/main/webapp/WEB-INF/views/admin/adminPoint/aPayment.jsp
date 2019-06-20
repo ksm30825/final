@@ -28,7 +28,7 @@
 	<div class="columns is-mobile">
 		<div class="column">
 			<section class="section" id="headerSection" style="margin-bottom:-60px;">
-				<jsp:include page="aPointNav.jsp"/>				
+			<jsp:include page="aPointNav.jsp"/>				
 			</section>
 			<section class="section">
 		      <div class="container" style="width:90%;height:100%;">
