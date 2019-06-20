@@ -24,7 +24,6 @@
 		
 </style>
 <body>
-	<jsp:include page="editorHeader.jsp" />
 	<div class="columns">
 		<div class="column">
 			<section class="section">
@@ -70,7 +69,7 @@
 					</div>				
 					<div class="column is-3">
 						<nav class="panel">
-							<div class="panel-heading tabs is-toggle" align="center" style="padding:0">
+							<div class="tabs is-toggle" align="center" style="padding:0">
 								<ul>
 									<li class="is-active" style="width:50%">
 								    	<a>
@@ -78,7 +77,7 @@
 								          	<span>좋아요장소</span>
 								        </a>
 								    </li>
-								    <li style="width:50%">
+								    <li class="is-light" style="width:50%">
 								     	<a>
 								          	<span class="icon is-small"><i class="fas fa-thumbs-up"></i></span>
 								          	<span>추천장소</span>

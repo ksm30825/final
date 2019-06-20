@@ -7,7 +7,6 @@
 <title>TI - detailEditor</title>
 </head>
 <body>
-	<jsp:include page="editorHeader.jsp" />
 	<div class="columns">
 		<div class="column is-3">
 			<section class="section">
@@ -82,6 +81,13 @@
 							<a class="button is-primary is-outlined">
 								<span class="icon">
 									<i class="far fa-snowflake"></i>
+								</span>
+							</a>
+						</p>
+						<p class="level-item" style="margin:0 10px 0 0">
+							<a class="button is-warning is-outlined">
+								<span class="icon">
+									<i class="fas fa-bolt"></i>
 								</span>
 							</a>
 						</p>

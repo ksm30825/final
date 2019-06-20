@@ -93,7 +93,7 @@
 				</div>
 			</section>
 			<footer class="modal-card-foot" >
-				<a class="button is-primary">완료</a> 
+				<a class="button is-primary okBtn">완료</a> 
 				<a class="button cancelBtn">취소</a>
 			</footer>
 		</div>
@@ -111,6 +111,9 @@
         		var field = $(this).parents(".travelCityField").clone(true);
         		field.find(".travelCityLabel").text('');
         		field.insertAfter($(this).parents(".travelCityField"));
+        	});
+        	$(".okBtn").click(function() {
+        		location.href="showTrvEditor.trv";
         	});
 		});
 	</script>
