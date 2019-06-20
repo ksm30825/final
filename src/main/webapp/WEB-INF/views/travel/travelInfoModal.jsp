@@ -6,6 +6,14 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<style>
+	.select:not(.is-multiple):not(.is-loading)::after {
+   		border-color:purple;
+   	}
+	#cityPlusBtn:hover {
+   		cursor:pointer;
+   	}
+</style>
 <body>
 	<div class="modal" id="travelInfoModal">
 		<div class="modal-background"></div>

@@ -16,16 +16,12 @@
 <script src="resources/js/semantic.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <style>
+	body {
+		overflow-x:visible !important;
+	}
 	.navbar-item img {
     	max-height: 100% !important;
    	}
-   	.select:not(.is-multiple):not(.is-loading)::after {
-   		border-color:purple;
-   	}
-   	#cityPlusBtn:hover {
-   		cursor:pointer;
-   	}
-   
 </style>
 </head>
 <body>

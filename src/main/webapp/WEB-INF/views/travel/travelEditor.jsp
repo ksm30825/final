@@ -15,6 +15,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <style>
+	body {
+		overflow-x:visible !important;
+	}
 	.navbar-item img {
     	max-height: 100% !important;
    	}
@@ -85,7 +88,12 @@
 			<section class="section" style="padding-bottom:0;">
 				<div class="columns">
 					<div class="column">
-						<h3 class="title is-3">여자혼자 시드니, 멜버른 자유여행</h3>
+						<h3 class="title is-3">
+							<span class="icon" style="color:skyblue">
+								<i class="fas fa-plane"></i>
+							</span>
+							여자혼자 시드니, 멜버른 자유여행
+						</h3>
 						<h6 class="subtitle is-6">
 							<i class="fas fa-map-marker-alt"></i>
 							호주/ 시드니, 멜버른
@@ -131,7 +139,7 @@
 		<div id="detailEditor" style="display:none">
 			<jsp:include page="detailEditor.jsp" />
 		</div>
-		<div id="allSchedule" style="display:none">
+		<div id="allSchedule" style="display:none; overflow-x:auto">
 			<jsp:include page="allSchedule.jsp" />
 		</div>
 		<div id="costEditor" style="display:none">
@@ -146,8 +154,8 @@
 			$(".editorMenu").tab();
 		});
 		$(".editorMenu li").click(function() {
-			$(this).addClass('is-active').addClass('active');
-			$(this).siblings().removeClass('is-active').removeClass('active');
+			$(this).addClass('is-active');
+			$(this).siblings().removeClass('is-active');
 			var menu = $(this).children().children().text();
 			switch(menu) {
 			case '일정작성' : $("#scheduleEditor").show();

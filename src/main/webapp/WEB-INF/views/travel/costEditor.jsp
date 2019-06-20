@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-	.input {
+	.budgetInput {
 		width:80% !important;
 	}
 	.table td, .table th {
@@ -31,7 +31,7 @@
 								<span class="icon is-medium">
 									<i class="fas fa-won-sign"></i>
 								</span>
-								<input class="input is-primary" placeholder="원화 총액">
+								<input class="input is-primary budgetInput" placeholder="원화 총액">
 							</p>
 						</div>
 					</div>
@@ -42,7 +42,7 @@
 								<span class="icon is-medium">
 									<i class="fas fa-dollar-sign"></i>
 								</span>
-								<input class="input is-primary" placeholder="현지화 총액">
+								<input class="input is-primary budgetInput" placeholder="현지화 총액">
 							</p>
 						</div>
 					</div>
@@ -51,7 +51,7 @@
 			<section class="section" style="padding-top:0">
 				<table class="table is-bordered is-fullwidth is-striped" align="center">
 					<thead>
-						<tr class="is-selected">
+						<tr class="is-selected" style="background:skyblue">
 							<th width="12%">
 								<i class="fas fa-3x fa-bed"></i>
 								<span>숙박</span>
@@ -103,6 +103,56 @@
 							<td>50 AUD</td>
 							<td>300 AUD</td>
 							<td>50 AUD</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<section class="section">
+				<table class="table is-bordered is-fullwidth is-striped allSchTable" align="center">
+					<thead>
+						<tr class="is-selected">
+							<th width="200px">DAY1</th>
+							<th width="200px">DAY2</th>
+							<th width="200px">DAY3</th>
+							<th width="200px">DAY4</th>
+							<th width="200px">DAY5</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr style="background:whitesmoke;">
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+						</tr>
+						<tr>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
+						</tr>
+						<tr class="is-selected">
+							<td>DAY6</td>
+							<td>DAY7</td>
+							<td>DAY8</td>
+							<td>DAY9</td>
+							<td>DAY10</td>
+						</tr>
+						<tr style="background:whitesmoke;">
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+							<td>2019-07-01</td>
+						</tr>
+						<tr>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
+							<td height="300px">Three</td>
 						</tr>
 					</tbody>
 				</table>
