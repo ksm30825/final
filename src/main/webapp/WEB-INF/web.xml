@@ -59,6 +59,21 @@
 		<servlet-name>TravelBoard</servlet-name>
 		<url-pattern>*.tb</url-pattern>
 	</servlet-mapping>
+	
+	<!-- 통계 예랑 -->
+	<servlet>
+		<servlet-name>Statistics</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/statistics-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Statistics</servlet-name>
+		<url-pattern>*.sta</url-pattern>
+	</servlet-mapping>
+	
 	<!-- 필터 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>

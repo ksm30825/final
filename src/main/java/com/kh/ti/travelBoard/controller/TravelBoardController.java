@@ -82,4 +82,19 @@ public class TravelBoardController {
 		
 		return "travelBoard/travelDetail";
 	}
+	
+	
+	//마이페이지 / 구매한 일정 보기 - 예랑
+	@RequestMapping("myBuyTravelListView.tb")
+	public String myBuyTravelListView() {
+		
+		return "travelBoard/myBuyTravelList";
+	}
+	
+	//마이페이지 / 구매한 일정으로 내 일정 만들기 - 예랑
+	@RequestMapping("travelMake.tb")
+	public String travelMake() {
+		
+		return "travel/travelEditor";
+	}
 }
