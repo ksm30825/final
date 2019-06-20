@@ -7,9 +7,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<jsp:include page="../common/mainNav.jsp"/>
-	<jsp:include page="../common/myPageHeader.jsp"/>
-	<jsp:include page="pointNav.jsp"/>
+	<div style="width:98%;margin-left:auto;margin-right:auto;">
+		<jsp:include page="../common/mainNav.jsp"/>
+		<jsp:include page="../common/myPageHeader.jsp"/>
+		<jsp:include page="pointNav.jsp"/>
+	</div>
 	<section class="section">
       <div class="container" style="width:85%;height:100%;border:1px solid #ccccff;">
 		<div id="payment">

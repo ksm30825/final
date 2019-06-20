@@ -47,6 +47,7 @@
 
 </head>
 <body>
+	<br><br><br><br>
 	<div class="columns is-multiline is-mobile is-vcentered" >
 		<div class="column is-full-mobile" >
 			<span class="icon is-large has-text-info" id="userEditBtn" data-tooltip="회원정보 수정" onclick="location.href='updateMemberForm.me'">
