@@ -309,7 +309,7 @@ th, td {
 		var result = confirm("정말로 채택하시겠습니까?");
 		console.log(result);
 		if(result == true) {
-			location = "requestList.mp";
+			location = "myRequestList.mr";
 		} else {
 			location = location;
 		}
@@ -318,7 +318,7 @@ th, td {
 		location = location;
 	}
 	function report() {
-		location = "reportList.mp";
+		location = "paneltyList.pe";
 	}
 </script>
 </html>

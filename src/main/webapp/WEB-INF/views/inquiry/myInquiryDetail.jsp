@@ -85,7 +85,7 @@
 				<div class="columns">
 					<div class="column">
 						<div class="buttons">
-							<a class="button is-primary back" href="myInquiryList.pe"> 돌아가기 </a>
+							<a class="button is-primary back" href="myInquiryList.mr"> 돌아가기 </a>
 						</div>
 					</div>
 				</div>
