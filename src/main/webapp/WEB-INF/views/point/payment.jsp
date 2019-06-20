@@ -5,29 +5,38 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	.column .columns {
+		margin:0 !important;
+	}
+	
+</style>
 </head>
 <body>
-	<div style="width:98%;margin-left:auto;margin-right:auto;">
-		<jsp:include page="../common/mainNav.jsp"/>
-		<jsp:include page="../common/myPageHeader.jsp"/>
-		<jsp:include page="pointNav.jsp"/>
-	</div>
-	<section class="section">
-      <div class="container" style="width:85%;height:100%;border:1px solid #ccccff;">
-		<div id="payment">
-			<div id="paymentHeader" style="color:purple; font-size:28px;margin-top:3%;">
-		    			포인트 충전내역
-	    	</div>
-			<div id="paymentSection" style="border-top:1px solid lightgray;">
-				<div id="ps">
-					<div id="psHeader" style="margin-top:3%;" align="center">
-						<textarea cols="115" rows="4" style="resize:none;border:none;text-align:center;line-height:200%;"readonly>당사는 100원당 100P형식으로 운영되고 있습니다.
+	<jsp:include page="../common/mainNav.jsp"/>
+	<div class="columns is-mobile">
+		<div class="column">
+			<section class="section" id="headerSection">
+				<jsp:include page="../common/myPageHeader.jsp" />
+				<jsp:include page="pointNav.jsp"/>
+			</section>
+			<section class="section">
+			      <div class="container" style="width:85%;height:100%;border:1px solid #ccccff;margin-top:-60px;">
+					<div id="payment">
+						<div id="paymentHeader" style="color:purple; font-size:28px;margin-top:3%;margin-bottom:3%;">
+					    			포인트 충전내역
+					    			
+				    	</div>
+						<div id="paymentSection" style="border-top:1px solid lightgray;">
+							<div id="ps">
+								<div id="psHeader" style="margin-top:3%;" align="center">
+									<textarea cols="115" rows="4" style="resize:none;border:none;text-align:center;line-height:200%;"readonly>당사는 100원당 100P형식으로 운영되고 있습니다.
 당사에 게시되어있는 여행일정을 구매하시거나, 
 여행설계를 의뢰 맡기실 때에는 당사의 포인트로 이용가능합니다.
-						</textarea>
-					</div>
-					<div id="serviceTerm" align="center">
-						<textarea cols="115" rows="5" style="resize:none;border:none;text-align:center;line-height:200%;background:#e3e7ed;"readonly>Travle Interface전자금융거래 이용약관
+									</textarea>
+								</div>
+								<div id="serviceTerm" align="center">
+									<textarea cols="115" rows="5" style="resize:none;border:none;text-align:center;line-height:200%;background:#e3e7ed;"readonly>Travle Interface전자금융거래 이용약관
 제1장 총칙
 제1조 (목적)
 본 약관은 주식회사 Travle Interface(이하 '회사'라 합니다)가 제공하는 전자지급결제대행서비스, 선불전자지급수단의 발행 및 관리서비스(이하 통칭하여 '전자금융거래서비스'라 합니다)를 회원이 이용함에 있어, 회사와 회원 간 권리, 의무 및 회원의 이용절차 등에 관한 사항을 규정하는 것을 그 목적으로 합니다.
@@ -69,33 +78,36 @@
 6) 회사가 전자금융거래의 대가로 받은 수수료
 7) 회원의 출금 동의에 관한 사항
 8) 해당 전자금융거래와 관련한 전자적 장치의 접속기록
-						</textarea>
+									</textarea>
+								</div>
+								<div id="radioBtnArea" style="margin-left:3%;">
+									<input type="radio" name="agreeStatus">동의&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<input type="radio" name="agreeStatus">비동의
+								</div>
+								<div id="payArea" style="width:200px;margin-left:auto;margin-right:auto;">
+									<input type="radio" name="payAmount" value="1000">1,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,000P<br>
+									<input type="radio" name="payAmount" value="3000">3,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3,000P<br>
+									<input type="radio" name="payAmount" value="5000">5,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5,000P<br>
+									<input type="radio" name="payAmount" value="10000">10,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10,000P<br>
+									<input type="radio" name="payAmount" value="30000">30,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30,000P<br>
+									<input type="radio" name="payAmount" value="50000">50,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50,000P<br>
+									<input type="radio" name="payAmount">기타&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number"style="width:100px;" min="0" step="1000" id="etcPay"><br>
+								</div>
+								<div id="psBottom" align="center" style="margin-top:3%;">
+									포인트를 충전하시겠습니까?						
+								</div>
+								<div id="btnsArea" align="center" style="margin-top:3%; margin-bottom:3%;">
+									<a class="button is-success" style="border-radius:5px; height:25px;"> 충전 </a>
+									<a class="button is-danger" style="border-radius:5px; height:25px;"> 취소 </a>
+								</div>				
+							</div>
+						</div>
 					</div>
-					<div id="radioBtnArea" style="margin-left:3%;">
-						<input type="radio" name="agreeStatus">동의&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="agreeStatus">비동의
-					</div>
-					<div id="payArea" style="width:200px;margin-left:auto;margin-right:auto;">
-						<input type="radio" name="payAmount" value="1000">1,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,000P<br>
-						<input type="radio" name="payAmount" value="3000">3,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3,000P<br>
-						<input type="radio" name="payAmount" value="5000">5,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5,000P<br>
-						<input type="radio" name="payAmount" value="10000">10,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10,000P<br>
-						<input type="radio" name="payAmount" value="30000">30,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30,000P<br>
-						<input type="radio" name="payAmount" value="50000">50,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50,000P<br>
-						<input type="radio" name="payAmount">기타&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number"style="width:100px;" min="0" step="1000" id="etcPay"><br>
-					</div>
-					<div id="psBottom" align="center" style="margin-top:3%;">
-						포인트를 충전하시겠습니까?						
-					</div>
-					<div id="btnsArea" align="center" style="margin-top:3%; margin-bottom:3%;">
-						<a class="button is-success" style="border-radius:5px; height:25px;"> 충전 </a>
-						<a class="button is-danger" style="border-radius:5px; height:25px;"> 취소 </a>
-					</div>				
-				</div>
-			</div>
+			         
+			      </div>
+			   </section>
 		</div>
-         
-      </div>
-   </section>
+	</div>
+	
 </body>
 </html>

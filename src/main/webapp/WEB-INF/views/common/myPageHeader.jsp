@@ -47,21 +47,22 @@
 
 </head>
 <body>
-	<br><br>
 	<div class="columns is-multiline is-mobile is-vcentered" >
 		<div class="column is-full-mobile" >
 			<span class="icon is-large has-text-info" id="userEditBtn" data-tooltip="회원정보 수정" onclick="location.href='updateMemberForm.me'">
 				<i class="fas fa-3x fa-user-edit"></i>
 			</span>&nbsp;&nbsp;
 			<span class="title is-3">홍길동</span>
-			<span class="icon has-text-danger">
-				<i class="fab fa-product-hunt"></i>
-			</span>
-			<span style="color:red">3000</span>
-			<span class="icon" style="margin-left:135px;">
-            	<i class='fab fa-maxcdn' style="color:green;"></i>
-         	</span>
-         	<span style="color:green">319,600</span><br>			
+			<a href="pointMainView.po">
+				<span class="icon has-text-danger">
+					<i class="fab fa-product-hunt"></i>
+				</span>
+				<span style="color:red">3000</span>
+				<span class="icon" style="margin-left:135px;">
+	            	<i class='fab fa-maxcdn' style="color:green;"></i>
+	         	</span>
+	         	<span style="color:green">319,600</span><br>			
+			</a>
 		</div>
 		<div class="column is-one-third-mobile" >
 			<span class="icon is-medium has-text-primary">
@@ -113,7 +114,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a>
+	        <a href="pointMainView.po" class="myPoint">
 	          <span class="icon"><i class="fas fa-coins"></i></span>
 	          <span>포인트/수익금</span>
 	        </a>
