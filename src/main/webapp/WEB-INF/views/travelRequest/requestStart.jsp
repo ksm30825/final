@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <title>Insert title here</title>
 <style>
 .input {
@@ -86,17 +87,22 @@ th, td {
 					<div class="column">
 						<br>
 						<div class="field">
-							<a class="button is-primary"> Day1 </a> &nbsp; <span
-								data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan"><svg
+							<a class="button is-primary"> Day1 </a> &nbsp;
+							<!-- X버튼 -->
+							<span data-balloon="size: 3x" data-balloon-pos="up"
+								class="db color-inherit link hover-cyan"> <svg
 									aria-hidden="true" focusable="false" data-prefix="fas"
 									data-icon="times-circle" role="img"
 									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
 									class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
+								<path fill="currentColor"
 										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-										class=""></path></svg></span> <span data-balloon="size: 3x"
-								data-balloon-pos="up" class="db color-inherit link hover-indigo"><svg
+										class=""></path>
+								</svg>
+							</span>
+							<!-- + 버튼 -->
+							<span data-balloon="size: 3x" data-balloon-pos="up"
+								class="db color-inherit link hover-indigo plusBtn"><svg
 									aria-hidden="true" focusable="false" data-prefix="fas"
 									data-icon="plus-circle" role="img"
 									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
@@ -106,7 +112,7 @@ th, td {
 										class=""></path></svg></span> <input class="input" type="text"
 								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
 							<p class="control">
-								<textarea class="textarea" placeholder="일정 작성"></textarea>
+								<textarea class="textarea " placeholder="일정 작성"></textarea>
 							</p>
 						</div>
 						<br>
@@ -232,6 +238,8 @@ th, td {
 									ID:</strong> <span id="place-id"></span><br> <span
 									id="place-address"></span>
 							</div>
+
+							<hr>
 							<!-- </div> -->
 							<div class="card-content">
 								<div class="media">
@@ -424,28 +432,30 @@ th, td {
 	    	if (e.target.value) {
 		      window.location.href = '/bulmaswatch/' + e.target.value;
 		    }
-		  });
+		});
 	
-		  // Get all "navbar-burger" elements
-		  var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+		// Get all "navbar-burger" elements
+		var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 	
-		  // Check if there are any nav burgers
-		  if ($navbarBurgers.length > 0) {
-	
-		    // Add a click event on each of them
+		// Check if there are any nav burgers
+		if ($navbarBurgers.length > 0) {
+			// Add a click event on each of them
 		    $navbarBurgers.forEach(function ($el) {
-		      $el.addEventListener('click', () => {
+				$el.addEventListener('click', () => {
+		        	// Get the target from the "data-target" attribute
+					var target = $el.dataset.target;
+		        	var $target = document.getElementById(target);
 	
-		        // Get the target from the "data-target" attribute
-		        var target = $el.dataset.target;
-		        var $target = document.getElementById(target);
-	
-		        // Toggle the class on both the "navbar-burger" and the "navbar-menu"
-		        $el.classList.toggle('is-active');
-		        $target.classList.toggle('is-active');
-		      });
-		   });
+		        	// Toggle the class on both the "navbar-burger" and the "navbar-menu"
+		       		$el.classList.toggle('is-active');
+		        	$target.classList.toggle('is-active');
+				});
+		   	});
 		}
+		//+버튼
+		$(".plusBtn").click(function(){
+			$(this).parent().append('<input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)"><p class="control"><textarea class="textarea " placeholder="일정 작성"></textarea></p>');
+		});
 	});
 
 	function back() {
@@ -472,28 +482,43 @@ th, td {
           zoom: 8
         });
       } */
-      var MarkersArray = [];
-      var Coordinates= [];
-      var travelPathArray = [];
-      var map;
-      var marker;
+		/* var MarkersArray = [];
+     	var Coordinates= [];
+      	var travelPathArray = [];
+      	var map;
+     	var marker; */
+     	var ploy;
+     	var map;
+     	var markers = new Array();
       
-      /* lat: -33.8688, lng: 151.2195 */
-      function initMap() {
-    	  var myLatlng = new google.maps.LatLng(-33.8688, 151.2195);
-    	  var myOptions = {
-    	  zoom: 13,
-    	  center: myLatlng
-    	  }
-    	  map = new google.maps.Map(document.getElementById('map'), myOptions);
-     	 
-    	  //맵 클릭시 마커 찍기
-    	  google.maps.event.addListener(map, 'click', function(event) { 
-    		  marker = new google.maps.Marker({ 
-    		  position: event.latLng, 
-    		  map: map,
-    		  title: '위치마커'
-    		});
+      	/* lat: -33.8688, lng: 151.2195 */
+		function initMap() {
+			/* var myLatlng = new google.maps.LatLng(-33.8688, 151.2195);
+    	  	var myOptions = {
+				zoom: 13,
+    	  		center: myLatlng
+    	  	} */
+    	  	map = new google.maps.Map(document.getElementById('map'), {
+    	  		zoom: 13,
+    	  		center : {lat : -33.93979965825738, lng : 151.1751365661621},
+    	  	});
+    	  	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
+     	 	
+    	  	//폴리라인
+    	  	poly = new google.maps.Polyline({
+    	  		strokeColor: "#FF0000",
+    	  		strokeWeight : 3
+    	  	});
+    	  	poly.setMap(map);
+    	  	
+    	  	map.addListener('click', addLatLng);
+    	  	//맵 클릭시 마커 찍기, 폴리라인 연결
+			/* google.maps.event.addListener(map, 'click', function(event) { 
+    			marker = new google.maps.Marker({ 
+		    		position: event.latLng, 
+		    		map: map,
+		    		title: '위치마커'
+    			});
     		attachMessage(marker, event.latLng); 
     		//선을 그리기 위해 좌표를 넣는다.
     		Coordinates.push( event.latLng ); 
@@ -504,25 +529,25 @@ th, td {
     		});
     	  
     	//해당 위치에 주소를 가져오고, 마크를 클릭시 infowindow에 주소를 표시
-  		function attachMessage(marker, latlng) {
-  		geocoder = new google.maps.Geocoder();
-  		 geocoder.geocode({'latLng': latlng}, function(results, status) {
-  		     if (status == google.maps.GeocoderStatus.OK) {
-  		if (results[0]) {
-  		var address_nm = results[0].formatted_address;
-  		var infowindow = new google.maps.InfoWindow(
-  		     { content: address_nm,
-  		size: new google.maps.Size(50,50)
-  		     });
-  		 google.maps.event.addListener(marker, 'click', function() {
-  		   infowindow.open(map,marker);
-  		 });
-  		}
-  		     } else {
-  		alert('주소 가져오기 오류!'); 
-  		     }
-  		});
-  		}
+    	function attachMessage(marker, latlng) {
+	  		geocoder = new google.maps.Geocoder();
+	  		geocoder.geocode({'latLng': latlng}, function(results, status) {
+	  		    if (status == google.maps.GeocoderStatus.OK) {
+					if (results[0]) {
+						var address_nm = results[0].formatted_address;
+						var infowindow = new google.maps.InfoWindow({
+								content: address_nm,
+								size: new google.maps.Size(50,50)
+						 });
+						 google.maps.event.addListener(marker, 'click', function() {
+						   	infowindow.open(map,marker);
+						 });
+					}
+	  		    } else {
+	  				alert('주소 가져오기 오류!'); 
+	  		    }
+		  	});
+	  	}
 	  //동선그리기
 	  function flightPath(){
 	  		for (i in travelPathArray){
@@ -535,7 +560,7 @@ th, td {
 	  		});
 	  			flightPath.setMap(map);
 	  			travelPathArray.push(flightPath);
-	  		}
+	  		} */
 
     	  //지역 검색
           var input = document.getElementById('pac-input');
@@ -553,7 +578,7 @@ th, td {
           infowindow.setContent(infowindowContent);
 
           marker = new google.maps.Marker({map: map});
-
+			
           marker.addListener('click', function() {
             infowindow.open(map, marker);
           });
@@ -579,6 +604,9 @@ th, td {
               placeId: place.place_id,
               location: place.geometry.location
             });
+            console.log(place);
+            console.log(place.formatted_address);
+            
 
             marker.setVisible(false);
 
@@ -588,9 +616,84 @@ th, td {
                 place.formatted_address;
             infowindow.open(map, marker);
           });
-          
-          
         }
+		function addLatLng(event) {
+	        var path = poly.getPath();
+
+	        // Because path is an MVCArray, we can simply append a new coordinate
+	        // and it will automatically appear.
+	        path.push(event.latLng);
+
+	        // Add a new marker at the new plotted point on the polyline.
+	        
+	        var marker = new google.maps.Marker({
+	          position: event.latLng,
+	          title: '#' + path.getLength(),
+	          map: map
+	        });
+	        markers.push(marker);
+	        
+	        console.log("위도 : " + marker.position.lat());
+	        console.log("경도 : " + marker.position.lng());
+	        console.log("마커 순서 : " + marker.title);
+	        
+	        var request = {
+	                placeId: event.placeId,
+	                fields: ['name', 'formatted_address', 'geometry']
+	        };
+	        
+	        var infowindow = new google.maps.InfoWindow();
+	        var service = new google.maps.places.PlacesService(map);
+	        
+	        service.getDetails(request, function(place, status) {
+	            if (status === google.maps.places.PlacesServiceStatus.OK) {
+	              var marker = new google.maps.Marker({
+	                map: map,
+	                position: place.geometry.location
+	              });
+	              google.maps.event.addListener(marker, 'click', function() {
+	                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+	                  place.formatted_address + '</div>');
+	                infowindow.open(map, this);
+	              });
+	            }
+	        
+	        /* marker.addListener('click', function() {
+	            infowindow.open(map, marker);
+	          }); */
+	        console.log(event);
+	      });
+		}
+		function initialize() {
+			google.maps.event.addListener(flightPath, 'rightclick', function(e) {
+		          // Check if click was on a vertex control point
+		          if (e.vertex == undefined) {
+		        	  console.log(e.vertex);
+		            return;
+		          }
+		          deleteMenu.open(map, flightPath.getPath(), e.vertex);
+		        });
+		}
+	        
+		/* function attachMessage(marker, latlng) {
+    		geocoder = new google.maps.Geocoder();
+    		 geocoder.geocode({'latLng': latlng}, function(results, status) {
+    		     if (status == google.maps.GeocoderStatus.OK) {
+    		if (results[0]) {
+    		var address_nm = results[0].formatted_address;
+    		var infowindow = new google.maps.InfoWindow(
+    		     { content: address_nm,
+    		size: new google.maps.Size(50,50)
+    		     });
+    		 google.maps.event.addListener(marker, 'click', function() {
+    		   infowindow.open(map,marker);
+    		 });
+    		}
+    		     } else {
+    		alert('주소 가져오기 오류!'); 
+    		     }
+    		});
+    		} */
         /* var MarkersArray = [];
         var Coordinates= [];
         var travelPathArray = [];
