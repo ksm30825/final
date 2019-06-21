@@ -44,7 +44,7 @@
 			</section>
 			<section class="tableSection">
 			    <div class="container" style="width:95%;height:100%;border:1px solid #ccccff">
-			    	<table style="width:60%;">
+			    	<table style="width:50%;">
 			  			<tr>
 			  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#">포인트 충전내역 바로가기</a></td>
 			  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#receiveTop">포인트 지급내역 바로가기</a></td>
@@ -149,7 +149,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 				    	</div>
-				    	<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
+				    	<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 			    	</div>
 			    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
 			    		<div id="receiveTop">
@@ -276,7 +276,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
+			    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 			    	</div>
 			    	<div id="useArea"  style="margin-top:3%; border-top:1px solid lightgray;">
 			    		<div id="useTop">
@@ -434,7 +434,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
+			    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 			    		<br>
 			    	</div>
 			   	</div>
@@ -444,16 +444,32 @@
 					<div class="modal-background"></div>
 					<div class="modal-card">
 						<header class="modal-card-head">
-							<p class="modal-card-title">환불 하시겠습니까?</p>
+							<p class="modal-card-title" id="modalHeader"></p>
 							<button class="delete" id="del"></button>
 						</header>
 						<section class="modal-card-body">
-							<textarea placeholder="환불사유를 입력해주세요" cols="85" rows="15" style="resize:none;"></textarea>
+							<textarea cols="85" rows="15" style="resize:none;" id="modalContent"></textarea>
 						</section>
 						<footer class="modal-card-foot">
 							<div style="margin-left:auto;margin-right:auto;">
-								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;"> 예 </a>
-								<a class="button is-danger" style="border-radius:5px; height:25px;"> 아니요 </a>
+								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" onclick="yes()"> 예 </a>
+								<a class="button is-danger" style="border-radius:5px; height:25px;" onclick="no()"> 아니요 </a>
+							</div>
+						</footer>
+					</div>
+				</div>
+			</section>
+			<section class="section" id="modal2">
+				<div class="modal" id="myModal2">
+					<div class="modal-background" id="back2"></div>
+					<div class="modal-card">
+						<header class="modal-card-head">
+							<p class="modal-card-title" id="modalHeader2" style="font-size:15px;text-align:center"></p>
+							<button class="delete" id="del2"></button>
+						</header>
+						<footer class="modal-card-foot">
+							<div style="margin-left:auto;margin-right:auto;">
+								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" id="okay"> 확인 </a>
 							</div>
 						</footer>
 					</div>
@@ -464,13 +480,46 @@
 	<script type="text/javascript">
 		$(function() {
 			$(".myPoint").parent().addClass('is-active');
+			$("#modalHeader").text('환불은 신청하시겠습니까?');
+			$("#modalContent").attr('placeholder','환불사유를 입력해주세요');
+			
 			$('.modal-background, .modal-close').click(function() {
 				$(this).parent().removeClass('is-active');
+				$("#modalHeader2").text('환불을 취소하셨습니다.');
+				$('#myModal2').toggleClass('is-active');
+				$('#back2, #del2').click(function() {
+					$(this).parent().removeClass('is-active');
+				});
+				$("#okay").click(function(){
+					$("#myModal2").removeClass('is-active');
+				});
 			});
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
 		});
+		function yes(){
+			$("#myModal").removeClass('is-active');
+			$("#modalHeader2").text('환불신청한 내역이 관리자에게 전달 되었습니다.').append("<p>빠른 시일 내에 처리하도록 하겠습니다.</p>");
+			$('#myModal2').toggleClass('is-active');
+			$('#back2, #del2').click(function() {
+				$(this).parent().removeClass('is-active');
+			});
+			$("#okay").click(function(){
+				$("#myModal2").removeClass('is-active');
+			});
+		}
+		function no(){
+			$("#myModal").removeClass('is-active');
+			$("#modalHeader2").text('환불을 취소하셨습니다.');
+			$('#myModal2').toggleClass('is-active');
+			$('#back2, #del2').click(function() {
+				$(this).parent().removeClass('is-active');
+			});
+			$("#okay").click(function(){
+				$("#myModal2").removeClass('is-active');
+			});
+		}
 	</script>
 </body>
 </html>
