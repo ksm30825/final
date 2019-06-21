@@ -20,7 +20,7 @@
 	.nextBtnArea {
 		flex: 1;
 		display: inline-block;
-		margin-top: 8%;
+		margin-top: 12%;
 	}
 	.button.is-primary.soft {
 		background: rgb(159, 125, 191);
@@ -55,8 +55,8 @@
 </style>
 <body>
 	<!-- 서브메뉴 본문(가계부) -->
-	<section class="section" id="detailSub">
-		<div class="container" id="detailSubContent" align="center">
+	<section class="section" id="detailSub" style="padding-top: 0;">
+		<div id="detailSubContent" align="center">
 			<div id="costBtnArea">
 				<a class="button is-primary" onclick="allCost()">전체</a>
 				<a class="button is-primary soft" onclick="dayCost(1)">일별</a>
@@ -132,7 +132,6 @@
 			url : "allCost.tb",
 			data : {num : num},
 			success : function(data) {
-				alert("전체 가계부 테이블에 출력");
 				$("#costTitle").text("전체예산");
 				
 				$(".nextBtnArea").css("visibility", "hidden");
@@ -148,7 +147,6 @@
 			url : "dayCost.tb",
 			data : {num : num, day : day},
 			success : function(data) {
-				alert("해당 날짜별 가계부 테이블에 출력");
 				$("#costTitle").text("DAY " + day);
 				
 				$(".nextBtnArea").removeAttr("style");

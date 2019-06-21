@@ -102,7 +102,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a href="#">
+	        <a href="myLikeyTravelListView.tb">
 	          <span class="icon"><i class="far fa-heart"></i></span>
 	          <span>좋아요 목록</span>
 	        </a>
