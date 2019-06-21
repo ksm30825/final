@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
-
+ <script src="https://code.jquery.com/jquery-latest.js"></script> 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
 
@@ -46,6 +46,21 @@
 	
 	#datepicker1 , #datepicker2{ width : 150px; display : inline-block; /* margin-right : 10px; */ }
 	
+	#peopleNum {
+	color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+	width : 150px;  height: 30px;
+    line-height: 1.5; margin-left : 38%;
+    border-radius: 3px;}
+    
+    #txtDetail{
+    	resize : none;
+    	width : 340px; height : 100px;
+    	border-radius: 3px;
+    }
+	
 </style>
 </head>
 <body>
@@ -54,9 +69,11 @@
 	<div id = "container">	
 	 <div id="menu1" style = "padding-left : 20px;">
 	     <br>
-	     <table class = "AllChatList" >
-	     	<tr>
-	     		<td colspan = "2" class = "AllChatTitle"><label>채팅방 제목</label></td>
+	     <table class = "AllChatList" id = "ChatListTable" >
+	     		<tr>
+	     			<td colspan = "2" class = "AllChatTitle">
+	     			<input type = "hidden" id = "chatNum" name = "chatNum" value = "1">
+	     			<label>채팅방 제목</label></td>
 	     			<td><label>&nbsp;&nbsp;모집중</label></td>
 	     		</tr>
 	     		<tr style=  "border-bottom : 1px solid lightgray;">
@@ -69,7 +86,7 @@
 	   </div>
 	  </div>
 	  <div id="footer" >
-	     <div style = "float:right;" id = "makeRoomBtn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">
+	     <div style = "float:right;" id = "makeRoomBtn" class="btn btn-info btn-lg" data-toggle="방만들기" data-target="#myModal">
 	     	<i class="material-icons" id ="makeRoomIcon">add_circle</i>
 	     </div>
 	  </div>
@@ -119,21 +136,48 @@
 		         		<tr>
 		         			<td>
 		         				<b>인원 </b>
-		         				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="number" name= "peopleNum" min="0" value = "1">
+		         				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="number" id = "peopleNum" name= "peopleNum" min="0" value = "1">
 		         			</td>
 		         		</tr>
-		         		
+		         		<tr>
+		         			<td>
+		         				<b>채팅방 설명</b>
+		         			</td>
+		         		</tr>
+		         		<tr>
+		         			<td>
+		         				<textarea name = "chatDetail" id = "txtDetail"></textarea>
+		         			</td>
+		         		</tr>
 		         	</table> 
 		         	
 		         </form>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">방만들기</button>
 		      </div>
 		    </div>
-		
 		  </div>
 	  </div> 
+	  
+	    
+	<div id="checkModel" class="checkmodal">
+ 
+      <!-- Modal content -->
+      <div class="checkmodal-content">
+          <form>
+          	<table>
+          		<tr>	
+          			<td><h2 style = "align:center;"></h2></td>
+          		</tr>
+          	</table>
+          </form>
+      </div>
+ 
+    </div>
+	  
+	  
 	  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	  <script>
 			  $.datepicker.setDefaults({
@@ -151,11 +195,30 @@
 		          ,maxDate: "+1Y" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
 		      });
 				 		
-			  
-			  	$("#datepicker1").datepicker();
-		 		$("#datepicker2").datepicker();
+			 $("#datepicker1").datepicker();
+		 	 $("#datepicker2").datepicker();
+		 	
+		 	 
+		 	 $(function(){
+		 	 	$("#ChatListTable tr").click(function(){
+		 	 		var chatList = $(this).parent().children().children();
+		 	 		var chatNum = chatList.children().val();
+		 	 		
+		 	 		console.log(chatList);
+		 	 		console.log("chatNum :" + chatNum);
+		 	 		
+		 	 		 $('#checkModel').show();
+		 	 		
+		 	 	}); 
+		 	 });
 		 		
-		 		
+		 	 
+	        //팝업 Close 기능
+	        function close_pop(flag) {
+	             $('#checkModel').hide();
+	        };
+
+
 		 		
 	  </script>
 	  
