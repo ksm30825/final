@@ -43,7 +43,7 @@
 				<jsp:include page="pointNav.jsp"/>				
 			</section>
 			<section class="tableSection">
-			    <div class="container" style="width:80%;height:100%;border:1px solid #ccccff">
+			    <div class="container" style="width:95%;height:100%;border:1px solid #ccccff">
 			    	<table style="width:60%;">
 			  			<tr>
 			  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#">포인트 충전내역 바로가기</a></td>
@@ -149,7 +149,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 				    	</div>
-				    	<a style="height:20px;color:purple;font-size:40px;margin-left:80%;" href="#pt">△Top</a>
+				    	<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
 			    	</div>
 			    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
 			    		<div id="receiveTop">
@@ -276,7 +276,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;font-size:40px;margin-left:80%;" href="#pt">△Top</a>
+			    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
 			    	</div>
 			    	<div id="useArea"  style="margin-top:3%; border-top:1px solid lightgray;">
 			    		<div id="useTop">
@@ -434,7 +434,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;font-size:40px;margin-left:80%;" href="#pt">△Top</a>
+			    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
 			    		<br>
 			    	</div>
 			   	</div>

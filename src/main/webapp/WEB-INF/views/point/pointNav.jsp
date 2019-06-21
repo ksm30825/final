@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-	<div class="tabs is-boxed"style="width:40%;margin-left:80px;">
+	<div class="tabs is-boxed"style="width:40%;margin-left:10px;">
 		<ul>
 			<li>
 				<a href="pointMainView.po" class="apointPay">
