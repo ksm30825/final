@@ -43,14 +43,15 @@
 	     	</c:forEach>
 	   </div>
 	  </div>
-	  <div id="footer" >
-	     <div style = "float:right;" id = "makeRoomBtn" class="btn btn-info btn-lg" data-toggle="방만들기" data-target="#myModal">
+		<div id="footer" >
+	     <div style = "float:right;" id = "makeRoomBtn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">
 	     	<i class="material-icons" id ="makeRoomIcon">add_circle</i>
 	     </div>
 	  </div>
 	  
 	  
-	  <div id="myModal" class="modal fade" role="dialog">
+	  
+	   <div id="myModal" class="modal fade" role="dialog">
 		  <div class="modal-dialog">
 		
 		    <!-- Modal content-->
@@ -94,7 +95,7 @@
 		         		<tr>
 		         			<td>
 		         				<b>인원 </b>
-		         				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="number" id = "peopleNum" name= "peopleNum" min="0" value = "1">
+		         				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="number" name= "peopleNum" id = "peopleNum" min="1" value = "1">
 		         			</td>
 		         		</tr>
 		         		<tr>
@@ -116,6 +117,7 @@
 		        <button type="button" class="btn btn-default" data-dismiss="modal">방만들기</button>
 		      </div>
 		    </div>
+		
 		  </div>
 	  </div> 
 	  
