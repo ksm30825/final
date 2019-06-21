@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Travel Interface</title>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <style>
 	.pageingBtn{
 		width:30px;
@@ -38,9 +39,53 @@
 				</div>
 				
 				<!-- member condition search -->
-				<div class="field">
-				
+				<div class="field is-horizontal">
+					<div class="field-body">
+						<!-- condition button area 1 -->
+						<div class="field buttons">
+								<a class="button is-primary"> 전체회원 </a>
+								<a class="button is-primary"> 가입회원 </a>
+								<a class="button is-primary"> 탈퇴회원 </a>
+						</div> <!-- end condition button area 1 -->
+						
+						<!-- condition keyword -->
+						<div class="field has-addons" style="justify-content: flex-end;">
+					      <p class="control">
+					        <span class="select">
+					          <select>
+					            <option>이름</option>
+					            <option>이메일</option>
+					            <option>연락처</option>
+					          </select>
+					       </span>
+					      </p>
+					      <p class="control">
+					        <input class="input" type="text" placeholder="Search Member">
+					      </p>
+					      <p class="control">
+					        <a class="button"><i class="fas fa-search"></i></a>
+					      </p>
+					    </div>
+					</div><!-- end condition keyword -->
 				</div> <!-- end member condition search -->
+				
+				<!-- page forward btn -->
+				<div class="field is-horizontal">
+					<div class="field-body">
+						<label class="label">전체회원 수 : 100명</label>
+						<div class="field is-grouped" style="justify-content: flex-end;">
+							<div class="field-label is-normal">
+					          <label class="label">상세보기</label>
+					        </div>
+					        <div class="buttons">
+					        	<a class="button is-rounded" style="background-color:yellow; border-color:yellow;">게시글 내역</a>
+					        	<a class="button is-info is-rounded">결제 내역</a>
+					        	<a class="button is-danger is-rounded">신고 내역</a>
+					        	<a class="button is-link is-rounded">문의 내역</a>
+					        </div>
+				        </div>
+					</div>
+				</div><!-- end page forward brn -->
 				
 				<!-- member list -->
 				<div class="field">
@@ -65,7 +110,7 @@
 				<!-- paging -->
 				<div class="field" >
 					<nav class="pagination">
-				  	<ul class="pagination-list">
+				  	<ul class="pagination-list" style="justify-content: center;">
 				  		<li><button class="pageingBtn"> << </button></li>
 				  		<li><button class="pageingBtn"> < </button></li>
 				  		<li><button class="pageingBtn"> 1 </button></li>

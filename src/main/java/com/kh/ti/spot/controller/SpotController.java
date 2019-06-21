@@ -6,6 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class SpotController {
 	
+	//관리자 입력폼으로 여행지추가용 메소드 --세령
+	@RequestMapping("showInserOneSpot.sp")
+	public String showAdminAddOneSpot() {
+		return "admin/spot/adminAddOneSpot";
+	}
+	
 	//엑셀로여행지추가용메소드
 	@RequestMapping("insertSpotExcel.sp")
 	public String insertSpotFromExcel() {
@@ -18,10 +24,10 @@ public class SpotController {
 		return null;
 	}
 	
-	//관리자여행지전체조회용메소드
+	//관리자여행지전체조회용메소드 --세령
 	@RequestMapping("selectAllSpotAdmin.sp")
 	public String selectAllSpotListForAdmin() {
-		return null;
+		return "admin/spot/adminSpotList";
 	}
 	
 	//관리자여행지조건조회용메소드
@@ -30,10 +36,10 @@ public class SpotController {
 		return null;
 	}
 	
-	//관리자여행지상세보기용메소드
+	//관리자여행지상세보기용메소드 --세령
 	@RequestMapping("selectSpotInfoAdmin.sp")
 	public String selectSpotDetailInfoForAdmin() {
-		return null;
+		return "admin/spot/adminSpotDetail";
 	}
 	
 	//여행지수정용메소드
@@ -99,7 +105,7 @@ public class SpotController {
 	//관리자명소리뷰전체조회용메소드
 	@RequestMapping("selectAllSpotReviewAdmin.sp")
 	public String selectAllSpotReviewForAdmin() {
-		return null;
+		return "admin/spot/adminSpotReviewList";
 	}
 	
 	//여행지지도마커표시용메소드
