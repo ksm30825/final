@@ -36,7 +36,7 @@
 		         <div style="width:100%;height:100%;">
 		         	<div>
 		         		<div class="field has-addons" style="width:550px;float:right;">
-							<p class="control">
+							<p class="control" data-tooltip="검색">
 								<a class="button is-primary" style="width:40px;height:20px;">
 									<i class='fas fa-search' style='font-size:15px'></i>
 								</a>
@@ -44,9 +44,9 @@
 							<p class="control">
 								<input class="input" type="text" placeholder="회원ID를 검색하세요" style="width:150px;height:20px;">
 							</p>
-							<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:1%;">
+							<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:1%;" data-tooltip="검색시작날짜">
 							<i class='far fa-calendar-alt' style='font-size:20px;color:purple;margin-right:1%;'></i>~
-							<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:1%;">
+							<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:1%;" data-tooltip="검색종료날짜">
 							<i class='far fa-calendar-alt' style='font-size:20px;color:purple;'></i>
 						</div>
 					</div>
