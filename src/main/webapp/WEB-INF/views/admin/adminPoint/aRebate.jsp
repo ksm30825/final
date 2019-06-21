@@ -33,13 +33,13 @@
 			<section class="section">
 				<div class="container" style="width:90%;height:100%;">
 					<div style="width:100%;font-size:25px;color:#209cee;">환급 내역</div>
-			        <a class="button is-primary" style="width:70px;height:20px;float:right;margin-left:2px;">다운로드</a>
-			        <a class="button is-success" style="width:70px;height:20px;float:right;">지급하기</a>	
+			        <a class="button is-primary" style="width:70px;height:20px;float:right;margin-left:2px;" data-tooltip="다운로드를 받으실 수 있습니다.">다운로드</a>
+			        <a class="button is-success" style="width:70px;height:20px;float:right;" data-tooltip="선택항목들 지급하기">지급하기</a>	
 					<br>
 			         <div style="width:100%;height:100%;">
 			         	<div>
 			         		<div class="field has-addons" style="width:475px;float:right;margin-top:1%;">
-								<p class="control">
+								<p class="control" data-tooltip="검색">
 									<a class="button is-primary" style="width:40px;height:20px;">
 										<i class='fas fa-search' style='font-size:15px'></i>
 									</a>
@@ -54,9 +54,9 @@
 						              <option>지급완료</option>
 						            </select>
 					        	</div>
-						        <input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;">
+						        <input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;" data-tooltip="검색시작날짜">
 								<i class='far fa-calendar-alt' style='font-size:20px;color:purple;margin-right:2px;'></i>~
-								<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;">
+								<input type="date" class="input is-primary" style="width:140px;height:20px;margin-left:2px;" data-tooltip="검색종료날짜">
 								<i class='far fa-calendar-alt' style='font-size:20px;color:purple;'></i>
 							</div>
 						</div>

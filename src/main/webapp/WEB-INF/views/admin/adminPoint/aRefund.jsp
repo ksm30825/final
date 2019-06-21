@@ -36,7 +36,7 @@
 		         <div style="width:100%;height:100%;">
 		         	<div>
 		         		<div class="field has-addons" style="width:320px;float:right;">
-							<p class="control">
+							<p class="control" data-tooltip="검색">
 								<a class="button is-primary" style="width:40px;height:20px;">
 									<i class='fas fa-search' style='font-size:15px'></i>
 								</a>
