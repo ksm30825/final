@@ -39,6 +39,40 @@ textarea {
 th, td {
 	text-align: center !important;
 }
+
+.controls {
+	background-color: #fff;
+	border-radius: 2px;
+	border: 1px solid transparent;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+	box-sizing: border-box;
+	font-family: Roboto;
+	font-size: 15px;
+	font-weight: 300;
+	height: 29px;
+	margin-left: 17px;
+	margin-top: 10px;
+	outline: none;
+	padding: 0 11px 0 13px;
+	text-overflow: ellipsis;
+	width: 400px;
+}
+
+.controls:focus {
+	border-color: #4d90fe;
+}
+
+.title {
+	font-weight: bold;
+}
+
+#infowindow-content {
+	display: none;
+}
+
+#map #infowindow-content {
+	display: inline;
+}
 </style>
 </head>
 <body>
@@ -185,10 +219,19 @@ th, td {
 						</div>
 						<div class="card">
 							<!-- <div> -->
+							<div style="display: none">
+								<input id="pac-input" class="controls" type="text"
+									placeholder="지역명을 쓰세요">
+							</div>
 							<figure id="map" class="image is-4by3">
 								<!-- <img src="https://source.unsplash.com/random/800x600"
 										alt="Image"> -->
 							</figure>
+							<div id="infowindow-content">
+								<span id="place-name" class="title"></span><br> <strong>Place
+									ID:</strong> <span id="place-id"></span><br> <span
+									id="place-address"></span>
+							</div>
 							<!-- </div> -->
 							<div class="card-content">
 								<div class="media">
@@ -429,39 +472,199 @@ th, td {
           zoom: 8
         });
       } */
+      var MarkersArray = [];
+      var Coordinates= [];
+      var travelPathArray = [];
       var map;
-      var service;
-      var infowindow;
-
+      var marker;
+      
+      /* lat: -33.8688, lng: 151.2195 */
       function initMap() {
-        var sydney = new google.maps.LatLng(-33.867, 151.195);
+    	  var myLatlng = new google.maps.LatLng(-33.8688, 151.2195);
+    	  var myOptions = {
+    	  zoom: 13,
+    	  center: myLatlng
+    	  }
+    	  map = new google.maps.Map(document.getElementById('map'), myOptions);
+     	 
+    	  //맵 클릭시 마커 찍기
+    	  google.maps.event.addListener(map, 'click', function(event) { 
+    		  marker = new google.maps.Marker({ 
+    		  position: event.latLng, 
+    		  map: map,
+    		  title: '위치마커'
+    		});
+    		attachMessage(marker, event.latLng); 
+    		//선을 그리기 위해 좌표를 넣는다.
+    		Coordinates.push( event.latLng ); 
+    		//마커 담기
+    		MarkersArray.push(marker);
+    		        //array에 담은 위도,경도 데이타를 가지고 동선 그리기
+    		flightPath();
+    		});
+    	  
+    	//해당 위치에 주소를 가져오고, 마크를 클릭시 infowindow에 주소를 표시
+  		function attachMessage(marker, latlng) {
+  		geocoder = new google.maps.Geocoder();
+  		 geocoder.geocode({'latLng': latlng}, function(results, status) {
+  		     if (status == google.maps.GeocoderStatus.OK) {
+  		if (results[0]) {
+  		var address_nm = results[0].formatted_address;
+  		var infowindow = new google.maps.InfoWindow(
+  		     { content: address_nm,
+  		size: new google.maps.Size(50,50)
+  		     });
+  		 google.maps.event.addListener(marker, 'click', function() {
+  		   infowindow.open(map,marker);
+  		 });
+  		}
+  		     } else {
+  		alert('주소 가져오기 오류!'); 
+  		     }
+  		});
+  		}
+	  //동선그리기
+	  function flightPath(){
+	  		for (i in travelPathArray){
+	  			travelPathArray[i].setMap(null);
+	  		}
+	  		var flightPath = new google.maps.Polyline({
+	  			path: Coordinates,
+	  			strokeColor: "#FF0000",
+	  			strokeWeight: 5
+	  		});
+	  			flightPath.setMap(map);
+	  			travelPathArray.push(flightPath);
+	  		}
 
-        infowindow = new google.maps.InfoWindow();
+    	  //지역 검색
+          var input = document.getElementById('pac-input');
 
-        map = new google.maps.Map(
-            document.getElementById('map'), {center: sydney, zoom: 15});
+          var autocomplete = new google.maps.places.Autocomplete(input);
+          autocomplete.bindTo('bounds', map);
 
-        var request = {
-          query: 'Museum of Contemporary Art Australia',
-          fields: ['name', 'geometry'],
-        };
+          // Specify just the place data fields that you need.
+          autocomplete.setFields(['place_id', 'geometry', 'name']);
 
-        var service = new google.maps.places.PlacesService(map);
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-        service.findPlaceFromQuery(request, function(results, status) {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            for (var i = 0; i < results.length; i++) {
-              createMarker(results[i]);
+          var infowindow = new google.maps.InfoWindow();
+          var infowindowContent = document.getElementById('infowindow-content');
+          infowindow.setContent(infowindowContent);
+
+          marker = new google.maps.Marker({map: map});
+
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
+          });
+
+          autocomplete.addListener('place_changed', function() {
+            infowindow.close();
+
+            var place = autocomplete.getPlace();
+
+            if (!place.geometry) {
+              return;
             }
-            map.setCenter(results[0].geometry.location);
-          }
-        });
-      }
-</script>
-	<script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap&libraries=places"
-		async defer></script>
 
+            if (place.geometry.viewport) {
+              map.fitBounds(place.geometry.viewport);
+            } else {
+              map.setCenter(place.geometry.location);
+              map.setZoom(17);
+            }
+
+            // Set the position of the marker using the place ID and location.
+            marker.setPlace({
+              placeId: place.place_id,
+              location: place.geometry.location
+            });
+
+            marker.setVisible(false);
+
+            infowindowContent.children['place-name'].textContent = place.name;
+            infowindowContent.children['place-id'].textContent = place.place_id;
+            infowindowContent.children['place-address'].textContent =
+                place.formatted_address;
+            infowindow.open(map, marker);
+          });
+          
+          
+        }
+        /* var MarkersArray = [];
+        var Coordinates= [];
+        var travelPathArray = [];
+        var map;
+        var marker;
+		
+        function initMap() {
+        	 var myLatlng = new google.maps.LatLng(33.397, 126.65544);
+        	  var myOptions = {
+        	  zoom: 10,
+        	  center: myLatlng
+        	  }
+        	  map = new google.maps.Map(document.getElementById('map'), myOptions);
+        	 
+        	  google.maps.event.addListener(map, 'click', function(event) { 
+        		  marker = new google.maps.Marker({ 
+        		  position: event.latLng, 
+        		  map: map,
+        		  title: '위치마커'
+        		});
+        		attachMessage(marker, event.latLng); 
+        		//선을 그리기 위해 좌표를 넣는다.
+        		Coordinates.push( event.latLng ); 
+        		//마커 담기
+        		MarkersArray.push(marker);
+        		        //array에 담은 위도,경도 데이타를 가지고 동선 그리기
+        		flightPath();
+        		});
+
+        		//해당 위치에 주소를 가져오고, 마크를 클릭시 infowindow에 주소를 표시한다.
+        		function attachMessage(marker, latlng) {
+        		geocoder = new google.maps.Geocoder();
+        		 geocoder.geocode({'latLng': latlng}, function(results, status) {
+        		     if (status == google.maps.GeocoderStatus.OK) {
+        		if (results[0]) {
+        		var address_nm = results[0].formatted_address;
+        		var infowindow = new google.maps.InfoWindow(
+        		     { content: address_nm,
+        		size: new google.maps.Size(50,50)
+        		     });
+        		 google.maps.event.addListener(marker, 'click', function() {
+        		   infowindow.open(map,marker);
+        		 });
+        		}
+        		     } else {
+        		alert('주소 가져오기 오류!'); 
+        		     }
+        		});
+        		}
+
+        		//동선그리기
+        		function flightPath(){
+        		for (i in travelPathArray){
+        		travelPathArray[i].setMap(null);
+        		}
+        		var flightPath = new google.maps.Polyline({
+        		path: Coordinates,
+        		strokeColor: "#FF0000",
+        		strokeOpacity: 0.3,
+        		strokeWeight: 2
+        		});
+        		flightPath.setMap(map);
+        		travelPathArray.push(flightPath);
+        		}
+        		
+        }
+         */
+</script>
+	<!-- <script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap&libraries=places"
+		async defer></script> -->
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&libraries=places&callback=initMap"
+		async defer></script>
 </body>
 </html>
 <!-- <!DOCTYPE html>
