@@ -23,7 +23,7 @@
 		margin:0 auto;
 		background-color: rgba( 0, 0, 0, 0.5 );
 	}
-	.label {
+	.colWhite {
 		color:white !important;
 	}
 	.button.is-primary, .button.is-link{
@@ -61,7 +61,7 @@
 		  <!-- signInArea -->
 		    <div class="column" id="signInArea">
 			      <div class="field">
-			        <label class="label">이메일</label>
+			        <label class="label colWhite">이메일</label>
 			        <p class="control has-icons-left has-icons-right">
 			          <input class="input is-danger" type="text" placeholder="Email input" value="hello@" name="email" id="email">
 			          <span class="icon is-small is-left">
@@ -73,7 +73,7 @@
 			        </p>
 			      </div>
 			      <div class="field">
-			        <label class="label">비밀번호</label>
+			        <label class="label colWhite">비밀번호</label>
 			        <p class="control has-icons-left has-icons-right">
 			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="userPwd" id="userPwd">
 			          <span class="icon is-small is-left">
@@ -105,7 +105,7 @@
 		      <!-- signUpArea -->
 		      <div class="column" id="signUpArea">
 			      <div class="field">
-			        <label class="label">* 사용자 이름</label>
+			        <label class="label colWhite">* 사용자 이름</label>
 			        <p class="control has-icons-left has-icons-right">
 			          <input class="input is-success" type="text" placeholder="Text input" value="bulma">
 			          <span class="icon is-small is-left">
@@ -117,7 +117,7 @@
 			        </p>
 			      </div>
 			      <div class="field">
-			        <label class="label">* 이메일</label>
+			        <label class="label colWhite">* 이메일</label>
 			        <p class="control has-icons-left has-icons-right">
 			          <input class="input is-danger" type="text" placeholder="Email input" value="hello@">
 			          <span class="icon is-small is-left">
@@ -129,7 +129,7 @@
 			        </p>
 			      </div>
 			      <div class="field">
-			        <label class="label">* 비밀번호</label>
+			        <label class="label colWhite">* 비밀번호</label>
 			        <p class="control has-icons-left has-icons-right">
 			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="userPwd1">
 			          <span class="icon is-small is-left">
@@ -141,7 +141,7 @@
 			        </p>
 			      </div>
 			      <div class="field">
-			        <label class="label">* 비밀번호 확인</label>
+			        <label class="label colWhite">* 비밀번호 확인</label>
 			        <p class="control has-icons-left has-icons-right">
 			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="userPwd2">
 			          <span class="icon is-small is-left">
@@ -154,7 +154,7 @@
 			        <p class="help is-success">비밀번호가 일치합니다.</p>
 			      </div>
 			      <div class="field">
-			      	<label class="label">* 휴대폰 인증</label>
+			      	<label class="label colWhite">* 휴대폰 인증</label>
 			      	<div class="field has-addons" style="width:100%;">
 				          <input class="input" type="tel" placeholder="phone number">
 				          <a class="button">본인 인증</a>
@@ -162,7 +162,7 @@
 			      </div>
 			      <div class="field is-horizontal">
 			      	<div class="field" style="margin-right:20px;">
-				        <label class="label"> 성별 </label>
+				        <label class="label colWhite"> 성별 </label>
 				          <span class="select">
 				            <select>
 				              <option>남자</option>
@@ -171,7 +171,7 @@
 				          </span>
 			      	</div>
 			      	<div class="field">			      	
-				        <label class="label"> 생년월일 </label>
+				        <label class="label colWhite"> 생년월일 </label>
 				        <input class="input is-danger" type="date" placeholder="birthday">
 			      	</div>
 			      </div>
