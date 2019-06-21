@@ -25,8 +25,12 @@
 	.dayMemo {
 		width:60%;
 	}
-	.tag:hover {
+	.tag:hover{
 		cursor:pointer;
+	}
+	.schInfoBtn:hover, .backBtn:hover {
+		cursor:pointer;
+		color:#7AD9FC;
 	}
 </style>
 <body>
@@ -40,7 +44,7 @@
 							style="background:whitesmoke;color:black;;height:30px">
 								<p class="help">2019-07-01</p>
 							</div>
-							<div class="panel-heading columns" align="center" style="margin:0">
+							<div class="panel-heading columns is-mobile" align="center" style="margin:0">
 								<div class="column is-2" style="padding-left:0">
 									<a class="button is-small dayLeftBtn">
 										<span class="icon"> 
@@ -48,7 +52,7 @@
 										</span>
 									</a>
 								</div>
-								<div class="column is-8 dayTitle">
+								<div class="column is-8 dayTitle" style="padding-left:0; padding-right:0">
 									<span>DAY 1</span>&nbsp;
 									<input class="input dayMemo is-small" type="text" placeholder="MEMO"></div>
 								<div class="column is-2" style="padding-right:0">
@@ -64,9 +68,9 @@
 							<ul id="day1" class="connectedSortable menu-list">
 								<li class="ui-state-default panel-block">
 									<div class="media-left">
-										<a class="button is-small is-rounded schInfoBtn">
-											<i class="fas fa-info-circle"></i>
-										</a>
+										<span class="icon schInfoBtn">
+											<i class="fas fa-edit"></i>
+										</span>
 									</div>
 									<div class="media-content">
 										<p>Item 1</p>
@@ -77,9 +81,9 @@
 								</li>
 								<li class="ui-state-default panel-block">
 									<div class="media-left">
-										<a class="button is-small is-rounded schInfoBtn">
-											<i class="fas fa-info-circle"></i>
-										</a>
+										<span class="icon schInfoBtn">
+											<i class="fas fa-edit"></i>
+										</span>
 									</div>
 									<div class="media-content">
 										<p>Item 2</p>
@@ -90,9 +94,9 @@
 								</li>
 								<li class="ui-state-default panel-block">
 									<div class="media-left">
-										<a class="button is-small is-rounded schInfoBtn">
-											<i class="fas fa-info-circle"></i>
-										</a>
+										<span class="icon schInfoBtn">
+											<i class="fas fa-edit"></i>
+										</span>
 									</div>
 									<div class="media-content">
 										<p>Item 3</p>
@@ -103,9 +107,9 @@
 								</li>
 								<li class="ui-state-default panel-block">
 									<div class="media-left">
-										<a class="button is-small is-rounded schInfoBtn">
-											<i class="fas fa-info-circle"></i>
-										</a>
+										<span class="icon schInfoBtn">
+											<i class="fas fa-edit"></i>
+										</span>
 									</div>
 									<div class="media-content">
 										<p>Item 4</p>
@@ -116,9 +120,9 @@
 								</li>
 								<li class="ui-state-default panel-block">
 									<div class="media-left">
-										<a class="button is-small is-rounded schInfoBtn">
-											<i class="fas fa-info-circle"></i>
-										</a>
+										<span class="icon schInfoBtn">
+											<i class="fas fa-edit"></i>
+										</span>
 									</div>
 									<div class="media-content">
 										<p>Item 5</p>
@@ -249,7 +253,7 @@
 										<p>좋아요 1</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -257,7 +261,7 @@
 										<p>좋아요 2</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -265,7 +269,7 @@
 										<p>좋아요 3</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -273,7 +277,7 @@
 										<p>좋아요 4</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -281,7 +285,7 @@
 										<p>좋아요 5</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 							</ul>
@@ -292,7 +296,7 @@
 										<p>추천 1</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<button class="delete" aria-label="close"></button>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -300,7 +304,7 @@
 										<p>추천 2</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<button class="delete" aria-label="close"></button>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -308,7 +312,7 @@
 										<p>추천 3</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<button class="delete" aria-label="close"></button>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -316,7 +320,7 @@
 										<p>추천 4</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<button class="delete" aria-label="close"></button>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -324,7 +328,7 @@
 										<p>추천 5</p>
 									</div>
 									<div class="media-right">
-										<span class="icon"><i class="fas fa-reply"></i></span>	
+										<button class="delete" aria-label="close"></button>
 									</div>
 								</li>
 							</ul>
@@ -335,7 +339,14 @@
 						</nav>
 					</div>
 					<div class="column is-6">
-						<div style="border:1px solid gray; height:400px"></div>
+						<div class="field">
+							<p class="control">
+								<input class="input is-info" type="text" placeholder="지도에서 장소검색" id="searchInput">
+							</p>
+						</div>
+						<div style="border:1px solid gray; height:400px">
+							<div id="map" style="height:100%"></div>
+						</div>
 					</div>
 				</div>
 			</section>			
@@ -345,59 +356,18 @@
 						<i class="fas fa-tags"></i>여행테마 선택
 					</h4>
 					<div class="tags">
-						<span class="tag is-white"> 혼자여행 </span> 
-						<span class="tag is-white"> 가족여행 </span> 
-						<span class="tag is-white"> 커플여행 </span> 
-						<span class="tag is-white"> 먹방여행 </span> 
-						<span class="tag is-white"> 휴양 </span> 
-						<span class="tag is-white"> 밤도깨비 </span> 
+						<span class="tag is-white themes"> 혼자여행 </span> 
+						<span class="tag is-white themes"> 가족여행 </span> 
+						<span class="tag is-white themes"> 커플여행 </span> 
+						<span class="tag is-white themes"> 먹방여행 </span> 
+						<span class="tag is-white themes"> 휴양 </span> 
+						<span class="tag is-white themes"> 밤도깨비 </span> 
 					</div>
 					<hr style="border:1px solid lightgray">
 					<h6 class="title is-6">
 						<i class="fas fa-hashtag"></i>내 여행 테마
 					</h6>
 					<div class="field is-grouped is-grouped-multiline" id="myTagArea">
-						<!-- <div class="control">
-							<div class="tags has-addons">
-								<a class="tag is-primary">Technology</a> <a class="tag is-delete"></a>
-							</div>
-						</div>
-	
-						<div class="control">
-							<div class="tags has-addons">
-								<a class="tag is-primary">CSS</a> <a class="tag is-delete"></a>
-							</div>
-						</div>
-	
-						<div class="control">
-							<div class="tags has-addons">
-								<a class="tag is-primary">Flexbox</a> <a class="tag is-delete"></a>
-							</div>
-						</div>
-	
-						<div class="control">
-							<div class="tags has-addons">
-								<a class="tag is-primary">Web Design</a> <a class="tag is-delete"></a>
-							</div>
-						</div>
-	
-						<div class="control">
-							<div class="tags has-addons">
-								<a class="tag is-primary">Open Source</a> <a class="tag is-delete"></a>
-							</div>
-						</div>
-	
-						<div class="control">
-							<div class="tags has-addons">
-								<a class="tag is-primary">Community</a> <a class="tag is-delete"></a>
-							</div>
-						</div>
-	
-						<div class="control">
-							<div class="tags has-addons">
-								<a class="tag is-primary">Documentation</a> <a class="tag is-delete"></a>
-							</div>
-						</div> -->
 					</div>
 				</div>
 			</section>
@@ -457,16 +427,42 @@
 				$('#scheduleInfoModal').toggleClass('is-active');
 			});
 			
-			$(".tag.is-white").click(function() {
-				$(this).removeClass('is-white').addClass('is-link');
-				$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
-						+ $(this).text() + '</a><a class="tag is-delete"></a></div></div>'));
-				
+			$(".themes").click(function() {
+				var text = $(this).text();
+				if($(this).is(".is-white")) {
+					$(this).removeClass('is-white').addClass('is-link');
+					$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
+							+ $(this).text() + '</a><a class="tag is-delete tagDelete"></a></div></div>'));
+					
+					$(".tagDelete").click(function() {
+						console.log("1");
+						var text = $(this).prev().text();
+						$(this).parent().parent().remove();
+						$(".themes").each(function() {
+							if($(this).text() == text) {
+								$(this).addClass('is-white').removeClass('is-link');
+							}
+						});
+					});
+					
+				}else {
+					$(this).addClass('is-white').removeClass('is-link');
+					$("#myTagArea .tags.has-addons").each(function() {
+						if($(this).children("a").text() == text) {
+							$(this).parent().remove();
+						}
+					});
+				}
 			});
-			$(".tag.is-link").click(function() {
-				console.log('1');
-				$(this).removeClass('is-link').addClass('is-white');
+			$(".backBtn").click(function() {
+				if(!$(this).parents("ul").is("#likeList")) {
+					$(this).parents("li").appendTo($("#likeList"));
+				}
 			});
+			$(".delete").click(function() {
+				$(this).parents("li").remove();
+			});
+
 		});
 	</script>
 

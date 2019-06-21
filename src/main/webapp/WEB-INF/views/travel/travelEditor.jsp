@@ -14,6 +14,9 @@
 <script src="resources/js/semantic.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7fLkDFvRtLNooR612ov12h_gwdsqDI6Q&libraries=places&callback=initMap"
+    async defer></script>
+<script src="resources/js/travel/travel.js"></script>
 <style>
 	body {
 		overflow-x:visible !important;
@@ -139,7 +142,7 @@
 		<div id="detailEditor" style="display:none">
 			<jsp:include page="detailEditor.jsp" />
 		</div>
-		<div id="allSchedule" style="display:none; overflow-x:auto">
+		<div id="allSchedule" style="display:none;">
 			<jsp:include page="allSchedule.jsp" />
 		</div>
 		<div id="costEditor" style="display:none">

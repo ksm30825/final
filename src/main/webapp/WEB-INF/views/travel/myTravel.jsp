@@ -136,7 +136,7 @@
 	</div>
 	<script>
 		$(".trvCard").click(function() {
-			location.href="showSchEditor.trv";
+			location.href="showTrvEditor.trv";
 		});
 	</script>
 

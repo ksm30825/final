@@ -22,6 +22,11 @@
 	<div class="columns">
 		<div class="column">
 			<section class="section">
+				<div style="border:1px solid gray; height:400px">
+					<div id="mapWide" style="height:100%"></div>
+				</div>
+			</section>
+			<section class="section">
 				<table class="table is-bordered is-fullwidth is-striped allSchTable" align="center">
 					<thead>
 						<tr class="is-selected">
