@@ -82,7 +82,7 @@
 	<script>
 		$(function(){
 			$("#startbutton").click(function(){
-				location.href = "${contextPath}/enterChatting.ch";
+				location.href = "${contextPath}/enterRoom.ch";
 			});
 		});
 	</script>

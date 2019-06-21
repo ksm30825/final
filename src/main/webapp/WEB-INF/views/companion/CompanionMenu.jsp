@@ -18,8 +18,8 @@
 	<div class="container">
 	  	<h2 align = "center">Travel InterFace</h2>
 	  	<ul class="nav" id = "chMenu">
-	   	 	<li id = "enterMenu"><a href="${contextPath }/enterChatting.ch"><i class="material-icons">sms</i>&nbsp;&nbsp;&nbsp;<label class = "title">내 채팅방</label></a></li>
-	    	 <li id = "joinMenu"><a href="${contextPath }/joinChatting.ch"><i class="material-icons">question_answer</i><label class = "title">동행자 찾기</label></a></li>
+	   	 	<li id = "enterMenu"><a href="${contextPath }/enterRoom.ch"><i class="material-icons">sms</i>&nbsp;&nbsp;&nbsp;<label class = "title">내 채팅방</label></a></li>
+	    	 <li id = "joinMenu"><a href="${contextPath }/joinRoom.ch"><i class="material-icons">question_answer</i><label class = "title">동행자 찾기</label></a></li>
 	  	</ul>
 	  </div>
 
