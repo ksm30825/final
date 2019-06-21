@@ -6,7 +6,7 @@ function initMap() {
 	var kh = {lat:-33.865143, lng: 151.209900};
 	var sydney = new google.maps.LatLng(-33.867, 151.195);
 	map = new google.maps.Map(document.getElementById('map'), {zoom:15, center:sydney});
-	mapWide = new google.maps.Map(document.getElementById('mapWide'), {zoom:15, center:sydney});
+	//mapWide = new google.maps.Map(document.getElementById('mapWide'), {zoom:15, center:sydney});
 	var infowindow = new google.maps.InfoWindow();
 	var input = document.getElementById('searchInput');
 	var searchBox = new google.maps.places.SearchBox(input);

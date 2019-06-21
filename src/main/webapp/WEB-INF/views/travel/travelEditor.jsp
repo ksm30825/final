@@ -90,7 +90,7 @@
 		<div class="column">
 			<section class="section" style="padding-bottom:0;">
 				<div class="columns">
-					<div class="column">
+					<div class="column is-6">
 						<h3 class="title is-3">
 							<span class="icon" style="color:skyblue">
 								<i class="fas fa-plane"></i>
@@ -103,19 +103,94 @@
 							&nbsp;&nbsp;<span style="color:gray;"><strong>9박 10일</strong></span>
 						</h6>
 					</div>
+					<div class="column is-1">
+						<div class="dropdown">
+							<div class="navbar-item field dropdown-trigger" id="inviteBtn"
+								style="margin: 0" data-tooltip="동행초대" data-variation="mini"
+								data-position="right center">
+								<p class="control">
+									<a class="button is-primary is-rounded" aria-haspopup="true"
+										aria-controls="inviteDropdown" style="width: 40px"> <i
+										class="fas fa-users"></i>
+									</a>
+								</p>
+							</div>
+							<div class="dropdown-menu" id="inviteDropdown" role="menu" style="min-width: 25rem;">
+								<div class="dropdown-content">
+									<div class="dropdown-item">
+										<p>함께 여행하는 동행을 초대해서 일정을 공유하고 같이 작성해보세요!</p>
+									</div>
+									<hr class="dropdown-divider">
+									<div class="dropdown-item">
+										<p class="control has-icons-left">
+											<span class="icon is-small is-left"> 
+												<i class="fas fa-search-plus"></i>
+											</span> 
+											<input class="input is-rounded" type="text" placeholder="ID로 검색">
+										</p>
+										<p>
+											user01 (홍길동) 
+											<button class="button is-info is-small is-rounded">추가</button>
+										</p>
+									</div>
+									<hr class="dropdown-divider">
+									<div class="dropdown-item">
+										<table class="table ">
+											<!-- <thead>
+												<tr>
+													<th >초대된 사람</th>
+													<th></th>
+												</tr>
+											</thead> -->
+											<tbody>
+												<tr>
+													<td width="10%">
+														<span class="icon">
+															<i class="far fa-user"></i>
+														</span>
+													</td>
+													<td width="70%">user01 (홍길동)</td>
+													<td width="20%">
+														<button class="button is-dark is-small">삭제</button>
+													</td>
+												</tr>
+												<tr>
+													<td width="10%">
+														<span class="icon">
+															<i class="far fa-user"></i>
+														</span>
+													</td>
+													<td width="70%">user02 (문지원)</td>
+													<td width="20%">
+														<button class="button is-dark is-small">삭제</button>
+													</td>
+												</tr>
+												<tr>
+													<td width="10%">
+														<span class="icon">
+															<i class="far fa-user"></i>
+														</span>
+													</td>
+													<td width="70%">user03 (천예랑)</td>
+													<td width="20%">
+														<button class="button is-dark is-small">삭제</button>
+													</td>
+												</tr>
+												
+											</tbody>
+										</table>
+									</div>
+									<hr class="dropdown-divider">
+									<div class="dropdown-item">
+										<button class="button is-small closeBtn">닫기</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="column" style="line-height:50px;">
 						<div class="tabs is-right editorMenu">
 						    <ul>
-						    	<li>
-						    		<div class="navbar-item field" style="margin:0" data-tooltip="동행초대" 
-						    		data-variation="mini" data-position="right center">
-						         		<p class="control">
-						         			<a class="button is-primary is-rounded" style="width:40px">
-						                        <i class="fas fa-users"></i><br>
-						                    </a>
-						            	</p>
-						            </div>
-						    	</li>
 						    	<li class="is-active" >
 						        	<a><strong>일정작성</strong></a>
 						      	</li> 
@@ -155,6 +230,12 @@
 	<script>
 		$(function() {
 			$(".editorMenu").tab();
+			$("#inviteBtn").click(function() {
+				$("#inviteDropdown").toggle();
+			});
+			$(".closeBtn").click(function() {
+				$("#inviteDropdown").hide();
+			});
 		});
 		$(".editorMenu li").click(function() {
 			$(this).addClass('is-active');
