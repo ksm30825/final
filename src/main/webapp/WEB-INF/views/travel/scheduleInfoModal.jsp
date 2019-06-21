@@ -11,7 +11,7 @@
 		<div class="modal-background"></div>
 		<div class="modal-card" style="width:480px">
 			<header class="modal-card-head">
-				<span class="icon is-large"><i class="fas fa-2x fa-bookmark"></i></span>
+				<span class="icon is-large" style="color:purple"><i class="fas fa-2x fa-edit"></i></span>
 				<p class="modal-card-title">일정 정보</p>
 				<button class="delete" aria-label="close"></button>
 			</header>
