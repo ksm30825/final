@@ -85,7 +85,7 @@
 				        </div>
 			          <div class="field is-grouped" style="flex-grow:1;">
 			            <p class="control is-expanded has-icons-left has-icons-right">
-			              <button class="button is-primary is-outlined" style="width:50%;"> 비밀번호 재설정 </button>
+			              <button class="button is-primary is-outlined" style="width:50%;" onclick="$('#modalUpdatePassword').toggleClass('is-active');"> 비밀번호 재설정 </button>
 			               <span class="icon is-small is-left">
 				              <i class="fas fa-mobile-alt"></i>
 				           </span>
@@ -151,7 +151,7 @@
 			          	</div>
 			          	<div class="field is-grouped">
 				            <p class="control is-expanded has-icons-left has-icons-right">
-				              <a class="button is-primary is-outlined" style="width:50%;"> 사용자 계좌 재인증 </a>
+				              <a class="button is-primary is-outlined" style="width:50%;"  onclick="$('#modalConfirmAcc').toggleClass('is-active');"> 사용자 계좌 재인증 </a>
 					          <span class="icon is-small is-left">
 					            <i class="fas fa-dollar-sign"></i>
 					          </span>
@@ -201,6 +201,8 @@
 	</div> <!-- end columns -->
 	
 	<jsp:include page="../common/footer.jsp"/>
+	<jsp:include page="updatePasswordModal.jsp"/>
+	<jsp:include page="confirmAccountPopup.jsp"/>
 	
 </body>
 </html>
