@@ -25,7 +25,7 @@
    <nav class="navbar is-info is-fixed-top" style="border-bottom:1px solid skyblue">
       <div class="navbar-brand">
          <a class="navbar-item" href="index.jsp"> 
-            <img src="resources/images/logo1.png" width="70px" height="70px">
+            <img src="resources/images/logo2.png" width="120px" height="70px">
          </a>        
          <div class="navbar-burger burger is-hidden-tablet" data-target="mainNav">
             <span></span> <span></span> <span></span>

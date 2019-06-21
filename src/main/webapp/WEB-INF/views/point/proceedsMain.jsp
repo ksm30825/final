@@ -119,7 +119,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 				    	</div>
-				    		<a style="height:20px;color:purple;font-size:40px;margin-left:80%;" href="#pt">△Top</a>
+				    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
 				  		</div>
 				  	</div>
 				  	
@@ -254,7 +254,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;font-size:40px;margin-left:80%;" href="#pt">△Top</a>
+			    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
 				 		</div>
 				  	</div>
 		    </section>
