@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,55 +12,8 @@
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
  <script src="https://code.jquery.com/jquery-latest.js"></script> 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-
-
 <style>
-	body {overflow-y: hidden; overflow-x: hidden;}
 	
-	#makeRoomIcon{
-	font-size : 60px;
-	color: #7ba9f2;
-	background : none;
-	float : right ;
-	}
-	
-	#footer {
-    position:absolute;
-    bottom:0;
-    width:100%;
-    height:70px;   
-    padding : 0; margin: 0;
-	}
-	
-	#makeRoomBtn{
-		background : none;
-		border : none;
-	}
-	
-	#makeRoomTable td{
-		padding: 5px;
-	}
-	
-	#chatPlace, #chatTitle{
-	    width: 340px !important; 
-	}
-	
-	#datepicker1 , #datepicker2{ width : 150px; display : inline-block; /* margin-right : 10px; */ }
-	
-	#peopleNum {
-	color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-	width : 150px;  height: 30px;
-    line-height: 1.5; margin-left : 38%;
-    border-radius: 3px;}
-    
-    #txtDetail{
-    	resize : none;
-    	width : 340px; height : 100px;
-    	border-radius: 3px;
-    }
 	
 </style>
 </head>
@@ -67,22 +21,26 @@
 	 <jsp:include page = "../companion/CompanionMenu.jsp"/>
 		
 	<div id = "container">	
-	 <div id="menu1" style = "padding-left : 20px;">
+	 <div id="menu1" style = "padding-left: 5%;padding-right: 5%;height : 700px; overflow-y: auto;">
 	     <br>
+	     <c:forEach var="i" begin="0" end="3">
 	     <table class = "AllChatList" id = "ChatListTable" >
-	     		<tr>
-	     			<td colspan = "2" class = "AllChatTitle">
-	     			<input type = "hidden" id = "chatNum" name = "chatNum" value = "1">
-	     			<label>채팅방 제목</label></td>
-	     			<td><label>&nbsp;&nbsp;모집중</label></td>
-	     		</tr>
-	     		<tr style=  "border-bottom : 1px solid lightgray;">
-	     			<td colspan = "3">
-	     				<i class="material-icons" id = "peopleIcon">group</i>
-	     				&nbsp;&nbsp;&nbsp;<label>(4/6)</label>
-	     			</td>
-	     		</tr>
+	     		<!--  -->
+					<tr>
+		     			<td colspan = "2" class = "AllChatTitle">
+		     			<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "${i}">
+		     			<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "${i}번째 설명입니다.ㄴ">
+		     			<label>채팅방 제목<c:out value = "${i+1}"/></label></td>
+		     			<td><label>&nbsp;&nbsp;모집중</label></td>
+	     			</tr>
+		     		<tr style=  "border-bottom : 1px solid lightgray;">
+		     			<td colspan = "3">
+		     				<i class="material-icons" id = "peopleIcon">group</i>
+		     				&nbsp;&nbsp;&nbsp;<label>(4/6)</label>
+		     			</td>
+		     		</tr>
 	     	</table>
+	     	</c:forEach>
 	   </div>
 	  </div>
 	  <div id="footer" >
@@ -167,14 +125,23 @@
       <!-- Modal content -->
       <div class="checkmodal-content">
           <form>
-          	<table>
-          		<tr>	
-          			<td><h2 style = "align:center;"></h2></td>
-          		</tr>
-          	</table>
+          	   <table id = "checkTable">
+          	   		<tr>
+          	   			<td><h4 id = "checkTitle">채팅방 제목</h4>
+          	   			<input type ="hidden" id = "checkRoomNum" name = "checkRoomNum">
+          	   			</td>
+          	   		</tr>
+          	   		<tr>
+          	   			<td><p id = "checkDetail"><br>채팅방 설명입니다.</p></td>
+          	   		</tr>
+          	   </table>
           </form>
+          <div class="modal-footer">
+ 			 <button type="button" class="btn btn-default" onclick = "close_pop();">닫기</button>
+ 			 <button type="button" class="btn btn-primary" onclick = "enterChatRoom();">들어가기</button>
+ 	      </div>
       </div>
- 
+      
     </div>
 	  
 	  
@@ -197,26 +164,47 @@
 				 		
 			 $("#datepicker1").datepicker();
 		 	 $("#datepicker2").datepicker();
+		 	 
+		 	$(document).on("click","#ChatListTable tr",function(){
+	 	 		var chatList = $(this).parent().children().children();
+	 	 		var chatTitle = chatList.children("label").html(); 
+	 	 		var chatNum = chatList.children("#chatNum").val();
+	 	 		var chatDetail = chatList.children("#chatRoomDetail").val();
+	 	 		
+	 	 		console.log(chatList);
+	 	 		console.log("chatNum :" + chatTitle);
+	 	 		console.log("chatDetail :"+chatDetail);
+	 	 		
+	 	 		var checkTable = $("#checkTable");
+	 	 		
+	 	 		$("#checkTable").children().children().children().children("#checkTitle").text(chatTitle);
+	 	 		
+	 	 		$("#checkTable").children().children().children().children("#checkRoomNum").val(chatNum);
+	 	 		
+	 	 		$("#checkTable").children().children().children().children("#checkDetail").text(chatDetail);
+				
+	 	 		$('#checkModel').show();
+	 	 		 
+	 	 		 
+	 	 		
+	 	 	}); 
 		 	
 		 	 
-		 	 $(function(){
-		 	 	$("#ChatListTable tr").click(function(){
-		 	 		var chatList = $(this).parent().children().children();
-		 	 		var chatNum = chatList.children().val();
-		 	 		
-		 	 		console.log(chatList);
-		 	 		console.log("chatNum :" + chatNum);
-		 	 		
-		 	 		 $('#checkModel').show();
-		 	 		
-		 	 	}); 
-		 	 });
+		 
 		 		
 		 	 
 	        //팝업 Close 기능
 	        function close_pop(flag) {
 	             $('#checkModel').hide();
 	        };
+	        
+	        function enterChatRoom(){
+	        	var chatnum =  $("#checkTable").children().children().children().children("#checkRoomNum").val();
+	 			
+	 			console.log(chatnum + "?");
+	 			
+	 			location.href = "${contextPath}/enterChatting.ch?num=" + chatnum;
+	        }
 
 
 		 		

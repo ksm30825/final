@@ -6,14 +6,17 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/enterRoom.css">
+<style>
+	body {overflow-y: hidden; overflow-x: hidden;}
+</style>
 </head>
 <body>
 	<jsp:include page = "../companion/CompanionMenu.jsp"/>
 	<div id = "container">
 	    <div id="home" >
-	    	<div id = "listWrap" style = "padding-left : 20px;">
+	    	<div id = "listWrap" style = "padding-left: 5%;padding-right: 5%;height : 700px; overflow-y: auto;">
 	 		<br>
-	     	<table class = "MyChatList">
+	     	<table class = "MyChatList" style = "width: 100%;">
 	     		<tr>
 	     			<td colspan = "2" class = "chName"><label>채팅방 제목</label></td>
 	     			<td id = "status"><label>여행준비중</label></td>

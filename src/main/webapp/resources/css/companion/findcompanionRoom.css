@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+.AllChatList {width : 100%;}
+
 .AllChatList td { padding : 10px; }
  
 #joinMenu i{
@@ -38,6 +40,53 @@
             height : auto;                     
  }
 
+
+body {overflow-y: hidden; overflow-x: hidden;}
+	
+	#makeRoomIcon{
+	font-size : 60px;
+	color: #7ba9f2;
+	background : none;
+	float : right ;
+	}
+	
+	#footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:70px;   
+    padding : 0; margin: 0;
+	}
+	
+	#makeRoomBtn{
+		background : none;
+		border : none;
+	}
+	
+	#makeRoomTable td{
+		padding: 5px;
+	}
+	
+	#chatPlace, #chatTitle{
+	    width: 340px !important; 
+	}
+	
+	#datepicker1 , #datepicker2{ width : 150px; display : inline-block; /* margin-right : 10px; */ }
+	
+	#peopleNum {
+	color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+	width : 150px;  height: 30px;
+    line-height: 1.5; margin-left : 38%;
+    border-radius: 3px;}
+    
+    #txtDetail{
+    	resize : none;
+    	width : 340px; height : 100px;
+    	border-radius: 3px;
+    }
 
 
 
