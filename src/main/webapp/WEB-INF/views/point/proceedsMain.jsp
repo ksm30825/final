@@ -43,7 +43,7 @@
 				<jsp:include page="pointNav.jsp"/>				
 			</section>
 			<section class="tableSection">
-			    <div class="container" style="width:80%;height:100%;border:1px solid #ccccff">
+			    <div class="container" style="width:95%;height:100%;border:1px solid #ccccff">
 			    	<table style="width:30%;">
 			  			<tr>
 			  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#">환급신청내역 바로가기</a></td>
@@ -119,7 +119,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 				    	</div>
-				    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
+				    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				  		</div>
 				  	</div>
 				  	
@@ -167,8 +167,8 @@
 							        <td> 1 </td>
 							        <td> 19.06.03 </td>
 							        <td> 32,000P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
+							        <td>	
+							        	<a class="button is-primary " style="height:20px;">보러가기</a>
 							        </td>
 							      </tr>
 							      <tr>
@@ -176,7 +176,7 @@
 							        <td> 19.06.03 </td>
 							        <td> 32,000P </td>
 							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
+							        	<a class="button is-primary " style="height:20px;">보러가기</a>
 							        </td>
 							      </tr>
 							      <tr>
@@ -184,7 +184,7 @@
 							        <td> 19.06.03 </td>
 							        <td> 32,000P </td>
 							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
+							        	<a class="button is-primary " style="height:20px;">보러가기</a>
 							        </td>
 							      </tr>
 							      <tr>
@@ -192,7 +192,7 @@
 							        <td> 19.06.03 </td>
 							        <td> 32,000P </td>
 							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
+							        	<a class="button is-primary " style="height:20px;">보러가기</a>
 							        </td>
 							      </tr>
 							      <tr>
@@ -200,7 +200,7 @@
 							        <td> 19.06.03 </td>
 							        <td> 32,000P </td>
 							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
+							        	<a class="button is-primary " style="height:20px;">보러가기</a>
 							        </td>
 							      </tr>
 							      <tr>
@@ -208,39 +208,7 @@
 							        <td> 19.06.03 </td>
 							        <td> 32,000P </td>
 							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 7 </td>
-							        <td> 19.06.03 </td>
-							        <td> 32,000P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 8 </td>
-							        <td> 19.06.03 </td>
-							        <td> 32,000P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 9 </td>
-							        <td> 19.06.03 </td>
-							        <td> 32,000P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 10 </td>
-							        <td> 19.06.03 </td>
-							        <td> 32,000P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">내 일정 보러가기</a>
+							        	<a class="button is-primary " style="height:20px;">보러가기</a>
 							        </td>
 							      </tr>
 							    </tbody>
@@ -254,7 +222,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;font-size:30px;margin-left:80%;" href="#pt">△Top</a>
+			    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				 		</div>
 				  	</div>
 		    </section>

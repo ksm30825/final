@@ -5,6 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <style>
 	.column .columns {
 		margin:0 !important;
@@ -21,7 +23,7 @@
 				<jsp:include page="pointNav.jsp"/>
 			</section>
 			<section class="section">
-			      <div class="container" style="width:85%;height:100%;border:1px solid #ccccff;margin-top:-60px;">
+			      <div class="container" style="width:95%;height:100%;border:1px solid #ccccff;margin-top:-60px;">
 					<div id="payment">
 						<div id="paymentHeader" style="color:purple; font-size:28px;margin-top:3%;margin-bottom:3%;">
 					    			포인트 충전내역
@@ -80,25 +82,36 @@
 8) 해당 전자금융거래와 관련한 전자적 장치의 접속기록
 									</textarea>
 								</div>
-								<div id="radioBtnArea" style="margin-left:3%;">
-									<input type="radio" name="agreeStatus">동의&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="agreeStatus">비동의
+								<div id="radioBtnArea" style="margin-left:10%;">
+									<input type="radio" name="agreeStatus" value="yes" id="yes" checked>
+										<label for="yes">동의&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+									<input type="radio" name="agreeStatus" value="no" id="no">
+										<label for="no">비동의</label>
 								</div>
-								<div id="payArea" style="width:200px;margin-left:auto;margin-right:auto;">
-									<input type="radio" name="payAmount" value="1000">1,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,000P<br>
-									<input type="radio" name="payAmount" value="3000">3,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3,000P<br>
-									<input type="radio" name="payAmount" value="5000">5,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5,000P<br>
-									<input type="radio" name="payAmount" value="10000">10,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10,000P<br>
-									<input type="radio" name="payAmount" value="30000">30,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30,000P<br>
-									<input type="radio" name="payAmount" value="50000">50,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50,000P<br>
-									<input type="radio" name="payAmount">기타&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number"style="width:100px;" min="0" step="1000" id="etcPay"><br>
+								<div id="payArea" style="width:200px;margin-top:3%;margin-left:auto;margin-right:auto;line-height:160%;">
+									<input type="radio" name="payAmount" value="1000" id="1000">
+										<label for="1000">1,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,000P</label><br>
+									<input type="radio" name="payAmount" value="3000" id="3000">
+										<label for="3000">3,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3,000P</label><br>
+									<input type="radio" name="payAmount" value="5000" id="5000">
+										<label for="5000">5,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5,000P</label><br>
+									<input type="radio" name="payAmount" value="10000" id="10000">
+										<label for="10000">10,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10,000P</label><br>
+									<input type="radio" name="payAmount" value="30000" id="30000">
+										<label for="30000">30,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30,000P</label><br>
+									<input type="radio" name="payAmount" value="50000" id="50000">
+										<label for="50000">50,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50,000P</label><br>
+									<input type="radio" name="payAmount" id="etc">
+										<label for="etc">기타&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											<input type="number"style="width:100px;" min="0" step="1000" id="etcPay">
+										</label><br>
 								</div>
 								<div id="psBottom" align="center" style="margin-top:3%;">
 									포인트를 충전하시겠습니까?						
 								</div>
 								<div id="btnsArea" align="center" style="margin-top:3%; margin-bottom:3%;">
-									<a class="button is-success" style="border-radius:5px; height:25px;"> 충전 </a>
-									<a class="button is-danger" style="border-radius:5px; height:25px;"> 취소 </a>
+									<a class="button is-success" style="border-radius:5px; height:25px;" onclick="payTry()"> 충전 </a>
+									<a class="button is-danger" style="border-radius:5px; height:25px;" onclick="noPay()"> 취소 </a>
 								</div>				
 							</div>
 						</div>
@@ -106,8 +119,118 @@
 			         
 			      </div>
 			   </section>
+			   <section class="section" id="modal">
+				<div class="modal" id="myModal">
+					<div class="modal-background"></div>
+					<div class="modal-card">
+						<header class="modal-card-head">
+							<p class="modal-card-title" align="center" id="modayContent"></p>
+							<button class="delete" id="del"></button>
+						</header>
+						
+						<footer class="modal-card-foot">
+							<div style="margin-left:auto;margin-right:auto;">
+								<a class="button is-success okay" style="border-radius:5px; height:25px;width:60px;"> 확인 </a>
+							</div>
+						</footer>
+					</div>
+				</div>
+			</section>
 		</div>
 	</div>
+	<script>
+		$(function(){
+			$('input[name="payAmount"]').click(function(){
+				
+				var amount = $('input[name="payAmount"]:checked').val();
+	
+				$('input[name="payAmount"]').click(function(){
+			        if(amount!='on'){
+			        	$("#etcPay").css({"visibility":"hidden"});
+			        }
+		        });
+		            
+		        $('#etc').click(function(){
+		        	$("#etcPay").css({"visibility":"visible"});
+		        });
+
+			});
+			
+		})
+		function payTry(){
+			var IMP = window.IMP; // 생략가능
+			IMP.init('imp10998160');
+	
+			var status = $("input[name=agreeStatus]:checked").val();
+			var money = $('input[name="payAmount"]:checked').val();
+			if(money=='on'){
+				money = $("#etcPay").val()
+			}else{
+				money = money;
+			}
+			if(status=="yes"){
+				if(money<1000||money==null){
+					$("#modayContent").text("1000원 이상부터 충전이 가능합니다.");
+					$('#myModal').toggleClass('is-active');
+					$(".okay").click(function(){
+						$('#myModal').removeClass('is-active');
+					});
+				}else{
+					IMP.request_pay({
+					    pg : 'inicis', // version 1.1.0부터 지원.
+					    pay_method : 'card',
+					    merchant_uid : 'merchant_' + new Date().getTime(),
+					    name : '포인트 충전',
+					    amount : money,
+					    buyer_email : 'iamport@siot.do',
+					    buyer_name : '구매자이름',
+					    buyer_tel : '010-1234-5678',
+					    buyer_addr : '서울특별시 강남구 삼성동',
+					    buyer_postcode : '123-456',
+					    m_redirect_url : 'https://www.yourdomain.com/payments/complete'
+					}, function(rsp) {
+					    if ( rsp.success ) {
+					        var msg = '결제가 완료되었습니다.';
+					        /* msg += '고유ID : ' + rsp.imp_uid;
+					        msg += '상점 거래ID : ' + rsp.merchant_uid;
+					        msg += '결제 금액 : ' + rsp.paid_amount;
+					        msg += '카드 승인번호 : ' + rsp.apply_num;
+					         */
+					    } else {
+					        var msg = '결제에 실패하였습니다';
+					        msg += " : "+rsp.error_msg;
+					    }
+					    $("#modayContent").text(msg);
+					    $('#myModal').toggleClass('is-active');
+						$(".okay").click(function(){
+							$('#myModal').removeClass('is-active');
+							location.href="pointMainView.po";
+						});
+						
+					});
+				}
+				
+			}else{
+				$("#modayContent").text("동의를 하셔야 충전이 가능합니다.");
+				$('#myModal').toggleClass('is-active');
+				$(".okay").click(function(){
+					$('#myModal').removeClass('is-active');
+				});
+			}
+		}
+		function noPay(){
+			$("#modayContent").text("결제를 취소하셨습니다.");
+			$('#myModal').toggleClass('is-active');
+			$('.modal-background, .modal-close').click(function() {
+				$('#myModal').removeClass('is-active');
+				location.href="pointMainView.po";
+			});
+			$(".okay").click(function(){
+				$('#myModal').removeClass('is-active');
+				location.href="pointMainView.po";
+			});
+		}
+	</script>	
 	
 </body>
 </html>

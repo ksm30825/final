@@ -25,7 +25,7 @@ public class PointController {
 	}
 	//포인트 충전하는 페이지로 이동--수민
 	@RequestMapping("/toPayView.po")
-	public String toPayView(int memberId, String payAmount) {
+	public String toPayView(/* int memberId, String payAmount */) {
 		
 		return "point/payment";
 	}
