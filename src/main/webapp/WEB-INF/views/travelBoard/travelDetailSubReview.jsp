@@ -75,7 +75,7 @@
 						<td>☆★★★★</td>
 						<td>
 							<span>리뷰내용리뷰내용리뷰내용</span>
-							<a class="tag is-danger" onclick="insertReview()">리뷰삭제</a>
+							<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a>
 						</td>
 						<td>유저01</td>
 					</tr>
@@ -133,7 +133,7 @@
 		    <div class="modal-card">
 		    
 				<header class="modal-card-head">
-					<p class="modal-card-title">구매리뷰 작성하기</p>
+					<p class="modal-card-title"><i class="fas fa-sticky-note"></i>&nbsp;구매리뷰 작성하기</p>
 					<button class="cancel delete"></button>
 				</header>
 			
@@ -195,6 +195,16 @@
 		$(".cancel").click(function(){
 			$('#myModal').removeClass('is-active');
         });
+	}
+	
+	function deleteReview() {
+		$.ajax({
+			url : "deliteReview.tb",
+			data : {},
+			success : function(data) {
+				alert("리뷰삭제");
+			}
+		})
 	}
 	
 </script>

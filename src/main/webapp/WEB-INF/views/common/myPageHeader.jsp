@@ -96,7 +96,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a href="#">
+	        <a href="myBuyTravelListView.tb">
 	          <span class="icon"><i class="fas fa-shopping-basket"></i></span>
 	          <span>구매한 일정</span>
 	        </a>

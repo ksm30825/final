@@ -11,28 +11,6 @@
 		padding: 3rem 1.5rem;
 		padding-top: 0;
 	}
-	.travelListBox {
-		background: white;
-		display: inline-block;
-		padding: 20px;
-		margin: 2em;
-		border-radius: 20px;
-		border: 2px solid rgb(137, 100, 179);
-	}
-	.travelListBox:hover {
-		cursor: pointer;
-	}
-	.travelListImgBox {
-		width: 200px;
-		height: 200px;
-		border-radius: 20px;
-		border: 2px solid black;
-		text-align: center;
-		
-	}
-	.travelListTable tr td p{
-		text-align: center;
-	}
 </style>
 </head>
 <body>
@@ -41,168 +19,67 @@
 	<!-- 본문 -->
 	<div class="columns is-mobile" id="travelListArea" align="center">
 		<div class="column">
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-				<div class="travelListImgBox">
-					<img src="">
-				</div>
-				<br>
-				<table class="travelListTable" align="center">
-					<tr>
-						<td colspan="3">
-							<p>[여행스타일] 국가 - 도시</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3"><p>[00DAYS] 00년 00월 00일</p></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-						<p class="subtitle" style="font-weight: bold; font-size: 2em;">TITLE</p>
-						</td>
-					</tr>
-					<tr>
-						<td><p>작성자</p></td>
-						<td><i class="fas fa-shopping-cart"></i> 0</td>
-						<td><i class="fas fa-star"></i> 0</td>
-					</tr>
-				</table>
-			</div>
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-				<div class="travelListImgBox">
-					<img src="">
-				</div>
-				<br>
-				<table class="travelListTable" align="center">
-					<tr>
-						<td colspan="3">
-							<p>[여행스타일] 국가 - 도시</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3"><p>[00DAYS] 00년 00월 00일</p></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-						<p class="subtitle" style="font-weight: bold; font-size: 2em;">TITLE</p>
-						</td>
-					</tr>
-					<tr>
-						<td><p>작성자</p></td>
-						<td><i class="fas fa-shopping-cart"></i> 0</td>
-						<td><i class="fas fa-star"></i> 0</td>
-					</tr>
-				</table>
-			</div>
+			<div class="ui special cards">
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-				<div class="travelListImgBox">
-					<img src="">
-				</div>
-				<br>
-				<table class="travelListTable" align="center">
-					<tr>
-						<td colspan="3">
-							<p>[여행스타일] 국가 - 도시</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3"><p>[00DAYS] 00년 00월 00일</p></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-						<p class="subtitle" style="font-weight: bold; font-size: 2em;">TITLE</p>
-						</td>
-					</tr>
-					<tr>
-						<td><p>작성자</p></td>
-						<td><i class="fas fa-shopping-cart"></i> 0</td>
-						<td><i class="fas fa-star"></i> 0</td>
-					</tr>
-				</table>
-			</div>
+				<div class="card" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
+				
+					<div class="blurring dimmable image">
+						<div class="ui dimmer">
+							<div class="content">
+								<div class="center">
+									<p class="title is-4" style="color: white;">TITLE</p>
+								</div>
+							</div>
+						</div>
+						<img src="resources/images/sample1.jpg">
+					</div>
+					
+					<div class="content">
+						<div class="header">
+							<p class="title is-3">TITLE</p>
+						</div>
+						<div class="meta">
+							<div>
+								<a>@도시 </a>
+								<a>@도시 </a>
+							</div>
+							<p class="date"><small>[00DAYS] 2019-01-01 ~ 2019-01-10</small></p>
+							<a class="button is-small"> 
+								<span class="icon is-small"><i class="fa fa-user"></i></span> 
+								<span> 작성자 </span>
+							</a>
+						</div>
+					</div>
+					
+					<div class="extra content">
+							<a>#먹방여행 </a>
+							<a>#혼자여행 </a>
+							<a>#자유여행 </a>
+					</div>
+					<div class="extra content">
+						<span>
+							<a data-tooltip="구매수"><i class="fas fa-shopping-cart"></i>&nbsp;&nbsp;0</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<a data-tooltip="좋아요수"><i class="fas fa-star"></i>&nbsp;&nbsp;0</a>
+						</span>
+					</div>	
+				</div>	<!-- class="card" 글 하나-->
+			  
+		</div>	<!-- class="ui special cards" -->
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-				<div class="travelListImgBox">
-					<img src="">
-				</div>
-				<br>
-				<table class="travelListTable" align="center">
-					<tr>
-						<td colspan="3">
-							<p>[여행스타일] 국가 - 도시</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3"><p>[00DAYS] 00년 00월 00일</p></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-						<p class="subtitle" style="font-weight: bold; font-size: 2em;">TITLE</p>
-						</td>
-					</tr>
-					<tr>
-						<td><p>작성자</p></td>
-						<td><i class="fas fa-shopping-cart"></i> 0</td>
-						<td><i class="fas fa-star"></i> 0</td>
-					</tr>
-				</table>
-			</div>
 			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-				<div class="travelListImgBox">
-					<img src="">
-				</div>
-				<br>
-				<table class="travelListTable" align="center">
-					<tr>
-						<td colspan="3">
-							<p>[여행스타일] 국가 - 도시</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3"><p>[00DAYS] 00년 00월 00일</p></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-						<p class="subtitle" style="font-weight: bold; font-size: 2em;">TITLE</p>
-						</td>
-					</tr>
-					<tr>
-						<td><p>작성자</p></td>
-						<td><i class="fas fa-shopping-cart"></i> 0</td>
-						<td><i class="fas fa-star"></i> 0</td>
-					</tr>
-				</table>
-			</div>
-			
-			<div class="travelListBox" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-				<div class="travelListImgBox">
-					<img src="">
-				</div>
-				<br>
-				<table class="travelListTable" align="center">
-					<tr>
-						<td colspan="3">
-							<p>[여행스타일] 국가 - 도시</p>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3"><p>[00DAYS] 00년 00월 00일</p></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-						<p class="subtitle" style="font-weight: bold; font-size: 2em;">TITLE</p>
-						</td>
-					</tr>
-					<tr>
-						<td><p>작성자</p></td>
-						<td><i class="fas fa-shopping-cart"></i> 0</td>
-						<td><i class="fas fa-star"></i> 0</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</div>
+		</div>	<!-- class="column" -->
+	</div>	<!-- class="columns is-mobile" -->
+	
+	
+<script>
+	
+	//각 글에 마우스 올렸을 때 설명글
+	$('.special.cards .image').dimmer({
+	  on: 'hover'
+	});
+	
+</script>
 </body>
 </html>
