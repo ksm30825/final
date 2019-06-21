@@ -20,10 +20,10 @@
 	<div class="columns is-mobile" id="travelListArea" align="center">
 		<div class="column">
 			
+			<!-- 게시글 영역 -->
 			<div class="ui special cards">
 			
 				<div class="card" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-				
 					<div class="blurring dimmable image">
 						<div class="ui dimmer">
 							<div class="content">
@@ -65,9 +65,9 @@
 						</span>
 					</div>	
 				</div>	<!-- class="card" 글 하나-->
+				
 			  
-		</div>	<!-- class="ui special cards" -->
-			
+			</div>	<!-- class="ui special cards" -->
 			
 		</div>	<!-- class="column" -->
 	</div>	<!-- class="columns is-mobile" -->

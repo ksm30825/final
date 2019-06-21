@@ -97,4 +97,18 @@ public class TravelBoardController {
 		
 		return "travel/travelEditor";
 	}
+	
+	//마이페이지 / 좋아요 / 여행일정 좋아요 보기 - 예랑
+	@RequestMapping("myLikeyTravelListView.tb")
+	public String myLikeyTravelListView() {
+		
+		return "travelBoard/myLikeyTravelList";
+	}
+	
+	//마이페이지 / 좋아요 여행일정 좋아요 취소 - 예랑
+	@RequestMapping("myLikeyTravelCancel.tb")
+	public String myLikeyTravelCancel() {
+		
+		return "travelBoard/myLikeyTravelList";
+	}
 }

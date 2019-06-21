@@ -9,39 +9,35 @@
 <style>
 	#calendar{
 		display: inline-block;
-		width: 49%;
-		height: 300px;
+		width: 35%;
+		height: 400px;
 		border: 1px solid black;
 		margin-right: 2%;
 		overflow: scroll;
+		overflow-x:hidden;
 		float: left;
 	}
 	#calendarArea {
 		text-align: left;
-		width: 1200px;
+		width: 100%;
 		white-space:nowrap; 
 		overflow:auto; 
 	}
 	#calendarTable {
-		text-align: left;
-		table-layout: fixed;
+		width: 100%;
 	}
-	#calendarTable tr th {
-		width: 300px;
+	#calendarTable th {
+		width: 20%;
 		text-align: center;
-		border: 1px solid white;
-		background: rgb(198, 151, 217);
-		padding-left: 2em;
-		padding-right: 2em;	
 	}
-	#calendarTable tr td {
-		border-top: 1px solid lightgray;
+	#calendarTable td {
+		text-align: center;
 	}
 	
 	#map{
 		display: inline-block;
-		width: 49%;
-		height: 300px;
+		width: 62%;
+		height: 400px;
 		border: 1px solid black;
 		overflow: scroll;
 		float: right;
@@ -55,52 +51,52 @@
 <body>
 	<!-- 서브메뉴 본문(일정표) -->
 	<section class="section" id="detailSub">
-		<div class="container" id="detailSubContent" align="center">
+		<div id="detailSubContent" align="center">
+			
 			<div id="calendar">
-				<div id="calendarArea">
+				<div class="calendarArea">
+				
+					<!-- DAY1 -->
+					<div class="tabs is-fullwidth" style="margin-bottom: 0.5em;">
+						<ul>
+							<li>
+								<a>
+								<span class="icon"><i class="fa fa-angle-left"></i></span>
+								</a>
+							</li>
+							<li>
+								<span><strong>DAY 1</strong></span>
+							</li>
+							<li>
+								<a>
+								<span class="icon"><i class="fa fa-angle-right"></i></span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div align="right" style="border-bottom: 1px solid lightgray; padding-bottom: 0.3em;">
+						<input type="checkbox" id="timeCheck" checked="checked">
+						<label for="timeCheck">시간 표시</label>
+					</div>
 					<table id="calendarTable">
-						<tr>
-							<th>DAY 1</th>
-							<th>DAY 2</th>
-							<th>DAY 3</th>
-							<th>DAY 4</th>
-							<th>DAY 5</th>
-							<th>DAY 6</th>
-							<th>DAY 7</th>
-							<th>DAY 8</th>
-							<th>DAY 9</th>
-							<th>DAY 10</th>
-						</tr>
 						<% for(int i = 1; i < 25; i++) { %>
 						<tr>
 							<% if(i < 10) { %>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
-							<td>0<%= i %></td>
+							<th class="times">0<%= i %></th>
 							<% }else { %>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
-							<td><%= i %></td>
+							<th class="times"><%= i %></th>
 							<% } %>
+							<td>
+								<span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; 장소이름</span>
+							</td>
 						</tr>
 						<% } %>
 					</table>
+					<!-- DAY1 끝 -->
+					
 				</div>
 			</div>
+			
 			<div id="map">
 				<select id="mapDaySelect" onchange="dayMapSelect()">
 					<option value="1">DAY 1</option>
@@ -126,6 +122,16 @@
 			}
 		});
 	}
+	
+	$("#timeCheck").change(function() {
+		if($(this).prop("checked")) {
+			console.log("시간표시");
+			$(".times").removeAttr("style");
+		}else {
+			console.log("시간해제");
+			$(".times").css("display","none");
+		}
+	});
 </script>
 
 </body>

@@ -55,8 +55,8 @@
 </style>
 <body>
 	<!-- 서브메뉴 본문(구매리뷰) -->
-	<section class="section" id="detailSub">
-		<div class="container" id="detailSubContent" align="center">
+	<section class="section" id="detailSub" style="padding-top: 0;">
+		<div id="detailSubContent" align="center">
 			<div id="reviewBtnArea">
 				<a class="button is-info" data-target="#myModal" onclick="reviewForm()">리뷰작성</a>
 			</div>
@@ -127,39 +127,37 @@
 	</section>
 	
 	<!-- 리뷰용 모달 -->
-	<section class="section" id="modal">
-		<div class="modal" id="myModal">
-		    <div class="modal-background"></div>
-		    <div class="modal-card">
-		    
-				<header class="modal-card-head">
-					<p class="modal-card-title"><i class="fas fa-sticky-note"></i>&nbsp;구매리뷰 작성하기</p>
-					<button class="cancel delete"></button>
-				</header>
-			
-				<section class="modal-card-body">
-					<div class="starArea" align="center">
-						<span class="title is-5">별점 : </span>
-						<a class="starImg" score="1"><i class="far fa-star"></i></a>
-						<a class="starImg" score="2"><i class="far fa-star"></i></a>
-						<a class="starImg" score="3"><i class="far fa-star"></i></a>
-						<a class="starImg" score="4"><i class="far fa-star"></i></a>
-						<a class="starImg" score="5"><i class="far fa-star"></i></a>
-					</div>
-					
-					<div class="reviewContentArea" align="center">
-						<textarea rows="10" cols="50" placeholder="리뷰 내용을 작성해주세요." style="resize: none" name="reviewContent"></textarea>
-					</div>
-				</section>
-			
-				<footer class="modal-card-foot" style="justify-content: center">
-					<a class="button is-primary" id="insertReview">리뷰작성</a>
-					<a class="button cancel">취소하기</a>
-				</footer>
-			
-		    </div>
-		</div>
-	</section>
+	<div class="modal" id="myModal">
+	    <div class="modal-background"></div>
+	    <div class="modal-card">
+	    
+			<header class="modal-card-head">
+				<p class="modal-card-title"><i class="fas fa-sticky-note"></i>&nbsp;구매리뷰 작성하기</p>
+				<button class="cancel delete"></button>
+			</header>
+		
+			<section class="modal-card-body">
+				<div class="starArea" align="center">
+					<span class="title is-5">별점 : </span>
+					<a class="starImg" score="1"><i class="far fa-star"></i></a>
+					<a class="starImg" score="2"><i class="far fa-star"></i></a>
+					<a class="starImg" score="3"><i class="far fa-star"></i></a>
+					<a class="starImg" score="4"><i class="far fa-star"></i></a>
+					<a class="starImg" score="5"><i class="far fa-star"></i></a>
+				</div>
+				
+				<div class="reviewContentArea" align="center">
+					<textarea rows="10" cols="50" placeholder="리뷰 내용을 작성해주세요." style="resize: none" name="reviewContent"></textarea>
+				</div>
+			</section>
+		
+			<footer class="modal-card-foot" style="justify-content: center">
+				<a class="button is-primary" id="insertReview">리뷰작성</a>
+				<a class="button cancel">취소하기</a>
+			</footer>
+		
+	    </div>
+	</div>
 	
 	
 <script>

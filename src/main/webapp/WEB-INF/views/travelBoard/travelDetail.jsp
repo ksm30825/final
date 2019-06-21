@@ -6,69 +6,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-	.breadcrumb li a {
-		color:#A276FF;
-	}
-	.breadcrumb li a:hover {
-		color:#C6ACFE;
-	}
-	.breadcrumb li.is-active a {
-		color:black;
-		font-weight:bold;
-	}
-	.column .columns {
-		margin:0 !important;
-	}
-	.small-title {
-		color: rgb(137, 100, 179);
-		font-weight: bold;
-		font-size: 1.3em;
-	}
-	
 	#bell:hover {
 		color: red;
 		cursor: pointer;
-	}
-	.button.is-primary {
-		border-radius: 10px;
-		margin-left: 1em;
-	}
-	#detailTitle {
-		display: flex;
-	}
-	.container-left {
-		flex: 3;
-	}
-	.container-right {
-		text-align: right;
-	}
-	#countryTitle {
-		color: rgb(137, 100, 179);
-		font-weight: bold;
-		font-size: 1.2em;
-	}
-	#dayTitle {
-		font-size: 1.2em;
-		color: black;
-		font-weight: bold;
-	}
-	.subMenu {
-		display: inline-block;
-	}
-	#detailSub .tabs.is-boxed a{
-		font-size: 1.2em;
-	}
-	.tabs.is-boxed li.is-active a {
-		background: rgb(103, 171, 214) !important;
-	}
-	.is-active a span {
-		color: white;
-		font-weight: bold;
-	}
-	
-	#travelThema {
-		background: lightgray;
-		padding: 1.5em;
 	}
 	.title.thema {
 		padding-bottom: 0.7em;
@@ -77,236 +17,207 @@
 		display: inline;
 		padding-left: 1em;
 	}
-	
-	.dayTable {
-		width: 100%;
-		display: table;
-		border: 1px solid lightgray;
+	.dayTitle span {
+		color: rgb(52, 73, 94);
 	}
-	.day {
+	.description {
 		background: rgb(52, 73, 94);
-		border: 1px solid rgb(52, 73, 94);
 		color: white;
-		width: 15%;
-		vertical-align: middle;
-	}
-	.dayDetail {
-		padding-left: 1em;
-		border: 1px solid lightgray;
-	}
-	.city {
-		font-size: 1.6em;
-	}
-	.number {
-		background: rgb(103, 171, 214) !important;
-		color: white;
-		margin-left: 40%;
-	}
-	.dayNumber {
-		vertical-align: middle;
-		align-items: center;
-	}
-	.photo {
-		width: 150px;
-		height: 150px;
-		background: red;
-		margin-top: 1em;
-		margin-bottom: 1em;
-		margin-right: 1em;
-	}
-	.title.is-5{
-		margin-top: 1em;
-	}
-	.markerArea {
-		float: right;
-		margin: 1em;
-	}
-	.markerArea .subtitle.is-1 {
-		padding-left: 0.5em;
-	}
-	.traffic {
-		background: rgb(178, 214, 237);
-	}
-	.traffic td {
 		padding: 1em;
-		vertical-align: middle;
-	}
-	.button.is-white, .button.is-dark {
-		border-radius: 10px;
-		margin-left: 1em;
-		margin-right: 1em;
-	}
-	#paymentInfo {
-		background: rgb(178, 214, 237);
-		padding: 2.5em;
-		text-align: center;
+		
 	}
 </style>
 </head>
 <body>
 	<jsp:include page="travelSearchBar.jsp" />
 	
-	<div class="columns is-mobile">
+	
+	<div class="coumns">
 		<div class="column">
-			
-			<!-- 타이틀 부분 -->
-			<section class="section" id="headerSection">
-				<div class="container" id="detailTitle">
-					<div class="container-left">
-					<span class="title">[여행스타일] 국가 - 도시 TITLE &nbsp;<i class="fas fa-bell" id="bell" onclick="penalty()"></i></span>
+		
+			<!-- 버튼영역 -->
+			<section class="section" style="padding-top:0; padding-bottom:0;">
+				<div class="columns">
+				
+					<div class="column" id="btnArea" align="right">
+						<a class="button is-primary" onclick="travelLikey()">
+							<span class="icon"><i class="far fa-star"></i></span>
+				          	<span> &nbsp;좋아요 </span>
+				        </a>
+						&nbsp;
+						<a class="button is-primary" onclick="linkCopy()">
+							<span class="icon"><i class="fas fa-share-alt"></i></span>
+				          	<span> &nbsp;링크공유 </span>
+				        </a>
 					</div>
-					<a class="button is-primary" onclick="travelLikey()">
-						<span class="icon"><i class="far fa-star"></i></span>
-			          	<span> &nbsp;좋아요 </span>
-			        </a>
-					&nbsp;
-					<a class="button is-primary" onclick="linkCopy()">
-						<span class="icon"><i class="fas fa-share-alt"></i></span>
-			          	<span> &nbsp;링크공유 </span>
-			        </a>
-				</div>
-				<div class="container">
-					<span id="countryTitle"><i class="fas fa-map-marker-alt"></i> &nbsp;Australia / 시드니, 멜버른</span><span id="dayTitle">&nbsp;&nbsp;9박 10일</span>
+					
 				</div>
 			</section>
 			
-			<jsp:include page="travelDetailSubNav.jsp" />
+			 <!-- 상단 타이틀 -->
+			<section class="section" style="padding-bottom:0;">
+				<div class="columns">
+					<div class="column" id="title">
+						<h3 class="title is-3">
+							<span class="icon" style="color:skyblue">
+								<i class="fas fa-plane"></i>
+							</span>
+							<span>&nbsp; TITLE</span>
+							<span id="bell" data-tooltip="이 글 신고하기"><i class="fas fa-bell" onclick="penalty()"></i></span>
+						</h3>
+						
+						<h6 class="subtitle is-6">
+							<i class="fas fa-map-marker-alt"></i>
+							Australia / 시드니, 멜버른
+							&nbsp;&nbsp;<span style="color:gray;"><strong>9박 10일</strong></span>
+						</h6>
+					</div>
+				</div>
+			</section>	<!-- 상단 타이틀 -->
 			
+			<!-- 서브메뉴바 -->
+			<section class="section" style="padding-top:0;">
+				<div class="columns">
+					<div class="column" id="title">
+						<jsp:include page="travelDetailSubNav.jsp" />
+					</div>
+				</div>
+			</section>	<!-- 서브메뉴바 -->
 			
 			<!-- 여행테마 영역 -->
-			<section class="section">
-				<div class="container" id="travelThema">
-					<ul id="travelThemaTag">
-						<li><p class="title thema"><i class="fas fa-tags"></i> 여행테마</p></li>
-						<li>
-							<div class="buttons themaBtn">
-        						<a class="button is-info is-rounded">#여행테마1</a>
-      						</div>
-      						<div class="buttons themaBtn">
-        						<a class="button is-info is-rounded">#여행테마2</a>
-      						</div>
-						</li>
-						
-					</ul>
-				</div>
+			<section class="section" style="background: #C6E4F3; padding: 2em;">
+				<ul id="travelThemaTag">
+					<li><p class="title thema"><i class="fas fa-tags"></i> 여행테마</p></li>
+					<li>
+						<div class="buttons themaBtn">
+      						<a class="button is-info is-rounded">#여행테마1</a>
+    						</div>
+    						<div class="buttons themaBtn">
+      						<a class="button is-info is-rounded">#여행테마2</a>
+   						</div>
+					</li>
+				</ul>
 			</section>
 			
-			<!-- 여행 상세일정 -->
-			<section class="section">
-				<div class="container travelDetail">
-					<table class="dayTable">
-						<tr>
-							<th class="day"><p align="center">DAY 1</p></th>
-							<th class="dayDetail" colspan="3">2019년 00월 00일 (월)<br><span class="city">도시명, 도시명</span></th>
-						</tr>
-						
-						<tr>
-							<td rowspan="2" class="dayNumber">
-								<div class="number">1</div>
-							</td>
-							<td rowspan="2" colspan="1" style="width: 20%;">
-								<div class="photo"></div>
-							</td>
-							<td rowspan="1">
-								<p class="title is-5">장소명</p>
-								<p class="title is-6">장소분류</p>
-							</td>
-							<td rowspan="1" colspan="1" class="markerArea">
-								<a class="subtitle is-1"><i class="fas fa-info-circle"></i></a>
-								<a class="subtitle is-1"><i class="fas fa-map-marker-alt"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" rowspan="1">
-								<span>본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문</span>
-							</td>
-						</tr>
-						<tr class="traffic">
-							<td><p class="title is-3" align="center"><i class="fas fa-ellipsis-h"></i></p></td>
-							<td colspan="3">
-								<p>0.00km  |  이동수단  |  00시간 00분 소요  |  $ 0.00  /  ￦ 00000</p>
-							</td>
-						</tr>
-						
-						<tr>
-							<td rowspan="2" class="dayNumber">
-								<div class="number">2</div>
-							</td>
-							<td rowspan="2" colspan="1" style="width: 20%;">
-								<div class="photo"></div>
-							</td>
-							<td rowspan="1">
-								<p class="title is-5">장소명</p>
-								<p class="title is-6">장소분류</p>
-							</td>
-							<td rowspan="1" colspan="1" class="markerArea">
-								<a class="subtitle is-1"><i class="fas fa-info-circle"></i></a>
-								<a class="subtitle is-1"><i class="fas fa-map-marker-alt"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" rowspan="1">
-								<span></span>
-							</td>
-						</tr>
-						
-					</table>
-				</div>
+			<!-- 상세일정 영역 -->
+			<div class="columns">
+			
+				<!-- 상세일정 메뉴바 영역 -->
+				<div class="column is-3">
+					<section class="section" style="padding-left: 0px;">
+						<aside class="menu">
+							<p class="menu-label">일자별 상세글</p>
+							<ul class="menu-list">
+								<li><a class="is-active"><strong>DAY 1</strong></a></li>
+								<li><a><strong>DAY 2</strong></a></li>
+								<li><a><strong>DAY 3</strong></a></li>
+								<li><a><strong>DAY 4</strong></a></li>
+								<li><a><strong>DAY 5</strong></a></li>
+								<li><a><strong>DAY 6</strong></a></li>
+								
+							</ul>
+							<p class="menu-label">사진 갤러리</p>
+							<ul class="menu-list">
+								<li><a>전체보기</a></li>
+								<li><a>일자별 모아보기</a>
+									<ul>
+										<li><a>DAY 1</a></li>
+										<li><a>DAY 2</a></li>
+										<li><a>DAY 3</a></li>
+										<li><a>DAY 4</a></li>
+										<li><a>DAY 5</a></li>
+										<li><a>DAY 6</a></li>
+									</ul>
+								</li>
+							</ul>
+						</aside>
+					</section>
+				</div>	<!-- <div class="column is-3"> -->
 				
-				<br><br><br>
-				
-				<div class="container travelDetail">
-					<table class="dayTable">
-						<tr>
-							<th class="day"><p align="center">DAY 2</p></th>
-							<th class="dayDetail" colspan="3">2019년 00월 00일 (화)<br><span class="city">도시명, 도시명</span></th>
-						</tr>
+				<!-- 상세일정 본문 영역 -->
+				<div class="column is-9" >
+					<section class="section" style="margin-top :3.15em;">
+					
+						<!--  -->	
 						
-						<tr>
-							<td rowspan="2" class="dayNumber">
-								<div class="number">1</div>
-							</td>
-							<td rowspan="2" colspan="1" style="width: 20%;">
-								<div class="photo"></div>
-							</td>
-							<td rowspan="1">
-								<p class="title is-5">장소명</p>
-								<p class="title is-6">장소분류</p>
-							</td>
-							<td rowspan="1" colspan="1" class="markerArea">
-								<a class="subtitle is-1"><i class="fas fa-info-circle"></i></a>
-								<a class="subtitle is-1"><i class="fas fa-map-marker-alt"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" rowspan="1">
-								<span>본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문</span>
-							</td>
-						</tr>
-						<tr class="traffic">
-							<td><p class="title is-3" align="center"><i class="fas fa-ellipsis-h"></i></p></td>
-							<td colspan="3">
-								<p>0.00km</p>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</section>
+<div class="ui divided items">
+
+	<!-- 날짜별 타이틀 -->
+	<div class="dayTitle" style="padding-bottom: 0.5em;">
+		<span class="title is-3">DAY 1</span>&nbsp; <span>2019년 00월 00일 (화)</span>
+		<p class="city">도시명, 도시명</p>
+	</div>
+
+	<!-- 날짜별 상세 내용(장소분류) -->
+	<div class="item">
+		<div class="image">
+			<img src="resources/images/sample1.jpg">
+		</div>
+		
+		<div class="content">
+			<a class="header">1&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
+			<div class="meta">
+				<span class="cinema">
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				</span>
+			</div>
 			
-			<hr>
+			<div class="extra">
+				<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
+				<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
+			</div>
+		</div>
+	</div>	<!-- <div class="item"> -->
+	
+	<!-- 교통 상세내용 -->
+	<div class="description">
+		<p><i class="fas fa-ellipsis-h"></i>&nbsp;&nbsp; 0.00km  |  이동수단  |  00시간 00분 소요  |  $ 0.00  /  ￦ 00000</p>
+	</div>
+	
+	<!-- 날짜별 상세 내용(장소분류) -->
+	<div class="item">
+		<div class="image">
+			<img src="resources/images/sample1.jpg">
+		</div>
+		
+		<div class="content">
+			<a class="header">2&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
+			<div class="meta">
+				<span class="cinema">
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+				</span>
+			</div>
 			
-			<!-- 결제안내 -->
-			<section class="section">
-				<div class="container" id="paymentInfo">
-					<p>이 일정의 더 자세한 내용이 보고 싶으세요?</p>
-					<p class="title is-4">[ 1000P ]</p>
-					<div id="btnArea">
-						<a class="button is-white">결제하기</a>
-						<a class="button is-dark" style="color: white;" onclick="location.href='travelList.tb'">목록으로</a>
-					</div>
-				</div>
-			</section>
-		</div> <!-- class="column" -->
+			<div class="extra">
+				<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
+				<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
+			</div>
+		</div>
+	</div>	<!-- <div class="item"> -->
+	
+</div>
+
+
+
+				
+						
+						
+					</section>
+				</div>	<!-- class="column is-9" -->
+			
+			</div>	<!-- <div class="columns"> -->
+				
+				
+				
+		</div>
 	</div>
 
 <script>
@@ -354,6 +265,18 @@
 			}
 		});
 	});
+	
+	$(".place").click(function() {
+		alert("여행지 정보로 연결");
+	});
+	
+	
+	$(".map").click(function() {
+		var map = $("#map").offset().top;
+		$("body").animate({
+			scrollTop: map
+		}, 500);
+	})
 	
 </script>
 </body>
