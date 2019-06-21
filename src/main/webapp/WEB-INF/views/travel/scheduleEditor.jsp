@@ -7,13 +7,12 @@
 <title>TI - Schedule Editor</title>
 </head>
 <style>
-	
+	.dayPanel {
+		display:inline-block;
+	}
 	.panel-heading {
 		background:#8e44ad;
 		color:white;
-	}
-	.panel-tabs {
-		overflow-x:auto;
 	}
 	.notification {
 		background:#C6E4F3;
@@ -32,13 +31,245 @@
 		cursor:pointer;
 		color:#7AD9FC;
 	}
+	.overlay {
+	  height: 100%;
+	  width: 0;
+	  position: fixed;
+	  z-index: 10;
+	  top: 0;
+	  left: 0;
+	  background-color: rgb(0,0,0);
+	  background-color: rgba(0,0,0, 0.9);
+	  overflow-x: auto;
+	  transition: 0.9s;
+	}
+	.overlay-content {
+	  position: relative;
+	  top: 25%;
+	  width: 100%;
+	  text-align: center;
+	  margin-top: 30px;
+	}
+	.overlay .closebtn {
+	  position: absolute;
+	  top: 100px;
+	  right: 45px;
+	  font-size: 60px;
+	}
+	@media screen and (max-height: 450px) {
+	  .overlay a {font-size: 20px}
+	  .overlay .closebtn {
+	  font-size: 40px;
+	  top: 15px;
+	  right: 35px;
+	  }
+	}
+	
 </style>
 <body>
+	<div id="myNav" class="overlay">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<div class="overlay-content">
+		
+			<% for(int i = 0; i < 9; i++) { %>
+			<nav class="panel dayPanel">
+				<div class="panel-heading" align="center"
+					style="background: whitesmoke; color: black;; height: 30px">
+					<p class="help">2019-07-01</p>
+				</div>
+				<div class="panel-heading columns is-mobile" align="center"
+					style="margin: 0">
+					<div class="column is-2" style="padding-left: 0">
+						<a class="button is-small dayLeftBtn"> 
+							<span class="icon">
+								<i class="fas fa-2x fa-caret-left"></i>
+							</span>
+						</a>
+					</div>
+					<div class="column is-8"
+						style="padding-left: 0; padding-right: 0">
+						<span>DAY 1</span>&nbsp; <input class="input dayMemo is-small"
+							type="text" placeholder="MEMO">
+					</div>
+					<div class="column is-2" style="padding-right: 0">
+						<a class="button is-small dayRightBtn"> 
+							<span class="icon">
+								<i class="fas fa-2x fa-caret-right"></i>
+							</span>
+						</a>
+					</div>
+				</div>
+				<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
+				<ul class="connectedSortable menu-list">
+					<li class="ui-state-default panel-block">
+						<div class="media-left">
+							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+							</span>
+						</div>
+						<div class="media-content">
+							<p>Item 1</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-left">
+							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+							</span>
+						</div>
+						<div class="media-content">
+							<p>Item 2</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-left">
+							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+							</span>
+						</div>
+						<div class="media-content">
+							<p>Item 3</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-left">
+							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+							</span>
+						</div>
+						<div class="media-content">
+							<p>Item 4</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-left">
+							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+							</span>
+						</div>
+						<div class="media-content">
+							<p>Item 5</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+				</ul>
+				<ul class="connectedSortable menu-list"
+					style="display: none">
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>2- Item 1</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>2- Item 2</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>2- Item 3</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>2- Item 4</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>2- Item 5</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+				</ul>
+				<ul class="connectedSortable menu-list"
+					style="display: none">
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>3- Item 1</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>3- Item 2</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>3- Item 3</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>3- Item 4</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+					<li class="ui-state-default panel-block">
+						<div class="media-content">
+							<p>3- Item 5</p>
+						</div>
+						<div class="media-right">
+							<button class="delete" aria-label="close"></button>
+						</div>
+					</li>
+				</ul>
+				<div class="panel-block">
+					<button class="button is-primary is-outlined is-fullwidth"
+						onclick="$('#scheduleInfoModal').toggleClass('is-active')">
+						일정 추가</button>
+				</div>
+			</nav>
+			<% } %>
+			
+		</div>
+	</div>
+
+
+
+	<!-- ------------------------------------------------------------- -->
 	<div class="columns">
 		<div class="column">
 			<section class="section">
 				<div class="columns">
 					<div class="column is-3">
+						<div style="height:50px">
+							<span style="font-size:20px;cursor:pointer" onclick="openNav()">&#9776; 일정 펼쳐보기</span>
+						</div>
 						<nav class="panel">
 							<div class="panel-heading" align="center" 
 							style="background:whitesmoke;color:black;;height:30px">
@@ -52,7 +283,7 @@
 										</span>
 									</a>
 								</div>
-								<div class="column is-8 dayTitle" style="padding-left:0; padding-right:0">
+								<div class="column is-8 dayTitle"  style="padding-left:0; padding-right:0">
 									<span>DAY 1</span>&nbsp;
 									<input class="input dayMemo is-small" type="text" placeholder="MEMO"></div>
 								<div class="column is-2" style="padding-right:0">
@@ -222,8 +453,11 @@
 								일정 추가</button>
 							</div>
 						</nav>
-					</div>				
+					</div>	
+					
+								
 					<div class="column is-3">
+						<div style="height:50px;"></div>
 						<nav class="panel">
 							<div class="panel-heading" align="center" 
 								style="background:whitesmoke;color:black;height:30px">
@@ -253,7 +487,7 @@
 										<p>좋아요 1</p>
 									</div>
 									<div class="media-right">
-										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -261,7 +495,7 @@
 										<p>좋아요 2</p>
 									</div>
 									<div class="media-right">
-										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -269,7 +503,7 @@
 										<p>좋아요 3</p>
 									</div>
 									<div class="media-right">
-										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -277,7 +511,7 @@
 										<p>좋아요 4</p>
 									</div>
 									<div class="media-right">
-										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -285,7 +519,7 @@
 										<p>좋아요 5</p>
 									</div>
 									<div class="media-right">
-										<span class="icon backBtn"><i class="fas fa-reply"></i></span>	
+										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
 									</div>
 								</li>
 							</ul>
@@ -296,7 +530,7 @@
 										<p>추천 1</p>
 									</div>
 									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
+										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -304,7 +538,7 @@
 										<p>추천 2</p>
 									</div>
 									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
+										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -312,7 +546,7 @@
 										<p>추천 3</p>
 									</div>
 									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
+										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -320,7 +554,7 @@
 										<p>추천 4</p>
 									</div>
 									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
+										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
 									</div>
 								</li>
 								<li class="ui-state-highlight panel-block">
@@ -328,7 +562,7 @@
 										<p>추천 5</p>
 									</div>
 									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
+										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
 									</div>
 								</li>
 							</ul>
@@ -454,9 +688,14 @@
 					});
 				}
 			});
-			$(".backBtn").click(function() {
+			$(".backBtn1").click(function() {
 				if(!$(this).parents("ul").is("#likeList")) {
 					$(this).parents("li").appendTo($("#likeList"));
+				}
+			});
+			$(".backBtn2").click(function() {
+				if(!$(this).parents("ul").is("#recommList")) {
+					$(this).parents("li").appendTo($("#recommList"));
 				}
 			});
 			$(".delete").click(function() {
@@ -464,6 +703,14 @@
 			});
 
 		});
+		
+		
+		function openNav() {
+			document.getElementById("myNav").style.width = "100%";
+		}
+		function closeNav() {
+			document.getElementById("myNav").style.width = "0%";
+		}
 	</script>
 
 
