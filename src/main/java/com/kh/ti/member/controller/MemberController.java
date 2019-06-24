@@ -1,10 +1,21 @@
 package com.kh.ti.member.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.kh.ti.member.model.service.MemberService;
+import com.kh.ti.member.model.vo.Member;
+
+@SessionAttributes("loginUser")
 @Controller
 public class MemberController {
+	
+	@Autowired
+	private MemberService ms;
 
 	//로그인화면 보여주기 전용(forward loginForm.jsp)--세령
 	@RequestMapping("loginForm.me")
@@ -26,8 +37,11 @@ public class MemberController {
 	
 	//로그인용메소드--세령--세령
 	@RequestMapping("login.me")
-	public String loginCheck() {
-		return null;
+	public String loginCheck(@ModelAttribute Member m, Model model) {
+		Member loginUser = ms.loginMember(m);
+		model.addAttribute("loginUSer", loginUser);
+		System.out.println(loginUser);
+		return "member/loginForm";
 	}
 	
 	//로그아웃용메소드--세령--세령

@@ -72,10 +72,10 @@ public class SpotController {
 		return null;
 	}
 	
-	//사용자여행지전체조회용메소드
+	//사용자여행지전체조회용메소드 --세령
 	@RequestMapping("selectAllSpotUser.sp")
 	public String selectAllSpotFromUser() {
-		return null;
+		return "spot/spotHome";
 	}
 	
 	//사용자여행지조건조회용메소드
@@ -84,10 +84,10 @@ public class SpotController {
 		return null;
 	}
 	
-	//사용자여행지상세보기용메소드
+	//사용자여행지상세보기용메소드 --세령
 	@RequestMapping("selectSpotInfoUser.sp")
 	public String selectSpotInfoFromUser() {
-		return null;
+		return "spot/spotInfoPage";
 	}
 	
 	//명소상세보기용메소드
