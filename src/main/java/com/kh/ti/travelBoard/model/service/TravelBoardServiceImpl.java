@@ -6,8 +6,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelBoard.model.dao.TravelBoardDao;
-import com.kh.ti.travelBoard.model.vo.PageInfo;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 @Service

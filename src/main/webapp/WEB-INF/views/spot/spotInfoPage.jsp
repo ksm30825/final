@@ -78,7 +78,6 @@
 		</div> <!-- column -->
 	</div> <!-- end columns -->
 	
-	<jsp:include page="spotMenu.jsp"/>
 	
 	<div class="columns">
 		<div class="column">

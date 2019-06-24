@@ -1,15 +1,14 @@
 package com.kh.ti.travelBoard.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.common.Pagination;
 import com.kh.ti.travelBoard.model.service.TravelBoardService;
-import com.kh.ti.travelBoard.model.vo.PageInfo;
-import com.kh.ti.travelBoard.model.vo.Pagination;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 @Controller

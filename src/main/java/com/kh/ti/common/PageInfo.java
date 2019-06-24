@@ -1,4 +1,4 @@
-package com.kh.ti.travelBoard.model.vo;
+package com.kh.ti.common;
 
 public class PageInfo {
 	
