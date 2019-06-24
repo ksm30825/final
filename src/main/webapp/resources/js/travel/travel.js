@@ -1,22 +1,102 @@
 var map;
 var mapWide;
+var service;
+var infowindow;
+var searchBox;
+var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var labelIndex = 0;
+var icons = {
+	basic:{
+		icon:{
+			path:mapIcons.shapes.MAP_PIN,
+			fillColor: '#8B44F0',
+			fillOpacity:1,
+			strokeColor:'',
+			strokeWeight:0
+		},
+		map_icon_label : '<span class="map-icon map-icon-postal-code"></span>'
+	},
+	restaurant:{
+		icon:{
+			path:mapIcons.shapes.MAP_PIN,
+			fillColor: '#F1BF1E',
+			fillOpacity:1,
+			strokeColor:'',
+			strokeWeight:0
+		},
+		map_icon_label : '<span class="map-icon map-icon-restaurant"></span>'
+	},
+	bar:{
+		icon:{
+			path:mapIcons.shapes.MAP_PIN,
+			fillColor: '#DE2C26',
+			fillOpacity:1,
+			strokeColor:'',
+			strokeWeight:0
+		},
+		map_icon_label : '<span class="map-icon map-icon-night-club"></span>'
+	},
+	cafe:{
+		icon:{
+			path:mapIcons.shapes.MAP_PIN,
+			fillColor: '#926B25',
+			fillOpacity:1,
+			strokeColor:'',
+			strokeWeight:0
+		},
+		map_icon_label : '<span class="map-icon map-icon-cafe"></span>'
+	},
+	museum:{
+		icon:{
+			path:mapIcons.shapes.MAP_PIN,
+			fillColor: '#888888',
+			fillOpacity:1,
+			strokeColor:'',
+			strokeWeight:0
+		},
+		map_icon_label : '<span class="map-icon map-icon-museum"></span>'
+	},
+	park:{
+		icon:{
+			path:mapIcons.shapes.MAP_PIN,
+			fillColor: '#0C6916',
+			fillOpacity:1,
+			strokeColor:'',
+			strokeWeight:0
+		},
+		map_icon_label : '<span class="map-icon map-icon-park"></span>'
+	},
+	shopping_mall:{
+		icon:{
+			path:mapIcons.shapes.MAP_PIN,
+			fillColor: '#44BCF0',
+			fillOpacity:1,
+			strokeColor:'',
+			strokeWeight:0
+		},
+		map_icon_label : '<span class="map-icon map-icon-grocery-or-supermarket"></span>'
+	}
+	
+};
+var markers = [];
 function initMap() {
-	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	var labelIndex = 0;
-	var kh = {lat:-33.865143, lng: 151.209900};
 	var sydney = new google.maps.LatLng(-33.867, 151.195);
 	map = new google.maps.Map(document.getElementById('map'), {zoom:15, center:sydney});
-	//mapWide = new google.maps.Map(document.getElementById('mapWide'), {zoom:15, center:sydney});
-	var infowindow = new google.maps.InfoWindow();
-	var input = document.getElementById('searchInput');
-	var searchBox = new google.maps.places.SearchBox(input);
-	var markers = [
+	mapWide = new google.maps.Map(document.getElementById('mapWide'), {zoom:15, center:sydney});
+	service = new google.maps.places.PlacesService(map);
+	infowindow = new google.maps.InfoWindow();
+	searchBox = new google.maps.places.SearchBox(document.getElementById('searchInput'));
+	//map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('searchInput2'));
+	map.controls[google.maps.ControlPosition.LEFT_TOP].push(document.getElementById('left-panel'));
+	
+	var cityMarkers = [
 		{
 			location:sydney, 
-			icon:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-			info:'<h1>sydney</h1>'
+			icon:icons.basic.icon,
+			map_icon_label:icons.basic.map_icon_label,
+			info:'<h1>Sydney</h1><h5>NSW, Australia</h5>'
 		}
-		];
+	];
 
 	map.addListener('bounds_changed', function() {
 		searchBox.setBounds(map.getBounds());
@@ -60,54 +140,99 @@ function initMap() {
 	});
 
 
-	/* addMarker({
-	      		location:sydney, 
-	      		icon:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-	      		info:'<h1>sydney</h1>'
-	      	}); */
-
-	for(var i = 0; i < markers.length; i++) {
+	/*for(var i = 0; i < markers.length; i++) {
 		addMarker(markers[i]);
-	}
-
+	}*/
+	
+	//places result
+	//basic:address_component, adr_address, formatted_address, geometry, icon, name, 
+	//permanently_closed, photo, place_id, plus_code, type, url, utc_offset, vicinity
+	//contact:formatted_phone_number, international_phone_number,opening_hours, website
+	//atmosphere:rating, review, user_ratings_total
+	
+	
 	var request = {
 			query: 'Museum of Contemporary Art Australia',
-			fields: ['name', 'geometry'],
+			fields: ['name', 'icon', 'geometry', 'formatted_address', 'place_id', 'types'],
 	};
 
-	var service = new google.maps.places.PlacesService(map);
+	//service.findPlaceFromQuery(request, callback);
 
-	service.findPlaceFromQuery(request, function(results, status) {
+
+	/*google.maps.event.addListener(map, 'click', function(event) {
+		addMarker({location:event.latLng});
+	});*/
+}
+
+
+
+function placeTypeSearch(placeType) {
+	
+	var getNextPage = null;
+	var moreBtn = document.getElementById('more');
+	moreBtn.onclick = function() {
+		moreBtn.disabled = true;
+		if(getNextPage) getNextPage();
+	};
+	
+	markers.forEach(function(marker) {
+		marker.setMap(null);
+	});
+	var request = {
+			location: map.getCenter(),
+			radius: '1000',
+			type: [placeType]
+	};
+	service.nearbySearch(request, function(results, status, pagination) {
+		var bounds = new google.maps.LatLngBounds();
+		var placeList = document.getElementById('placeList');
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
 			for (var i = 0; i < results.length; i++) {
-				addMarker({location:results[i].geometry.location});
+				var li = document.createElement('li');
+//				li.classList.add('panel-block');
+				li.textContent = results[i].name;
+				li.classList.add('panel-block');
+				placeList.appendChild(li);
+				bounds.extend(results[i].geometry.location);
+				addMarker({
+					location:results[i].geometry.location,
+					icon:icons[placeType].icon,
+					map_icon_label:icons[placeType].map_icon_label,
+					info: '<h1>' + results[i].name + "'</h1>" + results[i].formatted_address 
+						+ ", (placeId : " + results[i].place_id + ")"
+				});
+			}
+			map.fitBounds(bounds);
+			moreBtn.disabled = !pagination.hasNextPage;
+			getNextPage = pagination.hasNextPage && function() {
+				pagination.nextPage();
 			}
 			map.setCenter(results[0].geometry.location);
-		}
+		}else return;
 	});
+}
 
 
-
-	function addMarker(props) {
-		var marker = new google.maps.Marker({
-			position: props.location,
-			label: labels[labelIndex++ % labels.length],
-			map: map
+function addMarker(props) {
+	var marker = new mapIcons.Marker({
+		position: props.location,
+		//label: labels[labelIndex++ % labels.length],
+		icon:props.icon,
+		map_icon_label:props.map_icon_label,
+		map: map
+	});
+	
+	markers.push(marker);
+	/*if(props.icon) {
+		marker.setIcon(props.icon);
+	}*/
+	if(props.info) {
+		var infoWindow = new google.maps.InfoWindow({
+			content:props.info
 		});
-		if(props.icon) {
-			marker.setIcon(props.icon);
-		}
-		if(props.info) {
-			var infoWindow = new google.maps.InfoWindow({
-				content:props.info
-			});
-			marker.addListener('click', function() {
-				infoWindow.open(map, marker);
-			});
-		}
+		marker.addListener('click', function() {
+			infoWindow.open(map, marker);
+		});
 	}
-
-	google.maps.event.addListener(map, 'click', function(event) {
-		addMarker({location:event.latLng});
-	});
+	
 }

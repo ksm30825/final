@@ -12,6 +12,9 @@
 	.table td, .table th {
 		text-align:center;
 	}
+	.panelTr>td {
+		padding:0;
+	}
 </style>
 </head>
 <body>
@@ -19,7 +22,7 @@
 		<div class="column">
 			<section class="section">
 				<nav class="level">
-					<div class="level-right has-text-centered">
+					<div class="level-item has-text-centered">
 						<div>
 							<p class="subtitle is-4"><strong>전체 예산</strong></p>
 						</div>
@@ -35,6 +38,7 @@
 							</p>
 						</div>
 					</div>
+					<div class="level-item has-text-centered"><div><p class="title is-1">=</p></div></div>
 					<div class="level-item has-text-centered">
 						<div>
 							<p class="heading">TOTAL</p>
@@ -46,6 +50,7 @@
 							</p>
 						</div>
 					</div>
+					<div class="level-item has-text-centered"><div></div></div>
 				</nav>
 			</section>
 			<section class="section" style="padding-top:0">
@@ -73,7 +78,8 @@
 								<span>관광</span>
 							</th>
 							<th width="12%">
-								<span>. . .</span>
+								<i class="fas fa-3x fa-ellipsis-h"></i>
+								<span>기타</span>
 							</th>
 							<th width="14%">
 								<span>TOTAL</span>
@@ -108,7 +114,90 @@
 				</table>
 			</section>
 			<section class="section">
-				<table class="table is-bordered is-fullwidth is-striped allSchTable" align="center">
+				<div class="columns is-multiline">
+					<% for(int i = 0; i < 10; i++) { %>
+					<div class="column is-one-fifth" style="padding:10.5px 0">
+						<nav class="panel">
+							<div class="panel-heading" align="center"
+								style="background: whitesmoke; color: black; height: 30px">
+								<p class="help">2019-07-01</p>
+							</div>
+							<div class="panel-heading" align="center" style="margin:0;">
+								DAY 1
+							</div>
+							<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
+							<ul class="connectedSortable menu-list">
+								<li class="ui-state-default panel-block">
+									<div class="media-left">
+										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+										</span>
+									</div>
+									<div class="media-content">
+										<p>Item 1</p>
+									</div>
+									<div class="media-right">
+										<button class="delete" aria-label="close"></button>
+									</div>
+								</li>
+								<li class="ui-state-default panel-block">
+									<div class="media-left">
+										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+										</span>
+									</div>
+									<div class="media-content">
+										<p>Item 2</p>
+									</div>
+									<div class="media-right">
+										<button class="delete" aria-label="close"></button>
+									</div>
+								</li>
+								<li class="ui-state-default panel-block">
+									<div class="media-left">
+										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+										</span>
+									</div>
+									<div class="media-content">
+										<p>Item 3</p>
+									</div>
+									<div class="media-right">
+										<button class="delete" aria-label="close"></button>
+									</div>
+								</li>
+								<li class="ui-state-default panel-block">
+									<div class="media-left">
+										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+										</span>
+									</div>
+									<div class="media-content">
+										<p>Item 4</p>
+									</div>
+									<div class="media-right">
+										<button class="delete" aria-label="close"></button>
+									</div>
+								</li>
+								<li class="ui-state-default panel-block">
+									<div class="media-left">
+										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+										</span>
+									</div>
+									<div class="media-content">
+										<p>Item 5</p>
+									</div>
+									<div class="media-right">
+										<button class="delete" aria-label="close"></button>
+									</div>
+								</li>
+							</ul>
+							<div class="panel-block">
+								<button class="button is-link is-outlined is-fullwidth"
+									onclick="$('#costModal').toggleClass('is-active')">
+									가계부 항목 추가</button>
+							</div>
+						</nav>
+					</div>
+					<% } %>
+				</div>
+				<%-- <table class="table is-bordered is-fullwidth is-striped allSchTable" align="center">
 					<thead>
 						<tr class="is-selected">
 							<th width="200px">DAY1</th>
@@ -126,10 +215,85 @@
 							<td>2019-07-01</td>
 							<td>2019-07-01</td>
 						</tr>
-						<tr>
-							<td height="300px">Three</td>
-							<td height="300px">Three</td>
-							<td height="300px">Three</td>
+						<tr class="panelTr">
+							<td height="300px">
+								<div class="panel">
+									<ul class="connectedSortable menu-list">
+										<% for(int i = 0; i < 7; i++) { %>
+										<li class="ui-state-default panel-block">
+											<div class="media-left">
+												<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+												</span>
+											</div>
+											<div class="media-content">
+												<p>Item <%= i+1 %></p>
+											</div>
+											<div class="media-right">
+												<button class="delete" aria-label="close"></button>
+											</div>
+										</li>
+										<% } %>
+									</ul>
+									<div class="panel-block">
+										<button class="button is-link is-outlined is-fullwidth"
+											onclick="$('#costModal').toggleClass('is-active')">
+											가계부 항목 추가
+										</button>
+									</div>
+								</div>
+							</td>
+							<td height="300px">
+								<div class="panel">
+									<ul class="connectedSortable menu-list">
+										<% for(int i = 0; i < 7; i++) { %>
+										<li class="ui-state-default panel-block">
+											<div class="media-left">
+												<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+												</span>
+											</div>
+											<div class="media-content">
+												<p>Item <%= i+1 %></p>
+											</div>
+											<div class="media-right">
+												<button class="delete" aria-label="close"></button>
+											</div>
+										</li>
+										<% } %>
+									</ul>
+									<div class="panel-block">
+										<button class="button is-link is-outlined is-fullwidth"
+											onclick="$('#costModal').toggleClass('is-active')">
+											가계부 항목 추가
+										</button>
+									</div>
+								</div>	
+							</td>
+							<td height="300px">
+								<div class="panel">
+									<ul class="connectedSortable menu-list">
+										<% for(int i = 0; i < 7; i++) { %>
+										<li class="ui-state-default panel-block">
+											<div class="media-left">
+												<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
+												</span>
+											</div>
+											<div class="media-content">
+												<p>Item <%= i+1 %></p>
+											</div>
+											<div class="media-right">
+												<button class="delete" aria-label="close"></button>
+											</div>
+										</li>
+										<% } %>
+									</ul>
+									<div class="panel-block">
+										<button class="button is-link is-outlined is-fullwidth"
+											onclick="$('#costModal').toggleClass('is-active')">
+											가계부 항목 추가
+										</button>
+									</div>
+								</div>
+							</td>
 							<td height="300px">Three</td>
 							<td height="300px">Three</td>
 						</tr>
@@ -147,7 +311,7 @@
 							<td>2019-07-01</td>
 							<td>2019-07-01</td>
 						</tr>
-						<tr>
+						<tr class="panelTr">
 							<td height="300px">Three</td>
 							<td height="300px">Three</td>
 							<td height="300px">Three</td>
@@ -155,9 +319,10 @@
 							<td height="300px">Three</td>
 						</tr>
 					</tbody>
-				</table>
+				</table> --%>
 			</section>
 		</div>
 	</div>	
+	<jsp:include page="costModal.jsp" />
 </body>
 </html>
