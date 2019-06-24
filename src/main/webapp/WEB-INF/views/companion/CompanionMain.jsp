@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="resources/css/bulmaswatch.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <style>
+	html { overflow-y : hidden; }
+
 	body {
     margin: 0;
     overflow-y: hidden; overflow-x: hidden; }
