@@ -3,12 +3,13 @@ package com.kh.ti.point.model.vo;
 import java.sql.Date;
 
 public class Rebate {
-	private int rebateId;
-	private Date applyDate;
-	private int payAmount;
-	private int memberId;
-	private Date payDate;
-	private int rebateStatus;
+	//환급내역
+	private int rebateId;		//환급코드
+	private Date applyDate;		//환급신청일
+	private int payAmount;		//환급신청액
+	private int memberId;		//회원코드
+	private Date payDate;		//환급지급일
+	private int rebateStatus;	//상태	-10:대기, 20:지급완료,30:지급불가
 	
 	public Rebate() {}
 
