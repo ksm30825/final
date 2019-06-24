@@ -4,12 +4,33 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="TravelRequest">
-	<resultMap type="com.kh.ti.travelRequest.model.vo.TravelRequest" id="travelRequestResultSet">
-		
+	<resultMap type="TravelRequest" id="requestResultSet">
+		<id property="requestId" column="REQUEST_ID"/>
+		<result property="requestTitle" column="REQUEST_TITLE"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="requestPrice" column="REQUEST_PRICE"/>
+		<result property="trvCost" column="TRV_COST"/>
+		<result property="endDate" column="END_DATE"/>
 	</resultMap>
+	<!-- 의뢰하기 -->
 	<insert id="insertRequest" parameterType="TravelRequest">
 		INSERT INTO TRV_REQUEST
 		VALUES(TRV_REQUEST_SEQ.NEXTVAL, #{requestTitle}, #{requestContent},
 			   #{endDate}, #{requestPrice}, 1, 'N', NULL, #{trvCost})
 	</insert>
+	
+	<!-- 의뢰글 목록 수 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRV_REQUEST
+		WHERE CHOOSE_STATUS = 'N'
+	</select>
+	
+	<!-- 의뢰글 조회 -->
+	<select id="selectRequestList" resultMap="requestResultSet">
+		SELECT TR.REQUEST_ID, TR.REQUEST_TITLE, M.USER_NAME, TR.REQUEST_PRICE, TR.TRV_COST, TR.END_DATE
+		FROM TRV_REQUEST TR
+		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
+		WHERE TR.CHOOSE_STATUS = 'N'
+	</select>
 </mapper>
