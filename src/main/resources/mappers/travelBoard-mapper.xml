@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TravelBoard">
+	<!-- trvCities -->
+	
+	<!-- trvTags -->
+	<resultMap type="TravelTag" id="travelTagResultSet">
+		<id property="tagId" column="TAG_ID"/>
+		<result property="tagName" column="TAG_NAME"/>
+	</resultMap>
+	
+	<!-- schFile -->
+	
+	<!-- TravelBoard -->
+	<resultMap type="TravelBoard" id="travelBoardResultSet">
+		<id property="trvId" column="TRV_ID"/>
+		<result property="trvTitle" column="TRV_TITLE"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="compNumber" column="COMP_NUMBER"/>
+		<result property="openDate" column="OPEN_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>
+		<result property="completeDate" column="COMPLETE_DATE"/>
+		<result property="status" column="STATUS"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvRef" column="TRV_REF"/>
+		<!-- <collection property="trvCities" javaType="java.util.ArrayList" resultMap=""/> -->
+		<collection property="trvTags" javaType="java.util.ArrayList" resultMap="travelTagResultSet"/>
+		<!-- <collection property="schFiles" javaType="java.util.ArrayList" resultMap=""/> -->
+	</resultMap>
+	
+	<!-- 페이징용 -->
+	<select id="getListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRAVEL
+		WHERE STATUS = 'Y'
+		AND TRV_REF IS NULL
+	</select>
+	
+	<!-- 여행일정 전체 조회용 -->
+	<select id="selectTravelBoardList" resultMap="travelBoardResultSet">
+		SELECT *
+	    FROM TRAVEL T
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+	    JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+	    WHERE T.STATUS = 'Y'
+	    AND T.TRV_REF IS NULL
+</select>
+</mapper>

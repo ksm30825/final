@@ -7,9 +7,15 @@
 	<!-- Member Part 수정(세령) -->
 	<typeAliases>
 		<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
+		
+		<!-- TravelBoard Part (예랑) -->
+		<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelBoard" alias="TravelBoard"/>
+		<typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="TravelTag"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/member-mapper.xml"/>
+		
+		<!-- TravelBoard Part (예랑) -->
+		<mapper resource="mappers/travelBoard-mapper.xml"/>
 	</mappers>
-	
 </configuration>
