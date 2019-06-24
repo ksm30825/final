@@ -9,11 +9,15 @@
 		<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
 		<!-- 수민 -->
 		<typeAlias type="com.kh.ti.point.model.vo.Payment" alias="Payment"/>
+    <!-- 선우 -->
+    <typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequest" alias="TravelRequest"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/member-mapper.xml"/>
 		<!-- 수민 -->
 		<mapper resource="mappers/point-mapper.xml"/>
+    <!-- 선우 -->
+    <mapper resource="mappers/travelRequest-mapper.xml"/>
 	</mappers>
 	
 	

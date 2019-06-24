@@ -9,16 +9,17 @@
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <style>
 	#footer {
-		background-color:#9999ff;
 		height:100px;
+		border-top: 2px solid skyblue;
+		border-bottom: 2px solid skyblue;
 	}
 </style>
 </head>
 <body>
+	<br><br>
 	<div class="columns">
 		<div class="column">
 			<div class="field" id="footer">
-			
 			</div>
 		</div>
 	</div>
