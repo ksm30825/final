@@ -15,7 +15,7 @@
    	}
 </style>
 <body>
-	<div class="modal" id="travelInfoModal">
+	<div class="modal" id="newTravelModal">
 		<div class="modal-background"></div>
 		<div class="modal-card" style="width:480px">
 			<header class="modal-card-head">
@@ -24,7 +24,7 @@
 				<button class="delete" aria-label="close"></button>
 			</header>
 			<section class="modal-card-body">
-				<form action="" method="post" id="trvInfoForm">
+				<form action="insertTravel.trv" method="post" id="newTrvForm">
 					<div class="field">
 						<p class="control">
 							<input class="input is-primary is-large" type="text" placeholder="여행 제목 입력"
@@ -115,7 +115,7 @@
         	    $(this).parents(".modal").removeClass('is-active');
         	});
         	
-			$("#startPicker, #endPicker").datepicker({
+        	$("#startPicker, #endPicker").datepicker({
         		dateFormat:"yy-mm-dd"
         	});
         	
@@ -128,7 +128,7 @@
         	
         	
         	$(".okBtn").click(function() {
-        		$("#trvInfoForm").submit();
+        		$("#newTrvForm").submit();
         	});
 		});
 	</script>

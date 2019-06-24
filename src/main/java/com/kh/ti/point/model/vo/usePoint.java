@@ -3,13 +3,14 @@ package com.kh.ti.point.model.vo;
 import java.sql.Date;
 
 public class usePoint {
-	private int pointId;
-	private int usePoint;
-	private Date useDate;
-	private int useType;
-	private int memberId;
-	private int trvId;
-	private int requestId;
+	//포인트 사용내역
+	private int pointId;	//사용내역코드
+	private int usePoint;	//사용포인트
+	private Date useDate;	//사용일
+	private int useType;	//사용타입	-10:일정구매, 20:설계의뢰
+	private int memberId;	//회원코드
+	private int trvId;		//여행일정번호
+	private int requestId;	//의뢰번호
 	
 	public usePoint() {}
 

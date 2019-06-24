@@ -2,7 +2,11 @@
 <web-app version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:root-context.xml</param-value>
+    <!-- 세령 수정 : spring-security.xml 추가 -->
+    <param-value>
+    	classpath:root-context.xml
+    	/WEB-INF/config/spring-security.xml
+    </param-value>
   </context-param>
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

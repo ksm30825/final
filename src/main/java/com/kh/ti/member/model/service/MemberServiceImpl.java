@@ -22,5 +22,11 @@ public class MemberServiceImpl implements MemberService{
 		return loginUser;
 	}
 
+	//회원가입용 메소드
+	@Override
+	public int insertMember(Member m) {
+		return md.insertMember(sqlSession, m);
+	}
+
 
 }
