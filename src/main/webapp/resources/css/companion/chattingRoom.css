@@ -29,3 +29,35 @@ body {overflow-y: hidden; overflow-x: hidden;}
     	margin-left : 5px;
     	height: 83px;
 }
+
+#rightMenu {
+		overflow-y : hidden;
+	}
+
+	#Chattinginfor td {
+		padding : 10px;
+	}
+	
+	#chatpeopleTable td {
+		padding : 10px;
+		padding-left: 25px;
+	}
+	
+
+	
+	#good , #bad{
+		float : left;
+		font-size : 15px;
+		margin : 5px;
+	}
+	
+	#goodicon, #badicon{
+		font-size : 30px;
+		padding : 0 ;
+		float : left ; 
+	}
+	
+	#goodicon { color : #f47773;}  #badicon {color : #72a4f9;}
+ 	
+ 	#outbtn,#setting,#Declaration {height : 100%; border : none; background : none;}
+ 	

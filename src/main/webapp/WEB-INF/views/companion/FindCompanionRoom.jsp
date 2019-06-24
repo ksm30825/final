@@ -12,10 +12,7 @@
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
  <script src="https://code.jquery.com/jquery-latest.js"></script> 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<style>
-	
-	
-</style>
+
 </head>
 <body>
 	 <jsp:include page = "../companion/CompanionMenu.jsp"/>

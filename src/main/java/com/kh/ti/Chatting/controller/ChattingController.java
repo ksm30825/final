@@ -42,5 +42,30 @@ public class ChattingController {
 		return "companion/ChattingRoom";
 	}
 	
+	//사용자 정보 창으로 이동 메소드 - 지원
+	@RequestMapping("/userInfo.ch")
+	public String showUserInfo() {
+		
+		
+		return "companion/UserInfo";
+	}
+	
+	//채팅방 설정  화면으로  - 지원
+	@RequestMapping("/showchange.ch")
+	public String showChangChattingRoom() {
+		
+		
+		return "companion/ChangeChattingRoom";
+	}
+	
+	
+	//신고 화면으로 - 지원
+	@RequestMapping("/declaration.ch")
+	public String showDeclarationChatting() {
+		
+		return "companion/DeclarationChatting";
+	}
+	
+	
 	
 }
