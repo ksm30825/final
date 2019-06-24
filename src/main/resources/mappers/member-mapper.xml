@@ -34,4 +34,11 @@
 		AND PASSWORD = #{password}
 		AND ENROLL_STATUS = 'Y'
 	</select>
+	
+	<!-- 회원가입용 세령 -->
+	<insert id="insertMember" parameterType="Member">
+		INSERT INTO MEMBER VALUES
+		(MEMBER_SEQ.NEXTVAL, #{email}, #{password}, #{userName}, #{birthday}, #{gender}, 
+		NULL, NULL, SYSDATE, NULL, NULL, #{enrollStatus}, #{phone}, 3000, 0, '자사가입', 0, 'M')
+	</insert>
 </mapper>
