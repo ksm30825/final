@@ -74,6 +74,20 @@ th, td {
 #map #infowindow-content {
 	display: inline;
 }
+
+#floating-panel {
+	position: absolute;
+	top: 10px;
+	left: 25%;
+	z-index: 5;
+	background-color: #fff;
+	padding: 5px;
+	border: 1px solid #999;
+	text-align: center;
+	font-family: 'Roboto', 'sans-serif';
+	line-height: 30px;
+	padding-left: 10px;
+}
 </style>
 </head>
 <body>
@@ -251,7 +265,7 @@ th, td {
 									</div>
 									<div class="media-content">
 										<p class="title is-4">지역명</p>
-										<a class="button is-primary"> 일정추가 </a>
+										<a class="button is-primary" onclick="removeLine();"> 일정삭제 </a>
 									</div>
 								</div>
 								<div class="content">
@@ -473,95 +487,77 @@ th, td {
 	}
 	
 	//구글 맵
-	 /* var map;
-	 var service;
-	 var infowindow;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-        });
-      } */
-		/* var MarkersArray = [];
-     	var Coordinates= [];
-      	var travelPathArray = [];
-      	var map;
-     	var marker; */
-     	var ploy;
-     	var map;
-     	var markers = new Array();
+    var ploy;
+    var map;
+    var markers = new Array();
       
-      	/* lat: -33.8688, lng: 151.2195 */
-		function initMap() {
-			/* var myLatlng = new google.maps.LatLng(-33.8688, 151.2195);
-    	  	var myOptions = {
-				zoom: 13,
-    	  		center: myLatlng
-    	  	} */
-    	  	map = new google.maps.Map(document.getElementById('map'), {
-    	  		zoom: 13,
-    	  		center : {lat : -33.93979965825738, lng : 151.1751365661621},
-    	  	});
-    	  	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
+    /* lat: -33.8688, lng: 151.2195 */
+	function initMap() {
+	 /* var myLatlng = new google.maps.LatLng(-33.8688, 151.2195);
+    	var myOptions = {
+		zoom: 13,
+    	center: myLatlng
+		} */
+    	map = new google.maps.Map(document.getElementById('map'), {
+    	  	zoom: 13,
+    	  	center : {lat : -33.93979965825738, lng : 151.1751365661621},
+    	});
+    	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
      	 	
-    	  	//폴리라인
-    	  	poly = new google.maps.Polyline({
-    	  		strokeColor: "#FF0000",
-    	  		strokeWeight : 3
-    	  	});
-    	  	poly.setMap(map);
-    	  	
-    	  	map.addListener('click', addLatLng);
-    	  	//맵 클릭시 마커 찍기, 폴리라인 연결
-			/* google.maps.event.addListener(map, 'click', function(event) { 
-    			marker = new google.maps.Marker({ 
-		    		position: event.latLng, 
-		    		map: map,
-		    		title: '위치마커'
-    			});
-    		attachMessage(marker, event.latLng); 
-    		//선을 그리기 위해 좌표를 넣는다.
-    		Coordinates.push( event.latLng ); 
-    		//마커 담기
-    		MarkersArray.push(marker);
-    		        //array에 담은 위도,경도 데이타를 가지고 동선 그리기
-    		flightPath();
-    		});
-    	  
-    	//해당 위치에 주소를 가져오고, 마크를 클릭시 infowindow에 주소를 표시
-    	function attachMessage(marker, latlng) {
-	  		geocoder = new google.maps.Geocoder();
-	  		geocoder.geocode({'latLng': latlng}, function(results, status) {
-	  		    if (status == google.maps.GeocoderStatus.OK) {
-					if (results[0]) {
-						var address_nm = results[0].formatted_address;
-						var infowindow = new google.maps.InfoWindow({
-								content: address_nm,
-								size: new google.maps.Size(50,50)
-						 });
-						 google.maps.event.addListener(marker, 'click', function() {
-						   	infowindow.open(map,marker);
-						 });
-					}
-	  		    } else {
-	  				alert('주소 가져오기 오류!'); 
-	  		    }
-		  	});
-	  	}
-	  //동선그리기
-	  function flightPath(){
-	  		for (i in travelPathArray){
-	  			travelPathArray[i].setMap(null);
-	  		}
-	  		var flightPath = new google.maps.Polyline({
-	  			path: Coordinates,
-	  			strokeColor: "#FF0000",
-	  			strokeWeight: 5
-	  		});
-	  			flightPath.setMap(map);
-	  			travelPathArray.push(flightPath);
-	  		} */
+    	//폴리라인 객체
+    	poly = new google.maps.Polyline({
+    	  	strokeColor: "#FF0000",
+    	  	strokeWeight : 3
+    	});
+    	poly.setMap(map);
+    	
+    	//맵 클릭시 마커,폴리라인 생성
+    	map.addListener('click', function(event) {
+    		var path = poly.getPath();
 
+	        // Because path is an MVCArray, we can simply append a new coordinate
+	        // and it will automatically appear.
+	        path.push(event.latLng);
+
+	        // Add a new marker at the new plotted point on the polyline.
+	        
+	        marker = new google.maps.Marker({
+	          position: event.latLng,
+	          title: '#' + path.getLength(),
+	          map: map
+	        });
+	        markers.push(marker);
+	        
+	        console.log("위도 : " + marker.position.lat());
+	        console.log("경도 : " + marker.position.lng());
+	        console.log("마커 순서 : " + marker.title);
+	        
+	        var request = {
+	                placeId: event.placeId,
+	                fields: ['name', 'formatted_address', 'geometry']
+	        };
+	        
+	        var infowindow = new google.maps.InfoWindow();
+	        var service = new google.maps.places.PlacesService(map);
+	        
+	        service.getDetails(request, function(place, status) {
+	            if (status === google.maps.places.PlacesServiceStatus.OK) {
+	              var marker = new google.maps.Marker({
+	                map: map,
+	                position: place.geometry.location
+	              });
+	              google.maps.event.addListener(marker, 'click', function() {
+	                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+	                  place.formatted_address + '</div>');
+	                infowindow.open(map, this);
+	              });
+	              google.maps.event.addListener(marker, 'rightclick', function() {
+	            	  clearMarkers();
+	              });
+	            }
+	        console.log(event);
+	      });
+    	});
     	  //지역 검색
           var input = document.getElementById('pac-input');
 
@@ -617,150 +613,15 @@ th, td {
             infowindow.open(map, marker);
           });
         }
-		function addLatLng(event) {
-	        var path = poly.getPath();
-
-	        // Because path is an MVCArray, we can simply append a new coordinate
-	        // and it will automatically appear.
-	        path.push(event.latLng);
-
-	        // Add a new marker at the new plotted point on the polyline.
-	        
-	        var marker = new google.maps.Marker({
-	          position: event.latLng,
-	          title: '#' + path.getLength(),
-	          map: map
-	        });
-	        markers.push(marker);
-	        
-	        console.log("위도 : " + marker.position.lat());
-	        console.log("경도 : " + marker.position.lng());
-	        console.log("마커 순서 : " + marker.title);
-	        
-	        var request = {
-	                placeId: event.placeId,
-	                fields: ['name', 'formatted_address', 'geometry']
-	        };
-	        
-	        var infowindow = new google.maps.InfoWindow();
-	        var service = new google.maps.places.PlacesService(map);
-	        
-	        service.getDetails(request, function(place, status) {
-	            if (status === google.maps.places.PlacesServiceStatus.OK) {
-	              var marker = new google.maps.Marker({
-	                map: map,
-	                position: place.geometry.location
-	              });
-	              google.maps.event.addListener(marker, 'click', function() {
-	                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-	                  place.formatted_address + '</div>');
-	                infowindow.open(map, this);
-	              });
-	            }
-	        
-	        /* marker.addListener('click', function() {
-	            infowindow.open(map, marker);
-	          }); */
-	        console.log(event);
-	      });
-		}
-		function initialize() {
-			google.maps.event.addListener(flightPath, 'rightclick', function(e) {
-		          // Check if click was on a vertex control point
-		          if (e.vertex == undefined) {
-		        	  console.log(e.vertex);
-		            return;
-		          }
-		          deleteMenu.open(map, flightPath.getPath(), e.vertex);
-		        });
-		}
-	        
-		/* function attachMessage(marker, latlng) {
-    		geocoder = new google.maps.Geocoder();
-    		 geocoder.geocode({'latLng': latlng}, function(results, status) {
-    		     if (status == google.maps.GeocoderStatus.OK) {
-    		if (results[0]) {
-    		var address_nm = results[0].formatted_address;
-    		var infowindow = new google.maps.InfoWindow(
-    		     { content: address_nm,
-    		size: new google.maps.Size(50,50)
-    		     });
-    		 google.maps.event.addListener(marker, 'click', function() {
-    		   infowindow.open(map,marker);
-    		 });
-    		}
-    		     } else {
-    		alert('주소 가져오기 오류!'); 
-    		     }
-    		});
-    		} */
-        /* var MarkersArray = [];
-        var Coordinates= [];
-        var travelPathArray = [];
-        var map;
-        var marker;
-		
-        function initMap() {
-        	 var myLatlng = new google.maps.LatLng(33.397, 126.65544);
-        	  var myOptions = {
-        	  zoom: 10,
-        	  center: myLatlng
-        	  }
-        	  map = new google.maps.Map(document.getElementById('map'), myOptions);
-        	 
-        	  google.maps.event.addListener(map, 'click', function(event) { 
-        		  marker = new google.maps.Marker({ 
-        		  position: event.latLng, 
-        		  map: map,
-        		  title: '위치마커'
-        		});
-        		attachMessage(marker, event.latLng); 
-        		//선을 그리기 위해 좌표를 넣는다.
-        		Coordinates.push( event.latLng ); 
-        		//마커 담기
-        		MarkersArray.push(marker);
-        		        //array에 담은 위도,경도 데이타를 가지고 동선 그리기
-        		flightPath();
-        		});
-
-        		//해당 위치에 주소를 가져오고, 마크를 클릭시 infowindow에 주소를 표시한다.
-        		function attachMessage(marker, latlng) {
-        		geocoder = new google.maps.Geocoder();
-        		 geocoder.geocode({'latLng': latlng}, function(results, status) {
-        		     if (status == google.maps.GeocoderStatus.OK) {
-        		if (results[0]) {
-        		var address_nm = results[0].formatted_address;
-        		var infowindow = new google.maps.InfoWindow(
-        		     { content: address_nm,
-        		size: new google.maps.Size(50,50)
-        		     });
-        		 google.maps.event.addListener(marker, 'click', function() {
-        		   infowindow.open(map,marker);
-        		 });
-        		}
-        		     } else {
-        		alert('주소 가져오기 오류!'); 
-        		     }
-        		});
-        		}
-
-        		//동선그리기
-        		function flightPath(){
-        		for (i in travelPathArray){
-        		travelPathArray[i].setMap(null);
-        		}
-        		var flightPath = new google.maps.Polyline({
-        		path: Coordinates,
-        		strokeColor: "#FF0000",
-        		strokeOpacity: 0.3,
-        		strokeWeight: 2
-        		});
-        		flightPath.setMap(map);
-        		travelPathArray.push(flightPath);
-        		}
-        		
+	function clearMarkers() {
+        setMapOnAll(null);
+        console.log(markers);
+      }
+	function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
         }
-         */
+      }
 </script>
 	<!-- <script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap&libraries=places"
@@ -770,38 +631,3 @@ th, td {
 		async defer></script>
 </body>
 </html>
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-    <script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-        });
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap"
-    async defer></script>
-  </body>
-</html> -->

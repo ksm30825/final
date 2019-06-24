@@ -26,21 +26,25 @@
 }
 
 #button {
-	width:15%;
-	margin-right:auto;
-	margin-left:auto;
+	width: 15%;
+	margin-right: auto;
+	margin-left: auto;
 }
+
 .back {
-	font-size:1.2em !important;
+	font-size: 1.2em !important;
 }
 </style>
 <title>Insert title here</title>
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<jsp:include page="../common/myPageHeader.jsp" />
+	<%-- <jsp:include page="../common/myPageHeader.jsp" /> --%>
 	<div class="columns">
 		<div class="column">
+			<section class="section" id="headerSection">
+				<jsp:include page="../common/myPageHeader.jsp" />
+			</section>
 			<section class="section" id="table">
 				<hr>
 				<table class="table">
@@ -85,7 +89,8 @@
 				<div class="columns">
 					<div class="column">
 						<div class="buttons">
-							<a class="button is-primary back" href="myInquiryList.mr"> 돌아가기 </a>
+							<a class="button is-primary back" href="myInquiryList.mr">
+								돌아가기 </a>
 						</div>
 					</div>
 				</div>
