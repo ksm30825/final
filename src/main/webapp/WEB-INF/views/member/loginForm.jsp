@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,7 +59,9 @@
 		</section> <!-- end tabs section -->
 		<section class="section" id="form">
 		  <div class="columns">
+		  
 		  <!-- signInArea -->
+		  <form action="login.me" method="post">
 		    <div class="column" id="signInArea">
 			      <div class="field">
 			        <label class="label colWhite">이메일</label>
@@ -75,7 +78,7 @@
 			      <div class="field">
 			        <label class="label colWhite">비밀번호</label>
 			        <p class="control has-icons-left has-icons-right">
-			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="userPwd" id="userPwd">
+			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="password" id="password">
 			          <span class="icon is-small is-left">
 			            <i class="fa fa-lock"></i>
 			          </span>
@@ -92,7 +95,7 @@
 		      
 			      <div class="field">
 			        <p class="control">
-			          <button class="button is-primary"><b>SIGN IN</b></button>
+			          <button class="button is-primary" type="submit"><b>SIGN IN</b></button>
 			        </p>
 			      </div>
 			      <div class="field">
@@ -101,6 +104,8 @@
 			        </p>
 			      </div>
 		      </div>
+		  </form>
+		  
 		      <!-- end SignInArea -->
 		      <!-- signUpArea -->
 		      <div class="column" id="signUpArea">

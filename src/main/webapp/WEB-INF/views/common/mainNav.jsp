@@ -60,7 +60,7 @@
             	</a>
             	<a class="navbar-item" href="travelList.tb"> <strong>여행일정</strong> </a>
             	<div class="navbar-item has-dropdown is-hoverable">
-               		<a class="navbar-link " href="#"> <strong>여행지</strong> </a>
+               		<a class="navbar-link " href="selectAllSpotUser.sp"> <strong>여행지</strong> </a> <!-- href 수정(세령) -->
                		<div class="navbar-dropdown ">
                   		<a class="navbar-item " href="#"> 주요도시 </a> 
                   		<a class="navbar-item " href="#"> 아시아 </a> 
