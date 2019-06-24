@@ -3,19 +3,21 @@ package com.kh.ti.point.model.vo;
 import java.sql.Date;
 
 public class ReservePoint {
-	private int pointId;
-	private int reservePoint;
-	private Date reserveDate;
-	private int trvId;
-	private int memberId;
-	private int reserveType; 
-	private int trvReviewId;
-	private int reviewId;
+	//포인트적립내역
+	private int pointId;		//포인트적립코드
+	private int reservePoint;	//적립포인트
+	private Date reserveDate;	//포인트적립일
+	private int trvId;			//여행일정번호
+	private int memberId;		//회원코드
+	private int reserveType; 	//적립유형 	-10:일정작성, 20:일정리뷰, 30:여행지리뷰
+	private int reviewId;		//여행리뷰코드
+	private int spotReviewId;	//장소리뷰코드
+	//가입:3000P, 일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
 	
 	public ReservePoint() {}
 
 	public ReservePoint(int pointId, int reservePoint, Date reserveDate, int trvId, int memberId, int reserveType,
-			int trvReviewId, int reviewId) {
+			int reviewId, int spotReviewId) {
 		super();
 		this.pointId = pointId;
 		this.reservePoint = reservePoint;
@@ -23,8 +25,8 @@ public class ReservePoint {
 		this.trvId = trvId;
 		this.memberId = memberId;
 		this.reserveType = reserveType;
-		this.trvReviewId = trvReviewId;
 		this.reviewId = reviewId;
+		this.spotReviewId = spotReviewId;
 	}
 
 	public int getPointId() {
@@ -51,12 +53,12 @@ public class ReservePoint {
 		return reserveType;
 	}
 
-	public int getTrvReviewId() {
-		return trvReviewId;
-	}
-
 	public int getReviewId() {
 		return reviewId;
+	}
+
+	public int getSpotReviewId() {
+		return spotReviewId;
 	}
 
 	public void setPointId(int pointId) {
@@ -83,18 +85,18 @@ public class ReservePoint {
 		this.reserveType = reserveType;
 	}
 
-	public void setTrvReviewId(int trvReviewId) {
-		this.trvReviewId = trvReviewId;
-	}
-
 	public void setReviewId(int reviewId) {
 		this.reviewId = reviewId;
+	}
+
+	public void setSpotReviewId(int spotReviewId) {
+		this.spotReviewId = spotReviewId;
 	}
 
 	@Override
 	public String toString() {
 		return "ReservePoint [pointId=" + pointId + ", reservePoint=" + reservePoint + ", reserveDate=" + reserveDate
-				+ ", trvId=" + trvId + ", memberId=" + memberId + ", reserveType=" + reserveType + ", trvReviewId="
-				+ trvReviewId + ", reviewId=" + reviewId + "]";
+				+ ", trvId=" + trvId + ", memberId=" + memberId + ", reserveType=" + reserveType + ", reviewId="
+				+ reviewId + ", spotReviewId=" + spotReviewId + "]";
 	}
 }

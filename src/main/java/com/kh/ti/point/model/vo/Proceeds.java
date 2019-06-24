@@ -3,13 +3,14 @@ package com.kh.ti.point.model.vo;
 import java.sql.Date;
 
 public class Proceeds {
-	private int proceedsId;
-	private int proceeds;
-	private Date proceedsDate;
-	private int proceedsType;
-	private int memberId;
-	private int trvId;
-	private int ptcpId;
+	//수익금 발생 내역
+	private int proceedsId;		//수익금발생코드	
+	private int proceeds;		//수익발생액
+	private Date proceedsDate;	//수익발생일
+	private int proceedsType;	//발생타입	-10:일정판매, 20:설계판매
+	private int memberId;		//회원코드
+	private int trvId;			//여행일정번호
+	private int ptcpId;			//참여번호
 	
 	public Proceeds() {}
 

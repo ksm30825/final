@@ -103,7 +103,7 @@
 										<label for="50000">50,000원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50,000P</label><br>
 									<input type="radio" name="payAmount" id="etc">
 										<label for="etc">기타&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											<input type="number"style="width:100px;" min="0" step="1000" id="etcPay">
+											<input type="number"style="width:100px;visibility:hidden;" min="1000" step="1000" id="etcPay">
 										</label><br>
 								</div>
 								<div id="psBottom" align="center" style="margin-top:3%;">
@@ -140,76 +140,89 @@
 	</div>
 	<script>
 		$(function(){
+			//기타 영역 자동으로 숨기고 생기고 하는 함수
 			$('input[name="payAmount"]').click(function(){
 				
 				var amount = $('input[name="payAmount"]:checked').val();
 	
-				$('input[name="payAmount"]').click(function(){
-			        if(amount!='on'){
-			        	$("#etcPay").css({"visibility":"hidden"});
-			        }
-		        });
+		        if(amount!='on'){
+		        	$("#etcPay").css({"visibility":"hidden"});
+		        }else{
+			        $("#etcPay").css({"visibility":"visible"});
+		        	
+		        }
 		            
-		        $('#etc').click(function(){
-		        	$("#etcPay").css({"visibility":"visible"});
-		        });
-
 			});
-			
-		})
+		});
+		
 		function payTry(){
 			var IMP = window.IMP; // 생략가능
 			IMP.init('imp10998160');
 	
 			var status = $("input[name=agreeStatus]:checked").val();
 			var money = $('input[name="payAmount"]:checked').val();
+			
 			if(money=='on'){
-				money = $("#etcPay").val()
-			}else{
-				money = money;
-			}
-			if(status=="yes"){
-				if(money<1000||money==null){
-					$("#modayContent").text("1000원 이상부터 충전이 가능합니다.");
+				//기타의 경우 input태그에 작성되는 금액 충전
+				money = $("#etcPay").val();
+				//1000원 단위로 충전가능
+				if((money%1000)!=0){
+					$("#modayContent").text("1000원 단위로 충전이 가능합니다.");
 					$('#myModal').toggleClass('is-active');
 					$(".okay").click(function(){
 						$('#myModal').removeClass('is-active');
 					});
 				}else{
-					IMP.request_pay({
-					    pg : 'inicis', // version 1.1.0부터 지원.
-					    pay_method : 'card',
-					    merchant_uid : 'merchant_' + new Date().getTime(),
-					    name : '포인트 충전',
-					    amount : money,
-					    buyer_email : 'iamport@siot.do',
-					    buyer_name : '구매자이름',
-					    buyer_tel : '010-1234-5678',
-					    buyer_addr : '서울특별시 강남구 삼성동',
-					    buyer_postcode : '123-456',
-					    m_redirect_url : 'https://www.yourdomain.com/payments/complete'
-					}, function(rsp) {
-					    if ( rsp.success ) {
-					        var msg = '결제가 완료되었습니다.';
-					        /* msg += '고유ID : ' + rsp.imp_uid;
-					        msg += '상점 거래ID : ' + rsp.merchant_uid;
-					        msg += '결제 금액 : ' + rsp.paid_amount;
-					        msg += '카드 승인번호 : ' + rsp.apply_num;
-					         */
-					    } else {
-					        var msg = '결제에 실패하였습니다';
-					        msg += " : "+rsp.error_msg;
-					    }
-					    $("#modayContent").text(msg);
-					    $('#myModal').toggleClass('is-active');
-						$(".okay").click(function(){
-							$('#myModal').removeClass('is-active');
-							location.href="pointMainView.po";
-						});
-						
-					});
+					money = money;
+					pay(money, status);
 				}
-				
+			}else{
+				money = money;
+				pay(money, status);
+			}
+		}
+		function pay(money, status){
+			console.log("money : "+money+"  status : "+status)
+			if(status=="yes"){
+				IMP.request_pay({
+				    pg : 'inicis', // version 1.1.0부터 지원.
+				    pay_method : 'card',
+				    merchant_uid : 'merchant_' + new Date().getTime(),
+				    name : '포인트 충전',
+				    amount : 100,
+				   /*  buyer_name : 'id', */
+				    /*buyer_email : 'iamport@siot.do',
+				    buyer_tel : '010-1234-5678',
+				    buyer_addr : '서울특별시 강남구 삼성동',
+				    buyer_postcode : '123-456', */
+				    m_redirect_url : 'https://www.yourdomain.com/payments/complete'
+				}, function(rsp) {
+				    if ( rsp.success ) {
+				        var msg = '결제가 완료되었습니다.';
+						$("#modayContent").text(msg);
+						$('#myModal').toggleClass('is-active');
+				       /*  msg += '고유ID : ' + rsp.imp_uid;
+				        msg += '상점 거래ID : ' + rsp.merchant_uid;
+				        msg += '결제 금액 : ' + rsp.paid_amount;
+				        msg += '카드 승인번호 : ' + rsp.apply_num;	 */
+				        
+				        $(".okay").click(function(){
+							$('#myModal').removeClass('is-active');
+							location.href="toPay.po?tid="+rsp.pg_tid+"&pAmount="+rsp.paid_amount;
+							console.log('yyy');
+						});
+				        $('.modal-background, .modal-close').click(function() {
+				        	console.log('dfsa');
+				        	$('#myModal').removeClass('is-active');
+				        	location.href="toPay.po?tid="+rsp.pg_tid+"&payAmount="+rsp.paid_amount;
+				        })
+				    } else {
+				        var msg = '결제에 실패하였습니다';
+				        msg += " : "+rsp.error_msg;
+				        $("#modayContent").text(msg);
+					    $('#myModal').toggleClass('is-active');
+				    }
+				});
 			}else{
 				$("#modayContent").text("동의를 하셔야 충전이 가능합니다.");
 				$('#myModal').toggleClass('is-active');
