@@ -240,12 +240,28 @@
 							<button class="delete" id="del"></button>
 						</header>
 						<section class="modal-card-body">
-							금액 입력 : <input type="number" style="width:80%;" min="0" step="1000">
+							금액 입력 : <input type="number" style="width:80%;" min="10000" step="10000" placeholder="10000원 단위로 신청가능합니다.">
 						</section>
 						<footer class="modal-card-foot">
 							<div style="margin-left:auto;margin-right:auto;">
-								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;"> 예 </a>
-								<a class="button is-danger" style="border-radius:5px; height:25px;"> 아니요 </a>
+								<a class="button is-success yes" style="border-radius:5px; height:25px;width:60px;"> 예 </a>
+								<a class="button is-danger no" style="border-radius:5px; height:25px;"> 아니요 </a>
+							</div>
+						</footer>
+					</div>
+				</div>
+			</section>
+			<section class="section" id="modal2">
+				<div class="modal" id="myModal2">
+					<div class="modal-background" id="back2"></div>
+					<div class="modal-card">
+						<header class="modal-card-head">
+							<p class="modal-card-title" id="modalHeader2" style="font-size:15px;text-align:center"></p>
+							<button class="delete" id="del2"></button>
+						</header>
+						<footer class="modal-card-foot">
+							<div style="margin-left:auto;margin-right:auto;">
+								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" id="okay"> 확인 </a>
 							</div>
 						</footer>
 					</div>
@@ -261,6 +277,22 @@
 			});
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
+			});
+			$(".yes").click(function(){
+				$('#myModal').removeClass('is-active');
+				$('#modalHeader2').text('환급 신청한 내역이 관리자에게 전달 되었습니다.').append('<p>정산은 매월 15일에 이뤄집니다.</p>');
+				$("#myModal2").toggleClass('is-active');
+				$("#okay").click(function(){
+					$('#myModal2').removeClass('is-active');
+				});
+			});
+			$(".no").click(function(){
+				$('#myModal').removeClass('is-active');
+				$('#modalHeader2').text('환급신청을 취소하셨습니다.');
+				$("#myModal2").toggleClass('is-active');
+				$("#okay").click(function(){
+					$('#myModal2').removeClass('is-active');
+				});
 			});
 		});
 	</script>
