@@ -1,6 +1,7 @@
 package com.kh.ti.member.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +17,8 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService ms;
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	//로그인화면 보여주기 전용(forward loginForm.jsp)--세령
 	@RequestMapping("loginForm.me")
@@ -50,10 +53,21 @@ public class MemberController {
 		return null;
 	}
 	
-	//회원가입용메소드--세령--세령
+	//회원가입용메소드--세령
 	@RequestMapping("insert.me")
-	public String insertMember() {
-		return null;
+	public String insertMember(@ModelAttribute Member m, Model model) {
+		
+		//비밀번호 암호화
+		String encPassword = passwordEncoder.encode(m.getPassword());
+		m.setPassword(encPassword);
+		
+		int result = ms.insertMember(m);
+		if(result > 0) {
+			return "redirect:index.jsp";
+		} else {
+			model.addAttribute("msg", "회원가입 실패!");
+			return "common/errorPage";
+		}
 	}
 	
 	//비밀번호수정용메소드--세령
