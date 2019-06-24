@@ -24,7 +24,6 @@
 		background: rgb(52, 73, 94);
 		color: white;
 		padding: 1em;
-		
 	}
 </style>
 </head>
@@ -108,20 +107,19 @@
 						<aside class="menu">
 							<p class="menu-label">일자별 상세글</p>
 							<ul class="menu-list">
-								<li><a class="is-active"><strong>DAY 1</strong></a></li>
+								<li><a class="is-active" href="#day1"><strong>DAY 1</strong></a></li>
 								<li><a><strong>DAY 2</strong></a></li>
 								<li><a><strong>DAY 3</strong></a></li>
 								<li><a><strong>DAY 4</strong></a></li>
 								<li><a><strong>DAY 5</strong></a></li>
 								<li><a><strong>DAY 6</strong></a></li>
-								
 							</ul>
 							<p class="menu-label">사진 갤러리</p>
 							<ul class="menu-list">
 								<li><a>전체보기</a></li>
 								<li><a>일자별 모아보기</a>
 									<ul>
-										<li><a>DAY 1</a></li>
+										<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"상세일정정보"'>DAY 1</a></li>
 										<li><a>DAY 2</a></li>
 										<li><a>DAY 3</a></li>
 										<li><a>DAY 4</a></li>
@@ -134,86 +132,81 @@
 					</section>
 				</div>	<!-- <div class="column is-3"> -->
 				
-				<!-- 상세일정 본문 영역 -->
-				<div class="column is-9" >
-					<section class="section" style="margin-top :3.15em;">
-					
-						<!--  -->	
+		<!-- 상세일정 본문 영역 -->
+		<div class="column is-9" >
+		
+		<section class="section" style="margin-top :3.15em;">
 						
-<div class="ui divided items">
-
-	<!-- 날짜별 타이틀 -->
-	<div class="dayTitle" style="padding-bottom: 0.5em;">
-		<span class="title is-3">DAY 1</span>&nbsp; <span>2019년 00월 00일 (화)</span>
-		<p class="city">도시명, 도시명</p>
-	</div>
-
-	<!-- 날짜별 상세 내용(장소분류) -->
-	<div class="item">
-		<div class="image">
-			<img src="resources/images/sample1.jpg">
-		</div>
+			<div class="ui divided items">
 		
-		<div class="content">
-			<a class="header">1&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
-			<div class="meta">
-				<span class="cinema">
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				</span>
+			<!-- 날짜별 타이틀 -->
+			<div id="day1" class="dayTitle" style="padding-bottom: 0.5em;">
+				<span class="title is-3">DAY 1</span>&nbsp; <span>2019년 00월 00일 (화)</span>
+				<p class="city">도시명, 도시명</p>
 			</div>
-			
-			<div class="extra">
-				<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
-				<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
-			</div>
-		</div>
-	</div>	<!-- <div class="item"> -->
-	
-	<!-- 교통 상세내용 -->
-	<div class="description">
-		<p><i class="fas fa-ellipsis-h"></i>&nbsp;&nbsp; 0.00km  |  이동수단  |  00시간 00분 소요  |  $ 0.00  /  ￦ 00000</p>
-	</div>
-	
-	<!-- 날짜별 상세 내용(장소분류) -->
-	<div class="item">
-		<div class="image">
-			<img src="resources/images/sample1.jpg">
-		</div>
 		
-		<div class="content">
-			<a class="header">2&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
-			<div class="meta">
-				<span class="cinema">
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-				</span>
-			</div>
-			
-			<div class="extra">
-				<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
-				<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
-			</div>
-		</div>
-	</div>	<!-- <div class="item"> -->
-	
-</div>
-
-
-
+			<!-- 날짜별 상세 내용(장소분류) -->
+			<div class="item">
+				<div class="image" data-tooltip="여행사진보기" onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"상세일정정보"'>
+					<img src="resources/images/sample1.jpg">
+				</div>
 				
-						
-						
-					</section>
-				</div>	<!-- class="column is-9" -->
+				<div class="content">
+					<a class="header">1&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
+					<div class="meta">
+						<span class="cinema">
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						</span>
+					</div>
+					
+					<div class="extra">
+						<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
+						<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
+					</div>
+				</div>	<!-- <div class="content"> -->
+			</div>	<!-- <div class="item"> -->
 			
-			</div>	<!-- <div class="columns"> -->
+			<!-- 교통 상세내용 -->
+			<div class="description">
+				<p><i class="fas fa-ellipsis-h"></i>&nbsp;&nbsp; 0.00km  |  이동수단  |  00시간 00분 소요  |  $ 0.00  /  ￦ 00000</p>
+			</div>
+			
+			<!-- 날짜별 상세 내용(장소분류) -->
+			<div class="item">
+				<div class="image" data-tooltip="여행사진보기" onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"상세일정정보"'>
+					<img src="resources/images/sample1.jpg">
+				</div>
+				
+				<div class="content">
+					<a class="header">2&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
+					<div class="meta">
+						<span class="cinema">
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
+						</span>
+					</div>
+					
+					<div class="extra">
+						<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
+						<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
+					</div>
+				</div>
+			</div>	<!-- <div class="item"> -->
+			
+		</div>
+
+		</section>
+		
+		</div>	<!-- class="column is-9" -->
+			
+	</div>	<!-- <div class="columns"> -->
 				
 				
 				
@@ -269,14 +262,6 @@
 	$(".place").click(function() {
 		alert("여행지 정보로 연결");
 	});
-	
-	
-	$(".map").click(function() {
-		var map = $("#map").offset().top;
-		$("body").animate({
-			scrollTop: map
-		}, 500);
-	})
 	
 </script>
 </body>

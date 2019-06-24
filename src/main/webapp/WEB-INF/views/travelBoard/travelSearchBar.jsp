@@ -31,7 +31,7 @@
 					<i class="dropdown icon"></i>
 				<div class="menu">
 					<div class="item" id="simpleSearch"><i class="fas fa-search"></i> 간편 검색</div>
-					<div class="item" id="detailSearch"><i class="fas fa-search-plus"></i> 상세검색</div>
+					<div class="item" id="detailSearch"><i class="fas fa-search-plus"></i> 태그검색</div>
 				</div>
 			</div>
 		</div>
