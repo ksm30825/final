@@ -11,6 +11,9 @@
 		padding: 3rem 1.5rem;
 		padding-top: 0;
 	}
+	.card {
+		cursor: pointer;
+	}
 </style>
 </head>
 <body>

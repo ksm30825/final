@@ -77,10 +77,10 @@ public class TravelBoardController {
 	}
 	
 	//여행일정 상세 / 날짜별 갤러리 보기 - 예랑
-	@RequestMapping("selectGallery.tb")
-	public String selectGallery() {
+	@RequestMapping("travelDetailGallery.tb")
+	public String travelDetailGallery() {
 		
-		return "travelBoard/travelDetail";
+		return "travelBoard/travelDetailGallery";
 	}
 	
 	
