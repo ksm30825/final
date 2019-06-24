@@ -16,6 +16,9 @@
 		<typeAlias type="com.kh.ti.travel.model.vo.City" alias="City" />
 		<typeAlias type="com.kh.ti.travel.model.vo.TrvCity" alias="TrvCity" />
 		<typeAlias type="com.kh.ti.travel.model.vo.TrvDay" alias="TrvDay" />
+    <!-- TravelBoard Part (예랑) -->
+		<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelBoard" alias="TravelBoard"/>
+		<typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="TravelTag"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/member-mapper.xml"/>
@@ -25,7 +28,10 @@
     <mapper resource="mappers/travelRequest-mapper.xml"/>
     <!-- 민지 추가 -->
 		<mapper resource="mappers/travel-mapper.xml" />
+    <!-- TravelBoard Part (예랑) -->
+		<mapper resource="mappers/travelBoard-mapper.xml"/>
 	</mappers>
 	
 	
 </configuration>
+
