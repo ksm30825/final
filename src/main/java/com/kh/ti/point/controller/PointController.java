@@ -1,11 +1,20 @@
 package com.kh.ti.point.controller;
 
+import java.sql.Date;
+import java.util.GregorianCalendar;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.ti.point.model.service.PointService;
+import com.kh.ti.point.model.vo.Payment;
+
 @Controller
 public class PointController {
+	@Autowired
+	private PointService ps;	
 	
 	//포인트 전체 페이지
 	@RequestMapping("/pointMainView.po")
@@ -31,9 +40,26 @@ public class PointController {
 	}
 	//포인트 충전--수민
 	@RequestMapping("/toPay.po")
-	public String toPay(int memberId) {
+	public void toPay(String tid, String pAmount) {
+		System.out.println("tid : " + tid);
+		System.out.println("payAmount : " + pAmount);
+		//충전액
+		int payAmount = Integer.parseInt(pAmount);
+		//충전일
+		Date paymentDate = new Date(new GregorianCalendar().getTimeInMillis());
 		
-		return "point/payment";
+		Payment pay = new Payment();
+		pay.setTid(tid);
+		pay.setPayAmount(payAmount);
+		pay.setPaymentDate(paymentDate);
+		pay.setMemberId(1);
+
+		//포인트충전
+		//->결제 테이블에 insert
+		int result = ps.insertPay(pay);
+		
+		System.out.println("result : " + result);
+		
 	}
 	
 	
@@ -50,6 +76,14 @@ public class PointController {
 		//-> 해당 게시글번호(리뷰면 리뷰, 일정작성이면 일정작성)--수민
 	@RequestMapping("/oneBoardRPoint.po")
 	public String selectOneBoardRPoint(int memberId, int bid) {
+		
+		return "??";
+	}
+	//포인트 자동 인서트!!
+	//일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
+	//10:일정작성, 20:일정리뷰, 30:여행지리뷰
+	@RequestMapping("/pointReserve.po")
+	public String insertPointReserve(int memberId, int code, int type, int rPoint) {
 		
 		return "??";
 	}
@@ -73,6 +107,13 @@ public class PointController {
 	//포인트 환불 (사용자가 '환불신청' 눌렀을 때 ->환불테이블에 insert된다!)--수민
 	@RequestMapping("/refundUPoint.po")
 	public String insertRefund(int memberId, int pointId) {
+		
+		return "??";
+	}
+	//포인트 사용하는 컨트롤러 -> 자동 차감
+	//10:일정구매, 20:설계의뢰
+	@RequestMapping("/usePoint.po")
+	public String insertPointUse(int memberId, int code, int type, int uPoint) {
 		
 		return "??";
 	}

@@ -13,7 +13,7 @@
 	  background-position: center;
 	  background-repeat: no-repeat;
 	  background-size: cover;
-	  min-height:700px;
+	  min-height:720px;
 	}
 	#tabs {
 		width:80%;
@@ -61,12 +61,12 @@
 		  <div class="columns">
 		  
 		  <!-- signInArea -->
-		  <form action="login.me" method="post">
-		    <div class="column" id="signInArea">
+		  <form action="login.me" id="signInArea" method="post" style="width:100%;">
+		    <div class="column">
 			      <div class="field">
 			        <label class="label colWhite">이메일</label>
 			        <p class="control has-icons-left has-icons-right">
-			          <input class="input is-danger" type="text" placeholder="Email input" value="hello@" name="email" id="email">
+			          <input class="input is-danger" type="text" placeholder="Email" name="email" id="email">
 			          <span class="icon is-small is-left">
 			            <i class="fa fa-envelope"></i>
 			          </span>
@@ -78,7 +78,7 @@
 			      <div class="field">
 			        <label class="label colWhite">비밀번호</label>
 			        <p class="control has-icons-left has-icons-right">
-			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="password" id="password">
+			          <input class="input is-success" type="password" placeholder="password" name="password" id="password">
 			          <span class="icon is-small is-left">
 			            <i class="fa fa-lock"></i>
 			          </span>
@@ -108,93 +108,95 @@
 		  
 		      <!-- end SignInArea -->
 		      <!-- signUpArea -->
-		      <div class="column" id="signUpArea">
-			      <div class="field">
-			        <label class="label colWhite">* 사용자 이름</label>
-			        <p class="control has-icons-left has-icons-right">
-			          <input class="input is-success" type="text" placeholder="Text input" value="bulma">
-			          <span class="icon is-small is-left">
-			            <i class="fa fa-user"></i>
-			          </span>
-			          <span class="icon is-small is-right">
-			            <i class="fa fa-check"></i>
-			          </span>
-			        </p>
-			      </div>
-			      <div class="field">
-			        <label class="label colWhite">* 이메일</label>
-			        <p class="control has-icons-left has-icons-right">
-			          <input class="input is-danger" type="text" placeholder="Email input" value="hello@">
-			          <span class="icon is-small is-left">
-			            <i class="fa fa-envelope"></i>
-			          </span>
-			          <span class="icon is-small is-right">
-			            <i class="fa fa-check"></i>
-			          </span>
-			        </p>
-			      </div>
-			      <div class="field">
-			        <label class="label colWhite">* 비밀번호</label>
-			        <p class="control has-icons-left has-icons-right">
-			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="userPwd1">
-			          <span class="icon is-small is-left">
-			            <i class="fa fa-lock"></i>
-			          </span>
-			          <span class="icon is-small is-right">
-			            <i class="fa fa-lock"></i>
-			          </span>
-			        </p>
-			      </div>
-			      <div class="field">
-			        <label class="label colWhite">* 비밀번호 확인</label>
-			        <p class="control has-icons-left has-icons-right">
-			          <input class="input is-success" type="password" placeholder="Text input" value="bulma" name="userPwd2">
-			          <span class="icon is-small is-left">
-			            <i class="fa fa-lock"></i>
-			          </span>
-			          <span class="icon is-small is-right">
-			            <i class="fa fa-lock"></i>
-			          </span>
-			        </p>
-			        <p class="help is-success">비밀번호가 일치합니다.</p>
-			      </div>
-			      <div class="field">
-			      	<label class="label colWhite">* 휴대폰 인증</label>
-			      	<div class="field has-addons" style="width:100%;">
-				          <input class="input" type="tel" placeholder="phone number">
-				          <a class="button">본인 인증</a>
-			      	</div>
-			      </div>
-			      <div class="field is-horizontal">
-			      	<div class="field" style="margin-right:20px;">
-				        <label class="label colWhite"> 성별 </label>
-				          <span class="select">
-				            <select>
-				              <option>남자</option>
-				              <option>여자</option>
-				            </select>
+		      <form action="insert.me"  id="signUpArea" method="post" style="width:100%;">
+			      <div class="column">
+				      <div class="field">
+				        <label class="label colWhite">* 사용자 이름</label>
+				        <p class="control has-icons-left has-icons-right">
+				          <input class="input is-success" type="text" placeholder="User Name" name="userName">
+				          <span class="icon is-small is-left">
+				            <i class="fa fa-user"></i>
 				          </span>
-			      	</div>
-			      	<div class="field">			      	
-				        <label class="label colWhite"> 생년월일 </label>
-				        <input class="input is-danger" type="date" placeholder="birthday">
-			      	</div>
-			      </div>
-			      <div class="field">
-			        <p class="control">
-			          <label class="checkbox">
-			            <input type="checkbox" style="color:white;">
-						<a>개인정보 처리 방침</a> 및 <a>구매 약관</a>, <a>홈페이지 약관</a>에 대해 동의합니다.
-			          </label>
-			        </p>
-			      </div>
-			      
-			      <div class="field">
-			        <p class="control">
-			          <button class="button is-primary"><b>SIGN UP</b></button>
-			        </p>
-			      </div>
-			  </div>
+				          <span class="icon is-small is-right">
+				            <i class="fa fa-check"></i>
+				          </span>
+				        </p>
+				      </div>
+				      <div class="field">
+				        <label class="label colWhite">* 이메일</label>
+				        <p class="control has-icons-left has-icons-right">
+				          <input class="input is-danger" type="text" placeholder="Email" name="email">
+				          <span class="icon is-small is-left">
+				            <i class="fa fa-envelope"></i>
+				          </span>
+				          <span class="icon is-small is-right">
+				            <i class="fa fa-check"></i>
+				          </span>
+				        </p>
+				      </div>
+				      <div class="field">
+				        <label class="label colWhite">* 비밀번호</label>
+				        <p class="control has-icons-left has-icons-right">
+				          <input class="input is-success" type="password" placeholder="password" name="password">
+				          <span class="icon is-small is-left">
+				            <i class="fa fa-lock"></i>
+				          </span>
+				          <span class="icon is-small is-right">
+				            <i class="fa fa-lock"></i>
+				          </span>
+				        </p>
+				      </div>
+				      <div class="field">
+				        <label class="label colWhite">* 비밀번호 확인</label>
+				        <p class="control has-icons-left has-icons-right">
+				          <input class="input is-success" type="password" placeholder="password check" name="password2">
+				          <span class="icon is-small is-left">
+				            <i class="fa fa-lock"></i>
+				          </span>
+				          <span class="icon is-small is-right">
+				            <i class="fa fa-lock"></i>
+				          </span>
+				        </p>
+				        <p class="help is-success">비밀번호가 일치합니다.</p>
+				      </div>
+				      <div class="field">
+				      	<label class="label colWhite">* 휴대폰 인증</label>
+				      	<div class="field has-addons" style="width:100%;">
+					          <input class="input" type="tel" placeholder="phone number" name="phone">
+					          <a class="button">본인 인증</a>
+				      	</div>
+				      </div>
+				      <div class="field is-horizontal">
+				      	<div class="field" style="margin-right:20px;">
+					        <label class="label colWhite"> 성별 </label>
+					          <span class="select">
+					            <select name="gender">
+					              <option value="M">남자</option>
+					              <option value="F">여자</option>
+					            </select>
+					          </span>
+				      	</div>
+				      	<div class="field">			      	
+					        <label class="label colWhite"> 생년월일 </label>
+					        <input class="input is-danger" type="date" placeholder="birthday" name="birthday">
+				      	</div>
+				      </div>
+				      <div class="field">
+				        <p class="control">
+				          <label class="checkbox">
+				            <input type="checkbox" style="color:white;">
+							<a>개인정보 처리 방침</a> 및 <a>구매 약관</a>, <a>홈페이지 약관</a>에 대해 동의합니다.
+				          </label>
+				        </p>
+				      </div>
+				      
+				      <div class="field">
+				        <p class="control">
+				          <button class="button is-primary" type="submit"><b>SIGN UP</b></button>
+				        </p>
+				      </div>
+				  </div>
+		      </form>
 			  <!-- end signUpArea -->
 		  </div>
       </section>

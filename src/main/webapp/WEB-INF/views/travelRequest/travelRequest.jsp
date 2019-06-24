@@ -72,7 +72,7 @@
 	<br>
 	<section class="section" id="table">
 		<table class="table">
-			<a class="button is-info is-active" href="request.tr"> 의뢰하기 </a>
+			<a class="button is-info is-active" href="showRequestForm.tr"> 의뢰하기 </a>
 			<br>
 			<br>
 			<thead>
