@@ -7,9 +7,13 @@
 	<!-- Member Part 수정(세령) -->
 	<typeAliases>
 		<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
+		<!-- 여행의뢰 (선우) -->
+		<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequest" alias="TravelRequest"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/member-mapper.xml"/>
+		<!-- 여행의뢰 맵핑(선우) -->
+		<mapper resource="mappers/travelRequest-mapper.xml"/>
 	</mappers>
 	
 </configuration>
