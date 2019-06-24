@@ -11,7 +11,7 @@
 .table {
 	margin-right: auto;
 	margin-left: auto;
-	width: 70%;
+	width: 80%;
 }
 
 .table th {
@@ -45,12 +45,14 @@
 .pagination-list {
 	margin-left: 30%;
 }
+
 textarea {
 	width: 100%;
 	resize: none !important;
 	border: none;
 	text-align: center;
 }
+
 .modal-card {
 	width: 400px !important;
 	height: 800px !important;
@@ -59,10 +61,11 @@ textarea {
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<jsp:include page="../common/myPageHeader.jsp" />
+	<%-- <jsp:include page="../common/myPageHeader.jsp" /> --%>
 	<div class="columns">
 		<div class="column">
-			<section class="section" id="button">
+			<section class="section" id="headerSection">
+				<jsp:include page="../common/myPageHeader.jsp" />
 				<hr>
 				<div class="columns">
 					<div class="column cal">
@@ -96,6 +99,8 @@ textarea {
 					</div>
 				</div>
 			</section>
+			<!-- <section class="section" id="button"> -->
+			<!-- </section> -->
 			<section class="section" id="table">
 
 				<hr>
@@ -121,7 +126,8 @@ textarea {
 							<td>30,000원</td>
 							<td>미채택</td>
 							<td class="report"
-							onclick="$('#reportModal').toggleClass('is-active')"><i class="far fa-bell"></i></td>
+								onclick="$('#reportModal').toggleClass('is-active')"><i
+								class="far fa-bell"></i></td>
 						</tr>
 						<tr>
 							<td><b>2</b></td>
@@ -131,7 +137,8 @@ textarea {
 							<td>30,000원</td>
 							<td>미채택</td>
 							<td class="report"
-							onclick="$('#reportModal').toggleClass('is-active')"><i class="far fa-bell"></i></td>
+								onclick="$('#reportModal').toggleClass('is-active')"><i
+								class="far fa-bell"></i></td>
 						</tr>
 						<tr>
 							<td><b>3</b></td>
@@ -141,7 +148,8 @@ textarea {
 							<td>30,000원</td>
 							<td>미채택</td>
 							<td class="report"
-							onclick="$('#reportModal').toggleClass('is-active')"><i class="far fa-bell"></i></td>
+								onclick="$('#reportModal').toggleClass('is-active')"><i
+								class="far fa-bell"></i></td>
 						</tr>
 						<tr>
 							<td><b>4</b></td>
@@ -151,7 +159,8 @@ textarea {
 							<td>30,000원</td>
 							<td>미채택</td>
 							<td class="report"
-							onclick="$('#reportModal').toggleClass('is-active')"><i class="far fa-bell"></i></td>
+								onclick="$('#reportModal').toggleClass('is-active')"><i
+								class="far fa-bell"></i></td>
 						</tr>
 						<!-- <tr class="is-selected"> -->
 						<tr>
@@ -162,7 +171,8 @@ textarea {
 							<td>30,000원</td>
 							<td>미채택</td>
 							<td class="report"
-							onclick="$('#reportModal').toggleClass('is-active')"><i class="far fa-bell"></i></td>
+								onclick="$('#reportModal').toggleClass('is-active')"><i
+								class="far fa-bell"></i></td>
 						</tr>
 					</tbody>
 				</table>
@@ -273,8 +283,8 @@ textarea {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<a type="submit" class="button is-primary" onclick="report();">신고</a> <a class="button"
-					onclick="cancel();">취소</a>
+				<a type="submit" class="button is-primary" onclick="report();">신고</a>
+				<a class="button" onclick="cancel();">취소</a>
 			</footer>
 		</div>
 	</div>

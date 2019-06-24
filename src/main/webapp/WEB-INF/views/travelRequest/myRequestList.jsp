@@ -4,13 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <title>Insert title here</title>
 <style>
 .table {
 	margin-right: auto;
 	margin-left: auto;
-	width: 70%;
+	width: 80%;
 }
 
 .table th {
@@ -38,10 +39,11 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<jsp:include page="../common/myPageHeader.jsp" />
+	<%-- <jsp:include page="../common/myPageHeader.jsp" /> --%>
 	<div class="columns">
 		<div class="column">
-			<section class="section" id="button">
+			<section class="section" id="headerSection">
+				<jsp:include page="../common/myPageHeader.jsp" />
 				<hr>
 				<div class="columns">
 					<div class="column">
@@ -53,6 +55,8 @@
 					</div>
 				</div>
 			</section>
+			<!-- <section class="section" id="button"> -->
+			<!-- </section> -->
 			<section class="section" id="table">
 
 				<hr>
@@ -109,7 +113,8 @@
 			</section>
 			<section class="section" id="pagination">
 				<hr>
-				<nav class="pagination is-rounded" role="navigation" aria-label="pagination">
+				<nav class="pagination is-rounded" role="navigation"
+					aria-label="pagination">
 					<ul class="pagination-list">
 						<li><a class="pagination-previous">이전</a></li>
 						<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>

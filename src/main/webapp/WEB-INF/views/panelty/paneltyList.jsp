@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +9,7 @@
 .table {
 	margin-right: auto;
 	margin-left: auto;
-	width: 70%;
+	width: 80%;
 }
 
 .table th {
@@ -46,22 +46,25 @@
 </style>
 </head>
 <body>
-	<jsp:include page="../common/mainNav.jsp"/>
-	<jsp:include page="../common/myPageHeader.jsp"/>
+	<jsp:include page="../common/mainNav.jsp" />
+	<jsp:include page="../common/myPageHeader.jsp" />
 	<div class="columns">
 		<div class="column">
-			<section class="section" id="button">
+			<section class="section" id="headerSection">
+				<jsp:include page="../common/myPageHeader.jsp" />
 				<hr>
 				<div class="columns">
 					<div class="column cal">
 						<div class="buttons">
 							<a class="button is-primary is-rounded" href="goInquiry.pe">문의하기</a>
-							<a class="button is-info is-rounded" href="myInquiryList.pe">나의 문의 내역</a>
-							<a class="button is-link is-rounded" href="paneltyList.pe">신고내역</a>
+							<a class="button is-info is-rounded" href="myInquiryList.pe">나의
+								문의 내역</a> <a class="button is-link is-rounded" href="paneltyList.pe">신고내역</a>
 						</div>
 					</div>
 				</div>
 			</section>
+			<!-- <section class="section" id="button"> -->
+			<!-- </section> -->
 			<section class="section" id="table">
 
 				<hr>
@@ -139,16 +142,19 @@
 	</div>
 </body>
 <script>
-	$(function () {
-		$(".table").find("td").mouseenter(function () {
-			$(this)
-			.parents("tr")
-			.css({"background":"#209CEE","cursor":"pointer", "color":"white"});
+	$(function() {
+		$(".table").find("td").mouseenter(function() {
+			$(this).parents("tr").css({
+				"background" : "#209CEE",
+				"cursor" : "pointer",
+				"color" : "white"
+			});
 		}).mouseout(function() {
-			$(this)
-			.parents("tr")
-			.css({"background":"white", "color":"black"});
-		}).click(function () {
+			$(this).parents("tr").css({
+				"background" : "white",
+				"color" : "black"
+			});
+		}).click(function() {
 			console.log($(this).parents().children("td").eq(0).text());
 			location = "paneltyDetail.pe";
 		});
