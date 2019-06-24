@@ -17,9 +17,13 @@
 	
 	.wrap{
 		width : 100%;
-		height :710px;
+		height :100%;
 		background-image : url("resources/images/chatmain.png");
 		background-repeat : no-repeat;
+		background-size : cover;
+		margin: 0;
+		position:absolute;
+   		overflow-y: hidden; overflow-x: hidden;
 	}
 	
 	.header {
