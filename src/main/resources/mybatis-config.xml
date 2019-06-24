@@ -7,9 +7,18 @@
 	<!-- Member Part 수정(세령) -->
 	<typeAliases>
 		<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
+		<!-- 민지 추가 -->
+		<typeAlias type="com.kh.ti.travel.model.vo.Travel" alias="Travel" />
+		<typeAlias type="com.kh.ti.travel.model.vo.City" alias="City" />
+		<typeAlias type="com.kh.ti.travel.model.vo.TrvCity" alias="TrvCity" />
+		<typeAlias type="com.kh.ti.travel.model.vo.TrvDay" alias="TrvDay" />
+		<!--  -->
 	</typeAliases>
 	<mappers>
-		<mapper resource="mappers/member-mapper.xml"/>
-	</mappers>
+		<mapper resource="mappers/member-mapper.xml" />
+		<!-- 민지 추가 -->
+		<mapper resource="mappers/travel-mapper.xml" />
+		<!--  -->
+	</mappers> 
 	
 </configuration>

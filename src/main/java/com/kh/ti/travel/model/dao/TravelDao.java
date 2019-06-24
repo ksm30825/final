@@ -6,20 +6,23 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
+import com.kh.ti.travel.model.vo.TrvCity;
 import com.kh.ti.travel.model.vo.TrvCost;
+import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
 
 public interface TravelDao {
 
 	int insertTravel(SqlSessionTemplate sqlSession, Travel trv);
 
-	int insertTrvCity(SqlSessionTemplate sqlSession, Travel trv);
+	int insertTrvCity(SqlSessionTemplate sqlSession, TrvCity trvCity);
 
-	int insertTrvDay(SqlSessionTemplate sqlSession, Travel trv);
+	int insertTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay);
 
 	int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m);
 
@@ -60,5 +63,10 @@ public interface TravelDao {
 	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
 
 	int deleteTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);
+
+	City findCity(SqlSessionTemplate sqlSession, String string);
+
+	int selectTrvId(SqlSessionTemplate sqlSession);
+
 
 }

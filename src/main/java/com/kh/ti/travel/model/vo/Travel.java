@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.springframework.stereotype.Component;
+
+
 public class Travel implements java.io.Serializable {
 	
 	private int trvId;
@@ -16,16 +19,16 @@ public class Travel implements java.io.Serializable {
 	private Date completeDate;
 	private String status;
 	private int memberId;
-	private ArrayList trvCities;
-	private ArrayList trvComps;
-	private ArrayList trvTags;
+	private String[] trvCities;
+	private int[] trvComps;
+	private int[] trvTags;
 	private int trvRef;
 	
 	public Travel() {}
 
 	public Travel(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, Date openDate,
-			Date modifyDate, Date completeDate, String status, int memberId, ArrayList trvCities, ArrayList trvComps,
-			ArrayList trvTags, int trvRef) {
+			Date modifyDate, Date completeDate, String status, int memberId, String[] trvCities, int[] trvComps,
+			int[] trvTags, int trvRef) {
 		super();
 		this.trvId = trvId;
 		this.trvTitle = trvTitle;
@@ -123,27 +126,27 @@ public class Travel implements java.io.Serializable {
 		this.memberId = memberId;
 	}
 
-	public ArrayList getTrvCities() {
+	public String[] getTrvCities() {
 		return trvCities;
 	}
 
-	public void setTrvCities(ArrayList trvCities) {
+	public void setTrvCities(String[] trvCities) {
 		this.trvCities = trvCities;
 	}
 
-	public ArrayList getTrvComps() {
+	public int[] getTrvComps() {
 		return trvComps;
 	}
 
-	public void setTrvComps(ArrayList trvComps) {
+	public void setTrvComps(int[] trvComps) {
 		this.trvComps = trvComps;
 	}
 
-	public ArrayList getTrvTags() {
+	public int[] getTrvTags() {
 		return trvTags;
 	}
 
-	public void setTrvTags(ArrayList trvTags) {
+	public void setTrvTags(int[] trvTags) {
 		this.trvTags = trvTags;
 	}
 
@@ -160,8 +163,11 @@ public class Travel implements java.io.Serializable {
 		return "Travel [trvId=" + trvId + ", trvTitle=" + trvTitle + ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", compNumber=" + compNumber + ", openDate=" + openDate + ", modifyDate=" + modifyDate
 				+ ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId + ", trvCities="
-				+ trvCities + ", trvComps=" + trvComps + ", trvTags=" + trvTags + ", trvRef=" + trvRef + "]";
+				+ Arrays.toString(trvCities) + ", trvComps=" + Arrays.toString(trvComps) + ", trvTags="
+				+ Arrays.toString(trvTags) + ", trvRef=" + trvRef + "]";
 	}
+
+	
 
 	
 	

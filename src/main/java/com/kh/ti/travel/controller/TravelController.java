@@ -1,5 +1,7 @@
 package com.kh.ti.travel.controller;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class TravelController {
 	
 	@Autowired
 	private TravelService ts;
-
+	
 	@RequestMapping("showTrvEditor.trv")
 	public String showSchEditor() {
 		return "travel/travelEditor";
@@ -34,9 +36,16 @@ public class TravelController {
 	
 	//새일정작성-민지
 	@RequestMapping("insertTravel.trv")
-	public String insertTravel(Travel trv) {
+	public String insertTravel(Travel trv, String startDate, String endDate, String trvCity) {
+		
+		trv.setStartDate(Date.valueOf(startDate));
+		trv.setEndDate(Date.valueOf(endDate));
+		String[] cityArr = trvCity.split(",");
+		trv.setTrvCities(cityArr);
+		
 		int result = ts.insertTravel(trv);
-		return "";
+		
+		return "travel/travelEditor";
 	}
 	
 	//동행추가-민지

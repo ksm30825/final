@@ -7,11 +7,14 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
+import com.kh.ti.travel.model.vo.TrvCity;
 import com.kh.ti.travel.model.vo.TrvCost;
+import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
 
 @Repository
@@ -20,20 +23,23 @@ public class TravelDaoImpl implements TravelDao {
 	
 	@Override
 	public int insertTravel(SqlSessionTemplate sqlSession, Travel trv) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.insert("Travel.insertTravel", trv);
 	}
-
 	@Override
-	public int insertTrvCity(SqlSessionTemplate sqlSession, Travel trv) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int selectTrvId(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Travel.selectTrvId");
 	}
-
 	@Override
-	public int insertTrvDay(SqlSessionTemplate sqlSession, Travel trv) {
-		// TODO Auto-generated method stub
-		return 0;
+	public City findCity(SqlSessionTemplate sqlSession, String cityName) {
+		return sqlSession.selectOne("Travel.selectCity", cityName);
+	}	
+	@Override
+	public int insertTrvCity(SqlSessionTemplate sqlSession, TrvCity trvCity) {
+		return sqlSession.insert("Travel.insertTrvCity", trvCity);
+	}
+	@Override
+	public int insertTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay) {
+		return sqlSession.insert("Travel.insertTrvDay", trvDay);
 	}
 
 	@Override
@@ -156,8 +162,8 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	
+
+
 	
 	
 	
