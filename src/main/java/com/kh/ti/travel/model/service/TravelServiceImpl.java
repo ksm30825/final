@@ -1,5 +1,6 @@
 package com.kh.ti.travel.model.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.dao.TravelDao;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
+import com.kh.ti.travel.model.vo.TrvCity;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
@@ -28,11 +31,38 @@ public class TravelServiceImpl implements TravelService {
 	
 	@Override
 	public int insertTravel(Travel trv) {
-
+		int result = 0;
+		
 		int result1 = td.insertTravel(sqlSession, trv);
-		int result2 = td.insertTrvCity(sqlSession, trv);
-		int result3 = td.insertTrvDay(sqlSession, trv);
-		return 0;
+		int result2 = 0;
+		int result3 = 0;
+		int trvId = td.selectTrvId(sqlSession);
+		String[] trvCities = trv.getTrvCities();
+		/*
+		 * for(int i = 0; i < trvCities.length; i++) { City city =
+		 * td.findCity(sqlSession, trvCities[i]); TrvCity trvCity = new
+		 * TrvCity(city.getCityId(), trvId); result2 += td.insertTrvCity(sqlSession,
+		 * trvCity); }
+		 */
+		
+		Date startDate = trv.getStartDate();
+		Date endDate = trv.getEndDate();
+		int days = (int)((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+		
+		System.out.println("days : " + days);
+		
+		/*
+		 * for(int i = 1; i <= days; i++) { TrvDay trvDay = new TrvDay();
+		 * trvDay.setTrvId(trvId); trvDay.setDayNumber(i); Date date = new
+		 * Date(startDate.getTime() + (1000 * 60 * 60 * 24) * i);
+		 * System.out.println("date : " + date); trvDay.setDayDate(date); result3 +=
+		 * td.insertTrvDay(sqlSession, trvDay); }
+		 */
+		
+		if(result1 > 0 && result2 == trvCities.length && result3 == days) {
+			result = 1;
+		}
+		return result;
 	}
 
 	@Override
