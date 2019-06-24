@@ -22,7 +22,7 @@
 	<div class="columns">
 		<div class="column">
 			<section class="section">
-				<div style="border:1px solid gray; height:400px">
+				<div style="border:1px solid gray; height:500px">
 					<div id="mapWide" style="height:100%"></div>
 				</div>
 			</section>

@@ -64,7 +64,24 @@
 	  right: 35px;
 	  }
 	}
-	
+	#left-panel {
+		background: #fff;
+    	opacity: 0.7;
+		width:200px;
+		height:300px;
+		overflow-y:scroll;
+		display:inline-block;
+		position:absolute;
+		z-index:100;
+	}
+	#left-panel>ul {
+		overflow-y:scroll;
+	}
+	#left-panel li:hover {
+		cursor:pointer;
+		background:lightgray;
+		opacity:0.7;
+	}
 </style>
 <body>
 	<div id="myNav" class="overlay">
@@ -573,12 +590,41 @@
 						</nav>
 					</div>
 					<div class="column is-6">
-						<div class="field">
-							<p class="control">
-								<input class="input is-info" type="text" placeholder="지도에서 장소검색" id="searchInput">
-							</p>
+						<div class="field is-horizontal">
+							<div class="field-label is-normal">
+								<label class="label">지도 검색</label>
+							</div>
+							<div class="field-body">
+								<div class="field is-narrow">
+									<div class="control">
+										<div class="select is-fullwidth">
+											<select id="placeType">
+												<option>장소 찾기</option>
+												<option>식당</option>
+												<option>카페</option>
+												<option>바</option>
+												<option>쇼핑몰</option>
+												<option>공원</option>
+												<option>박물관</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="field" >
+									<p class="control is-grouped">
+										<input class="input is-info" type="text" placeholder="장소 이름, 주소 검색" id="searchInput">
+									</p>
+								</div>
+							</div>
 						</div>
 						<div style="border:1px solid gray; height:400px">
+							<div id="left-panel" class="panel">
+								<div class="panel-heading">검색 결과
+								</div>
+								<ul id="placeList"></ul>
+								<button class="button is-primary is-outlined is-fullwidth" 
+									id="more">결과 더보기</button>
+							</div>
 							<div id="map" style="height:100%"></div>
 						</div>
 					</div>
@@ -700,6 +746,20 @@
 			});
 			$(".delete").click(function() {
 				$(this).parents("li").remove();
+			});
+			
+			$("#placeType").change(function() {
+				var type = $(this).children("option:selected").text();
+				switch(type) {
+				case '식당': type = 'restaurant'; break;
+				case '카페': type = 'cafe'; break;
+				case '바': type = 'bar'; break;
+				case '쇼핑몰': type = 'shopping_mall'; break;
+				case '공원': type = 'park'; break;
+				case '박물관': type = 'museum'; break;
+				case '장소찾기':return;
+				}
+				placeTypeSearch(type);
 			});
 
 		});

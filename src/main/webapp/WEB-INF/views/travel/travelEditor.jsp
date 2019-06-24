@@ -9,14 +9,13 @@
 <link rel="stylesheet" type="text/css" href="resources/css/semantic.min.css">
 <link rel="stylesheet" href="resources/css/jquery-ui.theme.min.css">
 <link rel="stylesheet" href="resources/css/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="resources/css/travel/map-icons.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="resources/js/jquery-ui.min.js"></script>
 <script src="resources/js/semantic.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7fLkDFvRtLNooR612ov12h_gwdsqDI6Q&libraries=places&callback=initMap"
-    async defer></script>
-<script src="resources/js/travel/travel.js"></script>
+
 <style>
 	body {
 		overflow-x:visible !important;
@@ -256,5 +255,10 @@
 			location.href="showMyTravel.trv";
 		}
 	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7fLkDFvRtLNooR612ov12h_gwdsqDI6Q&libraries=places&callback=initMap"
+    async defer></script>
+	<script src="resources/js/travel/map-icons.js"></script>
+	<script src="resources/js/travel/travel.js"></script>
+	
 </body>
 </html>
