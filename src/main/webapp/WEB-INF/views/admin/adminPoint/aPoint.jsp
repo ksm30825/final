@@ -21,6 +21,11 @@
 	#aPointTB *{
 		text-align:center;
 	}
+	#aPointTB tbody *:hover{
+		background:#ededff;
+		color:#8484ff;
+		font-weight:bold;
+	}
 </style>
 </head>
 <body>

@@ -21,6 +21,11 @@
 	#aPointTB *{
 		text-align:center;
 	}
+	tbody *:hover{
+		background:#ededff;
+		color:#8484ff;
+		font-weight:bold;
+	}	
 </style>
 </head>
 <body>
@@ -67,7 +72,7 @@
 							<thead>
 								<tr style="background:#ccccff;">
 									<th width="2%"> 
-										<input type="checkbox" name="rebateCheck">
+										<input type="checkbox" name="rebateCheck" id="allCheck">
 									</th>
 									<th width="3%"> No. </th>
 									<th width="5%"> 아이디 </th>
@@ -151,6 +156,14 @@
 			});
 			$(".apointReb").parent().addClass('is-active');
 			$(".apointReb").children().css({"color":"#209cee"});
+			
+			$("#allCheck").click(function(){
+				if($("#allCheck").prop("checked")) { 
+					$("input[type=checkbox]").prop("checked",true); 
+				}else { 
+					$("input[type=checkbox]").prop("checked",false); 
+				}
+			});
 		});
 	</script>
 </body>

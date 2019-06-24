@@ -31,6 +31,11 @@
 		border-radius:5px;
 		border:1px solid purple;
 	}
+	#chargeArea tbody *:hover,#receiveArea tbody *:hover,#useArea tbody *:hover{
+		background:#ededff;
+		color:#adadff;
+		font-weight:bold;
+	}
 </style>
 </head>
 <body>
@@ -80,7 +85,7 @@
 				    	<div id="chargeTB">
 				    		<table class="table is-narrow" align="center" style="width:100%;">
 							    <thead>
-							      <tr style="background:#ccccff;">
+							      <tr style="background:skyblue;">
 							        <th> No </th>
 							        <th> 충전일 </th>
 							        <th> 충전액 </th>
@@ -98,46 +103,6 @@
 							        <td> 19.06.03 </td>
 							        <td> 3,000 </td>
 							      </tr>
-							      <tr>
-							        <td> 3 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 4 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 5 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 6 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 7 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 8 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 9 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 10 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
 							    </tbody>
 						  </table>
 				    	</div>
@@ -149,7 +114,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 				    	</div>
-				    	<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
+				    	<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 			    	</div>
 			    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
 			    		<div id="receiveTop">
@@ -177,7 +142,7 @@
 						<div id="receiveTB">
 							<table class="table is-narrow" align="center" style="width:100%;">
 							    <thead>
-							      <tr style="background:#ccccff;">
+							      <tr style="background:skyblue;">
 							        <th> No </th>
 							        <th> 지급일 </th>
 							        <th> 지급포인트 </th>
@@ -201,70 +166,6 @@
 							        	<a class="button is-primary " style="height:20px;">후기작성</a>
 							        </td>
 							      </tr>
-							      <tr>
-							        <td> 3 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 4 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 5 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 6 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 7 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 8 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 9 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 10 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
 							    </tbody>
 						  </table>
 						</div>
@@ -276,7 +177,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
+			    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 			    	</div>
 			    	<div id="useArea"  style="margin-top:3%; border-top:1px solid lightgray;">
 			    		<div id="useTop">
@@ -304,7 +205,7 @@
 			    		<div id="useTB">
 							<table class="table is-narrow" align="center" style="width:100%;">
 							    <thead>
-							      <tr style="background:#ccccff;">
+							      <tr style="background:skyblue">
 							        <th> No </th>
 							        <th> 사용일 </th>
 							        <th> 사용포인트 </th>
@@ -368,61 +269,6 @@
 							        	<a class="button is-warning"> 처리대기 </a>
 							        </td>
 							      </tr>
-							      <tr>
-							        <td> 6 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-primary" data-target="#myModal" onclick="$('#myModal').toggleClass('is-active')"> 환불신청 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 7 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-primary" data-target="#myModal" onclick="$('#myModal').toggleClass('is-active')"> 환불신청 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 8 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-primary" data-target="#myModal" onclick="$('#myModal').toggleClass('is-active')"> 환불신청 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 9 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary" style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-primary" data-target="#myModal" onclick="$('#myModal').toggleClass('is-active')"> 환불신청 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 10 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-primary" data-target="#myModal" onclick="$('#myModal').toggleClass('is-active')"> 환불신청 </a>
-							        </td>
-							      </tr>
 							    </tbody>
 						  </table>
 						</div>
@@ -434,7 +280,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
+			    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 			    		<br>
 			    	</div>
 			   	</div>

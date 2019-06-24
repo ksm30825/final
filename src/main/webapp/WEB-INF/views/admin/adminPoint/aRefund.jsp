@@ -21,6 +21,11 @@
 	#aPointTB *{
 		text-align:center;
 	}
+	tbody *:hover{
+		background:#ededff;
+		color:#8484ff;
+		font-weight:bold;
+	}
 </style>
 </head>
 <body>
@@ -44,7 +49,7 @@
 							<p class="control">
 								<input class="input is-primary" type="text" placeholder="회원ID를 검색하세요" style="width:150px;height:20px;">
 							</p>
-							<div class="select is-small is-primary" style="display:inline-block;float:right;">
+							<div class="select is-small is-primary" style="display:inline-block;float:right;margin-left:2%;">
 					            <select name="chargeSelect" style="height:20px;">
 					              <option>--환불승인상태--</option>
 					              <option>대기중</option>
@@ -57,7 +62,7 @@
 		         	<div style="width:100%;height:25px;"></div>
 		         </div>
 		         <div style="width:100%;height:100%;" id="aPointArea">
-					<table id="aPointTB" class="table is-narrow"align="center"style="width:100%;height:100%;" >
+					<table id="aPointTB" class="table is-narrow" align="center"style="width:100%;height:100%;" >
 						<thead>
 							<tr style="background:#ccccff;">
 								<th width="3%"> No. </th>
@@ -71,18 +76,18 @@
 								<th width="10%"> 환불 승인 상태 </th>
 							</tr>
 						</thead>
-						<tbody id="aPointTBody">
+						<tbody id="aPointTBody" >
 							<tr>
-								<td> <a onclick="$('#myModal').toggleClass('is-active')">1</a> </td>
-								<td> <a onclick="$('#myModal').toggleClass('is-active')">user01</a> </td>
-								<td> <a onclick="$('#myModal').toggleClass('is-active')">skdafj</a> </td>
-								<td> <a onclick="$('#myModal').toggleClass('is-active')">19.06.10</a> </td>
-								<td> <a onclick="$('#myModal').toggleClass('is-active')">18</a> </td>
-								<td> <a onclick="$('#myModal').toggleClass('is-active')">400P</a> </td>
-								<td> <a onclick="$('#myModal').toggleClass('is-active')">이 사람이..</a> </td>
+								<td> 1 </td>
+								<td> user01 </td>
+								<td> skdafj </td>
+								<td> 19.06.10 </td>
+								<td> 18 </td>
+								<td> 400P </td>
+								<td> 이 사람이.. </td>
 								<td>
-									<a class="button is-success is-outlined" style="width:70px;height:20px;"> 승인 </a>
-									<a class="button is-danger is-outlined" style="width:70px;height:20px;"> 거절 </a>
+									<a class="button is-success is-outlined yes" style="width:70px;height:20px;"> 승인 </a>
+									<a class="button is-danger is-outlined no" style="width:70px;height:20px;"> 거절 </a>
 								</td>
 								<td>
 									<a class="button is-primary" style="width:70px;height:20px;"> 대기중 </a>
@@ -97,8 +102,8 @@
 								<td> 400P </td>
 								<td> 이 사람이.. </td>
 								<td>
-									<a class="button is-success is-outlined" style="width:70px;height:20px;"> 승인 </a>
-									<a class="button is-danger is-outlined" style="width:70px;height:20px;"> 거절 </a>
+									<a class="button is-success is-outlined yes" style="width:70px;height:20px;"> 승인 </a>
+									<a class="button is-danger is-outlined no" style="width:70px;height:20px;"> 거절 </a>
 								</td>
 								<td>
 									<a class="button is-primary" style="width:70px;height:20px;"> 대기중 </a>
@@ -113,8 +118,8 @@
 								<td> 300P </td>
 								<td> 이 사람이.. </td>
 								<td>
-									<a class="button is-success is-outlined" style="width:70px;height:20px;"> 승인 </a>
-									<a class="button is-danger is-outlined" style="width:70px;height:20px;"> 거절 </a>
+									<a class="button is-success is-outlined yes" style="width:70px;height:20px;"> 승인 </a>
+									<a class="button is-danger is-outlined no" style="width:70px;height:20px;"> 거절 </a>
 								</td>
 								<td>
 									<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>
@@ -129,8 +134,8 @@
 								<td> 400P </td>
 								<td> 이 사람이.. </td>
 								<td>
-									<a class="button is-success is-outlined" style="width:70px;height:20px;"> 승인 </a>
-									<a class="button is-danger is-outlined" style="width:70px;height:20px;"> 거절 </a>
+									<a class="button is-success is-outlined yes" style="width:70px;height:20px;"> 승인 </a>
+									<a class="button is-danger is-outlined no" style="width:70px;height:20px;"> 거절 </a>
 								</td>
 								<td>
 									<a class="button is-danger" style="width:70px;height:20px;"> 거절 </a>
@@ -155,19 +160,18 @@
 					<div class="modal-background"></div>
 					<div class="modal-card">
 						<header class="modal-card-head">
-							<p class="modal-card-title"style="line-height:180%;">환불 상세 내역<br><textarea cols="75" rows="4" style="font-size:13px;resize:none;line-height:150%;">
-		아이디 : as
-		구매일 : 
-		구매한 게시글 : 링크주소</textarea></p>
+							<p class="modal-card-title"style="line-height:180%;">환불 상세 내역<br>
+								<textarea cols="75" rows="4" style="font-size:13px;resize:none;line-height:150%;" id="modalHeadContent"></textarea>
+							</p>
 							<button class="delete" id="del"></button>
 						</header>
 						<section class="modal-card-body">
-							<textarea cols="85" rows="15" style="resize:none;" readonly>아니 이 사람이 사기쳤어요</textarea>
+							<textarea cols="85" rows="15" style="resize:none;" readonly id="modalBodyContent"></textarea>
 						</section>
 						<footer class="modal-card-foot">
 							<div style="margin-left:auto;margin-right:auto;">
-								<a class="button is-success" style="border-radius:5px; height:25px;"> 승인 </a>
-								<a class="button is-danger" style="border-radius:5px; height:25px;"> 거절 </a>
+								<a class="button is-success modalYes" style="border-radius:5px; height:25px;"> 승인 </a>
+								<a class="button is-danger modalNo" style="border-radius:5px; height:25px;"> 거절 </a>
 							</div>
 						</footer>
 					</div>
@@ -177,14 +181,56 @@
 	</div>
 	<script type="text/javascript">
 		$(function() {
+			var no = 9999999;
 			$('.modal-background, .modal-close').click(function() {
 				$(this).parent().removeClass('is-active');
 			});
+			
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
+			
 			$(".apointRef").parent().addClass('is-active');
 			$(".apointRef").children().css({"color":"#209cee"});
+			
+			$("#aPointTBody tr").click(function(){
+				$('#myModal').toggleClass('is-active');
+				
+				$("#modalHeadContent").text('아이디 : '
+						+$(this).children().eq(1).text()+'\n구매일 :'
+						+$(this).children().eq(3).text()+'\n구매한 게시글 : '
+						+$(this).children().eq(4).text());
+				
+				$("#modalBodyContent").text($(this).children().eq(6).text());
+				
+				no = $(this).children().eq(0).text()
+				
+				$(".modalYes").click(function(){
+					approve(no);
+					$('#myModal').removeClass('is-active');
+				});
+				
+				$(".modalNo").click(function(){
+					refuse(no);
+					$('#myModal').removeClass('is-active');
+				});
+			});
+			no=9999999;
+			
+			function approve(parame){
+				for(var i=0; i<4 ; i++){
+					if(parame==$("#aPointTBody").children().eq(i).children().eq(0).text()){
+						$("#aPointTBody").children().eq(i).children().eq(8).children().css({"background":"#2ecc71"}).text('승인');
+					}
+				}
+			}
+			function refuse(parame){
+				for(var i=0; i<4 ; i++){
+					if(parame==$("#aPointTBody").children().eq(i).children().eq(0).text()){
+						$("#aPointTBody").children().eq(i).children().eq(8).children().css({"background":"#e74c3c"}).text('거절');
+					}
+				}
+			}
 		});
 	</script>
 </body>
