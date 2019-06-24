@@ -31,6 +31,11 @@
 		border-radius:5px;
 		border:1px solid purple;
 	}
+	#rebateArea tbody *:hover,#proceedsArea tbody *:hover{
+		background:#ededff;
+		color:#adadff;
+		font-weight:bold;
+	}
 </style>
 </head>
 <body>
@@ -55,7 +60,7 @@
 				  			<div id="rebateTitle" style="color:purple; font-size:28px;margin-top:3%;">
 				    			수익금 환급신청 내역
 			    			</div>
-				  			<div class="select" style="display:inline-block;float:right;">
+				  			<div class="select" style="display:inline-block;float:right;margin-bottom:4px;">
 					            <select name="rebateSelect">
 					              <option>--월--</option>
 					              <option>1</option>
@@ -74,7 +79,7 @@
 					        </div>
 					        <div id="rebateTB">
 				    		<table class="table is-narrow" align="center" style="width:100%;">
-							    <thead>
+							    <thead style="background:skyblue;">
 							      <tr>
 							        <th> No </th>
 							        <th> 환급신청일 </th>
@@ -119,7 +124,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 				    	</div>
-				    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
+				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				  		</div>
 				  	</div>
 				  	
@@ -154,7 +159,7 @@
 				 		</div>
 				 		<div id="proceedsTB">
 				 			<table class="table is-narrow" align="center" style="width:100%;">
-							    <thead>
+							    <thead style="background:skyblue;">
 							      <tr>
 							        <th> No </th>
 							        <th> 달성일 </th>
@@ -222,7 +227,7 @@
 				    		<button class="pageingBtn"> > </button>
 				    		<button class="pageingBtn"> >> </button>
 			    		</div>
-			    		<a style="height:20px;color:purple;margin-left:80%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
+			    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				 		</div>
 				  	</div>
 		    </section>

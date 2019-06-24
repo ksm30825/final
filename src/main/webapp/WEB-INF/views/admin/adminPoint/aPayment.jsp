@@ -21,6 +21,11 @@
 	#aPayTB *{
 		text-align:center;
 	}
+	#aPayTB tbody *:hover{
+		background:#ededff;
+		color:#8484ff;
+		font-weight:bold;
+	}
 </style>
 </head>
 <body>
