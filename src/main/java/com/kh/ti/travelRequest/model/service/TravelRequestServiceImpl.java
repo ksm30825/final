@@ -39,4 +39,10 @@ public class TravelRequestServiceImpl implements TravelRequestService{
 		return trd.selectRequestList(sqlSession, pi);
 	}
 
+	//의뢰글 상세보기
+	@Override
+	public TravelRequest selectOneRequest(int reqNum) {
+		return trd.selectOneRequest(sqlSession, reqNum);
+	}
+
 }

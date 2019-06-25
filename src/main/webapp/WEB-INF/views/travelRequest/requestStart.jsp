@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,7 +105,7 @@ th, td {
 							<a class="button is-primary"> Day1 </a> &nbsp;
 							<!-- X버튼 -->
 							<span data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan"> <svg
+								class="db color-inherit link hover-cyan removeBtn" > <svg
 									aria-hidden="true" focusable="false" data-prefix="fas"
 									data-icon="times-circle" role="img"
 									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
@@ -127,101 +128,6 @@ th, td {
 								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
 							<p class="control">
 								<textarea class="textarea " placeholder="일정 작성"></textarea>
-							</p>
-						</div>
-						<br>
-						<hr>
-						<br>
-						<div class="field">
-							<a class="button is-primary"> Day2 </a> &nbsp; <span
-								data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan"><svg
-									aria-hidden="true" focusable="false" data-prefix="fas"
-									data-icon="times-circle" role="img"
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-									class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-										class=""></path></svg></span> <input class="input" type="text"
-								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
-							<p class="control">
-								<textarea class="textarea" placeholder="일정 작성"></textarea>
-							</p>
-						</div>
-						<br>
-						<hr>
-						<br>
-						<div class="field">
-							<a class="button is-primary"> Day3 </a> &nbsp; <span
-								data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan"><svg
-									aria-hidden="true" focusable="false" data-prefix="fas"
-									data-icon="times-circle" role="img"
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-									class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-										class=""></path></svg></span> <input class="input" type="text"
-								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
-							<p class="control">
-								<textarea class="textarea" placeholder="일정 작성"></textarea>
-							</p>
-						</div>
-						<br>
-						<hr>
-						<br>
-						<div class="field">
-							<a class="button is-primary"> Day4 </a> &nbsp; <span
-								data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan"><svg
-									aria-hidden="true" focusable="false" data-prefix="fas"
-									data-icon="times-circle" role="img"
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-									class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-										class=""></path></svg></span> <input class="input" type="text"
-								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
-							<p class="control">
-								<textarea class="textarea" placeholder="일정 작성"></textarea>
-							</p>
-						</div>
-						<br>
-						<hr>
-						<br>
-						<div class="field">
-							<a class="button is-primary"> Day5 </a> &nbsp; <span
-								data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan"><svg
-									aria-hidden="true" focusable="false" data-prefix="fas"
-									data-icon="times-circle" role="img"
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-									class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-										class=""></path></svg></span> <input class="input" type="text"
-								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
-							<p class="control">
-								<textarea class="textarea" placeholder="일정 작성"></textarea>
-							</p>
-						</div>
-						<br>
-						<hr>
-						<br>
-						<div class="field">
-							<a class="button is-primary"> Day6 </a> &nbsp; <span
-								data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan"><svg
-									aria-hidden="true" focusable="false" data-prefix="fas"
-									data-icon="times-circle" role="img"
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-									class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-										class=""></path></svg></span> <input class="input" type="text"
-								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
-							<p class="control">
-								<textarea class="textarea" placeholder="일정 작성"></textarea>
 							</p>
 						</div>
 						<br>
@@ -433,11 +339,10 @@ th, td {
 		</div>
 	</div>
 	<script>
+	
+	var count = 1;
+	
 	$(function() {
-		$(".hover-cyan").click(function() {
-			alert("일정 삭제하시겠습니까?");
-		});
-		
 	  	$('.modal-background, .modal-close').click(function() {
 	   		$('html').removeClass('is-clipped');
 	    	$(this).parent().removeClass('is-active');
@@ -467,8 +372,10 @@ th, td {
 		   	});
 		}
 		//+버튼
+		
 		$(".plusBtn").click(function(){
-			$(this).parent().append('<input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)"><p class="control"><textarea class="textarea " placeholder="일정 작성"></textarea></p>');
+			count++;
+			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan" onclick="remove()"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)"><p class="control"><textarea class="textarea " placeholder="일정 작성"></textarea></p></div>');
 		});
 	});
 
@@ -622,6 +529,33 @@ th, td {
           markers[i].setMap(map);
         }
       }
+	/* function remove(event) {
+		console.log($(this).parent());
+		
+		var parent = $(this).parent();
+		
+		parent.remove();
+		
+		count--;
+	}   */
+
+	$(document).on("click",".hover-cyan",function(){
+		/* console.log($(this).parent());
+		console.log($(this).parent().text().split(" ")[2]); */
+		var num = $(".day").text();
+		console.log(num);
+		var numArr= $(".day").text().split(" ");
+		console.log(numArr);
+		/* console.log(count); */
+		$(this).parent().remove();
+		
+		
+		count--;
+		for(var i = num; i < count; i++) {
+			/* console.log(i); */
+		}
+	});
+	
 </script>
 	<!-- <script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap&libraries=places"

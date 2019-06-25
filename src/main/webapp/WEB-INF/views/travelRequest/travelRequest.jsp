@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,47 +87,16 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td><b>1</b></td>
-					<td>여행제목</td>
-					<td>user01</td>
-					<td>30,000원</td>
-					<td>700,000원</td>
-					<td>2019/07/10</td>
-				</tr>
-				<tr>
-					<td><b>2</b></td>
-					<td>여행제목</td>
-					<td>user01</td>
-					<td>30,000원</td>
-					<td>700,000원</td>
-					<td>2019/07/10</td>
-				</tr>
-				<tr>
-					<td><b>3</b></td>
-					<td>여행제목</td>
-					<td>user01</td>
-					<td>30,000원</td>
-					<td>700,000원</td>
-					<td>2019/07/10</td>
-				</tr>
-				<tr>
-					<td><b>4</b></td>
-					<td>여행제목</td>
-					<td>user01</td>
-					<td>30,000원</td>
-					<td>700,000원</td>
-					<td>2019/07/10</td>
-				</tr>
-				<!-- <tr class="is-selected"> -->
-				<tr>
-					<td><b>5</b></td>
-					<td>여행제목</td>
-					<td>user01</td>
-					<td>30,000원</td>
-					<td>700,000원</td>
-					<td>2019/07/10</td>
-				</tr>
+				<c:forEach var="list" items="${ list }">
+					<tr>
+						<td><b>${ list.requestId }</b></td>
+						<td>${ list.requestTitle }</td>
+						<td>${ list.userName }</td>
+						<td><fmt:formatNumber value="${ list.requestPrice }" groupingUsed="true"></fmt:formatNumber>원</td>
+						<td><fmt:formatNumber value="${ list.trvCost }" groupingUsed="true"></fmt:formatNumber>원</td>
+						<td>${ list.endDate }</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 	</section>
@@ -136,14 +106,42 @@
 		<nav class="pagination is-rounded" role="navigation"
 			aria-label="pagination">
 			<ul class="pagination-list">
+			<!-- 이전버튼 -->
+			<c:if test="${pi.currentPage <= 1 }">
 				<li><a class="pagination-previous">이전</a></li>
-				<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-				<li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-				<li><a class="pagination-link is-current" aria-label="Page 46"
-					aria-current="page">46</a></li>
-				<li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-				<li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+			</c:if>
+			<c:if test="${ pi.currentPage > 1 }">
+				<c:url var="previous" value="travelRequest.tr">
+					<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
+				</c:url>
+				<li><a class="pagination-previous" href="${ previous }">이전</a></li>
+			</c:if>
+			<!--  -->
+			
+			<!-- 숫자버튼 -->
+			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				<c:if test="${ p eq pi.currentPage }">
+					<li><a class="pagination-link" aria-label="Goto page 1">${ p }</a></li>
+				</c:if>
+				<c:if test="${ p ne pi.currentPage }">
+					<c:url var="number" value="travelRequest.tr">
+						<c:param name="currentPage" value="${ p }"/>
+					</c:url>
+					<li><a class="pagination-link" aria-label="Goto page 1" href="${ number }">${ p }</a></li>
+				</c:if>
+			</c:forEach>
+			<!--  -->
+			
+			<!-- 다음 버튼 -->
+			<c:if test="${ pi.currentPage >= pi.maxPage }">
 				<li><a class="pagination-next">다음</a></li>
+			</c:if>
+			<c:if test="${ pi.currentPage < pi.maxPage }">
+				<c:url var="next" value="travelRequest.tr">
+					<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
+				</c:url>
+				<li><a class="pagination-next" href="${ next }">다음</a></li>
+			</c:if>
 			</ul>
 		</nav>
 		<br>
@@ -163,8 +161,9 @@
 				"color" : "black"
 			});
 		}).click(function() {
-			console.log($(this).parents().children("td").eq(0).text());
-			location = "requestDetail.tr";
+			var reqId = $(this).parents().children("td").eq(0).text();
+			console.log(reqId);
+			location = "requestDetail.tr?reqId=" + reqId;
 		});
 	});
 </script>

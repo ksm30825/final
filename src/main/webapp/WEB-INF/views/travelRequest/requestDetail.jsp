@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,12 +72,12 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><b>1</b></td>
-							<td>여행제목</td>
-							<td>user01</td>
-							<td>30,000원</td>
-							<td>700,000원</td>
-							<td>2019/07/10</td>
+							<td><b>${ tr.requestId }</b></td>
+							<td>${ tr.requestTitle }</td>
+							<td>${ tr.userName }</td>
+							<td><fmt:formatNumber value="${ tr.requestPrice }" groupingUsed="true"></fmt:formatNumber>원</td>
+							<td><fmt:formatNumber value="${ tr.requestPrice }" groupingUsed="true"></fmt:formatNumber>원</td>
+							<td>${ tr.endDate }</td>
 						</tr>
 					</tbody>
 				</table>
@@ -84,7 +86,7 @@
 				<div class="field">
 					<label class="label">이런 여행을 원해요</label>
 					<p class="control">
-						<textarea class="textarea" readonly>이런여행을 원해요</textarea>
+						<textarea class="textarea" readonly>${ tr.requestContent }</textarea>
 					</p>
 				</div>
 				<div class="field is-grouped">
@@ -265,7 +267,7 @@
 			});
 		});
 	function start() {
-		location = "requestStart.tr";
+		location = "showrequestStartForm.tr";
 	}
 	function reset() {
 		location = "travelRequest.tr";

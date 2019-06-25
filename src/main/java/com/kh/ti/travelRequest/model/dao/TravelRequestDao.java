@@ -15,4 +15,6 @@ public interface TravelRequestDao {
 
 	ArrayList<TravelRequest> selectRequestList(SqlSessionTemplate sqlSession, PageInfo pi);
 
+	TravelRequest selectOneRequest(SqlSessionTemplate sqlSession, int reqNum);
+
 }
