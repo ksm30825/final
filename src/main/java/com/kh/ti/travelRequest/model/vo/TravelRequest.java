@@ -10,6 +10,7 @@ public class TravelRequest implements Serializable{
 	private Date endDate;	//의뢰마감일
 	private int requestPrice;	//의뢰가격
 	private int memberId;	//회원코드
+	private String userName;	//회원명
 	private String chooseStatus;	//채택상태
 	private Date chooseDate;	//채택날짜
 	private int trvCost;	//예산
@@ -17,7 +18,7 @@ public class TravelRequest implements Serializable{
 	public TravelRequest() {}
 
 	public TravelRequest(int requestId, String requestTitle, String requestContent, Date endDate, int requestPrice,
-			int memberId, String chooseStatus, Date chooseDate, int trvCost) {
+			int memberId, String userName, String chooseStatus, Date chooseDate, int trvCost) {
 		super();
 		this.requestId = requestId;
 		this.requestTitle = requestTitle;
@@ -25,6 +26,7 @@ public class TravelRequest implements Serializable{
 		this.endDate = endDate;
 		this.requestPrice = requestPrice;
 		this.memberId = memberId;
+		this.userName = userName;
 		this.chooseStatus = chooseStatus;
 		this.chooseDate = chooseDate;
 		this.trvCost = trvCost;
@@ -78,6 +80,14 @@ public class TravelRequest implements Serializable{
 		this.memberId = memberId;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public String getChooseStatus() {
 		return chooseStatus;
 	}
@@ -106,6 +116,7 @@ public class TravelRequest implements Serializable{
 	public String toString() {
 		return "TravelRequest [requestId=" + requestId + ", requestTitle=" + requestTitle + ", requestContent="
 				+ requestContent + ", endDate=" + endDate + ", requestPrice=" + requestPrice + ", memberId=" + memberId
-				+ ", chooseStatus=" + chooseStatus + ", chooseDate=" + chooseDate + ", trvCost=" + trvCost + "]";
+				+ ", userName=" + userName + ", chooseStatus=" + chooseStatus + ", chooseDate=" + chooseDate
+				+ ", trvCost=" + trvCost + "]";
 	}
 }
