@@ -37,4 +37,10 @@ public class TravelRequestDaoImpl implements TravelRequestDao{
 		return (ArrayList) sqlSession.selectList("TravelRequest.selectRequestList", null, rowBounds);
 	}
 
+	//의뢰글 상세보기 - 선우
+	@Override
+	public TravelRequest selectOneRequest(SqlSessionTemplate sqlSession, int reqNum) {
+		return sqlSession.selectOne("TravelRequest.selectOneRequest", reqNum);
+	}
+
 }

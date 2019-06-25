@@ -10,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 //의뢰 및 설계
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
@@ -26,7 +28,8 @@ public class TravelRequestController {
 	private TravelRequestService trs;
 	//여행 의뢰 게시판 - 이선우
 	@RequestMapping("travelRequest.tr")
-	public String selectTravelRequest(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView selectTravelRequest(HttpServletRequest request, HttpServletResponse response
+			, ModelAndView mv) {
 		int currentPage = 1;
 		
 		if(request.getParameter("currentPage") != null) {
@@ -43,12 +46,18 @@ public class TravelRequestController {
 		ArrayList<TravelRequest> list = trs.selectRequestList(pi);
 		System.out.println("의뢰글 목록 : " + list);
 		
-		return "travelRequest/travelRequest";
+		//list, pi=> jsp전달
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		
+		mv.setViewName("travelRequest/travelRequest");
+		
+		return mv;
 	}
 	
 	//의뢰하기폼 - 이선우
 	@RequestMapping("showRequestForm.tr")
-	public String showRequest() {
+	public String showRequestForm() {
 		
 		return "travelRequest/request";
 	}
@@ -70,14 +79,25 @@ public class TravelRequestController {
 	
 	//의뢰글 상세보기 - 이선우
 	@RequestMapping("requestDetail.tr")
-	public String selectRequestDetail() {
+	public String selectRequestDetail(@RequestParam("reqId")String reqId, Model model) {
+		int reqNum = Integer.parseInt(reqId);
+		System.out.println("의뢰글 번호 : " + reqNum);
 		
-		return "travelRequest/requestDetail";
+		TravelRequest tr = trs.selectOneRequest(reqNum);
+		System.out.println(tr);
+		
+		if(tr != null) {
+			model.addAttribute("tr", tr);
+			return "travelRequest/requestDetail";
+		} else {
+			model.addAttribute("msg", "의뢰글 상세조회 오류");
+			return "common/errorPage";
+		}
 	}
 	
 	//설계해주기 - 이선우
-	@RequestMapping("requestStart")
-	public String insertRequestStart() {
+	@RequestMapping("showrequestStartForm")
+	public String showRequestStartForm() {
 		
 		return "travelRequest/requestStart";
 	}

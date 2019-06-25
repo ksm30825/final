@@ -13,4 +13,6 @@ public interface TravelRequestService {
 
 	ArrayList<TravelRequest> selectRequestList(PageInfo pi);
 
+	TravelRequest selectOneRequest(int reqNum);
+
 }
