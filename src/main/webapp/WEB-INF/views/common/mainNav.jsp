@@ -39,12 +39,31 @@
                         	<span>동행찾기</span>
                      	</a>
             		</p>
-            		<p class="control">
-                     	<a class="button is-info is-rounded" href="loginForm.me"> 
-                        	<span class="icon"><i class="fa fa-user"></i></span> 
-                        	<span>LOG IN</span>
-                    	</a>
-                  	</p> 
+            		
+            		<!-- 로그인 안 되었을 때  수정 세량-->
+            		<c:if test="${ empty loginUser }">
+            			<p class="control">
+	                     	<a class="button is-info is-rounded" href="loginForm.me"> 
+	                        	<span class="icon"><i class="fa fa-user"></i></span> 
+	                        	<span>LOG IN</span>
+	                    	</a>
+	                  	</p> 
+            		</c:if>
+            		
+            		<!-- 로그인 되었을 시 수정 세령-->
+            		<c:if test="${ !empty loginUser }">
+            			<div class="control navbar-item has-dropdown is-hoverable"  style="margin-right:20px;">
+	                     	<a class="button is-info is-rounded navbar-link" href="logout.me"> 
+	                        	<span class="icon"><i class="fa fa-user"></i></span>
+	                        	<span>${ loginUser.email }</span>
+	                    	</a>
+	                    	<div class="navbar-dropdown">
+		                  		<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a> 
+		                  		<a class="navbar-item " href="logout.me"> 로그아웃 </a>
+		              		</div>
+	                  	</div> 
+            		</c:if>
+            		
             	</div>
          	</div>
             <div class="navbar-burger burger is-hidden-tablet" data-target="mainNav">
@@ -68,13 +87,6 @@
                   		<a class="navbar-item " href="#"> 남태평양 </a> 
                   		<a class="navbar-item " href="#"> 북미 </a> 
                   		<a class="navbar-item " href="#"> 중남미 </a> 
-                  	<!-- <hr class="navbar-divider">
-                  	<div class="navbar-item">
-                     	<div>
-                        	이건모지
-                        	<p class="has-text-info is-size-6-desktop">???</p>
-                     	</div>
-                  	</div> -->
               		</div>
 				</div>
             	<a class="navbar-item" href="travelRequest.tr"> <strong>여행의뢰</strong> </a>
@@ -92,12 +104,30 @@
                         		<span>동행찾기</span>
                      		</a>
                   		</p>
-                  		<p class="control">
-                     		<a class="button is-info is-rounded" href="loginForm.me"> 
-                        		<span class="icon"><i class="fa fa-user"></i></span> 
-                        		<span>LOG IN</span>
-                    		</a>
-                  		</p>
+                  		<!-- 로그인 안 되었을 때 수정 세령 -->
+	            		<c:if test="${ empty loginUser }">
+	            			<p class="control">
+		                     	<a class="button is-info is-rounded" href="loginForm.me"> 
+		                        	<span class="icon"><i class="fa fa-user"></i></span> 
+		                        	<span>LOG IN</span>
+		                    	</a>
+		                  	</p> 
+	            		</c:if>
+	            		
+	            		<!-- 로그인 되었을 시 수정 세령 -->
+	            		<c:if test="${ !empty loginUser }">
+	            			<div class="control navbar-item has-dropdown is-hoverable"  style="margin-right:20px;">
+		                     	<a class="button is-info is-rounded navbar-link" href="logout.me"> 
+		                        	<span class="icon"><i class="fa fa-user"></i></span>
+		                        	<span>${ loginUser.email }</span>
+		                    	</a>
+		                    	<div class="navbar-dropdown">
+			                  		<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a> 
+			                  		<a class="navbar-item " href="logout.me"> 로그아웃 </a>
+			              		</div>
+		                  	</div> 
+	            		</c:if>
+	            		
             		</div>
 				</div>
 			</div>

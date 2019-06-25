@@ -7,7 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
+import com.kh.ti.member.model.exception.LoginException;
 import com.kh.ti.member.model.service.MemberService;
 import com.kh.ti.member.model.vo.Member;
 
@@ -41,22 +43,27 @@ public class MemberController {
 	//로그인용메소드--세령--세령
 	@RequestMapping("login.me")
 	public String loginCheck(@ModelAttribute Member m, Model model) {
-		Member loginUser = ms.loginMember(m);
-		model.addAttribute("loginUSer", loginUser);
-		System.out.println(loginUser);
-		return "member/loginForm";
+		Member loginUser;
+		try {
+			loginUser = ms.loginMember(m);
+			model.addAttribute("loginUser", loginUser);
+			return "redirect:index.jsp";
+		} catch (LoginException e) {
+			model.addAttribute("msg", e.getMessage());
+			return "common/errorPage";
+		}
 	}
 	
 	//로그아웃용메소드--세령--세령
 	@RequestMapping("logout.me")
-	public String logoutMember() {
-		return null;
+	public String logoutMember(SessionStatus status) {
+		status.setComplete();
+		return "redirect:index.jsp";
 	}
 	
 	//회원가입용메소드--세령
 	@RequestMapping("insert.me")
 	public String insertMember(@ModelAttribute Member m, Model model) {
-		
 		//비밀번호 암호화
 		String encPassword = passwordEncoder.encode(m.getPassword());
 		m.setPassword(encPassword);

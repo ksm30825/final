@@ -26,12 +26,19 @@
 		<result property="memberType" column="MEMBER_TYPE"/>
 	</resultMap>
 	
+	<!-- 비밀번호 확인용 메소드 세령 -->
+	<select id="selectPwd" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT PASSWORD
+		FROM MEMBER
+		WHERE EMAIL = #{email}
+		AND ENROLL_STATUS = 'Y'
+	</select>
+	
 	<!-- 로그인용(임시) 세령 -->
-	<select id="loginCheck" resultMap="memberResultSet" parameterType="Member">
+	<select id="selectLoginUser" resultMap="memberResultSet" parameterType="Member">
 		SELECT * 
 		FROM MEMBER
 		WHERE EMAIL = #{email}
-		AND PASSWORD = #{password}
 		AND ENROLL_STATUS = 'Y'
 	</select>
 	
@@ -39,6 +46,14 @@
 	<insert id="insertMember" parameterType="Member">
 		INSERT INTO MEMBER VALUES
 		(MEMBER_SEQ.NEXTVAL, #{email}, #{password}, #{userName}, #{birthday}, #{gender}, 
-		NULL, NULL, SYSDATE, NULL, NULL, #{enrollStatus}, #{phone}, 3000, 0, '자사가입', 0, 'M')
+		NULL, NULL, SYSDATE, NULL, NULL, 'Y', #{phone}, 3000, 0, '자사가입', 0, 'M')
+	</insert>
+	
+	<!-- 가입포인트 적립용 세령 -->
+	<insert id="insertReservePoint" parameterType="java.lang.String">
+		INSERT INTO RESERVE_POINT VALUES 
+		(RESERVE_POINT_SEQ.NEXTVAL, 3000, SYSDATE, 
+		(SELECT MEMBER_ID FROM MEMBER WHERE EMAIL = #{email}), 
+		0, NULL, NULL, NULL)
 	</insert>
 </mapper>
