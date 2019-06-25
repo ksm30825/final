@@ -20,17 +20,11 @@ import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
 
-@SessionAttributes("trv")
 @Controller
 public class TravelController {
 	
 	@Autowired
 	private TravelService ts;
-	
-	@RequestMapping("showTrvEditor.trv")
-	public String showTrvEditor() {
-		return "travel/travelEditor";
-	}
 	
 	@RequestMapping("showMyTravel.trv")
 	public String showMyTravel() {
@@ -43,20 +37,35 @@ public class TravelController {
 		
 		trv.setStartDate(Date.valueOf(startDate));
 		trv.setEndDate(Date.valueOf(endDate));
+		System.out.println("controller : " + trvCity);
 		String[] cityArr = trvCity.split(",");
 		trv.setTrvCities(cityArr);
 		
-		Travel travel = ts.insertTravel(trv);
-		System.out.println(travel);
-		if(travel != null) {
-			System.out.println("insertTravel.trv : " + travel);
-			model.addAttribute("trv", travel);
-			return "redirect:/showTrvEditor.trv";
+		int trvId = ts.insertTravel(trv);
+		if(trvId > 0) {
+			return "redirect:/selectTravel.trv?trvId=" + trvId;
 		}else {
 			model.addAttribute("msg", "새 일정 만들기 실패");
 			return "common/errorPage";
 		}
 	}
+	
+	//일정조회-민지
+	@RequestMapping("selectTravel.trv")
+	public String showTrvEditor(int trvId, Model model) {
+		HashMap trvMap = ts.selectTravel(trvId);
+
+		if(!trvMap.isEmpty()) {
+			model.addAttribute("trv", trvMap.get("trv"));
+			model.addAttribute("trvCityList", trvMap.get("trvCityList"));
+			model.addAttribute("trvDayList", trvMap.get("trvDayList"));
+			return "travel/travelEditor";
+		}else {
+			model.addAttribute("msg", "일정 정보 불러오기 실패");
+			return "common/errorPage";
+		}
+	}
+	
 	
 	//동행추가-민지
 	@RequestMapping("insertCompany.trv")

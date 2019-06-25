@@ -26,6 +26,24 @@
 		<result property="countryId" column="COUNTRY_ID" />
 		<result property="cityNameEn" column="CITY_NAME_EN" />
 	</resultMap>
+	<resultMap id="TrvCityResultMap" type="TrvCity">
+		<id property="cityId" column="CITY_ID" />
+		<id property="trvId" column="TRV_ID" />
+		<id property="cityNameKo" column="CITY_NAME_KO" />
+		<id property="cityNameEn" column="CITY_NAME_EN" />
+		<id property="countryId" column="COUNTRY_ID" />
+		<id property="countryNameKo" column="COUNTRY_NAME_KO" />
+		<id property="countryNameEn" column="COUNTRY_NAME_EN" />
+		<id property="currencyUnit" column="CURRENCY_UNIT" />
+	</resultMap>
+	<resultMap id="TrvDayResultSet" type="TrvDay">
+		<id property="dayId" column="DAY_ID" />
+		<result property="dayNumber" column="DAY_NUMBER" />
+		<result property="dayDate" column="DAY_DATE" />
+		<result property="dayMemo" column="DAY_MEMO" />
+		<result property="isTimeSet" column="ISTIMESET" />
+		<result property="trvId" column="TRV_ID" />
+	</resultMap>
 	
 	<insert id="insertTravel" parameterType="Travel">
 		INSERT INTO TRAVEL
@@ -53,6 +71,18 @@
 		WHERE TRV_ID = #{trvId}
 		AND STATUS = 'Y'
 	</select>
+	<select id="selectTrvCityList" parameterType="_int" resultMap="TrvCityResultMap">
+		SELECT TC.*, CITY.CITY_NAME_KO, CITY.CITY_NAME_EN, CITY.COUNTRY_ID, CTRY.COUNTRY_NAME_KO, CTRY.COUNTRY_NAME_EN,
+		CTRY.CURRENCY_UNIT
+		FROM TRV_CITY TC
+		JOIN CITY ON (TC.CITY_ID = CITY.CITY_ID)
+		JOIN COUNTRY CTRY ON (CITY.COUNTRY_ID = CTRY.COUNTRY_ID)
+		WHERE TC.TRV_ID = #{trvId}
+	</select>
+	<select id="selectTrvDayList" parameterType="_int" resultMap="TrvDayResultSet">
+		SELECT *
+		FROM TRV_DAY
+		WHERE TRV_ID = #{trvId}
+	</select>
 	
-
 </mapper>

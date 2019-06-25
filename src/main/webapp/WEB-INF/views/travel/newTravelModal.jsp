@@ -139,6 +139,9 @@
         	
         	//submit Form
         	$(".okBtn").click(function() {
+        		var title = $("input[name=trvTitle]").val();
+        		var start = $("#startPicker").val();
+        		var end = $("#endPicker").val();
         		var cities = [];
         		var duplicated = false;
         		$("select[name=trvCity]").each(function() {
@@ -151,6 +154,10 @@
         		});
         		if(duplicated) {
         			alert('도시명이 중복됩니다. 다시 확인해주세요.');
+        		}else if(title === '') {
+					alert('여행 제목을 입력해주세요.');        			
+        		}else if(start === '' || end === '') {
+        			alert('여행 시작일과 종료일을 선택해주세요');
         		}else {
 	        		$("#newTrvForm").submit();
         		}

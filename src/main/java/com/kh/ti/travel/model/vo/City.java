@@ -1,7 +1,5 @@
 package com.kh.ti.travel.model.vo;
 
-import org.springframework.stereotype.Component;
-
 
 public class City implements java.io.Serializable{
 	

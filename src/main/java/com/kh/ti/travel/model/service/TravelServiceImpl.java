@@ -33,17 +33,23 @@ public class TravelServiceImpl implements TravelService {
 	private TravelDao td;
 	
 	@Override
-	public Travel insertTravel(Travel trv) {
-		Travel travel = null;
+	public int insertTravel(Travel trv) {
+		int result = 0;
 		int result1 = td.insertTravel(sqlSession, trv);
 		int result2 = 0;
 		int result3 = 0;
 		int trvId = td.selectTrvId(sqlSession);
+		System.out.println("trvId : " + trvId);
 		String[] trvCities = trv.getTrvCities();
 		
 		for(int i = 0; i < trvCities.length; i++) { 
-			City city = td.selectCity(sqlSession, trvCities[i]); 
-			TrvCity trvCity = new TrvCity(city.getCityId(), trvId); 
+			System.out.println(trvCities[i]);
+			String cityName = trvCities[i];
+			City city = td.selectCity(sqlSession, cityName); 
+			System.out.println("city: " + city);
+			TrvCity trvCity = new TrvCity(); 
+			trvCity.setCityId(city.getCityId());
+			trvCity.setTrvId(trvId);
 			result2 += td.insertTrvCity(sqlSession, trvCity); 
 		}
 		
@@ -61,11 +67,29 @@ public class TravelServiceImpl implements TravelService {
 		}
 		
 		if(result1 > 0 && result2 == trvCities.length && result3 == days) {
-			travel = td.selectTravel(sqlSession, trvId);
+			result = trvId;
 		}
-		return travel;
+		return result;
+	}
+	
+	@Override
+	public HashMap selectTravel(int trvId) {
+		HashMap trvMap = new HashMap();
+		Travel trv = td.selectTravel(sqlSession, trvId);
+		ArrayList trvCityList = td.selectTrvCity(sqlSession, trvId);
+		ArrayList trvDayList = td.selectTrvDay(sqlSession, trvId);
+		trvMap.put("trv", trv);
+		trvMap.put("trvCityList", trvCityList);
+		trvMap.put("trvDayList", trvDayList);
+		return trvMap;
 	}
 
+
+	
+	
+	
+	
+	
 	@Override
 	public int insertTrvCompany(Travel trv, Member m) {
 		return td.insertTrvCompany(sqlSession, trv, m);
@@ -189,6 +213,7 @@ public class TravelServiceImpl implements TravelService {
 		int result = td.deleteTrvSchedule(sqlSession, sch);
 		return 0;
 	}
+
 
 
 
