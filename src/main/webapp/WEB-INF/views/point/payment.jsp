@@ -189,7 +189,7 @@
 				    pay_method : 'card',
 				    merchant_uid : 'merchant_' + new Date().getTime(),
 				    name : '포인트 충전',
-				    amount : 100,
+				    amount : money,
 				   /*  buyer_name : 'id', */
 				    /*buyer_email : 'iamport@siot.do',
 				    buyer_tel : '010-1234-5678',

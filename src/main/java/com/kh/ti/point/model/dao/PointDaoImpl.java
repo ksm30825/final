@@ -1,8 +1,12 @@
 package com.kh.ti.point.model.dao;
 
+import java.util.ArrayList;
+
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.Payment;
 
 @Repository
@@ -11,9 +15,30 @@ public class PointDaoImpl implements PointDao{
 	//포인트 충전
 	@Override
 	public int insertPay(SqlSessionTemplate sqlSession, Payment pay) {
+		//System.out.println("넘어온 후 pay : " + pay);
+		return sqlSession.insert("Payment.insertPay", pay);
+	}
+	//포인트 충전 리스트 전체 카운터
+	@Override
+	public int getChargeListCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.getChargeListCount", memberId);
+	}
+	//포인트 지급 리스트 전체 카운터
+	@Override
+	public int getReceiveListCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.getReceiveListCount", memberId);
+	}
+	//포인트 충전리스트 전체 조회
+	@Override
+	public ArrayList<Payment> selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, int memberId) {
+		int offset = (chPi.getCurrentPage() - 1) * chPi.getLimit();
+		//System.out.println("chPayList offset : " + offset);
+		RowBounds rowBounds = new RowBounds(offset, chPi.getLimit());
+		//System.out.println("chPayList rowBounds : " + rowBounds);
 		
-		System.out.println("pay : " + pay);
-		return sqlSession.insert("Payment.insertPay",pay);
+		ArrayList<Payment> chPayList = (ArrayList)sqlSession.selectList("Payment.selectChargeList",	memberId, rowBounds);
+		//System.out.println("chPayList chPayList : " + chPayList);
+		return chPayList;
 	}
 
 }

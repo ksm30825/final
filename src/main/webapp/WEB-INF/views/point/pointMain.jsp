@@ -63,20 +63,20 @@
 			    			</div>
 				    		<div class="select" style="display:inline-block;float:right;">
 					            <select name="chargeSelect">
-					              <option>--월--</option>
-					              <option>1</option>
-					              <option>2</option>
-					              <option>3</option>
-					              <option>4</option>
-					              <option>5</option>
-					              <option>6</option>
-					              <option>7</option>
-					              <option>8</option>
-					              <option>9</option>
-					              <option>10</option>
-					              <option>11</option>
-					              <option>12</option>
-					            </select>
+									<option>--월--</option>
+									<option>1</option>
+									<option>2</option>
+									<option>3</option>
+									<option>4</option>
+									<option>5</option>
+									<option>6</option>
+									<option>7</option>
+									<option>8</option>
+									<option>9</option>
+									<option>10</option>
+									<option>11</option>
+									<option>12</option>
+								</select>
 					        </div>
 					        <div style="float:right;">
 					        	<a class="button is-danger" href="toPayView.po">충전하러 가기</a>
@@ -85,24 +85,26 @@
 				    	<div id="chargeTB">
 				    		<table class="table is-narrow" align="center" style="width:100%;">
 							    <thead>
-							      <tr style="background:skyblue;">
-							        <th> No </th>
-							        <th> 충전일 </th>
-							        <th> 충전액 </th>
-							      </tr>
+									<tr style="background:skyblue;">
+										<th> No </th>
+										<th> 충전일 </th>
+										<th> 충전액 </th>
+									</tr>
 							    </thead>
-							    <tbody id="ps">
-							    
-							      <tr>
-							        <td> 1 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
-							      <tr>
-							        <td> 2 </td>
-							        <td> 19.06.03 </td>
-							        <td> 3,000 </td>
-							      </tr>
+							    <tbody id="chargeTBody">
+									<c:forEach var="chPay" items="chPayList">
+										<tr>
+											<td>
+												<c:out value="${ chPay.paymentId }"/>
+											</td>
+											<td>
+												<c:out value="${ chPay.paymentId }"/>
+											</td>
+											<td>
+												<c:out value="${ chPay.paymentId }"/>
+											</td>
+										</tr>
+									</c:forEach>
 							    </tbody>
 						  </table>
 				    	</div>
@@ -149,7 +151,7 @@
 							        <th> 지급게시글 </th>
 							      </tr>
 							    </thead>
-							    <tbody id="pb">
+							    <tbody id="receiveTBody">
 							      <tr>
 							        <td> 1 </td>
 							        <td> 19.06.03 </td>
@@ -213,7 +215,7 @@
 							        <th> 환불신청상태 </th>
 							      </tr>
 							    </thead>
-							    <tbody>
+							    <tbody id="useTBody">
 							      <tr>
 							        <td> 1 </td>
 							        <td> 19.06.03 </td>
@@ -326,6 +328,8 @@
 	<script type="text/javascript">
 		$(function() {
 			$(".myPoint").parent().addClass('is-active');
+			
+			//환불 신청 모달
 			$("#modalHeader").text('환불은 신청하시겠습니까?');
 			$("#modalContent").attr('placeholder','환불사유를 입력해주세요');
 			
@@ -345,6 +349,7 @@
 			});
 		});
 		function yes(){
+			//환불신청확인
 			$("#myModal").removeClass('is-active');
 			$("#modalHeader2").text('환불신청한 내역이 관리자에게 전달 되었습니다.').append("<p>빠른 시일 내에 처리하도록 하겠습니다.</p>");
 			$('#myModal2').toggleClass('is-active');
@@ -356,6 +361,7 @@
 			});
 		}
 		function no(){
+			//환불신청취소
 			$("#myModal").removeClass('is-active');
 			$("#modalHeader2").text('환불을 취소하셨습니다.');
 			$('#myModal2').toggleClass('is-active');

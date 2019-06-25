@@ -13,9 +13,21 @@
 	</resultMap>
 	<insert id="insertPay" parameterType="Payment">
 		INSERT INTO PAYMENT
-		VALUES(
-		    PAYMENT_SEQ.NEXTVAL, #{tid}, #{memberId}, #{payAmount}, #{paymentDate}
-		)
+		VALUES(PAYMENT_SEQ.NEXTVAL, #{tid}, #{memberId}, #{payAmount}, #{paymentDate})
 	</insert>	
-	
+	<select id="getChargeListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM PAYMENT
+		WHERE MEMBER_ID=#{memberId}
+	</select>
+	<select id="getReceiveListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM RESERVE_POINT
+		WHERE MEMBER_ID=#{memberId}
+	</select>
+	<select id="selectChargeList" resultMap="paymentResultSet">
+		SELECT *
+		FROM PAYMENT
+		WHERE MEMBER_ID=#{memberId}
+	</select>
 </mapper>
