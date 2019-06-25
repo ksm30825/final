@@ -1,13 +1,17 @@
 package com.kh.ti.point.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.common.Pagination;
 import com.kh.ti.point.model.service.PointService;
 import com.kh.ti.point.model.vo.Payment;
 
@@ -18,9 +22,40 @@ public class PointController {
 	
 	//포인트 전체 페이지
 	@RequestMapping("/pointMainView.po")
-	public String selectPointMainView() {
+	public String selectPointMainView(Model model) {
+		//포인트충전, 지급, 사용 내역 테이블 전체 조회
+		//페이징 처리도 전부
+		
+		//포인트 충전에 관한 것들 조회(일단 임시로 memberId=1)
+		int chargeListCount = ps.getChargeListCount(1);
+		//System.out.println("chargeListCount : " + chargeListCount);
+		int chargeCurrentPage = 1;
+		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
+		//System.out.println("chPi : " + chPi);
+		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, 1);
+		model.addAttribute("chPayList", chPayList);
+		//System.out.println("chmodel : " + model);
+		//포인트 충전에 관한 것들 조회
+		int receiveListCount = ps.getReceiveListCount(1);
+		//System.out.println("ReceiveListCount : " + receiveListCount);
+		int receiveCurrentPage = 1;
+		PageInfo rePi = Pagination.getPageInfo(receiveCurrentPage, receiveListCount);
+		//System.out.println("rePi : " + rePi);
+		
+		//포인트 사용에 관한 것들 조회
+		int useListCount = ps.getReceiveListCount(1);
+		//System.out.println("useListCount : " + useListCount);
+		int useCurrentPage = 1;
+		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
+		//System.out.println("usPi : " + usPi);
+		
 		
 		return "point/pointMain";
+	}
+	@RequestMapping("/totalList.po")
+	public ModelAndView selectTotalListCount(ModelAndView mv) {
+		
+		return mv;
 	}
 
 	
@@ -40,25 +75,34 @@ public class PointController {
 	}
 	//포인트 충전--수민
 	@RequestMapping("/toPay.po")
-	public void toPay(String tid, String pAmount) {
-		System.out.println("tid : " + tid);
-		System.out.println("payAmount : " + pAmount);
+	public String toPay(String tid, String pAmount) {
+		//System.out.println("tid : " + tid);
+		//System.out.println("payAmount : " + pAmount);
 		//충전액
 		int payAmount = Integer.parseInt(pAmount);
 		//충전일
 		Date paymentDate = new Date(new GregorianCalendar().getTimeInMillis());
+		
+		//System.out.println("paymentDate : " + paymentDate);
 		
 		Payment pay = new Payment();
 		pay.setTid(tid);
 		pay.setPayAmount(payAmount);
 		pay.setPaymentDate(paymentDate);
 		pay.setMemberId(1);
+		
+		//System.out.println("넘기기전 pay : " + pay);
 
 		//포인트충전
 		//->결제 테이블에 insert
 		int result = ps.insertPay(pay);
+		//System.out.println("result : " + result);
 		
-		System.out.println("result : " + result);
+		if(result>0) {
+			return "redirect:/pointMainView.po";
+		}else {
+			return "common/errorPage";
+		}
 		
 	}
 	
