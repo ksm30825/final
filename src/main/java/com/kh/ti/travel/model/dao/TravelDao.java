@@ -21,8 +21,14 @@ public interface TravelDao {
 	int insertTravel(SqlSessionTemplate sqlSession, Travel trv);
 
 	int insertTrvCity(SqlSessionTemplate sqlSession, TrvCity trvCity);
+	
+	City selectCity(SqlSessionTemplate sqlSession, String string);
+
+	int selectTrvId(SqlSessionTemplate sqlSession);
 
 	int insertTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay);
+	
+	Travel selectTravel(SqlSessionTemplate sqlSession, int trvId);
 
 	int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m);
 
@@ -64,9 +70,9 @@ public interface TravelDao {
 
 	int deleteTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);
 
-	City findCity(SqlSessionTemplate sqlSession, String string);
 
-	int selectTrvId(SqlSessionTemplate sqlSession);
+
+
 
 
 }

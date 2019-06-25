@@ -47,6 +47,12 @@
 		INSERT INTO TRV_DAY
 		VALUES(TRV_DAY_SEQ.NEXTVAL, #{dayNumber}, #{dayDate}, NULL, 'N', #{trvId})
 	</insert>
+	<select id="selectTravel" parameterType="_int" resultMap="TravelResultSet">
+		SELECT *
+		FROM TRAVEL
+		WHERE TRV_ID = #{trvId}
+		AND STATUS = 'Y'
+	</select>
 	
 
 </mapper>

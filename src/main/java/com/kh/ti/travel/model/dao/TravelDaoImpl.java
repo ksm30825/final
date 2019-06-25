@@ -30,7 +30,7 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.selectOne("Travel.selectTrvId");
 	}
 	@Override
-	public City findCity(SqlSessionTemplate sqlSession, String cityName) {
+	public City selectCity(SqlSessionTemplate sqlSession, String cityName) {
 		return sqlSession.selectOne("Travel.selectCity", cityName);
 	}	
 	@Override
@@ -41,6 +41,12 @@ public class TravelDaoImpl implements TravelDao {
 	public int insertTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay) {
 		return sqlSession.insert("Travel.insertTrvDay", trvDay);
 	}
+	@Override
+	public Travel selectTravel(SqlSessionTemplate sqlSession, int trvId) {
+		return sqlSession.selectOne("Travel.selectTravel", trvId);
+	}
+
+
 
 	@Override
 	public int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m) {
@@ -162,7 +168,6 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 	
 	

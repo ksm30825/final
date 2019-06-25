@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,6 +31,7 @@
 
 </head>
 <body>
+	<c:set var="trv" value="${ sessionScope.trv }" />
 	<nav class="navbar is-white is-fixed-top" style="border-bottom:1px solid skyblue">
     	<div class="navbar-brand">
     		<div class="navbar-item field is-grouped" style="margin:0">
@@ -94,7 +96,7 @@
 							<span class="icon" style="color:skyblue">
 								<i class="fas fa-plane"></i>
 							</span>
-							여자혼자 시드니, 멜버른 자유여행
+							${ trv.trvTitle }
 						</h3>
 						<h6 class="subtitle is-6">
 							<i class="fas fa-map-marker-alt"></i>

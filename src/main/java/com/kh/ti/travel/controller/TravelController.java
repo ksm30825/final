@@ -6,7 +6,9 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.service.TravelService;
@@ -18,6 +20,7 @@ import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
 
+@SessionAttributes("trv")
 @Controller
 public class TravelController {
 	
@@ -25,7 +28,7 @@ public class TravelController {
 	private TravelService ts;
 	
 	@RequestMapping("showTrvEditor.trv")
-	public String showSchEditor() {
+	public String showTrvEditor() {
 		return "travel/travelEditor";
 	}
 	
@@ -36,16 +39,23 @@ public class TravelController {
 	
 	//새일정작성-민지
 	@RequestMapping("insertTravel.trv")
-	public String insertTravel(Travel trv, String startDate, String endDate, String trvCity) {
+	public String insertTravel(Travel trv, String startDate, String endDate, String trvCity, Model model) {
 		
 		trv.setStartDate(Date.valueOf(startDate));
 		trv.setEndDate(Date.valueOf(endDate));
 		String[] cityArr = trvCity.split(",");
 		trv.setTrvCities(cityArr);
 		
-		int result = ts.insertTravel(trv);
-		
-		return "travel/travelEditor";
+		Travel travel = ts.insertTravel(trv);
+		System.out.println(travel);
+		if(travel != null) {
+			System.out.println("insertTravel.trv : " + travel);
+			model.addAttribute("trv", travel);
+			return "redirect:/showTrvEditor.trv";
+		}else {
+			model.addAttribute("msg", "새 일정 만들기 실패");
+			return "common/errorPage";
+		}
 	}
 	
 	//동행추가-민지
