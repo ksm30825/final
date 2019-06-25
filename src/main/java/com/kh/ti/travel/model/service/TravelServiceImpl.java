@@ -6,7 +6,11 @@ import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.dao.TravelDao;
@@ -25,44 +29,41 @@ public class TravelServiceImpl implements TravelService {
 
 	@Autowired
 	private SqlSessionTemplate sqlSession;
-	
 	@Autowired
 	private TravelDao td;
 	
 	@Override
-	public int insertTravel(Travel trv) {
-		int result = 0;
-		
+	public Travel insertTravel(Travel trv) {
+		Travel travel = null;
 		int result1 = td.insertTravel(sqlSession, trv);
 		int result2 = 0;
 		int result3 = 0;
 		int trvId = td.selectTrvId(sqlSession);
 		String[] trvCities = trv.getTrvCities();
-		/*
-		 * for(int i = 0; i < trvCities.length; i++) { City city =
-		 * td.findCity(sqlSession, trvCities[i]); TrvCity trvCity = new
-		 * TrvCity(city.getCityId(), trvId); result2 += td.insertTrvCity(sqlSession,
-		 * trvCity); }
-		 */
+		
+		for(int i = 0; i < trvCities.length; i++) { 
+			City city = td.selectCity(sqlSession, trvCities[i]); 
+			TrvCity trvCity = new TrvCity(city.getCityId(), trvId); 
+			result2 += td.insertTrvCity(sqlSession, trvCity); 
+		}
 		
 		Date startDate = trv.getStartDate();
 		Date endDate = trv.getEndDate();
 		int days = (int)((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 		
-		System.out.println("days : " + days);
-		
-		/*
-		 * for(int i = 1; i <= days; i++) { TrvDay trvDay = new TrvDay();
-		 * trvDay.setTrvId(trvId); trvDay.setDayNumber(i); Date date = new
-		 * Date(startDate.getTime() + (1000 * 60 * 60 * 24) * i);
-		 * System.out.println("date : " + date); trvDay.setDayDate(date); result3 +=
-		 * td.insertTrvDay(sqlSession, trvDay); }
-		 */
+		for(int i = 0; i < days; i++) { 
+			TrvDay trvDay = new TrvDay();
+			trvDay.setTrvId(trvId); 
+			trvDay.setDayNumber(i + 1); 
+			Date date = new Date(startDate.getTime() + (1000 * 60 * 60 * 24) * i);
+			trvDay.setDayDate(date); 
+			result3 += td.insertTrvDay(sqlSession, trvDay); 
+		}
 		
 		if(result1 > 0 && result2 == trvCities.length && result3 == days) {
-			result = 1;
+			travel = td.selectTravel(sqlSession, trvId);
 		}
-		return result;
+		return travel;
 	}
 
 	@Override

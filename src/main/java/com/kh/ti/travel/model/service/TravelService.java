@@ -13,7 +13,7 @@ import com.kh.ti.travel.model.vo.TrvSchedule;
 
 public interface TravelService {
 
-	int insertTravel(Travel trv);
+	Travel insertTravel(Travel trv);
 
 	int insertTrvCompany(Travel trv, Member m);
 

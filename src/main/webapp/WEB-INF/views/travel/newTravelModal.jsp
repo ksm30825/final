@@ -110,14 +110,25 @@
 	</div>
 	<script>
 		$(function() {
+			//modal close
 			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
         		$('html').removeClass('is-clipped');
         	    $(this).parents(".modal").removeClass('is-active');
         	});
         	
-        	$("#startPicker, #endPicker").datepicker({
+			//set datePicker
+			var startDate;
+        	$("#startPicker").datepicker({
+        		dateFormat:"yy-mm-dd",
+        		onSelect:function(selectedDate) {
+					startDate = $(this).datepicker('getDate');
+					$("#endPicker").datepicker("option", "minDate", startDate);
+				}, 
+        	});
+        	$("#endPicker").datepicker({
         		dateFormat:"yy-mm-dd"
         	});
+        	
         	
         	//cityfield추가
         	$(".cityPlusBtn").click(function() {
@@ -126,9 +137,23 @@
         		field.insertAfter($(this).parents(".travelCityField"));
         	});
         	
-        	
+        	//submit Form
         	$(".okBtn").click(function() {
-        		$("#newTrvForm").submit();
+        		var cities = [];
+        		var duplicated = false;
+        		$("select[name=trvCity]").each(function() {
+        			var city = $(this).children("option:selected").text();
+        			if(cities.indexOf(city) >= 0) {
+        				duplicated = true; 
+        			}else {
+        				cities.push(city);
+        			}
+        		});
+        		if(duplicated) {
+        			alert('도시명이 중복됩니다. 다시 확인해주세요.');
+        		}else {
+	        		$("#newTrvForm").submit();
+        		}
         	});
 		});
 	</script>
