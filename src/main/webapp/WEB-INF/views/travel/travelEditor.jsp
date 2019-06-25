@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +32,7 @@
 
 </head>
 <body>
-	<c:set var="trv" value="${ sessionScope.trv }" />
+	<%-- <c:set var="trv" value="${ sessionScopetrv }" /> --%>
 	<nav class="navbar is-white is-fixed-top" style="border-bottom:1px solid skyblue">
     	<div class="navbar-brand">
     		<div class="navbar-item field is-grouped" style="margin:0">
@@ -95,14 +96,28 @@
 						<h3 class="title is-3">
 							<span class="icon" style="color:skyblue">
 								<i class="fas fa-plane"></i>
-							</span>
-							${ trv.trvTitle }
+							</span>&nbsp;&nbsp;
+							<c:out value="${ trv.trvTitle }" />
 						</h3>
-						<h6 class="subtitle is-6">
+						<h6 class="subtitle is-6" style="margin:0">
 							<i class="fas fa-map-marker-alt"></i>
-							호주/ 시드니, 멜버른
-							&nbsp;&nbsp;<span style="color:gray;"><strong>9박 10일</strong></span>
+							<c:forEach var="trvCity" items="${ trvCityList }" varStatus="st">
+								${ trvCity.countryNameKo }&nbsp; ${ trvCity.cityNameKo } 
+								<c:if test="${ st.count ne trvCityList.size() }">/</c:if>&nbsp;
+							</c:forEach>
+							<c:set var="days" value="${ ((trv.endDate.getTime() - trv.startDate.getTime()) / (1000 * 60 * 60 * 24)) }"/>
+							&nbsp;&nbsp;
+							<span><strong>
+								(<fmt:formatNumber value="${ days }" pattern="#" />박 
+								<fmt:formatNumber value="${ days + 1 }" pattern="#" />일)</strong></span>
+							 <%-- <% ${ days } %> --%>
 						</h6>
+						<p class="help">
+							<c:forEach var="trvCity" items="${ trvCityList }" varStatus="st">
+								${ trvCity.cityNameEn }, ${ trvCity.countryNameEn }  
+								<c:if test="${ st.count ne trvCityList.size() }">/</c:if>&nbsp;
+							</c:forEach>
+						</p>
 					</div>
 					<div class="column is-1">
 						<div class="dropdown">
@@ -189,7 +204,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="column" style="line-height:50px;">
+					<div class="column" style="line-height:80px;">
 						<div class="tabs is-right editorMenu">
 						    <ul>
 						    	<li class="is-active" >

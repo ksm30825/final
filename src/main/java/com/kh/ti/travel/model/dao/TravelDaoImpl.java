@@ -45,6 +45,14 @@ public class TravelDaoImpl implements TravelDao {
 	public Travel selectTravel(SqlSessionTemplate sqlSession, int trvId) {
 		return sqlSession.selectOne("Travel.selectTravel", trvId);
 	}
+	@Override
+	public ArrayList selectTrvCity(SqlSessionTemplate sqlSession, int trvId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectTrvCityList", trvId);
+	}
+	@Override
+	public ArrayList selectTrvDay(SqlSessionTemplate sqlSession, int trvId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectTrvDayList", trvId);
+	}
 
 
 

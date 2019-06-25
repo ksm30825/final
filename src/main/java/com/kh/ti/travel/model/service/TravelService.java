@@ -13,7 +13,9 @@ import com.kh.ti.travel.model.vo.TrvSchedule;
 
 public interface TravelService {
 
-	Travel insertTravel(Travel trv);
+	int insertTravel(Travel trv);
+	
+	HashMap selectTravel(int trvId);
 
 	int insertTrvCompany(Travel trv, Member m);
 
@@ -54,6 +56,8 @@ public interface TravelService {
 	int deleteSchFile(SchFile file);
 
 	int deleteTrvSchedule(TrvSchedule sch);
+
+
 
 
 

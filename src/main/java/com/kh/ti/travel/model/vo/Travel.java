@@ -1,10 +1,8 @@
 package com.kh.ti.travel.model.vo;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.springframework.stereotype.Component;
 
 
 public class Travel implements java.io.Serializable {

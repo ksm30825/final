@@ -22,7 +22,7 @@ public interface TravelDao {
 
 	int insertTrvCity(SqlSessionTemplate sqlSession, TrvCity trvCity);
 	
-	City selectCity(SqlSessionTemplate sqlSession, String string);
+	City selectCity(SqlSessionTemplate sqlSession, String cityName);
 
 	int selectTrvId(SqlSessionTemplate sqlSession);
 
@@ -69,6 +69,10 @@ public interface TravelDao {
 	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
 
 	int deleteTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);
+
+	ArrayList selectTrvCity(SqlSessionTemplate sqlSession, int trvId);
+
+	ArrayList selectTrvDay(SqlSessionTemplate sqlSession, int trvId);
 
 
 
