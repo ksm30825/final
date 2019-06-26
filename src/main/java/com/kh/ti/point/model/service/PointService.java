@@ -15,5 +15,7 @@ public interface PointService {
 	int getReceiveListCount(int i);
 	//포인트 충전리스트 전체 조회
 	ArrayList<Payment> selectChargeList(PageInfo chPi, int memberId);
+	//포인트 지급리스트 전체 조회
+	ArrayList<Payment> selectReceiveList(PageInfo rePi, int memberId);
 
 }

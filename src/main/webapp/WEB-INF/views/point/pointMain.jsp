@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +32,7 @@
 		border-radius:5px;
 		border:1px solid purple;
 	}
-	#chargeArea tbody *:hover,#receiveArea tbody *:hover,#useArea tbody *:hover{
+	tbody *:hover{
 		background:#ededff;
 		color:#adadff;
 		font-weight:bold;
@@ -87,21 +88,21 @@
 							    <thead>
 									<tr style="background:skyblue;">
 										<th> No </th>
-										<th> 충전일 </th>
 										<th> 충전액 </th>
+										<th> 충전일 </th>
 									</tr>
 							    </thead>
 							    <tbody id="chargeTBody">
-									<c:forEach var="chPay" items="chPayList">
+									<c:forEach var="ch" items="${ chPayList }">
 										<tr>
 											<td>
-												<c:out value="${ chPay.paymentId }"/>
+												<c:out value="${ ch.paymentId }"/>
 											</td>
 											<td>
-												<c:out value="${ chPay.paymentId }"/>
+												<span id="comm">${ ch.payAmount }</span>P
 											</td>
 											<td>
-												<c:out value="${ chPay.paymentId }"/>
+												<c:out value="${ ch.paymentDate }"/>
 											</td>
 										</tr>
 									</c:forEach>
@@ -144,30 +145,41 @@
 						<div id="receiveTB">
 							<table class="table is-narrow" align="center" style="width:100%;">
 							    <thead>
-							      <tr style="background:skyblue;">
-							        <th> No </th>
-							        <th> 지급일 </th>
-							        <th> 지급포인트 </th>
-							        <th> 지급게시글 </th>
-							      </tr>
+									<tr style="background:skyblue;">
+										<th> No </th>
+										<th> 지급일 </th>
+										<th> 지급포인트 </th>
+										<th> 지급게시글 </th>
+									</tr>
 							    </thead>
 							    <tbody id="receiveTBody">
-							      <tr>
-							        <td> 1 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 2 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;">후기작성</a>
-							        </td>
-							      </tr>
+									<c:forEach var="re" items="${ rePayList }">
+										<tr>
+											<td>
+												<c:out value="${ re.pointId }"/>
+											</td>
+											<td>
+												<c:out value="${ re.reserveDate }"/>
+											</td>
+											<td>
+												<c:out value="${ re.reservePoint }"/>P
+											</td>
+											<td>
+												<c:if test="${ re.reserveType eq 10}">
+													<c:out value="${ re.trvId }"/> 
+													<a class="button is-primary" style="height:20px;">일정작성</a>
+												</c:if>
+												<c:if test="${ re.reserveType eq 20}">
+													<c:out value="${ re.reviewId }"/> 
+													<a class="button is-primary" style="height:20px;">일정리뷰</a>
+												</c:if>
+												<c:if test="${ re.reserveType eq 30}">
+													<c:out value="${ re.spotReviewId }"/> 
+													<a class="button is-primary" style="height:20px;">명소리뷰</a>
+												</c:if>
+											</td>
+										</tr>
+									</c:forEach>
 							    </tbody>
 						  </table>
 						</div>
@@ -343,10 +355,12 @@
 				$("#okay").click(function(){
 					$("#myModal2").removeClass('is-active');
 				});
+				
 			});
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
+			
 		});
 		function yes(){
 			//환불신청확인

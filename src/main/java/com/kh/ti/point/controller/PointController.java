@@ -35,11 +35,18 @@ public class PointController {
 		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, 1);
 		model.addAttribute("chPayList", chPayList);
 		//System.out.println("chmodel : " + model);
+		/*
+		for(int i=0 ; i<chPayList.size() ; i++) {
+		System.out.println("chPayList["+i+"] : "+chPayList.get(i)); }
+		 */
+		
 		//포인트 충전에 관한 것들 조회
 		int receiveListCount = ps.getReceiveListCount(1);
 		//System.out.println("ReceiveListCount : " + receiveListCount);
 		int receiveCurrentPage = 1;
 		PageInfo rePi = Pagination.getPageInfo(receiveCurrentPage, receiveListCount);
+		ArrayList<Payment> rePayList = ps.selectReceiveList(rePi, 1);
+		model.addAttribute("rePayList", rePayList);
 		//System.out.println("rePi : " + rePi);
 		
 		//포인트 사용에 관한 것들 조회
@@ -83,7 +90,7 @@ public class PointController {
 		//충전일
 		Date paymentDate = new Date(new GregorianCalendar().getTimeInMillis());
 		
-		//System.out.println("paymentDate : " + paymentDate);
+		System.out.println("paymentDate : " + paymentDate);
 		
 		Payment pay = new Payment();
 		pay.setTid(tid);
@@ -124,8 +131,8 @@ public class PointController {
 		return "??";
 	}
 	//포인트 자동 인서트!!
-	//일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
 	//10:일정작성, 20:일정리뷰, 30:여행지리뷰
+	//일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
 	@RequestMapping("/pointReserve.po")
 	public String insertPointReserve(int memberId, int code, int type, int rPoint) {
 		
