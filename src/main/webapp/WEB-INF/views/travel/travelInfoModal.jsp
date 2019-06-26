@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,7 @@
 <body>
 	<div class="modal" id="travelInfoModal">
 		<div class="modal-background"></div>
-		<div class="modal-card" style="width:480px">
+		<div class="modal-card" style="width:600px">
 			<header class="modal-card-head">
 				<span class="icon is-large"><i class="fas fa-2x fa-plane-departure"></i></span>
 				<p class="modal-card-title">여행 정보</p>
@@ -27,46 +28,47 @@
 				<form action="" method="post" id="trvInfoForm">
 					<div class="field">
 						<p class="control">
-							<input class="input is-primary is-large" type="text" placeholder="여행 제목 입력"
+							<input class="input is-primary is-large" type="text" value="${ trv.trvTitle }" placeholder="여행 제목 입력"
 								name="trvTitle">
 						</p>
 					</div>
-					<div class="field is-horizontal travelCityField">
-						<div class="field-label is-normal">
-							<label class="label travelCityLabel">여행지</label>
+					<c:forEach var="trvCity" items="${ trvCityList }" varStatus="st" >
+						<div class="field is-horizontal travelCityField">
+							<div class="field-label is-normal">
+								<label class="label travelCityLabel">여행지</label>
+							</div>
+							<div class="field-body">
+								<div class="field is-grouped">
+									<p class="control is-expanded has-icons-left">
+										<span class="icon is-small is-left"><i class="fas fa-globe-americas"></i></span>
+										<span class="select"> 
+											<select name="trvCountry" >
+												<!-- <option>일본</option>
+												<option>중국</option>
+												<option>미국</option> -->
+											</select>
+										</span>
+									</p>
+								</div>
+								<div class="field">
+									<p class="control is-expanded has-icons-left has-icons-right">
+										<span class="icon is-small is-left"><i class="fas fa-location-arrow"></i></span> 
+										<span class="select"> 
+											<select name="trvCity" >
+												<!-- <option>시드니</option>
+												<option>멜버른</option>
+												<option>브리즈번</option>
+												<option>퍼스</option> -->
+											</select>
+										</span>
+									</p>
+								</div>
+								<div class="field" style="line-height:40px" align="center">
+									<a style="font-size:2em; color:purple" data-tooltip="여행지 추가" class="cityPlusBtn">+</a>
+								</div>
+							</div>
 						</div>
-						<div class="field-body">
-							<div class="field is-grouped">
-								<p class="control is-expanded has-icons-left">
-									<span class="icon is-small is-left"><i class="fas fa-globe-americas"></i></span>
-									<span class="select"> 
-										<select name="trvCountry">
-											<option>호주</option>
-											<option>일본</option>
-											<option>중국</option>
-											<option>미국</option>
-										</select>
-									</span>
-								</p>
-							</div>
-							<div class="field">
-								<p class="control is-expanded has-icons-left has-icons-right">
-									<span class="icon is-small is-left"><i class="fas fa-location-arrow"></i></span> 
-									<span class="select"> 
-										<select name="trvCity">
-											<option>시드니</option>
-											<option>멜버른</option>
-											<option>브리즈번</option>
-											<option>퍼스</option>
-										</select>
-									</span>
-								</p>
-							</div>
-							<div class="field" style="line-height:40px" align="center">
-								<a style="font-size:2em; color:purple" data-tooltip="여행지 추가" class="cityPlusBtn">+</a>
-							</div>
-						</div>
-					</div>
+					</c:forEach>
 					<div class="field is-horizontal">
 						<div class="field-label is-normal">
 							<label class="label">여행 기간</label>
@@ -75,13 +77,13 @@
 							<div class="field is-grouped">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-calendar-check"></i></span>
-									<input class="input" type="text" id="startPicker" placeholder="시작일" name="startDate"/>
+									<input class="input" type="text" id="startPicker" placeholder="시작일" value="${ trv.startDate }" name="startDate"/>
 								</p>
 							</div>
 							<div class="field">
 								<p class="control is-expanded has-icons-left has-icons-right">
 									<span class="icon is-small is-left"><i class="far fa-calendar-check"></i></span> 
-									<input class="input" type="text" id="endPicker" placeholder="종료일" name="endDate"/>
+									<input class="input" type="text" id="endPicker" placeholder="종료일" value="${ trv.endDate }" name="endDate"/>
 								</p>
 							</div>
 						</div>
@@ -94,7 +96,7 @@
 							<div class="field is-narrow">
 								<div class="control">
 									<div class="is-fullwidth">
-										<input class="input" type="number" min="1" max="20" value="1" name="compNumber">
+										<input class="input" type="number" min="1" max="20" value="${ trv.compNumber }" name="compNumber">
 									</div>
 								</div>
 							</div>
@@ -114,8 +116,16 @@
         		$('html').removeClass('is-clipped');
         	    $(this).parents(".modal").removeClass('is-active');
         	});
-        	
-			$("#startPicker, #endPicker").datepicker({
+			
+			var startDate;
+        	$("#startPicker").datepicker({
+        		dateFormat:"yy-mm-dd",
+        		onSelect:function(selectedDate) {
+					startDate = $(this).datepicker('getDate');
+					$("#endPicker").datepicker("option", "minDate", startDate);
+				}, 
+        	});
+        	$("#endPicker").datepicker({
         		dateFormat:"yy-mm-dd"
         	});
         	
@@ -123,14 +133,78 @@
         	$(".cityPlusBtn").click(function() {
         		var field = $(this).parents(".travelCityField").clone(true);
         		field.find(".travelCityLabel").text('');
+        		field.find("select[name=trvCity]").children().remove();
         		field.insertAfter($(this).parents(".travelCityField"));
         	});
+        	      	
+        	
         	
         	
         	$(".okBtn").click(function() {
-        		$("#trvInfoForm").submit();
+        		var title = $("input[name=trvTitle]").val();
+        		var start = $("#startPicker").val();
+        		var end = $("#endPicker").val();
+        		var cities = [];
+        		var duplicated = false;
+        		$("select[name=trvCity]").each(function() {
+        			var city = $(this).children("option:selected").text();
+        			if(cities.indexOf(city) >= 0) {
+        				duplicated = true; 
+        			}else {
+        				cities.push(city);
+        			}
+        		});
+        		if(duplicated) {
+        			alert('도시명이 중복됩니다. 다시 확인해주세요.');
+        		}else if(title === '') {
+					alert('여행 제목을 입력해주세요.');        			
+        		}else if(start === '' || end === '') {
+        			alert('여행 시작일과 종료일을 선택해주세요');
+        		}else {
+	        		$("#trvInfoForm").submit();
+        		}
+        		
         	});
 		});
+		
+		function showTrvInfoModal() {
+			$.ajax({
+				url:"selectCountryList.trv",
+				type:"post",
+				success:function(data) {
+					var $select = $("select[name=trvCountry]");
+					for(var key in data.countryList) {
+						var id = data.countryList[key].countryId;
+						var country = data.countryList[key].countryNameKo;
+						var $option = $("<option value='" + id + "'>").text(country);
+						$select.append($option);
+					}
+				}, error:function(data) {
+					alert("서버 전송실패");
+				}
+			});
+			$('#travelInfoModal').toggleClass('is-active');
+		}
+		$("select[name=trvCountry]").change(function() {
+    		var country = $(this).children("option:selected");
+    		var citySelect = $(this).parent().parent().parent().next().find("select[name=trvCity]");
+	    	$.ajax({
+	    		url:"selectCityList.trv",
+	    		type:"post",
+	    		data:{countryId:country.val()},
+	    		success:function(data) {
+	    			citySelect.children().remove();
+					for(var key in data.cityList) {
+						var id = data.cityList[key].cityId;
+						var city = data.cityList[key].cityNameKo;
+						var $option = $("<option value='" + id + "'>").text(city);
+						citySelect.append($option);
+					}
+	    		}, error:function(data) {
+	    			alert("서버 전송실패");
+	    		}
+	    	});
+    	});
 	</script>
 </body>
 </html>

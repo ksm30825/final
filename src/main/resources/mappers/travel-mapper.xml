@@ -18,7 +18,13 @@
 		<result property="memberId" column="MEMBER_ID" />
 		<result property="trvRef" column="TRV_REF" />
 	</resultMap>
-	
+	<resultMap id="CountryResultSet" type="Country">
+		<id property="countryId" column="COUNTRY_ID" />
+		<result property="continentName" column="CONTINENT_NAME" />
+		<result property="countryNameKo" column="COUNTRY_NAME_KO" />
+		<result property="countryNameEn" column="COUNTRY_NAME_EN" />
+		<result property="currencyUnit" column="CURRENCY_UNIT" />
+	</resultMap>
 	<resultMap id="CityResultSet" type="City">
 		<id property="cityId" column="CITY_ID" />
 		<result property="cityNameKo" column="CITY_NAME_KO" />
@@ -52,10 +58,10 @@
 	<select id="selectTrvId" resultType="_int">
 		SELECT TRAVEL_SEQ.CURRVAL FROM DUAL
 	</select>
-	<select id="selectCity" parameterType="java.lang.String" resultMap="CityResultSet">
+	<select id="selectCity" parameterType="_int" resultMap="CityResultSet">
 		SELECT *
 		FROM CITY
-		WHERE CITY_NAME_KO = #{cityName}
+		WHERE CITY_ID = #{cityId}
 	</select>
 	<insert id="insertTrvCity" parameterType="TrvCity">
 		INSERT INTO TRV_CITY
@@ -84,5 +90,13 @@
 		FROM TRV_DAY
 		WHERE TRV_ID = #{trvId}
 	</select>
-	
+	<select id="selectCountryList" resultMap="CountryResultSet">
+		SELECT *
+		FROM COUNTRY
+	</select>
+	<select id="selectCityList" parameterType="_int" resultMap="CityResultSet">
+		SELECT *
+		FROM CITY
+		WHERE COUNTRY_ID = #{countryId}
+	</select>
 </mapper>

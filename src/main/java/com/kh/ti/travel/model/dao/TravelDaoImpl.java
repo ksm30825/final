@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.vo.City;
+import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
@@ -30,8 +31,8 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.selectOne("Travel.selectTrvId");
 	}
 	@Override
-	public City selectCity(SqlSessionTemplate sqlSession, String cityName) {
-		return sqlSession.selectOne("Travel.selectCity", cityName);
+	public City selectCity(SqlSessionTemplate sqlSession, int cityId) {
+		return sqlSession.selectOne("Travel.selectCity", cityId);
 	}	
 	@Override
 	public int insertTrvCity(SqlSessionTemplate sqlSession, TrvCity trvCity) {
@@ -54,6 +55,16 @@ public class TravelDaoImpl implements TravelDao {
 		return (ArrayList)sqlSession.selectList("Travel.selectTrvDayList", trvId);
 	}
 
+	@Override
+	public ArrayList<Country> selectCountryList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("Travel.selectCountryList");
+	}
+	@Override
+	public ArrayList<City> selectCityList(SqlSessionTemplate sqlSession, int countryId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectCityList", countryId);
+	}
+
+	
 
 
 	@Override
@@ -177,7 +188,6 @@ public class TravelDaoImpl implements TravelDao {
 		return 0;
 	}
 
-	
 	
 	
 	

@@ -74,7 +74,7 @@
       	<div id="mainNav" class="navbar-menu">
          	<div class="navbar-start">
             	<a class="navbar-item" href="#" 
-            		data-target="#newTravelModal" onclick="$('#newTravelModal').toggleClass('is-active')"> 
+            		data-target="#newTravelModal" onclick="showNewTrvModal();"> 
             		<strong>일정만들기</strong> 
             	</a>
             	<a class="navbar-item" href="travelList.tb"> <strong>여행일정</strong> </a>

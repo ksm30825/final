@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.vo.City;
+import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
@@ -22,13 +23,17 @@ public interface TravelDao {
 
 	int insertTrvCity(SqlSessionTemplate sqlSession, TrvCity trvCity);
 	
-	City selectCity(SqlSessionTemplate sqlSession, String cityName);
+	City selectCity(SqlSessionTemplate sqlSession, int cityId);
 
 	int selectTrvId(SqlSessionTemplate sqlSession);
 
 	int insertTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay);
 	
 	Travel selectTravel(SqlSessionTemplate sqlSession, int trvId);
+	
+	ArrayList<Country> selectCountryList(SqlSessionTemplate sqlSession);
+	
+	ArrayList<City> selectCityList(SqlSessionTemplate sqlSession, int countryId);
 
 	int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m);
 
@@ -73,6 +78,10 @@ public interface TravelDao {
 	ArrayList selectTrvCity(SqlSessionTemplate sqlSession, int trvId);
 
 	ArrayList selectTrvDay(SqlSessionTemplate sqlSession, int trvId);
+
+
+
+
 
 
 

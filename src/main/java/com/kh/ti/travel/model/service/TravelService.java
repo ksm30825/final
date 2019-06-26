@@ -1,8 +1,11 @@
 package com.kh.ti.travel.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.travel.model.vo.City;
+import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
@@ -16,6 +19,10 @@ public interface TravelService {
 	int insertTravel(Travel trv);
 	
 	HashMap selectTravel(int trvId);
+	
+	ArrayList<Country> selectCountryList();
+	
+	ArrayList<City> selectCityList(int countryId);
 
 	int insertTrvCompany(Travel trv, Member m);
 
@@ -56,6 +63,10 @@ public interface TravelService {
 	int deleteSchFile(SchFile file);
 
 	int deleteTrvSchedule(TrvSchedule sch);
+
+
+
+
 
 
 
