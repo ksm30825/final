@@ -7,11 +7,11 @@ public class ReservePoint {
 	private int pointId;		//포인트적립코드
 	private int reservePoint;	//적립포인트
 	private Date reserveDate;	//포인트적립일
-	private int trvId;			//여행일정번호
 	private int memberId;		//회원코드
 	private int reserveType; 	//적립유형 	-10:일정작성, 20:일정리뷰, 30:여행지리뷰
 	private int reviewId;		//여행리뷰코드
 	private int spotReviewId;	//장소리뷰코드
+	private int trvId;			//여행일정번호
 	//가입:3000P, 일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
 	
 	public ReservePoint() {}

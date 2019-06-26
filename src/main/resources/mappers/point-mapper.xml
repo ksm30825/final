@@ -11,6 +11,17 @@
 		<result property="payAmount" column="PAY_AMOUNT"/>
 		<result property="paymentDate" column="PAYMENT_DATE"/>
 	</resultMap>
+	<resultMap type="com.kh.ti.point.model.vo.ReservePoint" id="reserveResultSet">
+		<id property="pointId" column="POINT_ID"/>
+		
+		<result property="reservePoint" column="RESERVE_POINT"/>
+		<result property="reserveDate" column="RESERVE_DATE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="reserveType" column="RESERVE_TYPE"/>
+		<result property="reviewId" column="REVIEW_ID"/>
+		<result property="spotReviewId" column="SPOT_REVIEW_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+	</resultMap>
 	<insert id="insertPay" parameterType="Payment">
 		INSERT INTO PAYMENT
 		VALUES(PAYMENT_SEQ.NEXTVAL, #{tid}, #{memberId}, #{payAmount}, #{paymentDate})
@@ -26,8 +37,13 @@
 		WHERE MEMBER_ID=#{memberId}
 	</select>
 	<select id="selectChargeList" resultMap="paymentResultSet">
-		SELECT *
+		SELECT PAYMENT_ID, TID, MEMBER_ID, PAY_AMOUNT, PAYMENT_DATE
 		FROM PAYMENT
+		WHERE MEMBER_ID=#{memberId}
+	</select>
+	<select id="selectReceiveList" resultMap="reserveResultSet">
+		SELECT *
+		FROM RESERVE_POINT
 		WHERE MEMBER_ID=#{memberId}
 	</select>
 </mapper>

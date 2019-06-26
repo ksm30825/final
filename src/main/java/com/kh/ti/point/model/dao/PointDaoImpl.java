@@ -40,5 +40,17 @@ public class PointDaoImpl implements PointDao{
 		//System.out.println("chPayList chPayList : " + chPayList);
 		return chPayList;
 	}
+	//포인트 지급리스트 전체 조회
+	@Override
+	public ArrayList<Payment> selectReceiveList(SqlSessionTemplate sqlSession, PageInfo rePi, int memberId) {
+		int offset = (rePi.getCurrentPage() - 1) * rePi.getLimit();
+		//System.out.println("rePayList offset : " + offset);
+		RowBounds rowBounds = new RowBounds(offset, rePi.getLimit());
+		//System.out.println("rePayList rowBounds : " + rowBounds);
+		
+		ArrayList<Payment> rePayList = (ArrayList)sqlSession.selectList("Payment.selectReceiveList", memberId, rowBounds);
+		System.out.println("rePayList rePayList : " + rePayList);
+		return rePayList;
+	}
 
 }
