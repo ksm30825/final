@@ -17,7 +17,7 @@
 <body>
 	<div class="modal" id="newTravelModal">
 		<div class="modal-background"></div>
-		<div class="modal-card" style="width:480px">
+		<div class="modal-card" style="width:600px">
 			<header class="modal-card-head">
 				<span class="icon is-large"><i class="fas fa-2x fa-plane-departure"></i></span>
 				<p class="modal-card-title">여행 정보</p>
@@ -41,10 +41,10 @@
 									<span class="icon is-small is-left"><i class="fas fa-globe-americas"></i></span>
 									<span class="select"> 
 										<select name="trvCountry">
-											<option>호주</option>
+											<!-- <option>호주</option>
 											<option>일본</option>
 											<option>중국</option>
-											<option>미국</option>
+											<option>미국</option> -->
 										</select>
 									</span>
 								</p>
@@ -54,10 +54,10 @@
 									<span class="icon is-small is-left"><i class="fas fa-location-arrow"></i></span> 
 									<span class="select"> 
 										<select name="trvCity">
-											<option>시드니</option>
+											<!-- <option>시드니</option>
 											<option>멜버른</option>
 											<option>브리즈번</option>
-											<option>퍼스</option>
+											<option>퍼스</option> -->
 										</select>
 									</span>
 								</p>
@@ -134,6 +134,7 @@
         	$(".cityPlusBtn").click(function() {
         		var field = $(this).parents(".travelCityField").clone(true);
         		field.find(".travelCityLabel").text('');
+        		field.find("select[name=trvCity]").children().remove();
         		field.insertAfter($(this).parents(".travelCityField"));
         	});
         	
@@ -163,6 +164,44 @@
         		}
         	});
 		});
+		function showNewTrvModal() {
+			$.ajax({
+				url:"selectCountryList.trv",
+				type:"post",
+				success:function(data) {
+					var $select = $("select[name=trvCountry]");
+					for(var key in data.countryList) {
+						var id = data.countryList[key].countryId;
+						var country = data.countryList[key].countryNameKo;
+						var $option = $("<option value='" + id + "'>").text(country);
+						$select.append($option);
+					}
+				}, error:function(data) {
+					alert("서버 전송실패");
+				}
+			});
+			$('#newTravelModal').toggleClass('is-active')
+		}
+		$("select[name=trvCountry]").change(function() {
+    		var country = $(this).children("option:selected");
+    		var citySelect = $(this).parent().parent().parent().next().find("select[name=trvCity]");
+	    	$.ajax({
+	    		url:"selectCityList.trv",
+	    		type:"post",
+	    		data:{countryId:country.val()},
+	    		success:function(data) {
+	    			citySelect.children().remove();
+					for(var key in data.cityList) {
+						var id = data.cityList[key].cityId;
+						var city = data.cityList[key].cityNameKo;
+						var $option = $("<option value='" + id + "'>").text(city);
+						citySelect.append($option);
+					}
+	    		}, error:function(data) {
+	    			alert("서버 전송실패");
+	    		}
+	    	});
+    	});
 	</script>
 </body>
 </html>

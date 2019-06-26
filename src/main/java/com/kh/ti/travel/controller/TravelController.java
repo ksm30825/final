@@ -9,9 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.service.TravelService;
+import com.kh.ti.travel.model.vo.City;
+import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
@@ -31,14 +34,32 @@ public class TravelController {
 		return "travel/myTravel";
 	}
 	
+	@RequestMapping("selectCountryList.trv")
+	public ModelAndView selectCountryList(ModelAndView mv) {
+		ArrayList<Country> countryList = ts.selectCountryList();
+		mv.addObject("countryList", countryList);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	@RequestMapping("selectCityList.trv")
+	public ModelAndView selectCityList(ModelAndView mv, int countryId) {
+		ArrayList<City> cityList = ts.selectCityList(countryId);
+		mv.addObject("cityList", cityList);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	//새일정작성-민지
 	@RequestMapping("insertTravel.trv")
 	public String insertTravel(Travel trv, String startDate, String endDate, String trvCity, Model model) {
 		
 		trv.setStartDate(Date.valueOf(startDate));
 		trv.setEndDate(Date.valueOf(endDate));
-		System.out.println("controller : " + trvCity);
-		String[] cityArr = trvCity.split(",");
+		String[] strArr = trvCity.split(",");
+		int[] cityArr = new int[strArr.length];
+		for(int i = 0; i < strArr.length; i++) {
+			cityArr[i] = Integer.parseInt(strArr[i]);
+		}
 		trv.setTrvCities(cityArr);
 		
 		int trvId = ts.insertTravel(trv);

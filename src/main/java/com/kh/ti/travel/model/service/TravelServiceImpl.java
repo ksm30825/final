@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.dao.TravelDao;
 import com.kh.ti.travel.model.vo.City;
+import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
@@ -39,14 +40,11 @@ public class TravelServiceImpl implements TravelService {
 		int result2 = 0;
 		int result3 = 0;
 		int trvId = td.selectTrvId(sqlSession);
-		System.out.println("trvId : " + trvId);
-		String[] trvCities = trv.getTrvCities();
+		int[] trvCities = trv.getTrvCities();
 		
 		for(int i = 0; i < trvCities.length; i++) { 
-			System.out.println(trvCities[i]);
-			String cityName = trvCities[i];
-			City city = td.selectCity(sqlSession, cityName); 
-			System.out.println("city: " + city);
+			int cityId = trvCities[i];
+			City city = td.selectCity(sqlSession, cityId); 
 			TrvCity trvCity = new TrvCity(); 
 			trvCity.setCityId(city.getCityId());
 			trvCity.setTrvId(trvId);
@@ -82,6 +80,16 @@ public class TravelServiceImpl implements TravelService {
 		trvMap.put("trvCityList", trvCityList);
 		trvMap.put("trvDayList", trvDayList);
 		return trvMap;
+	}
+
+	@Override
+	public ArrayList<Country> selectCountryList() {
+		return td.selectCountryList(sqlSession);
+	}
+
+	@Override
+	public ArrayList<City> selectCityList(int countryId) {
+		return td.selectCityList(sqlSession, countryId);
 	}
 
 

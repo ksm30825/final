@@ -17,7 +17,7 @@ public class Travel implements java.io.Serializable {
 	private Date completeDate;
 	private String status;
 	private int memberId;
-	private String[] trvCities;
+	private int[] trvCities;
 	private int[] trvComps;
 	private int[] trvTags;
 	private int trvRef;
@@ -25,7 +25,7 @@ public class Travel implements java.io.Serializable {
 	public Travel() {}
 
 	public Travel(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, Date openDate,
-			Date modifyDate, Date completeDate, String status, int memberId, String[] trvCities, int[] trvComps,
+			Date modifyDate, Date completeDate, String status, int memberId, int[] trvCities, int[] trvComps,
 			int[] trvTags, int trvRef) {
 		super();
 		this.trvId = trvId;
@@ -124,11 +124,11 @@ public class Travel implements java.io.Serializable {
 		this.memberId = memberId;
 	}
 
-	public String[] getTrvCities() {
+	public int[] getTrvCities() {
 		return trvCities;
 	}
 
-	public void setTrvCities(String[] trvCities) {
+	public void setTrvCities(int[] trvCities) {
 		this.trvCities = trvCities;
 	}
 
@@ -164,6 +164,8 @@ public class Travel implements java.io.Serializable {
 				+ Arrays.toString(trvCities) + ", trvComps=" + Arrays.toString(trvComps) + ", trvTags="
 				+ Arrays.toString(trvTags) + ", trvRef=" + trvRef + "]";
 	}
+
+	
 
 	
 

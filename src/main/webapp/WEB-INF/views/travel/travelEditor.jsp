@@ -42,7 +42,7 @@
                     </a>
             	</p>
             	<p class="control">
-                    <a class="button is-rounded" onclick="$('#travelInfoModal').toggleClass('is-active')"> 
+                    <a class="button is-rounded" onclick="showTrvInfoModal();"> 
                         <i class="fas fa-info-circle"></i>
                         <span>여행정보수정</span>
                     </a>
@@ -271,6 +271,7 @@
 		function goToMyTravel() {
 			location.href="showMyTravel.trv";
 		}
+		
 	</script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7fLkDFvRtLNooR612ov12h_gwdsqDI6Q&libraries=places&callback=initMap"
     async defer></script>
