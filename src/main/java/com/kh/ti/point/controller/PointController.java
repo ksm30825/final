@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +14,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
+import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.service.PointService;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.UsePoint;
 
 @Controller
 public class PointController {
@@ -22,40 +27,44 @@ public class PointController {
 	
 	//포인트 전체 페이지
 	@RequestMapping("/pointMainView.po")
-	public String selectPointMainView(Model model) {
+	public String selectPointMainView(Model model , HttpServletRequest request) {
 		//포인트충전, 지급, 사용 내역 테이블 전체 조회
 		//페이징 처리도 전부
-		
-		//포인트 충전에 관한 것들 조회(일단 임시로 memberId=1)
-		int chargeListCount = ps.getChargeListCount(1);
+		//포인트 충전에 관한 것들 조회
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		//System.out.println(loginUser.getMemberId());
+		int memberId = loginUser.getMemberId();
+		int chargeListCount = ps.getChargeListCount(memberId);
 		//System.out.println("chargeListCount : " + chargeListCount);
 		int chargeCurrentPage = 1;
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		//System.out.println("chPi : " + chPi);
-		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, 1);
+		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, memberId);
 		model.addAttribute("chPayList", chPayList);
 		//System.out.println("chmodel : " + model);
-		/*
-		for(int i=0 ; i<chPayList.size() ; i++) {
-		System.out.println("chPayList["+i+"] : "+chPayList.get(i)); }
-		 */
 		
-		//포인트 충전에 관한 것들 조회
-		int receiveListCount = ps.getReceiveListCount(1);
+//		for(int i=0 ; i<chPayList.size() ; i++) {
+//		//포인트 충전에 관한 것들 조회(일단 임 ; i++) {
+//			System.out.println("chPayList["+i+"] : "+chPayList.get(i)); 
+//		}
+		
+		//포인트 지급에 관한 것들 조회
+		int receiveListCount = ps.getReceiveListCount(memberId);
 		//System.out.println("ReceiveListCount : " + receiveListCount);
 		int receiveCurrentPage = 1;
 		PageInfo rePi = Pagination.getPageInfo(receiveCurrentPage, receiveListCount);
-		ArrayList<Payment> rePayList = ps.selectReceiveList(rePi, 1);
+		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, memberId);
 		model.addAttribute("rePayList", rePayList);
 		//System.out.println("rePi : " + rePi);
 		
 		//포인트 사용에 관한 것들 조회
-		int useListCount = ps.getReceiveListCount(1);
+		int useListCount = ps.getUseListCount(memberId);
 		//System.out.println("useListCount : " + useListCount);
 		int useCurrentPage = 1;
 		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
 		//System.out.println("usPi : " + usPi);
-		
+		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, memberId);
+		model.addAttribute("usPayList", usPayList);
 		
 		return "point/pointMain";
 	}
@@ -82,21 +91,24 @@ public class PointController {
 	}
 	//포인트 충전--수민
 	@RequestMapping("/toPay.po")
-	public String toPay(String tid, String pAmount) {
+	public String toPay(String tid, String pAmount, HttpServletRequest request) {
 		//System.out.println("tid : " + tid);
 		//System.out.println("payAmount : " + pAmount);
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		//System.out.println(loginUser.getMemberId());
+		int memberId = loginUser.getMemberId();
 		//충전액
 		int payAmount = Integer.parseInt(pAmount);
 		//충전일
 		Date paymentDate = new Date(new GregorianCalendar().getTimeInMillis());
 		
-		System.out.println("paymentDate : " + paymentDate);
+		//System.out.println("paymentDate : " + paymentDate);
 		
 		Payment pay = new Payment();
 		pay.setTid(tid);
 		pay.setPayAmount(payAmount);
 		pay.setPaymentDate(paymentDate);
-		pay.setMemberId(1);
+		pay.setMemberId(memberId);
 		
 		//System.out.println("넘기기전 pay : " + pay);
 
@@ -157,7 +169,7 @@ public class PointController {
 	}
 	//포인트 환불 (사용자가 '환불신청' 눌렀을 때 ->환불테이블에 insert된다!)--수민
 	@RequestMapping("/refundUPoint.po")
-	public String insertRefund(int memberId, int pointId) {
+	public String insertRefund(int pointId) {
 		
 		return "??";
 	}

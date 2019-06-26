@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.UsePoint;
 
 @Repository
 public class PointDaoImpl implements PointDao{
@@ -28,6 +30,11 @@ public class PointDaoImpl implements PointDao{
 	public int getReceiveListCount(SqlSessionTemplate sqlSession, int memberId) {
 		return sqlSession.selectOne("Payment.getReceiveListCount", memberId);
 	}
+	//포인트 사용 리스트 전체 카운터
+	@Override
+	public int getUseListCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.getUseListCount",memberId);
+	}
 	//포인트 충전리스트 전체 조회
 	@Override
 	public ArrayList<Payment> selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, int memberId) {
@@ -42,15 +49,27 @@ public class PointDaoImpl implements PointDao{
 	}
 	//포인트 지급리스트 전체 조회
 	@Override
-	public ArrayList<Payment> selectReceiveList(SqlSessionTemplate sqlSession, PageInfo rePi, int memberId) {
+	public ArrayList<ReservePoint> selectReceiveList(SqlSessionTemplate sqlSession, PageInfo rePi, int memberId) {
 		int offset = (rePi.getCurrentPage() - 1) * rePi.getLimit();
 		//System.out.println("rePayList offset : " + offset);
 		RowBounds rowBounds = new RowBounds(offset, rePi.getLimit());
 		//System.out.println("rePayList rowBounds : " + rowBounds);
 		
-		ArrayList<Payment> rePayList = (ArrayList)sqlSession.selectList("Payment.selectReceiveList", memberId, rowBounds);
-		System.out.println("rePayList rePayList : " + rePayList);
+		ArrayList<ReservePoint> rePayList = (ArrayList)sqlSession.selectList("Payment.selectReceiveList", memberId, rowBounds);
+		//System.out.println("rePayList rePayList : " + rePayList);
 		return rePayList;
+	}
+	//포인트 사용리스트 전체 조회
+	@Override
+	public ArrayList<UsePoint> selectUseList(SqlSessionTemplate sqlSession, PageInfo usPi, int memberId) {
+		int offset = (usPi.getCurrentPage() - 1) * usPi.getLimit();
+		//System.out.println("rePayList offset : " + offset);
+		RowBounds rowBounds = new RowBounds(offset, usPi.getLimit());
+		//System.out.println("rePayList rowBounds : " + rowBounds);
+		
+		ArrayList<UsePoint> usPayList = (ArrayList)sqlSession.selectList("Payment.selectUseList", memberId, rowBounds);
+		//System.out.println("rePayList rePayList : " + rePayList);
+		return usPayList;
 	}
 
 }

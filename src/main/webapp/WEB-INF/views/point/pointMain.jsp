@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +33,7 @@
 		border-radius:5px;
 		border:1px solid purple;
 	}
-	tbody *:hover{
+	#chargeArea tbody *:hover, #receiveArea tbody *:hover, #useArea tbody *:hover{
 		background:#ededff;
 		color:#adadff;
 		font-weight:bold;
@@ -40,303 +41,281 @@
 </style>
 </head>
 <body>
-	<div id="pt"></div>
-	<jsp:include page="../common/mainNav.jsp"/>
-	<div class="columns is-mobile">
-		<div class="column">
-			<section class="section" id="headerSection">
-				<jsp:include page="../common/myPageHeader.jsp" />
-				<jsp:include page="pointNav.jsp"/>				
-			</section>
-			<section class="tableSection">
-			    <div class="container" style="width:95%;height:100%;border:1px solid #ccccff">
-			    	<table style="width:50%;">
-			  			<tr>
-			  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#">포인트 충전내역 바로가기</a></td>
-			  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#receiveTop">포인트 지급내역 바로가기</a></td>
-			  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#useTitle">포인트 사용내역 바로가기</a></td>
-			  			</tr>
-				  	</table>
-			    	<div id="chargeArea" style="height:100%;">
-				    	<div id="chargeTop" style="margin-top:3%;">
-				    		<div id="chargeTitle" style="color:purple; font-size:28px;margin-top:3%;">
-				    			포인트 충전내역
-			    			</div>
-				    		<div class="select" style="display:inline-block;float:right;">
-					            <select name="chargeSelect">
-									<option>--월--</option>
-									<option>1</option>
-									<option>2</option>
-									<option>3</option>
-									<option>4</option>
-									<option>5</option>
-									<option>6</option>
-									<option>7</option>
-									<option>8</option>
-									<option>9</option>
-									<option>10</option>
-									<option>11</option>
-									<option>12</option>
-								</select>
-					        </div>
-					        <div style="float:right;">
-					        	<a class="button is-danger" href="toPayView.po">충전하러 가기</a>
-					        </div>
-				    	</div>
-				    	<div id="chargeTB">
-				    		<table class="table is-narrow" align="center" style="width:100%;">
-							    <thead>
-									<tr style="background:skyblue;">
-										<th> No </th>
-										<th> 충전액 </th>
-										<th> 충전일 </th>
-									</tr>
-							    </thead>
-							    <tbody id="chargeTBody">
-									<c:forEach var="ch" items="${ chPayList }">
-										<tr>
-											<td>
-												<c:out value="${ ch.paymentId }"/>
-											</td>
-											<td>
-												<span id="comm">${ ch.payAmount }</span>P
-											</td>
-											<td>
-												<c:out value="${ ch.paymentDate }"/>
-											</td>
+	<c:if test="${ empty sessionScope.loginUser }">
+		<c:out value="로그인이 필요한 서비스입니다."/>
+	</c:if>
+	<c:if test="${ !empty sessionScope.loginUser }">
+		<div id="pt"></div>
+		<jsp:include page="../common/mainNav.jsp"/>
+		<div class="columns is-mobile">
+			<div class="column">
+				<section class="section" id="headerSection">
+					<jsp:include page="../common/myPageHeader.jsp" />
+					<jsp:include page="pointNav.jsp"/>				
+				</section>
+				<section class="tableSection">
+				    <div class="container" style="width:95%;height:100%;border:1px solid #ccccff">
+				    	<table style="width:50%;">
+				  			<tr>
+				  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#">포인트 충전내역 바로가기</a></td>
+				  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#receiveTop">포인트 지급내역 바로가기</a></td>
+				  				<td><a class="button is-primary is-outlined" style="height:20px;" href="#useTitle">포인트 사용내역 바로가기</a></td>
+				  			</tr>
+					  	</table>
+				    	<div id="chargeArea" style="height:100%;">
+					    	<div id="chargeTop" style="margin-top:3%;">
+					    		<div id="chargeTitle" style="color:purple; font-size:28px;margin-top:3%;">
+					    			포인트 충전내역
+				    			</div>
+					    		<div class="select" style="display:inline-block;float:right;">
+						            <select name="chargeSelect" id="chargeSelect">
+										<option id="defaultOption">--월--</option>
+										<option>1</option>
+										<option>2</option>
+										<option>3</option>
+										<option>4</option>
+										<option>5</option>
+										<option>6</option>
+										<option>7</option>
+										<option>8</option>
+										<option>9</option>
+										<option>10</option>
+										<option>11</option>
+										<option>12</option>
+									</select>
+						        </div>
+						        <div style="float:right;">
+						        	<a class="button is-danger" href="toPayView.po">충전하러 가기</a>
+						        </div>
+					    	</div>
+					    	<div id="chargeTB">
+					    		<table class="table is-narrow" align="center" style="width:100%;">
+								    <thead>
+										<tr style="background:skyblue;">
+											<th> No </th>
+											<th> 충전액 </th>
+											<th> 충전일 </th>
 										</tr>
-									</c:forEach>
-							    </tbody>
-						  </table>
+								    </thead>
+								    <tbody id="chargeTBody">
+										<c:forEach var="ch" items="${ chPayList }">
+											<tr>
+												<td>
+													<c:out value="${ ch.paymentId }"/>
+												</td>
+												<td>
+													<span><fmt:formatNumber value="${ ch.payAmount }" groupingUsed="true"/>P</span>
+												</td>
+												<td>
+													<fmt:formatDate value="${ ch.paymentDate }" pattern="yy/MM/dd HH:mm" />
+												</td>
+											</tr>
+										</c:forEach>
+								    </tbody>
+							  </table>
+					    	</div>
+					    	<div align="center" class="chargePagingArea" style="margin-top:3%;">
+					    		<button class="pageingBtn"> << </button>
+					    		<button class="pageingBtn"> < </button>
+					    		<button class="pageingBtn"> 1 </button>
+					    		<button class="pageingBtn"> 2 </button>
+					    		<button class="pageingBtn"> > </button>
+					    		<button class="pageingBtn"> >> </button>
+					    	</div>
+					    	<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				    	</div>
-				    	<div align="center" class="chargePagingArea" style="margin-top:3%;">
-				    		<button class="pageingBtn"> << </button>
-				    		<button class="pageingBtn"> < </button>
-				    		<button class="pageingBtn"> 1 </button>
-				    		<button class="pageingBtn"> 2 </button>
-				    		<button class="pageingBtn"> > </button>
-				    		<button class="pageingBtn"> >> </button>
-				    	</div>
-				    	<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
-			    	</div>
-			    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
-			    		<div id="receiveTop">
-			    			<div id="receiveTitle" style="color:purple; font-size:28px;margin-top:3%;">
-				    			포인트 지급내역
-			    			</div>
-				    		<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
-				    			<select name="receiveSelect">
-				    				<option>--월--</option>
-						            <option>1</option>
-						            <option>2</option>
-						            <option>3</option>
-						            <option>4</option>
-						            <option>5</option>
-						            <option>6</option>
-						            <option>7</option>
-						            <option>8</option>
-						            <option>9</option>
-						            <option>10</option>
-						            <option>11</option>
-						            <option>12</option>
-								</select>
-							</div>
-			    		</div>
-						<div id="receiveTB">
-							<table class="table is-narrow" align="center" style="width:100%;">
-							    <thead>
-									<tr style="background:skyblue;">
-										<th> No </th>
-										<th> 지급일 </th>
-										<th> 지급포인트 </th>
-										<th> 지급게시글 </th>
-									</tr>
-							    </thead>
-							    <tbody id="receiveTBody">
-									<c:forEach var="re" items="${ rePayList }">
-										<tr>
-											<td>
-												<c:out value="${ re.pointId }"/>
-											</td>
-											<td>
-												<c:out value="${ re.reserveDate }"/>
-											</td>
-											<td>
-												<c:out value="${ re.reservePoint }"/>P
-											</td>
-											<td>
-												<c:if test="${ re.reserveType eq 10}">
-													<c:out value="${ re.trvId }"/> 
-													<a class="button is-primary" style="height:20px;">일정작성</a>
-												</c:if>
-												<c:if test="${ re.reserveType eq 20}">
-													<c:out value="${ re.reviewId }"/> 
-													<a class="button is-primary" style="height:20px;">일정리뷰</a>
-												</c:if>
-												<c:if test="${ re.reserveType eq 30}">
-													<c:out value="${ re.spotReviewId }"/> 
-													<a class="button is-primary" style="height:20px;">명소리뷰</a>
-												</c:if>
-											</td>
+				    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
+				    		<div id="receiveTop">
+				    			<div id="receiveTitle" style="color:purple; font-size:28px;margin-top:3%;">
+					    			포인트 지급내역
+				    			</div>
+					    		<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
+					    			<select name="receiveSelect" id="receiveSelect">
+					    				<option id="defaultOption">--월--</option>
+							            <option>1</option>
+							            <option>2</option>
+							            <option>3</option>
+							            <option>4</option>
+							            <option>5</option>
+							            <option>6</option>
+							            <option>7</option>
+							            <option>8</option>
+							            <option>9</option>
+							            <option>10</option>
+							            <option>11</option>
+							            <option>12</option>
+									</select>
+								</div>
+				    		</div>
+							<div id="receiveTB">
+								<table class="table is-narrow" align="center" style="width:100%;">
+								    <thead>
+										<tr style="background:skyblue;">
+											<th> No </th>
+											<th> 지급포인트 </th>
+											<th> 지급일 </th>
+											<th> 지급게시글 </th>
 										</tr>
-									</c:forEach>
-							    </tbody>
-						  </table>
+								    </thead>
+								    <tbody id="receiveTBody">
+										<c:forEach var="re" items="${ rePayList }">
+											<tr>
+												<td>
+													<c:out value="${ re.pointId }"/>
+												</td>
+												<td>
+													<span><fmt:formatNumber value="${ re.reservePoint }" groupingUsed="true"/>P</span>
+												</td>
+												<td>
+													<fmt:formatDate value="${ re.reserveDate }" pattern="yy/MM/dd HH:mm" />
+												</td>
+												<td>
+													<c:if test="${ re.reserveType eq 10}">
+														<input type="text" value="${ re.trvId }" style="display:none;">
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">일정작성</a>
+													</c:if>
+													<c:if test="${ re.reserveType eq 20}">
+														<input type="text" value="${ re.reviewId }" style="display:none;">
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">일정리뷰</a>
+													</c:if>
+													<c:if test="${ re.reserveType eq 30}">
+														<input type="text" value="${ re.spotReviewId }" style="display:none;">
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">명소리뷰</a>
+													</c:if>
+												</td>
+											</tr>
+										</c:forEach>
+								    </tbody>
+							  </table>
+							</div>
+							<div align="center" class="receivePagingArea" style="margin-top:3%;">
+					    		<button class="pageingBtn"> << </button>
+					    		<button class="pageingBtn"> < </button>
+					    		<button class="pageingBtn"> 1 </button>
+					    		<button class="pageingBtn"> 2 </button>
+					    		<button class="pageingBtn"> > </button>
+					    		<button class="pageingBtn"> >> </button>
+				    		</div>
+				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
+				    	</div>
+				    	<div id="useArea"  style="margin-top:3%; border-top:1px solid lightgray;">
+				    		<div id="useTop">
+				    			<div id="useTitle" style="color:purple; font-size:28px;margin-top:3%;">
+					    			포인트 사용내역
+				    			</div>
+				    			<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
+					    			<select name="useSelect" id="useSelect">
+					    				<option id="defaultOption">--월--</option>
+							            <option>1</option>
+							            <option>2</option>
+							            <option>3</option>
+							            <option>4</option>
+							            <option>5</option>
+							            <option>6</option>
+							            <option>7</option>
+							            <option>8</option>
+							            <option>9</option>
+							            <option>10</option>
+							            <option>11</option>
+							            <option>12</option>
+									</select>
+								</div>
+				    		</div>
+				    		<div id="useTB">
+								<table class="table is-narrow" align="center" style="width:100%;">
+								    <thead>
+								      <tr style="background:skyblue">
+								        <th> No </th>
+								        <th> 사용포인트 </th>
+								        <th> 사용일 </th>
+								        <th> 사용게시글 </th>
+								        <th> 환불신청상태 </th>
+								      </tr>
+								    </thead>
+								    <tbody id="useTBody">
+								    	<c:forEach var="us" items="${ usPayList }">
+											<tr>
+												<td>
+													<c:out value="${ us.pointId }"/>
+												</td>
+												<td>
+													<span><fmt:formatNumber value="${ us.usePoint }" groupingUsed="true"/>P</span>
+												</td>
+												<td>
+													<fmt:formatDate value="${ us.useDate }" pattern="yy/MM/dd HH:mm" />
+												</td>
+												<td>
+													<c:if test="${ us.useType eq 10}">
+														<!-- 일정구매 -->
+														<input type="text" value="${ us.trvId }" style="display:none;">
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">일정구매</a>
+													</c:if>
+													<c:if test="${ us.useType eq 20}">
+														<input type="text" value="${ us.requestId }" style="display:none;">
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">의뢰채택</a>
+													</c:if>
+												</td>
+												<td>
+													<a class="button is-primary" data-target="#myModal" onclick="$('#myModal').toggleClass('is-active')"style="height:20px;" data-tooltip="환불 신청하기">  환불신청 </a>
+												</td>
+											</tr>
+										</c:forEach>
+								    </tbody>
+							  </table>
+							</div>
+							<div align="center" class="receivePagingArea" style="margin-top:3%;">
+					    		<button class="pageingBtn"> << </button>
+					    		<button class="pageingBtn"> < </button>
+					    		<button class="pageingBtn"> 1 </button>
+					    		<button class="pageingBtn"> 2 </button>
+					    		<button class="pageingBtn"> > </button>
+					    		<button class="pageingBtn"> >> </button>
+				    		</div>
+				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
+				    		<br>
+				    	</div>
+				   	</div>
+			    </section>
+			    <section class="section" id="modal">
+					<div class="modal" id="myModal">
+						<div class="modal-background"></div>
+						<div class="modal-card">
+							<header class="modal-card-head">
+								<p class="modal-card-title" id="modalHeader"></p>
+								<button class="delete" id="del"></button>
+							</header>
+							<section class="modal-card-body">
+								<textarea cols="85" rows="15" style="resize:none;" id="modalContent"></textarea>
+							</section>
+							<footer class="modal-card-foot">
+								<div style="margin-left:auto;margin-right:auto;">
+									<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" onclick="yes()"> 예 </a>
+									<a class="button is-danger" style="border-radius:5px; height:25px;" onclick="no()"> 아니요 </a>
+								</div>
+							</footer>
 						</div>
-						<div align="center" class="receivePagingArea" style="margin-top:3%;">
-				    		<button class="pageingBtn"> << </button>
-				    		<button class="pageingBtn"> < </button>
-				    		<button class="pageingBtn"> 1 </button>
-				    		<button class="pageingBtn"> 2 </button>
-				    		<button class="pageingBtn"> > </button>
-				    		<button class="pageingBtn"> >> </button>
-			    		</div>
-			    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
-			    	</div>
-			    	<div id="useArea"  style="margin-top:3%; border-top:1px solid lightgray;">
-			    		<div id="useTop">
-			    			<div id="useTitle" style="color:purple; font-size:28px;margin-top:3%;">
-				    			포인트 사용내역
-			    			</div>
-			    			<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
-				    			<select name="useSelect">
-				    				<option>--월--</option>
-						            <option>1</option>
-						            <option>2</option>
-						            <option>3</option>
-						            <option>4</option>
-						            <option>5</option>
-						            <option>6</option>
-						            <option>7</option>
-						            <option>8</option>
-						            <option>9</option>
-						            <option>10</option>
-						            <option>11</option>
-						            <option>12</option>
-								</select>
-							</div>
-			    		</div>
-			    		<div id="useTB">
-							<table class="table is-narrow" align="center" style="width:100%;">
-							    <thead>
-							      <tr style="background:skyblue">
-							        <th> No </th>
-							        <th> 사용일 </th>
-							        <th> 사용포인트 </th>
-							        <th> 사용게시글 </th>
-							        <th> 환불신청상태 </th>
-							      </tr>
-							    </thead>
-							    <tbody id="useTBody">
-							      <tr>
-							        <td> 1 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-primary" data-target="#myModal" onclick="$('#myModal').toggleClass('is-active')"> 환불신청 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 2 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-warning"> 처리대기 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 3 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-success"> 환불승인 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 4 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-danger"> 환불거절 </a>
-							        </td>
-							      </tr>
-							      <tr>
-							        <td> 5 </td>
-							        <td> 19.06.03 </td>
-							        <td> 50P </td>
-							        <td>
-							        	<a class="button is-primary " style="height:20px;" id="apply">후기작성</a>
-							        </td>
-							        <td>
-							        	<a class="button is-warning"> 처리대기 </a>
-							        </td>
-							      </tr>
-							    </tbody>
-						  </table>
+					</div>
+				</section>
+				<section class="section" id="modal2">
+					<div class="modal" id="myModal2">
+						<div class="modal-background" id="back2"></div>
+						<div class="modal-card">
+							<header class="modal-card-head">
+								<p class="modal-card-title" id="modalHeader2" style="font-size:15px;text-align:center"></p>
+								<button class="delete" id="del2"></button>
+							</header>
+							<footer class="modal-card-foot">
+								<div style="margin-left:auto;margin-right:auto;">
+									<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" id="okay"> 확인 </a>
+								</div>
+							</footer>
 						</div>
-						<div align="center" class="receivePagingArea" style="margin-top:3%;">
-				    		<button class="pageingBtn"> << </button>
-				    		<button class="pageingBtn"> < </button>
-				    		<button class="pageingBtn"> 1 </button>
-				    		<button class="pageingBtn"> 2 </button>
-				    		<button class="pageingBtn"> > </button>
-				    		<button class="pageingBtn"> >> </button>
-			    		</div>
-			    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
-			    		<br>
-			    	</div>
-			   	</div>
-		    </section>
-		    <section class="section" id="modal">
-				<div class="modal" id="myModal">
-					<div class="modal-background"></div>
-					<div class="modal-card">
-						<header class="modal-card-head">
-							<p class="modal-card-title" id="modalHeader"></p>
-							<button class="delete" id="del"></button>
-						</header>
-						<section class="modal-card-body">
-							<textarea cols="85" rows="15" style="resize:none;" id="modalContent"></textarea>
-						</section>
-						<footer class="modal-card-foot">
-							<div style="margin-left:auto;margin-right:auto;">
-								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" onclick="yes()"> 예 </a>
-								<a class="button is-danger" style="border-radius:5px; height:25px;" onclick="no()"> 아니요 </a>
-							</div>
-						</footer>
 					</div>
-				</div>
-			</section>
-			<section class="section" id="modal2">
-				<div class="modal" id="myModal2">
-					<div class="modal-background" id="back2"></div>
-					<div class="modal-card">
-						<header class="modal-card-head">
-							<p class="modal-card-title" id="modalHeader2" style="font-size:15px;text-align:center"></p>
-							<button class="delete" id="del2"></button>
-						</header>
-						<footer class="modal-card-foot">
-							<div style="margin-left:auto;margin-right:auto;">
-								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" id="okay"> 확인 </a>
-							</div>
-						</footer>
-					</div>
-				</div>
-			</section>
+				</section>
+			</div>
 		</div>
-	</div>
+	</c:if>
+	
 	<script type="text/javascript">
 		$(function() {
 			$(".myPoint").parent().addClass('is-active');
@@ -360,7 +339,6 @@
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
-			
 		});
 		function yes(){
 			//환불신청확인
