@@ -28,7 +28,7 @@
 	<insert id="insertRequest" parameterType="TravelRequest">
 		INSERT INTO TRV_REQUEST
 		VALUES(TRV_REQUEST_SEQ.NEXTVAL, #{requestTitle}, #{requestContent},
-			   #{endDate}, #{requestPrice}, 1, 'N', NULL, #{trvCost})
+			   #{endDate}, #{requestPrice}, #{memberId}, 'N', NULL, #{trvCost})
 	</insert>
 	
 	<!-- 의뢰글 목록 수 -->
