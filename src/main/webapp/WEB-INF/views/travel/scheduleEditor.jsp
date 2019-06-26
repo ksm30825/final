@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -636,12 +637,12 @@
 						<i class="fas fa-tags"></i>여행테마 선택
 					</h4>
 					<div class="tags">
-						<span class="tag is-white themes"> 혼자여행 </span> 
-						<span class="tag is-white themes"> 가족여행 </span> 
-						<span class="tag is-white themes"> 커플여행 </span> 
-						<span class="tag is-white themes"> 먹방여행 </span> 
-						<span class="tag is-white themes"> 휴양 </span> 
-						<span class="tag is-white themes"> 밤도깨비 </span> 
+						<c:forEach var="tag" items="${ allTagList }" varStatus="st">
+							<span class="tag is-white themes">
+								<input type="hidden" value="${ tag.tagId }" name="tagId">
+								${ tag.tagName }
+							</span>
+						</c:forEach>
 					</div>
 					<hr style="border:1px solid lightgray">
 					<h6 class="title is-6">

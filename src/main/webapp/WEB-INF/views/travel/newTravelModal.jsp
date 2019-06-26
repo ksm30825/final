@@ -63,6 +63,9 @@
 								</p>
 							</div>
 							<div class="field" style="line-height:40px" align="center">
+									<a style="font-size:2em; color:purple" data-tooltip="여행지 삭제" class="cityRemoveBtn">-</a>
+								</div>
+							<div class="field" style="line-height:40px" align="center">
 								<a style="font-size:2em; color:purple" data-tooltip="여행지 추가" class="cityPlusBtn">+</a>
 							</div>
 						</div>
@@ -136,6 +139,19 @@
         		field.find(".travelCityLabel").text('');
         		field.find("select[name=trvCity]").children().remove();
         		field.insertAfter($(this).parents(".travelCityField"));
+        	});
+        	
+        	//cityField 삭제
+        	$(".cityRemoveBtn").click(function() {
+        		if($(this).parents(".travelCityField").find(".travelCityLabel") != '') {
+        			$(this).parents(".travelCityField").next().find(".travelCityLabel").text('여행지');
+        		}
+        		console.log($(this).parents(".travelCityField").siblings());
+        		if($(this).parents(".travelCityField").siblings().length == 3) {
+					alert("마지막 여행지입니다.");
+        		}else {
+	        		$(this).parents(".travelCityField").remove();
+        		}
         	});
         	
         	//submit Form

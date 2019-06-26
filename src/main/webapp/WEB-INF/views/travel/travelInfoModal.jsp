@@ -25,9 +25,10 @@
 				<button class="delete" aria-label="close"></button>
 			</header>
 			<section class="modal-card-body">
-				<form action="" method="post" id="trvInfoForm">
+				<form action="updateTravel.trv" method="post" id="trvInfoForm">
 					<div class="field">
 						<p class="control">
+							<input type="hidden" value="${ trv.trvId }" name="trvId"> 
 							<input class="input is-primary is-large" type="text" value="${ trv.trvTitle }" placeholder="여행 제목 입력"
 								name="trvTitle">
 						</p>
@@ -35,17 +36,17 @@
 					<c:forEach var="trvCity" items="${ trvCityList }" varStatus="st" >
 						<div class="field is-horizontal travelCityField">
 							<div class="field-label is-normal">
-								<label class="label travelCityLabel">여행지</label>
+								<label class="label travelCityLabel">
+									<c:if test="${ st.index == 0 }" >여행지</c:if>
+								</label>
 							</div>
 							<div class="field-body">
 								<div class="field is-grouped">
 									<p class="control is-expanded has-icons-left">
 										<span class="icon is-small is-left"><i class="fas fa-globe-americas"></i></span>
 										<span class="select"> 
-											<select name="trvCountry" >
-												<!-- <option>일본</option>
-												<option>중국</option>
-												<option>미국</option> -->
+											<select name="trvCountry">
+												<option value="${ trvCity.countryId }" selected>${ trvCity.countryNameKo }</option>
 											</select>
 										</span>
 									</p>
@@ -54,17 +55,17 @@
 									<p class="control is-expanded has-icons-left has-icons-right">
 										<span class="icon is-small is-left"><i class="fas fa-location-arrow"></i></span> 
 										<span class="select"> 
-											<select name="trvCity" >
-												<!-- <option>시드니</option>
-												<option>멜버른</option>
-												<option>브리즈번</option>
-												<option>퍼스</option> -->
+											<select name="trvCity">
+												<option value="${ trvCity.cityId }" selected>${ trvCity.cityNameKo }</option>
 											</select>
 										</span>
 									</p>
 								</div>
 								<div class="field" style="line-height:40px" align="center">
-									<a style="font-size:2em; color:purple" data-tooltip="여행지 추가" class="cityPlusBtn">+</a>
+									<a style="font-size:2em; color:purple" data-tooltip="여행지 삭제" class="cityRemoveBtn2">-</a>
+								</div>
+								<div class="field" style="line-height:40px" align="center">
+									<a style="font-size:2em; color:purple" data-tooltip="여행지 추가" class="cityPlusBtn2">+</a>
 								</div>
 							</div>
 						</div>
@@ -129,15 +130,39 @@
         		dateFormat:"yy-mm-dd"
         	});
         	
-        	//cityfield추가
-        	$(".cityPlusBtn").click(function() {
-        		var field = $(this).parents(".travelCityField").clone(true);
+        	//cityField추가
+        	$(".cityPlusBtn2").click(function() {
+        		var field = $(this).parent().parent().parent().clone(true);
+        		field.find("select[name=trvCountry]").addClass('newField');
+        		field.find("select[name=trvCity]").addClass('newField');
         		field.find(".travelCityLabel").text('');
-        		field.find("select[name=trvCity]").children().remove();
-        		field.insertAfter($(this).parents(".travelCityField"));
+        		//field.find("select[name=trvCity]").children().remove();
+        		$(this).parent().parent().parent().after(field[0]);
+        		//showCityList(field.find("select[name=trvCountry]"));
+        	});
+        	
+        	//cityField삭제
+        	$(".cityRemoveBtn2").click(function() {
+        		if($(this).parents(".travelCityField").find(".travelCityLabel") != '') {
+        			$(this).parents(".travelCityField").next().find(".travelCityLabel").text('여행지');
+        		}
+        		console.log($(this).parents(".travelCityField").siblings());
+        		if($(this).parents(".travelCityField").siblings().length == 3) {
+					alert("마지막 여행지입니다.");
+        		}else {
+	        		$(this).parents(".travelCityField").remove();
+        		}
         	});
         	      	
+        	$("select[name=trvCountry], select[name=trvCity]").one('click', function() {
+        		if(!$(this).is(".newField")) {
+	        		$(this).children("option").eq(0).remove();
+        		}
+        	});
         	
+        	$("select[name=trvCountry]").change(function() {
+    			showCityList($(this));
+    		});
         	
         	
         	$(".okBtn").click(function() {
@@ -183,28 +208,57 @@
 					alert("서버 전송실패");
 				}
 			});
+	    			
+			$("select[name=trvCountry]").each(function() {
+				var country = $(this).children("option:selected");
+				var citySelect = $(this).parent().parent().parent().next().find("select[name=trvCity]");
+				$.ajax({
+					url : "selectCityList.trv",
+					type : "post",
+					data : {countryId:country.val()},
+					success : function(data) {
+						for (var key in data.cityList) {
+							var id = data.cityList[key].cityId;
+							var city = data.cityList[key].cityNameKo;
+							var $option = $("<option value='" + id + "'>").text(city);
+							citySelect.append($option);
+						}
+					},
+					error : function(data) {
+						alert("서버 전송실패");
+					}
+				});
+			});
 			$('#travelInfoModal').toggleClass('is-active');
+			
+			
 		}
-		$("select[name=trvCountry]").change(function() {
-    		var country = $(this).children("option:selected");
-    		var citySelect = $(this).parent().parent().parent().next().find("select[name=trvCity]");
-	    	$.ajax({
-	    		url:"selectCityList.trv",
-	    		type:"post",
-	    		data:{countryId:country.val()},
-	    		success:function(data) {
-	    			citySelect.children().remove();
-					for(var key in data.cityList) {
+		
+		
+		
+		function showCityList(countrySelect) {
+			var country = countrySelect.children("option:selected");
+			console.log(country.val());
+			var citySelect = countrySelect.parent().parent().parent().next().find("select[name=trvCity]");
+			$.ajax({
+				url : "selectCityList.trv",
+				type : "post",
+				data : {countryId : country.val()},
+				success : function(data) {
+					citySelect.children().remove();
+					for ( var key in data.cityList) {
 						var id = data.cityList[key].cityId;
 						var city = data.cityList[key].cityNameKo;
 						var $option = $("<option value='" + id + "'>").text(city);
 						citySelect.append($option);
 					}
-	    		}, error:function(data) {
-	    			alert("서버 전송실패");
-	    		}
-	    	});
-    	});
+				},
+				error : function(data) {
+					alert("서버 전송실패");
+				}
+			});
+		}
+			
 	</script>
 </body>
 </html>

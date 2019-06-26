@@ -74,11 +74,13 @@ public class TravelServiceImpl implements TravelService {
 	public HashMap selectTravel(int trvId) {
 		HashMap trvMap = new HashMap();
 		Travel trv = td.selectTravel(sqlSession, trvId);
-		ArrayList trvCityList = td.selectTrvCity(sqlSession, trvId);
-		ArrayList trvDayList = td.selectTrvDay(sqlSession, trvId);
+		ArrayList<TrvCity> trvCityList = td.selectTrvCity(sqlSession, trvId);
+		ArrayList<TrvDay> trvDayList = td.selectTrvDay(sqlSession, trvId);
+		ArrayList<Tag> allTagList = td.selectTagList(sqlSession);
 		trvMap.put("trv", trv);
 		trvMap.put("trvCityList", trvCityList);
 		trvMap.put("trvDayList", trvDayList);
+		trvMap.put("allTagList", allTagList);
 		return trvMap;
 	}
 
@@ -93,6 +95,81 @@ public class TravelServiceImpl implements TravelService {
 	}
 
 
+	@Override
+	public int updateTravel(Travel trv) {
+		int result = td.updateTravel(sqlSession, trv);
+		int[] trvCities = trv.getTrvCities();
+		int duplicated = 0;
+		ArrayList<TrvCity> trvCityList = td.selectTrvCity(sqlSession, trv.getTrvId());
+		for(int j = 0; j < trvCityList.size(); j++) {
+			for(int i = 0; i < trvCities.length; i++) { 
+				if(trvCityList.get(j).getCityId() == trvCities[i]) {
+					duplicated++;
+				}
+			}
+			if(duplicated == 0) {
+				td.deleteTrvCity(sqlSession, trvCityList.get(j));
+			}
+			duplicated = 0;
+		}
+		duplicated = 0;
+		for(int i = 0; i < trvCities.length; i++) { 
+			for(int j = 0; j < trvCityList.size(); j++) {
+				if(trvCities[i] == trvCityList.get(j).getCityId()) {
+					duplicated++;
+				};
+			}
+			if(duplicated == 0) {
+				TrvCity trvCity = new TrvCity();
+				trvCity.setTrvId(trv.getTrvId());
+				trvCity.setCityId(trvCities[i]);
+				td.insertTrvCity(sqlSession, trvCity);
+			}
+			duplicated = 0;
+		}
+		
+		
+		ArrayList<TrvDay> trvDayList = td.selectTrvDay(sqlSession, trv.getTrvId());
+		Date startDate = trv.getStartDate();
+		Date endDate = trv.getEndDate();
+		int days = (int)((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+		
+		if(trvDayList.get(0).getDayDate() != startDate || trvDayList.get(trvDayList.size() - 1).getDayDate() != endDate) {
+			if(trvDayList.size() > days) {
+				for(int i = 0; i < trvDayList.size(); i++) {
+					if(i < days) {
+						TrvDay trvDay = new TrvDay();
+						Date date = new Date(startDate.getTime() + (1000 * 60 * 60 * 24) * i);
+						trvDay.setTrvId(trv.getTrvId()); 
+						trvDay.setDayNumber(i + 1);
+						trvDay.setDayDate(date);
+						td.updateTrvDay(sqlSession, trvDay);
+					}else {
+						td.deleteTrvDay(sqlSession, trvDayList.get(i));
+					}
+				}
+			}else if (trvDayList.size() < days) {
+				for(int i = 0; i < days; i++) {
+					if(i < trvDayList.size()) {
+						TrvDay trvDay = new TrvDay();
+						Date date = new Date(startDate.getTime() + (1000 * 60 * 60 * 24) * i);
+						trvDay.setTrvId(trv.getTrvId()); 
+						trvDay.setDayNumber(i + 1);
+						trvDay.setDayDate(date);
+						td.updateTrvDay(sqlSession, trvDay);
+					}else {
+						TrvDay trvDay = new TrvDay();
+						Date date = new Date(startDate.getTime() + (1000 * 60 * 60 * 24) * i);
+						trvDay.setTrvId(trv.getTrvId()); 
+						trvDay.setDayNumber(i + 1);
+						trvDay.setDayDate(date);
+						td.insertTrvDay(sqlSession, trvDay);
+					}
+				}
+			}
+		}
+		return result;
+	}
 	
 	
 	
@@ -162,11 +239,6 @@ public class TravelServiceImpl implements TravelService {
 		return spotMap;
 	}
 
-	@Override
-	public int updateTravel(Travel trv) {
-		int result = td.updateTravel(sqlSession, trv);
-		return 0;
-	}
 
 	@Override
 	public int completeTravel(Travel trv) {
@@ -182,7 +254,7 @@ public class TravelServiceImpl implements TravelService {
 
 	@Override
 	public int deleteTrvCity(Travel trv, int cityId) {
-		int result = td.deleteTrvCity(sqlSession, trv, cityId);
+		//int result = td.deleteTrvCity(sqlSession, trv, cityId);
 		return 0;
 	}
 

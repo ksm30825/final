@@ -80,9 +80,29 @@ public class TravelController {
 			model.addAttribute("trv", trvMap.get("trv"));
 			model.addAttribute("trvCityList", trvMap.get("trvCityList"));
 			model.addAttribute("trvDayList", trvMap.get("trvDayList"));
+			model.addAttribute("allTagList", trvMap.get("allTagList"));
 			return "travel/travelEditor";
 		}else {
 			model.addAttribute("msg", "일정 정보 불러오기 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	//전체일정정보 수정-민지
+	@RequestMapping("updateTravel.trv")
+	public String updateTravel(Travel trv, String trvCity, Model model) {
+		String[] strArr = trvCity.split(",");
+		int[] cityArr = new int[strArr.length];
+		for(int i = 0; i < strArr.length; i++) {
+			cityArr[i] = Integer.parseInt(strArr[i]);
+		}
+		trv.setTrvCities(cityArr);
+		
+		int result = ts.updateTravel(trv);
+		if(result > 0) {
+			return "redirect:/selectTravel.trv?trvId=" + trv.getTrvId();
+		}else {
+			model.addAttribute("msg", "여행 정보 수정 실패!");
 			return "common/errorPage";
 		}
 	}
@@ -146,12 +166,7 @@ public class TravelController {
 		return "";
 	}
 	
-	//전체일정정보 수정-민지
-	@RequestMapping("updateTravel.trv")
-	public String updateTravel(Travel trv) {
-		int result = ts.updateTravel(trv);
-		return "";
-	}
+
 	
 	//작성완료처리-민지
 	@RequestMapping("completeTravel.trv")
