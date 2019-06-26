@@ -2,7 +2,7 @@ package com.kh.ti.point.model.vo;
 
 import java.sql.Date;
 
-public class usePoint {
+public class UsePoint {
 	//포인트 사용내역
 	private int pointId;	//사용내역코드
 	private int usePoint;	//사용포인트
@@ -12,9 +12,9 @@ public class usePoint {
 	private int trvId;		//여행일정번호
 	private int requestId;	//의뢰번호
 	
-	public usePoint() {}
+	public UsePoint() {}
 
-	public usePoint(int pointId, int usePoint, Date useDate, int useType, int memberId, int trvId, int requestId) {
+	public UsePoint(int pointId, int usePoint, Date useDate, int useType, int memberId, int trvId, int requestId) {
 		super();
 		this.pointId = pointId;
 		this.usePoint = usePoint;

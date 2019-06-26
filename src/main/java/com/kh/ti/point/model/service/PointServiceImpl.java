@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.dao.PointDao;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.UsePoint;
 @Service
 public class PointServiceImpl implements PointService{
 
@@ -34,6 +36,11 @@ public class PointServiceImpl implements PointService{
 	public int getReceiveListCount(int memberId) {
 		return pd.getReceiveListCount(sqlSession, memberId);
 	}
+	//포인트 사용 리스트 전체 카운터
+	@Override
+	public int getUseListCount(int memberId) {
+		return pd.getUseListCount(sqlSession, memberId);
+	}
 	//포인트 충전리스트 전체 조회
 	@Override
 	public ArrayList<Payment> selectChargeList(PageInfo chPi, int memberId) {
@@ -41,8 +48,13 @@ public class PointServiceImpl implements PointService{
 	}
 	//포인트 지급리스트 전체 조회
 	@Override
-	public ArrayList<Payment> selectReceiveList(PageInfo rePi, int memberId) {
+	public ArrayList<ReservePoint> selectReceiveList(PageInfo rePi, int memberId) {
 		return pd.selectReceiveList(sqlSession, rePi, memberId);
+	}
+	//포인트 사용리스트 전체 조회
+	@Override
+	public ArrayList<UsePoint> selectUseList(PageInfo usPi, int memberId) {
+		return pd.selectUseList(sqlSession, usPi, memberId);
 	}
 
 }

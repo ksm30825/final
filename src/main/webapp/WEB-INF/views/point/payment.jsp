@@ -214,7 +214,7 @@
 				        $('.modal-background, .modal-close').click(function() {
 				        	console.log('dfsa');
 				        	$('#myModal').removeClass('is-active');
-				        	location.href="toPay.po?tid="+rsp.pg_tid+"&payAmount="+rsp.paid_amount;
+				        	location.href="toPay.po?tid="+rsp.pg_tid+"&pAmount="+rsp.paid_amount;
 				        })
 				    } else {
 				        var msg = '결제에 실패하였습니다';
