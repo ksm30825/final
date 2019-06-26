@@ -93,6 +93,7 @@ th, td {
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
+	<form action="myRequestPlan.mr">
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="form">
@@ -103,6 +104,7 @@ th, td {
 						<br>
 						<div class="field">
 							<a class="button is-primary"> Day1 </a> &nbsp;
+							<input type="hidden" value="Day1" name="Pday">
 							<!-- X버튼 -->
 							<span data-balloon="size: 3x" data-balloon-pos="up"
 								class="db color-inherit link hover-cyan removeBtn" > <svg
@@ -116,18 +118,17 @@ th, td {
 								</svg>
 							</span>
 							<!-- + 버튼 -->
-							<span data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-indigo plusBtn"><svg
-									aria-hidden="true" focusable="false" data-prefix="fas"
-									data-icon="plus-circle" role="img"
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-									class="svg-inline--fa fa-plus-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
-										class=""></path></svg></span> <input class="input" type="text"
-								placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)">
+							<span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-indigo plusBtn">
+								<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-plus-circle fa-w-16 fa-3x">
+									<path fill="currentColor" 
+										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z" class="">
+									</path>
+								</svg>
+							</span>
+							<!-- <input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)" > -->
+							<br><br>
 							<p class="control">
-								<textarea class="textarea " placeholder="일정 작성"></textarea>
+								<textarea class="textarea " placeholder="일정 작성" name="pdayMemo"></textarea>
 							</p>
 						</div>
 						<br>
@@ -178,9 +179,9 @@ th, td {
 									<div class="card">
 										<div class="card-content">
 											<div class="content">
-												<input class="input" type="text" placeholder="여행 제목 입력">
+												<input class="input" type="text" placeholder="여행 제목 입력" name="planTitle">
 												<hr>
-												<textarea class="textarea" placeholder="여행 소개"></textarea>
+												<textarea class="textarea" placeholder="여행 소개" name="planContent"></textarea>
 											</div>
 										</div>
 										<footer class="card-footer">
@@ -209,15 +210,13 @@ th, td {
 															<th>숙박</th>
 															<th>경비</th>
 															<th>기타</th>
-															<th>총액</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr>
-															<td><textarea>100,000원</textarea></td>
-															<td><textarea>100,000원</textarea></td>
-															<td><textarea>100,000원</textarea></td>
-															<td><textarea>300,000원</textarea></td>
+															<td><textarea name="roomCharge" placeholder="비용을 입력하세요"></textarea></td>
+															<td><textarea name="trafficCharge" placeholder="비용을 입력하세요"></textarea></td>
+															<td><textarea name="etcCharge" placeholder="비용을 입력하세요"></textarea></td>
 													</tbody>
 												</table>
 											</section>
@@ -265,12 +264,12 @@ th, td {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<a type="submit" class="button is-primary"
-					onclick="myRequestPlan();">확인</a> <a class="button"
+				<button type="submit" class="button is-primary">확인 <button` class="button"
 					onclick="cancel();">취소</a>
 			</footer>
 		</div>
 	</div>
+	</form>
 
 	<!-- 불러오기 모달 -->
 	<div class="modal" id="loadModal">
@@ -375,7 +374,7 @@ th, td {
 		
 		$(".plusBtn").click(function(){
 			count++;
-			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan" onclick="remove()"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)"><p class="control"><textarea class="textarea " placeholder="일정 작성"></textarea></p></div>');
+			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <input type="hidden" value="Day" ' + count + ' name="Pday"><span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan" onclick="remove()"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><p class="control"><textarea class="textarea " placeholder="일정 작성" name="pdayMemo"></textarea></p></div>');
 		});
 	});
 
@@ -384,7 +383,7 @@ th, td {
 	}
 	
 	function myRequestPlan() {
-		location = "myRequestPlan.mp"
+		location = "myRequestPlan.mr"
 	}
 	function ok() {
 		location = location;
@@ -529,31 +528,32 @@ th, td {
           markers[i].setMap(map);
         }
       }
-	/* function remove(event) {
-		console.log($(this).parent());
-		
-		var parent = $(this).parent();
-		
-		parent.remove();
-		
-		count--;
-	}   */
-
-	$(document).on("click",".hover-cyan",function(){
-		/* console.log($(this).parent());
-		console.log($(this).parent().text().split(" ")[2]); */
+	/* function remove() {
 		var num = $(".day").text();
 		console.log(num);
 		var numArr= $(".day").text().split(" ");
 		console.log(numArr);
-		/* console.log(count); */
+		console.log(count);
+		$(this).parent().remove();
+	} */
+
+	$(document).on("click",".hover-cyan",function(){
+		console.log($(this).parent());
+		console.log($(".day").text());
+		console.log($(this).parent().text().split(" ")[2]);
+		var num = $(".day").text();
+		console.log(num);
+		var numArr= $(".day").text().split(" ");
+		console.log(numArr);
+		console.log(count);
 		$(this).parent().remove();
 		
-		
-		count--;
-		for(var i = num; i < count; i++) {
-			/* console.log(i); */
-		}
+		count = 2;
+		$(".day").each(function() {
+			$(this).text(count);
+			count++;
+		});
+		count = 1;
 	});
 	
 </script>

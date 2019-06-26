@@ -32,6 +32,7 @@
 	<div class="columns">
 		<div class="column">
 			<form action="insertRequest.tr" method="post">
+				<input type="hidden" value="${ loginUser.memberId }" name="memberId">
 				<section class="section" id="form">
 					<div class="field">
 						<label class="label">제목</label>
