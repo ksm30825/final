@@ -7,7 +7,7 @@
 	<!-- trvCities -->
 	
 	<!-- trvTags -->
-	<resultMap type="TravelTag" id="travelTagResultSet">
+	<resultMap type="Tag" id="travelTagResultSet">
 		<id property="tagId" column="TAG_ID"/>
 		<result property="tagName" column="TAG_NAME"/>
 	</resultMap>
