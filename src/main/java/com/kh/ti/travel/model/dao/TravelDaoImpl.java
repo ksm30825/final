@@ -47,11 +47,11 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.selectOne("Travel.selectTravel", trvId);
 	}
 	@Override
-	public ArrayList selectTrvCity(SqlSessionTemplate sqlSession, int trvId) {
+	public ArrayList<TrvCity> selectTrvCity(SqlSessionTemplate sqlSession, int trvId) {
 		return (ArrayList)sqlSession.selectList("Travel.selectTrvCityList", trvId);
 	}
 	@Override
-	public ArrayList selectTrvDay(SqlSessionTemplate sqlSession, int trvId) {
+	public ArrayList<TrvDay> selectTrvDay(SqlSessionTemplate sqlSession, int trvId) {
 		return (ArrayList)sqlSession.selectList("Travel.selectTrvDayList", trvId);
 	}
 
@@ -63,9 +63,32 @@ public class TravelDaoImpl implements TravelDao {
 	public ArrayList<City> selectCityList(SqlSessionTemplate sqlSession, int countryId) {
 		return (ArrayList)sqlSession.selectList("Travel.selectCityList", countryId);
 	}
-
+	@Override
+	public ArrayList<Tag> selectTagList(SqlSessionTemplate sqlSession) {
+		return(ArrayList)sqlSession.selectList("Travel.selectAllTagList");
+	}
 	
-
+	@Override
+	public int updateTravel(SqlSessionTemplate sqlSession, Travel trv) {
+		return sqlSession.update("Travel.updateTravel", trv);
+	}
+	@Override
+	public int deleteTrvCity(SqlSessionTemplate sqlSession, TrvCity trvCity) {
+		return sqlSession.delete("Travel.deleteTrvCity", trvCity);
+	}
+	@Override
+	public int updateTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay) {
+		return sqlSession.update("Travel.updateTrvDay", trvDay);
+	}
+	@Override
+	public int deleteTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay) {
+		return sqlSession.delete("Travel.deleteTrvDay", trvDay);
+	}
+	
+	
+	
+	
+	
 
 	@Override
 	public int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m) {
@@ -128,11 +151,6 @@ public class TravelDaoImpl implements TravelDao {
 		return null;
 	}
 
-	@Override
-	public int updateTravel(SqlSessionTemplate sqlSession, Travel trv) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public int completeTravel(SqlSessionTemplate sqlSession, Travel trv) {
@@ -146,11 +164,6 @@ public class TravelDaoImpl implements TravelDao {
 		return 0;
 	}
 
-	@Override
-	public int deleteTrvCity(SqlSessionTemplate sqlSession, Travel trv, int cityId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public int deleteTrvComp(SqlSessionTemplate sqlSession, Travel trv, int memberId) {
@@ -187,6 +200,7 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 	
 	

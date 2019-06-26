@@ -50,10 +50,13 @@
 		<result property="isTimeSet" column="ISTIMESET" />
 		<result property="trvId" column="TRV_ID" />
 	</resultMap>
-	
+	<resultMap id="TagResultSet" type="Tag">
+		<id property="tagId" column="TAG_ID" />
+		<result property="tagName" column="TAG_NAME"/>
+	</resultMap>
 	<insert id="insertTravel" parameterType="Travel">
 		INSERT INTO TRAVEL
-		VALUES(TRAVEL_SEQ.NEXTVAL, #{trvTitle}, #{startDate}, #{endDate}, #{compNumber}, SYSDATE, SYSDATE, NULL, 'Y', 1, NULL)
+		VALUES(TRAVEL_SEQ.NEXTVAL, #{trvTitle}, #{startDate}, #{endDate}, #{compNumber}, SYSDATE, SYSDATE, NULL, 'Y', 5, NULL)
 	</insert>
 	<select id="selectTrvId" resultType="_int">
 		SELECT TRAVEL_SEQ.CURRVAL FROM DUAL
@@ -89,6 +92,7 @@
 		SELECT *
 		FROM TRV_DAY
 		WHERE TRV_ID = #{trvId}
+		ORDER BY DAY_NUMBER
 	</select>
 	<select id="selectCountryList" resultMap="CountryResultSet">
 		SELECT *
@@ -99,4 +103,48 @@
 		FROM CITY
 		WHERE COUNTRY_ID = #{countryId}
 	</select>
+	<select id="selectAllTagList" resultMap="TagResultSet">
+		SELECT *
+		FROM TAG
+	</select>
+	<update id="updateTravel" parameterType="Travel">
+		UPDATE TRAVEL
+		SET TRAVEL_TITLE = #{trvTitle} AND START_DATE = #{startDate} AND END_DATE = #{endDate} 
+		AND COMP_NUMBER = #{compNumber} AND MODIFY_DATE = SYSDATE
+		WHERE TRAVEL_ID = #{trvId}
+	</update>
+	<delete id="deleteTrvCity" parameterType="TrvCity">
+		DELETE FROM TRV_CITY
+		WHERE CITY_ID = #{cityId} AND TRV_ID = #{trvId}
+	</delete>
+	<update id="updateTrvDay" parameterType="TrvDay">
+		UPDATE TRV_DAY
+		SET DAY_DATE = #{dayDate}
+		WHERE DAY_NUMBER = #{dayNumber} AND TRV_ID = #{trvId}
+	</update>
+	<delete id="deleteTrvDay" parameterType="TrvDay">
+		DELETE FROM TRV_DAY
+		WHERE DAY_ID = #{dayId}
+	</delete>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

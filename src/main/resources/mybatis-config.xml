@@ -17,9 +17,10 @@
 		<typeAlias type="com.kh.ti.travel.model.vo.City" alias="City" />
 		<typeAlias type="com.kh.ti.travel.model.vo.TrvCity" alias="TrvCity" />
 		<typeAlias type="com.kh.ti.travel.model.vo.TrvDay" alias="TrvDay" />
+		<typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="Tag" />
     <!-- TravelBoard Part (예랑) -->
 		<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelBoard" alias="TravelBoard"/>
-		<typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="TravelTag"/>
+		<!-- <typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="TravelTag"/> -->
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/member-mapper.xml"/>
