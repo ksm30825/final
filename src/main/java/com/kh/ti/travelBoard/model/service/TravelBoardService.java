@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 public interface TravelBoardService {
@@ -13,6 +14,12 @@ public interface TravelBoardService {
 	HashMap travelList(PageInfo pi, TravelBoard tb);
 
 	HashMap travelDetailForm(TravelBoard tb);
+
+	int travelDelete(int trvId);
+
+	int travelLikeyInsert(Likey likey);
+
+	int travelLikeyDelete(Likey likey);
 
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelBoard.model.dao.TravelBoardDao;
+import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 @Service
@@ -39,6 +40,27 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	public HashMap travelDetailForm(TravelBoard tb) {
 		
 		return tbd.travelDetailForm(sqlSession, tb);
+	}
+	
+	//여행일정 삭제 - 예랑
+	@Override
+	public int travelDelete(int trvId) {
+		
+		return tbd.travelDelete(sqlSession, trvId);
+	}
+	
+	//여행일정 좋아요 - 예랑
+	@Override
+	public int travelLikeyInsert(Likey likey) {
+		
+		return tbd.travelLikeyInsert(sqlSession, likey);
+	}
+	
+	//여행일정 좋아요 취소 - 예랑
+	@Override
+	public int travelLikeyDelete(Likey likey) {
+		
+		return tbd.travelLikeyDelete(sqlSession, likey);
 	}
 
 

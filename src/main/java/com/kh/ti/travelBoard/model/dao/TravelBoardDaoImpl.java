@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travel.model.vo.Tag;
+import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 @Service
@@ -54,14 +55,36 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		
 		//일정 상세정보 조회
 		tb = sqlSession.selectOne("TravelBoard.selectTravelDetailForm", tb);
-		System.out.println(tb);
 		tbMap.put("tb", tb);
 		
 		//해당 일정 구매여부 확인
 		tb.setBuyStatus(sqlSession.selectOne("TravelBoard.checkBuyStatus", tb));
-		System.out.println(tb.getBuyStatus());
+		
+		//해당 일정 좋아요여부 확인
+		tb.setLikeyStatus(sqlSession.selectOne("TravelBoard.checkLikeyStatus", tb));
 		
 		return tbMap;
+	}
+	
+	//여행일정 삭제 - 예랑
+	@Override
+	public int travelDelete(SqlSessionTemplate sqlSession, int trvId) {
+		
+		return sqlSession.update("TravelBoard.travelDelete", trvId);
+	}
+	
+	//여행일정 좋아요 - 예랑
+	@Override
+	public int travelLikeyInsert(SqlSessionTemplate sqlSession, Likey likey) {
+		
+		return sqlSession.insert("TravelBoard.travelLikeyInsert", likey);
+	}
+	
+	//여행일정 좋아요 취소 - 예랑
+	@Override
+	public int travelLikeyDelete(SqlSessionTemplate sqlSession, Likey likey) {
+		
+		return sqlSession.delete("TravelBoard.travelLikeyDelete", likey);
 	}
 	
 

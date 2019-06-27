@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,11 +40,29 @@
 				<div class="columns">
 				
 					<div class="column" id="btnArea" align="right">
-						<a class="button is-primary" onclick="travelLikey()">
-							<span class="icon"><i class="far fa-star"></i></span>
-				          	<span> &nbsp;좋아요 </span>
-				        </a>
+						<c:choose>
+							<c:when test="${ !empty loginUser && tb.likeyStatus eq 'N' }">
+								<a class="button is-primary" onclick="travelLikeyInsert()">
+									<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
+						          	<span> &nbsp;좋아요 </span>
+				        		</a>
+							</c:when>
+							<c:when test="${ !empty loginUser && tb.likeyStatus eq 'Y' }">
+								<a class="button is-primary" onclick="travelLikeyDelete()">
+									<span class="icon"><i class="fas fa-star"></i></span>
+						          	<span> &nbsp;좋아요 </span>
+				        		</a>
+							</c:when>
+							<c:otherwise>
+								<a class="button is-dark" onclick="loginInfo()">
+									<span class="icon"><i class="far fa-star"></i></span>
+						          	<span> &nbsp;좋아요 </span>
+				        		</a>
+							</c:otherwise>
+						</c:choose>
+						
 						&nbsp;
+						
 						<a class="button is-primary" onclick="linkCopy()">
 							<span class="icon"><i class="fas fa-share-alt"></i></span>
 				          	<span> &nbsp;링크공유 </span>
@@ -205,13 +224,67 @@
 		</section>
 		
 		</div>	<!-- class="column is-9" -->
-			
+		
 	</div>	<!-- <div class="columns"> -->
-				
-				
+			
+			<c:choose>
+				<c:when test="${ loginUser.memberId eq tb.memberId }">
+					<section class="section" align="center">
+						<div class="columns">
+							<div class="column">
+								<a class="button is-primary" href="travelList.tb">
+									<span class="icon"><i class="fas fa-list"></i></span>
+						          	<span> &nbsp;목록으로 </span>
+				        		</a>
+				        		&nbsp;
+				        		<a class="button is-primary" onclick="location.href='selectTravel.trv?trvId=${ tb.trvId }'">
+									<span class="icon"><i class="fas fa-pen"></i></span>
+						          	<span> &nbsp;수정하기 </span>
+				        		</a>
+				        		&nbsp;
+				        		<a class="button is-primary" onclick="travelDelete()">
+									<span class="icon"><i class="fas fa-times"></i></span>
+						          	<span> &nbsp;삭제하기 </span>
+				        		</a>
+							</div>
+						</div>
+					</section>
+				</c:when>
+			</c:choose>
+			<c:if test="${ !empty loginUser }">
+			
+		</c:if>	
 				
 		</div>
 	</div>
+	
+	<!-- 일정만들기 안내 모달 -->
+	<section class="section" id="modal">
+		<div class="modal" id="travelDeleteModal">
+		    <div class="modal-background"></div>
+		    <div class="modal-card">
+		    
+				<header class="modal-card-head">
+					<p class="modal-card-title"><i class="fas fa-exclamation-triangle"></i>&nbsp;일정 삭제 안내</p>
+					<button class="cancel delete"></button>
+				</header>
+			
+				<section class="modal-card-body" align="center">
+					
+					<p>
+						작성하신 일정글을 삭제할 경우 복구할 수 없습니다.<br>
+						삭제하시겠습니까?
+					</p>
+				</section>
+			
+				<footer class="modal-card-foot" style="justify-content: center">
+					<a class="button is-primary" id="travelDelete">일정삭제</a>
+					<a class="button cancel">닫기</a>
+				</footer>
+			
+		    </div>
+		</div>
+	</section>
 
 <script>
 	function penalty() {
@@ -230,22 +303,46 @@
 		}
 	}
 	
-	function travelLikey() {
-		var num = "게시판 번호";
-		var userId = "유저번호";
+	function travelLikeyInsert() {
+	console.log("좋아요 추가 실행");
+		var trvId = ${ tb.trvId };
+		var memberId = ${ loginUser.memberId };
 		
 		$.ajax({
-			url : "travelLikey.tb",
-			data : {num : num, userId : userId},
+			url : "travelLikeyInsert.tb",
+			data : {trvId : trvId, memberId : memberId},
 			success : function(data) {
-				alert("좋아요 하면 버튼 색 변경할 것");
-			}
-			
+				
+				alert("해당 일정 좋아요 추가");
+				
+			},
+			error:function(data) {
+    			alert("서버 전송실패");
+    		}
+		});
+	}
+	
+	function travelLikeyDelete() {
+		console.log("좋아요 취소 실행");
+		var trvId = ${ tb.trvId };
+		var memberId = ${ loginUser.memberId };
+		
+		$.ajax({
+			url : "travelLikeyDelete.tb",
+			data : {trvId : trvId, memberId : memberId},
+			success : function(data) {
+				
+				alert("해당 일정 좋아요 삭제");
+				
+			},
+			error:function(data) {
+    			alert("서버 전송실패");
+    		}
 		});
 	}
 	
 	function linkCopy() {
-		alert("해당 글 링크 복사");
+	    alert("현재 주소 복사하기");
 	}
 	
 	$(".photo").click(function() {
@@ -262,6 +359,24 @@
 	$(".place").click(function() {
 		alert("여행지 정보로 연결");
 	});
+	
+	function loginInfo() {
+		alert("로그인이 필요한 서비스입니다.");
+	}
+	
+	function travelDelete() {
+		
+		$('#travelDeleteModal').toggleClass('is-active').removeAttr('style');
+		
+		$("#travelDelete").click(function() {
+			alert("해당 일정 삭제");
+			location.href="travelDelete.tb?trvId=" + ${ tb.trvId };
+		})
+		
+		$(".cancel").click(function(){
+			$('#travelDeleteModal').removeClass('is-active');
+	    });
+	}
 	
 </script>
 </body>

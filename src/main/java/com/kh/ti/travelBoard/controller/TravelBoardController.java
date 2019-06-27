@@ -1,7 +1,6 @@
 package com.kh.ti.travelBoard.controller;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travelBoard.model.service.TravelBoardService;
+import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 @Controller
@@ -43,7 +44,6 @@ public class TravelBoardController {
 		model.addAttribute("cityList", tbMap.get("cityList"));
 		
 		return "travelBoard/travelList";
-		
 	}
 	
 	//여행일정 리스트 검색 - 예랑
@@ -81,12 +81,11 @@ public class TravelBoardController {
 		model.addAttribute("cityList", tbMap.get("cityList"));
 		
 		return "travelBoard/travelList";
-		
 	}
 	
 	//여행일정 상세 조회 - 예랑
 	@RequestMapping("travelDetailForm.tb")
-	public String travelDetailForm(int num, Model model, HttpServletRequest request) {
+	public String travelDetailForm(int trvId, Model model, HttpServletRequest request) {
 		
 		TravelBoard tb = new TravelBoard();
 		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
@@ -94,7 +93,7 @@ public class TravelBoardController {
 		if(loginUser != null) {
 			tb.setMemberId(loginUser.getMemberId());
 		}
-		tb.setTrvId(num);
+		tb.setTrvId(trvId);
 		
 		HashMap tbMap = tbs.travelDetailForm(tb);
 		
@@ -103,11 +102,51 @@ public class TravelBoardController {
 		return "travelBoard/travelDetail";
 	}
 	
+	//여행일정 삭제 - 예랑
+	@RequestMapping("travelDelete.tb")
+	public String travelDelete(Model model, int trvId) {
+		
+		int result = tbs.travelDelete(trvId);
+		
+		if(result > 0) {
+			return "redirect:/travelList.tb";
+		}else {
+			model.addAttribute("msg", "일정 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
 	//여행일정 좋아요 - 예랑
 	@RequestMapping("travelLikey.tb")
-	public String travelLikey() {
+	public ModelAndView travelLikeyInsert(ModelAndView mv, int trvId, int memberId) {
 		
-		return "travelBoard/travelDetail";
+		Likey likey = new Likey();
+		likey.setTrvId(trvId);
+		likey.setMemberId(memberId);
+		
+		tbs.travelLikeyInsert(likey);
+		
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	//여행일정 좋아요 취소 - 예랑
+	@RequestMapping("travelLikeyDelete.tb")
+	public ModelAndView travelLikeyDelete(ModelAndView mv, int trvId, int memberId) {
+		
+		System.out.println("trvId : " + trvId);
+		System.out.println("memberId : " + memberId);
+		
+		Likey likey = new Likey();
+		likey.setTrvId(trvId);
+		likey.setMemberId(memberId);
+		
+		tbs.travelLikeyDelete(likey);
+		
+		mv.setViewName("jsonView");
+		
+		return mv;
 	}
 	
 	//여행일정 상세 / 일정표 / 날짜별 지도 보기 - 예랑

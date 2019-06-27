@@ -16,6 +16,13 @@
 	<!-- trvCities -->
 	<resultMap type="trvCity" id="travelCityResultSet">
 		<id property="cityId" column="CITY_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+	</resultMap>
+	
+	<!-- city -->
+	<resultMap type="city" id="cityResultSet">
+		<id property="cityId" column="CITY_ID"/>
 		<result property="trvId" column="TRV_ID"/>
 		<result property="cityNameKo" column="CITY_NAME_KO"/>
 		<result property="cityNameEn" column="CITY_NAME_EN"/>
@@ -24,7 +31,7 @@
 		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
 		<result property="currencyUnit" column="CURRENCY_UNIT"/>
 	</resultMap>
-	
+		
 	<!-- trvTags -->
 	<resultMap type="Tag" id="travelTagResultSet">
 		<id property="tagId" column="TAG_ID"/>
@@ -71,6 +78,7 @@
 		<result property="likeyCount" column="LIKEY_COUNT"/>
 		<result property="buyCount" column="BUY_COUNT"/>
 		<result property="buyStatus" column="BUY_STATUS"/>
+		<result property="likeyStatus" column="LIKEY_STATUS"/>
 		
 		<collection property="trvCities" javaType="java.util.ArrayList" resultMap="travelCityResultSet"/>
 		<collection property="trvTags" javaType="java.util.ArrayList" resultMap="travelTagResultSet"/>
@@ -144,7 +152,7 @@
 	
 	<select id="selectTravelDetailForm" resultMap="travelBoardResultSet">
 		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
-       		   M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, LIKEY_COUNT, BUY_COUNT
+       		   T.MEMBER_ID, M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, LIKEY_COUNT, BUY_COUNT
 	    FROM TRAVEL T
 	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
 	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
@@ -176,4 +184,28 @@
 		WHERE TRV_ID = #{ trvId }
 		AND MEMBER_ID = #{ memberId }
 	</select>
+	
+	<select id="checkLikeyStatus" resultType="string">
+		SELECT DECODE(COUNT(*), 0, 'N', 1, 'Y') LIKEY_STATUS
+		FROM LIKEY
+		WHERE TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+	</select>
+	
+	<update id="travelDelete" parameterType="_int">
+		UPDATE TRAVEL
+		SET STATUS = 'N'
+		WHERE TRV_ID = #{ trvId }
+	</update>
+	
+	<insert id="travelLikeyInsert" parameterType="Likey">
+		INSERT INTO LIKEY (LIKEY_ID, MEMBER_ID, ENROLL_DATE, LIKEY_TYPE, TRV_ID)
+		VALUES (LIKEY_SEQ.NEXTVAL, #{ memberId }, SYSDATE, '일정', #{ trvId })
+	</insert>
+	
+	<delete id="travelLikeyDelete" parameterType="Likey">
+		DELETE FROM LIKEY
+		WHERE MEMBER_ID = #{ memberId }
+		AND TRV_ID = #{ trvId }
+	</delete>
 </mapper>
