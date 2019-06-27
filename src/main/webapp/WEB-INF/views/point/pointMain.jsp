@@ -342,14 +342,18 @@
 			$("#chargeSelect").change(function(){
 				var month = $(this).children('option:selected').val();
 				if(month!='defaultOption'){
+					console.log("month : " + month );
 					$.ajax({
 						url:"oneMonthPay.po",
 						type:"post",
 						data:{month:month},
-						success:function(data){},
-						error:function(data){}
+						success:function(data){
+							console.log(data.chPayList);
+						},
+						error:function(data){
+							console.log('error');
+						}
 					});
-					
 				}
 			})
 			
