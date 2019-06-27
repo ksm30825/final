@@ -32,6 +32,10 @@
 		width:90% !important;
 		margin:0 auto;
 	}
+	.icon {
+		font-size : 20px !important;
+		margin-right:10px !important;
+	}
 </style>
 </head>
 <body>
@@ -78,13 +82,48 @@
 		</div> <!-- column -->
 	</div> <!-- end columns -->
 	
-	
+	<!-- spot menu area -->
+	<div class="tabs is-toggle is-fullwidth is-large">
+	    <ul>
+	    
+	      <li>
+	      	<a class="button is-info is-outlined">
+	      		<span class="icon"> <i class="fas fa-plane-departure"></i> </span>
+	      		관광
+	      	 </a>
+	      </li>
+	      
+	      <li>
+	      	<a class="button is-info is-outlined">
+	      		<span class="icon"> <i class="fas fa-store"></i> </span>
+	      		맛집
+	      	 </a>
+	      </li>
+	      
+	      <li>
+	      	<a class="button is-info is-outlined">
+	      		<span class="icon"> <i class="far fa-paper-plane"></i> </span>
+	      		일정
+	      	 </a>
+	      </li>
+	      
+	      <!-- <li><a class="button is-info is-outlined"> 호텔 </a></li> -->
+	      <li>
+	      	<a class="button is-info is-outlined">
+	      		<span class="icon"> <i class="fas fa-map-marked-alt"></i> </span>
+	      		지도
+	      	 </a>
+	      </li>
+	      
+	    </ul>
+	  </div> <!-- end spot menu area -->
+	  
 	<div class="columns">
 		<div class="column">
 			<!-- list area -->
 			<section class="section">
 			 	<c:forEach var="i" begin="1" end="10" step="1">
-			 		<div class="field" style="border:0.5px solid gray; padding:10px;">
+			 		<div class="field" style="border:0.5px solid gray; padding:10px;" class="listItem" onclick="location.href='selectSpotDetailInfo.sp'">
 						<article class="media">
 						    <figure class="media-left">
 						      <p class="image">
