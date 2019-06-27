@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ti.common.PageInfo;
@@ -85,6 +86,7 @@ public class PointController {
 	
 	
 	//포인트 충전 월 검색 내역 테이블--수민
+	@ResponseBody
 	@RequestMapping("/oneMonthPay.po")
 	public ModelAndView searchOneMonthPay(String month, ModelAndView mv, HttpServletRequest request) {
 		
@@ -94,15 +96,20 @@ public class PointController {
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		charge.setMonth(month);
-		
+		//System.out.println("month : " + month);
+		//System.out.println("memberID : "+ memberId);
+		System.out.println("charge : " + charge);
 		
 		int chargeListCount = ps.getChargeListCount(charge); 
 		System.out.println("월 검색 chargeListCount : "+chargeListCount);
 		int chargeCurrentPage = 1; 
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
-		
+		//System.out.println("chPayList : "+ chPayList);
 		mv.addObject("chPayList", chPayList);
+		
+		mv.setViewName("jsonView");
+		System.out.println("mv : " + mv);
 		
 		return mv;
 	}
