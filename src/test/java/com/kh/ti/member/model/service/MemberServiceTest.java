@@ -30,7 +30,7 @@ public class MemberServiceTest {
 	@Before
 	public void setup() {
 		m = new Member();
-		m.setEmail("test3");
+		m.setEmail("user20@gmail.com");
 		m.setPassword("0000");
 		m.setUserName("testName");
 		m.setBirthday("970922");
@@ -51,6 +51,19 @@ public class MemberServiceTest {
 	public void testSelectLoginUser() throws LoginException {
 		ms.loginMember(m);
 		log.info("로그인 성공!");
+	}
+	
+	@Ignore
+	@Test
+	public void testUpdateUserPwd() throws LoginException {
+		ms.updateUserPwd(m, "0000", "1234");
+		log.info("비밀번호 수정 성공!");
+	}
+	
+	@Test
+	public void testDropOutUserInfo() {
+		ms.dropOutUserInfo(m);
+		log.info("회원 탈퇴 성공!");
 	}
 	
 }

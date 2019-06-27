@@ -1,11 +1,14 @@
 package com.kh.ti.member.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -79,8 +82,20 @@ public class MemberController {
 	
 	//비밀번호수정용메소드--세령
 	@RequestMapping("updateUserPwd.me")
-	public void updateUserPwd() {
+	public String updateUserPwd(@RequestParam("oldPassword") String oldPassword, 
+							  @RequestParam("newPassword") String newPassword,
+							  HttpServletRequest request, SessionStatus status,
+							  Model model) {
+		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
 		
+		try {
+			int result = ms.updateUserPwd(loginUser, oldPassword, newPassword);
+			status.setComplete();
+			return "redirect:index.jsp";
+		} catch (LoginException e) {
+			model.addAttribute("msg", e.getMessage());
+			return "common/errorPage";
+		}
 	}
 	
 	//계좌정보수정용메소드--세령
@@ -97,8 +112,16 @@ public class MemberController {
 	
 	//회원탈퇴용메소드--세령
 	@RequestMapping("dropOutUser.me")
-	public String dropOutUserInfo() {
-		return null;
+	public String dropOutUserInfo(HttpServletRequest request, SessionStatus status, Model model) {
+		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+		int result = ms.dropOutUserInfo(loginUser);
+		if(result > 0) {
+			status.setComplete();
+			return "redirect:index.jsp";
+		} else {
+			model.addAttribute("msg", "회원탈퇴 실패!");
+			return "common/errorPage";
+		}
 	}
 	
 	//회원전체조회용메소드--세령

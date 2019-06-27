@@ -14,4 +14,8 @@ public interface MemberDao {
 
 	int insertReservePoint(SqlSessionTemplate sqlSession, String email);
 
+	int updateUserPwd(SqlSessionTemplate sqlSession, Member loginUser);
+
+	int dropOutUserInfo(SqlSessionTemplate sqlSession, Member loginUser);
+
 }

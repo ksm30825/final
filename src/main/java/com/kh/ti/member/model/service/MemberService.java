@@ -8,5 +8,9 @@ public interface MemberService {
 	Member loginMember(Member m) throws LoginException;
 
 	int insertMember(Member m);
+
+	int updateUserPwd(Member loginUser, String oldPassword, String newPassword) throws LoginException;
+
+	int dropOutUserInfo(Member loginUser);
 	
 }
