@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class TrvSchedule implements java.io.Serializable {
 
 	private int schId;
+	private String schTitle;
 	private String startTime;
 	private String endTime;
-	private String schMemo;
 	private String schContent;
 	private String schTransp;
 	private int plcId;
@@ -16,13 +16,13 @@ public class TrvSchedule implements java.io.Serializable {
 	
 	public TrvSchedule() {}
 
-	public TrvSchedule(int schId, String startTime, String endTime, String schMemo, String schContent, String schTransp,
-			int plcId, int dayId, int likeyId) {
+	public TrvSchedule(int schId, String schTitle, String startTime, String endTime, String schContent,
+			String schTransp, int plcId, int dayId, int likeyId) {
 		super();
 		this.schId = schId;
+		this.schTitle = schTitle;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.schMemo = schMemo;
 		this.schContent = schContent;
 		this.schTransp = schTransp;
 		this.plcId = plcId;
@@ -36,6 +36,14 @@ public class TrvSchedule implements java.io.Serializable {
 
 	public void setSchId(int schId) {
 		this.schId = schId;
+	}
+
+	public String getSchTitle() {
+		return schTitle;
+	}
+
+	public void setSchTitle(String schTitle) {
+		this.schTitle = schTitle;
 	}
 
 	public String getStartTime() {
@@ -52,14 +60,6 @@ public class TrvSchedule implements java.io.Serializable {
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
-	}
-
-	public String getSchMemo() {
-		return schMemo;
-	}
-
-	public void setSchMemo(String schMemo) {
-		this.schMemo = schMemo;
 	}
 
 	public String getSchContent() {
@@ -104,11 +104,11 @@ public class TrvSchedule implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "TrvSchedule [schId=" + schId + ", startTime=" + startTime + ", endTime=" + endTime + ", schMemo="
-				+ schMemo + ", schContent=" + schContent + ", schTransp=" + schTransp + ", plcId=" + plcId + ", dayId="
+		return "TrvSchedule [schId=" + schId + ", schTitle=" + schTitle + ", startTime=" + startTime + ", endTime="
+				+ endTime + ", schContent=" + schContent + ", schTransp=" + schTransp + ", plcId=" + plcId + ", dayId="
 				+ dayId + ", likeyId=" + likeyId + "]";
 	}
-	
+
 	
 	
 	

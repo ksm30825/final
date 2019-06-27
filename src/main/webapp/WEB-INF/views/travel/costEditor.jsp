@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -115,211 +116,44 @@
 			</section>
 			<section class="section">
 				<div class="columns is-multiline">
-					<% for(int i = 0; i < 10; i++) { %>
-					<div class="column is-one-fifth" style="padding:10.5px 0">
-						<nav class="panel">
-							<div class="panel-heading" align="center"
-								style="background: whitesmoke; color: black; height: 30px">
-								<p class="help">2019-07-01</p>
-							</div>
-							<div class="panel-heading" align="center" style="margin:0;">
-								DAY 1
-							</div>
-							<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
-							<ul class="connectedSortable menu-list">
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 1</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 2</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 3</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 4</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 5</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>
-									</div>
-								</li>
-							</ul>
-							<div class="panel-block">
-								<button class="button is-link is-outlined is-fullwidth"
-									onclick="$('#costModal').toggleClass('is-active')">
-									가계부 항목 추가</button>
-							</div>
-						</nav>
-					</div>
-					<% } %>
+					<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st">
+						<div class="column is-one-fifth" style="padding: 10.5px 0">
+							<nav class="panel">
+								<div class="panel-heading" align="center"
+									style="background: whitesmoke; color: black; height: 30px">
+									<p class="help">${ trvDay.dayDate }</p>
+								</div>
+								<div class="panel-heading" align="center" style="margin: 0">
+									<span>DAY ${ trvDay.dayNumber }</span>&nbsp; 
+									<input class="input dayMemo is-small" type="text" placeholder="MEMO"
+										value="${ trvDay.dayMemo }">
+								</div>
+								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
+								<ul class="connectedSortable menu-list"
+									style="background: white">
+									<% for (int i = 1; i <= 5; i++) { %>
+									<li class="ui-state-default panel-block">
+										<div class="media-left">
+											<span class="icon schInfoBtn"><i class="fas fa-edit"></i></span>
+										</div>
+										<div class="media-content">
+											<p>Item<%=i%></p>
+										</div>
+										<div class="media-right">
+											<button class="delete" aria-label="close"></button>
+										</div>
+									</li>
+									<% } %>
+								</ul>
+								<div class="panel-block">
+									<button class="button is-link is-outlined is-fullwidth"
+										onclick="$('#costModal').toggleClass('is-active')">가계부
+										항목 추가</button>
+								</div>
+							</nav>
+						</div>
+					</c:forEach>
 				</div>
-				<%-- <table class="table is-bordered is-fullwidth is-striped allSchTable" align="center">
-					<thead>
-						<tr class="is-selected">
-							<th width="200px">DAY1</th>
-							<th width="200px">DAY2</th>
-							<th width="200px">DAY3</th>
-							<th width="200px">DAY4</th>
-							<th width="200px">DAY5</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr style="background:whitesmoke;">
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-						</tr>
-						<tr class="panelTr">
-							<td height="300px">
-								<div class="panel">
-									<ul class="connectedSortable menu-list">
-										<% for(int i = 0; i < 7; i++) { %>
-										<li class="ui-state-default panel-block">
-											<div class="media-left">
-												<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-												</span>
-											</div>
-											<div class="media-content">
-												<p>Item <%= i+1 %></p>
-											</div>
-											<div class="media-right">
-												<button class="delete" aria-label="close"></button>
-											</div>
-										</li>
-										<% } %>
-									</ul>
-									<div class="panel-block">
-										<button class="button is-link is-outlined is-fullwidth"
-											onclick="$('#costModal').toggleClass('is-active')">
-											가계부 항목 추가
-										</button>
-									</div>
-								</div>
-							</td>
-							<td height="300px">
-								<div class="panel">
-									<ul class="connectedSortable menu-list">
-										<% for(int i = 0; i < 7; i++) { %>
-										<li class="ui-state-default panel-block">
-											<div class="media-left">
-												<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-												</span>
-											</div>
-											<div class="media-content">
-												<p>Item <%= i+1 %></p>
-											</div>
-											<div class="media-right">
-												<button class="delete" aria-label="close"></button>
-											</div>
-										</li>
-										<% } %>
-									</ul>
-									<div class="panel-block">
-										<button class="button is-link is-outlined is-fullwidth"
-											onclick="$('#costModal').toggleClass('is-active')">
-											가계부 항목 추가
-										</button>
-									</div>
-								</div>	
-							</td>
-							<td height="300px">
-								<div class="panel">
-									<ul class="connectedSortable menu-list">
-										<% for(int i = 0; i < 7; i++) { %>
-										<li class="ui-state-default panel-block">
-											<div class="media-left">
-												<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-												</span>
-											</div>
-											<div class="media-content">
-												<p>Item <%= i+1 %></p>
-											</div>
-											<div class="media-right">
-												<button class="delete" aria-label="close"></button>
-											</div>
-										</li>
-										<% } %>
-									</ul>
-									<div class="panel-block">
-										<button class="button is-link is-outlined is-fullwidth"
-											onclick="$('#costModal').toggleClass('is-active')">
-											가계부 항목 추가
-										</button>
-									</div>
-								</div>
-							</td>
-							<td height="300px">Three</td>
-							<td height="300px">Three</td>
-						</tr>
-						<tr class="is-selected">
-							<td>DAY6</td>
-							<td>DAY7</td>
-							<td>DAY8</td>
-							<td>DAY9</td>
-							<td>DAY10</td>
-						</tr>
-						<tr style="background:whitesmoke;">
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-							<td>2019-07-01</td>
-						</tr>
-						<tr class="panelTr">
-							<td height="300px">Three</td>
-							<td height="300px">Three</td>
-							<td height="300px">Three</td>
-							<td height="300px">Three</td>
-							<td height="300px">Three</td>
-						</tr>
-					</tbody>
-				</table> --%>
 			</section>
 		</div>
 	</div>	
