@@ -85,7 +85,11 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.delete("Travel.deleteTrvDay", trvDay);
 	}
 	
-	
+
+	@Override
+	public int completeTravel(SqlSessionTemplate sqlSession, int trvId) {
+		return sqlSession.update("Travel.completeTravel", trvId);
+	}	
 	
 	
 	
@@ -152,11 +156,6 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 
-	@Override
-	public int completeTravel(SqlSessionTemplate sqlSession, Travel trv) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public int deleteTravel(SqlSessionTemplate sqlSession, Travel trv) {

@@ -171,7 +171,10 @@ public class TravelServiceImpl implements TravelService {
 		return result;
 	}
 	
-	
+	@Override
+	public int completeTravel(int trvId) {
+		return td.completeTravel(sqlSession, trvId);
+	}
 	
 	
 	
@@ -239,12 +242,6 @@ public class TravelServiceImpl implements TravelService {
 		return spotMap;
 	}
 
-
-	@Override
-	public int completeTravel(Travel trv) {
-		int result = td.completeTravel(sqlSession, trv);
-		return 0;
-	}
 
 	@Override
 	public int deleteTravel(Travel trv) {
