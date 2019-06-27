@@ -61,7 +61,7 @@
 							<span class="icon" style="color:skyblue">
 								<i class="fas fa-plane"></i>
 							</span>
-							<span>&nbsp; TITLE</span>
+							<span>&nbsp; ${ tb.trvTitle }</span>
 							<span id="bell" data-tooltip="이 글 신고하기"><i class="fas fa-bell" onclick="penalty()"></i></span>
 						</h3>
 						

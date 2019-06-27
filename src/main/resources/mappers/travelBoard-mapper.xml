@@ -4,10 +4,25 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="TravelBoard">
+	<!-- country -->
+	<resultMap type="Country" id="travelCountryResultSet">
+		<id property="countryId" column="COUNTRY_ID"/>
+		<result property="continentName" column="CONTINENT_NAME"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+		<result property="currencyUnit" column="CURRENCY_UNIT"/>
+	</resultMap>
+	
 	<!-- trvCities -->
-	<resultMap type="City" id="travelCityResultSet">
+	<resultMap type="trvCity" id="travelCityResultSet">
 		<id property="cityId" column="CITY_ID"/>
+		<result property="trvId" column="TRV_ID"/>
 		<result property="cityNameKo" column="CITY_NAME_KO"/>
+		<result property="cityNameEn" column="CITY_NAME_EN"/>
+		<result property="countryId" column="COUNTRY_ID"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+		<result property="currencyUnit" column="CURRENCY_UNIT"/>
 	</resultMap>
 	
 	<!-- trvTags -->
@@ -17,6 +32,17 @@
 	</resultMap>
 	
 	<!-- schFile -->
+	<resultMap type="SchFile" id="schFileResultSet">
+		<id property="fileId" column="FILE_ID"/>
+		<result property="originName" column="ORIGIN_NAME"/>
+		<result property="changeName" column="CHANGE_NAME"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="uploadDate" column="UPLOAD_DATE"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+		<result property="fileCaption" column="FILE_CAPTION"/>
+		<result property="schId" column="SCH_ID"/>
+		<result property="fileStatus" column="FILE_STATUS"/>
+	</resultMap>
 	
 	<!-- likey -->
 	<resultMap type="Likey" id="likeyResultSet">
@@ -44,10 +70,11 @@
 		<result property="trvRef" column="TRV_REF"/>
 		<result property="likeyCount" column="LIKEY_COUNT"/>
 		<result property="buyCount" column="BUY_COUNT"/>
+		<result property="buyStatus" column="BUY_STATUS"/>
 		
 		<collection property="trvCities" javaType="java.util.ArrayList" resultMap="travelCityResultSet"/>
 		<collection property="trvTags" javaType="java.util.ArrayList" resultMap="travelTagResultSet"/>
-		<!-- <collection property="schFiles" javaType="java.util.ArrayList" resultMap=""/> -->
+		<collection property="schFiles" javaType="java.util.ArrayList" resultMap="schFileResultSet"/>
 	</resultMap>
 	
 	<!-- 페이징용 -->
@@ -56,18 +83,26 @@
 		FROM TRAVEL
 		WHERE STATUS = 'Y'
 		AND TRV_REF IS NULL
+		<choose>
+			<when test="trvTitle != null"> AND TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
+			<when test="userName != null"> AND USER_NAME LIKE '%' || #{ userName } || '%' </when>
+		</choose>
 	</select>
 	
 	<!-- 여행일정 전체 조회용 -->
 	<select id="selectTravelBoardList" resultMap="travelBoardResultSet">
 		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
-       M.USER_NAME, T.TRV_REF, TA.TAG_NAME, LIKEY_COUNT, BUY_COUNT
+       		   M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, LIKEY_COUNT, BUY_COUNT,
+               SFI.ORIGIN_NAME, SFI.CHANGE_NAME, SFI.FILE_PATH
 	    FROM TRAVEL T
 	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
-	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
-	    JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID) AND TD.DAY_NUMBER = 1
+	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+        LEFT JOIN SCH_FILE SFI ON (SFI.SCH_ID = TS.SCH_ID) AND SFI.FILE_LEVEL = 0 AND FILE_STATUS = 'Y'
 	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
 	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+        LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+        LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
         JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
               FROM TRAVEL T
               LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
@@ -82,6 +117,63 @@
               GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
 	    WHERE T.STATUS = 'Y'
 	    AND T.TRV_REF IS NULL
-        ORDER BY T.COMPLETE_DATE DESC
-</select>
+	    <choose>
+			<when test="trvTitle != null"> AND TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
+			<when test="userName != null"> AND USER_NAME LIKE '%' || #{ userName } || '%' </when>
+		</choose>
+        
+        <choose>
+			<when test="completeDate != null"> ORDER BY T.COMPLETE_DATE DESC </when>
+			<when test="likeyCount = -1"> ORDER BY LIKEY_COUNT DESC </when>
+			<when test="buyCount = -1"> ORDER BY BUY_COUNT DESC </when>
+			<otherwise>
+				ORDER BY T.COMPLETE_DATE DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectTagList" resultMap="travelTagResultSet">
+		SELECT *
+		FROM TAG
+	</select>
+	
+	<select id="selectCityList" resultMap="travelCountryResultSet">
+		SELECT *
+		FROM COUNTRY
+	</select>
+	
+	<select id="selectTravelDetailForm" resultMap="travelBoardResultSet">
+		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
+       		   M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, LIKEY_COUNT, BUY_COUNT
+	    FROM TRAVEL T
+	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+        LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+        LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) TRL ON (TRL.TRV_ID = T.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(U.USE_POINT) as BUY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
+	    WHERE T.STATUS = 'Y'
+	    AND T.TRV_REF IS NULL
+		AND T.TRV_ID = #{ trvId }
+	</select>
+	
+	<select id="checkBuyStatus" resultType="string">
+		SELECT DECODE(COUNT(*), 0, 'N', 1, 'Y') BUY_STATUS
+		FROM USE_POINT
+		WHERE TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+	</select>
 </mapper>

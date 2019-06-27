@@ -38,20 +38,30 @@
 		
 	<div id="simpleSearchArea" style="display: none;">
 		<!-- 기본검색바 -->
+		
 		<div class="field has-addons" style="justify-content: flex-end; margin-top: 1em;">
 			<a class="button is-primary searchClose" data-tooltip="검색창 닫기" data-position="top right">X</a>
+			
 			<p class="control">
 				<span class="select">
-					<select>
-						<option>최신순</option>
-						<option>좋아요순</option>
-						<option>최신순</option>
+					<select id="orderBy">
+						<option value="-">-검색조건-</option>
+						<option value="completeDate">최신순</option>
+						<option value="likeyCount">좋아요순</option>
+						<option value="buyCount">구매순</option>
 					</select>
 				</span>
 			</p>
-			
 			<p class="control">
-				<input class="input" type="text" placeholder="검색어를 입력하세요">
+				<span class="select">
+					<select id="searchCondition">
+						<option value="trvTitle">제목</option>
+						<option value="userName">작성자</option>
+					</select>
+				</span>
+			</p>
+			<p class="control">
+				<input class="input" type="text" id="searchContent" placeholder="검색어를 입력하세요">
 			</p>
 			<p class="control" onclick="searchTravelList()">
 				<a class="button"><i class="fas fa-search"></i></a>
@@ -67,12 +77,9 @@
 			<p class="control is-expanded" style="color: red;">
 				<span class="select is-fullwidth">
 					<select id="travelStyle" name="travelStyle">
-						<option value="혼자여행">혼자여행</option>
-						<option value="자유여행">자유여행</option>
-						<option value="먹방여행">먹방여행</option>
-						<option value="여행스타일">여행스타일</option>
-						<option value="여행스타일">여행스타일</option>
-						<option value="여행스타일">여행스타일</option>
+						<c:forEach var="tagList" items="${ tagList }" varStatus="st">
+							<option value="${ tagList.tagId }">${ tagList.tagName }</option>
+						</c:forEach>
 					</select>
 				</span>
 			</p>
@@ -91,18 +98,9 @@
 			<p class="control is-expanded">
 				<span class="select is-fullwidth">
 					<select name="country" id="travelCountry">
-						<option value="Argentina">Argentina</option>
-						<option value="Bolivia">Bolivia</option>
-						<option value="Brazil">Brazil</option>
-						<option value="Chile">Chile</option>
-						<option value="Colombia">Colombia</option>
-						<option value="Ecuador">Ecuador</option>
-						<option value="Guyana">Guyana</option>
-						<option value="Paraguay">Paraguay</option>
-						<option value="Peru">Peru</option>
-						<option value="Suriname">Suriname</option>
-						<option value="Uruguay">Uruguay</option>
-						<option value="Venezuela">Venezuela</option>
+						<c:forEach var="cityList" items="${ cityList }" varStatus="st">
+							<option value="${ cityList.countryId }">${ cityList.countryNameKo }</option>
+						</c:forEach>
 					</select>
 				</span>
 			</p>
@@ -123,49 +121,17 @@
 </body>
 
 <script>
-var content = [
-	  { title: 'Andorra' },
-	  { title: 'United Arab Emirates' },
-	  { title: 'Afghanistan' },
-	  { title: 'Antigua' },
-	  { title: 'Anguilla' },
-	  { title: 'Albania' },
-	  { title: 'Armenia' },
-	  { title: 'Netherlands Antilles' },
-	  { title: 'Angola' },
-	  { title: 'Argentina' },
-	  { title: 'American Samoa' },
-	  { title: 'Austria' },
-	  { title: 'Australia' },
-	  { title: 'Aruba' },
-	  { title: 'Aland Islands' },
-	  { title: 'Azerbaijan' },
-	  { title: 'Bosnia' },
-	  { title: 'Barbados' },
-	  { title: 'Bangladesh' },
-	  { title: 'Belgium' },
-	  { title: 'Burkina Faso' },
-	  { title: 'Bulgaria' },
-	  { title: 'Bahrain' },
-	  { title: 'Burundi' }
-	  // etc
-	];
-	
+	//간편검색 서치용
 	function searchTravelList() {
-		$.ajax({
-			url : 'searchTravelList.tb',
-			data : {},
-			success : function(data) {
-				alert("검색");
-			}
-		})
-	}
-	
-	$('.ui.search')
-	  .search({
-	    source: content
-	  })
-	;
+		var orderBy = $("#orderBy").children("option:selected").val();
+		var searchCondition = $("#searchCondition").children("option:selected").val();
+		var searchContent = $("#searchContent").val();
+		
+		console.log(searchCondition);
+		console.log(searchContent);
+		
+		location.href="searchTravelList.tb?orderBy=" + orderBy + "&searchCondition=" + searchCondition + "&searchContent=" + searchContent;
+	};
 	
 	/* 여행검색 관련 펑션 */
 	$('.dropdown').dropdown({
@@ -188,21 +154,20 @@ var content = [
 	});
 	
 	$('#styleAdd').click(function() {
-		var style = $("#travelStyle").val();
-		var tag = '<div class="tags has-addons"><a class="tag is-link style">'+style+'</a><a class="tag is-delete">　</a></div>';
-			
+		var style = $("#travelStyle").children("option:selected").text();
+		var tag = '<div class="tags has-addons"><a class="tag is-link style">'+style+'</a><span class="tag is-delete">　</span></div>';
+		$("#travelStyle").children("option:selected").attr("disabled", true);
 		$("#selectStyle").append(tag);
 		
 	});
 	
 	$('#countryAdd').click(function() {
-		var country = $("#travelCountry").val();
-		var tag = '<div class="tags has-addons"><a class="tag is-link style">'+country+'</a><a class="tag is-delete">　</a></div>';
+		var country = $("#travelCountry").children("option:selected").text();
+		var tag = '<div class="tags has-addons"><a class="tag is-link style">'+country+'</a><a class="tag is-delete" onclick="tagDelete()">　</a></div>';
 		
+		$("#travelCountry").children("option:selected").attr("disabled", true);
 		$("#selectCountry").append(tag);
 	});
-	
-	
 	
 </script>
 </html>

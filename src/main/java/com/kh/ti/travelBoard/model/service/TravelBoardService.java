@@ -1,15 +1,18 @@
 package com.kh.ti.travelBoard.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 public interface TravelBoardService {
 
-	int getListCount();
+	int getListCount(TravelBoard tb);
 	
-	ArrayList<TravelBoard> travelList(PageInfo pi);
+	HashMap travelList(PageInfo pi, TravelBoard tb);
+
+	HashMap travelDetailForm(TravelBoard tb);
 
 
 }
