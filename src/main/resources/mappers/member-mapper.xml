@@ -56,4 +56,20 @@
 		(SELECT MEMBER_ID FROM MEMBER WHERE EMAIL = #{email}), 
 		0, NULL, NULL, NULL)
 	</insert>
+	
+	<!-- 비밀번호 수정용 세령 -->
+	<update id="updatePwd" parameterType="Member">
+		UPDATE MEMBER
+		SET PASSWORD = #{ password }
+		WHERE EMAIL = #{ email }
+		AND ENROLL_STATUS = 'Y'
+	</update>
+	
+	<!-- 회원 탈퇴용 세령 -->
+	<update id="updateEnrollStatus" parameterType="Member">
+		UPDATE MEMBER 
+		SET ENROLL_STATUS = 'N'
+		WHERE EMAIL = #{ email }
+		AND ENROLL_STATUS = 'Y'
+	</update>
 </mapper>

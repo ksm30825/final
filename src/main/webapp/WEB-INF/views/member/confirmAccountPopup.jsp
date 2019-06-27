@@ -75,11 +75,4 @@
 	      </footer>
 	    </div>
 	  </div>
-	  
-	  <script>
-	  	//모달 닫기용 함수
-	  	function closeModal() {
-	  		$("#modalConfirmAcc").toggleClass('is-active');
-	  	}
-	  </script>
 </body>

@@ -32,5 +32,17 @@ public class MemberDaoImpl implements MemberDao{
 		return sqlSession.insert("Member.insertReservePoint", email);
 	}
 
+	//비밀번호 변경용 메소드 -- 세령
+	@Override
+	public int updateUserPwd(SqlSessionTemplate sqlSession, Member loginUser) {
+		return sqlSession.update("Member.updatePwd", loginUser);
+	}
+
+	//회원탈퇴용 메소드 - 세령
+	@Override
+	public int dropOutUserInfo(SqlSessionTemplate sqlSession, Member loginUser) {
+		return sqlSession.update("Member.updateEnrollStatus", loginUser);
+	}
+
 
 }
