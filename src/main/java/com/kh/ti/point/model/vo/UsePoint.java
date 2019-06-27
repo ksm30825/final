@@ -11,10 +11,12 @@ public class UsePoint {
 	private int memberId;	//회원코드
 	private int trvId;		//여행일정번호
 	private int requestId;	//의뢰번호
+	private String month;	//검색월
 	
 	public UsePoint() {}
 
-	public UsePoint(int pointId, int usePoint, Date useDate, int useType, int memberId, int trvId, int requestId) {
+	public UsePoint(int pointId, int usePoint, Date useDate, int useType, int memberId, int trvId, int requestId,
+			String month) {
 		super();
 		this.pointId = pointId;
 		this.usePoint = usePoint;
@@ -23,6 +25,7 @@ public class UsePoint {
 		this.memberId = memberId;
 		this.trvId = trvId;
 		this.requestId = requestId;
+		this.month = month;
 	}
 
 	public int getPointId() {
@@ -53,6 +56,10 @@ public class UsePoint {
 		return requestId;
 	}
 
+	public String getMonth() {
+		return month;
+	}
+
 	public void setPointId(int pointId) {
 		this.pointId = pointId;
 	}
@@ -81,9 +88,15 @@ public class UsePoint {
 		this.requestId = requestId;
 	}
 
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
 	@Override
 	public String toString() {
-		return "usePoint [pointId=" + pointId + ", usePoint=" + usePoint + ", useDate=" + useDate + ", useType="
-				+ useType + ", memberId=" + memberId + ", trvId=" + trvId + ", requestId=" + requestId + "]";
+		return "UsePoint [pointId=" + pointId + ", usePoint=" + usePoint + ", useDate=" + useDate + ", useType="
+				+ useType + ", memberId=" + memberId + ", trvId=" + trvId + ", requestId=" + requestId + ", month="
+				+ month + "]";
 	}
+	
 }

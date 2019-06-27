@@ -9,16 +9,18 @@ public class Payment {
 	private int memberId;		//회원코드
 	private int payAmount;		//결제금액
 	private Date paymentDate;	//결제일
+	private String month;		//검색 월
 	
 	public Payment() {}
 
-	public Payment(int paymentId, String tid, int memberId, int payAmount, Date paymentDate) {
+	public Payment(int paymentId, String tid, int memberId, int payAmount, Date paymentDate, String month) {
 		super();
 		this.paymentId = paymentId;
 		this.tid = tid;
 		this.memberId = memberId;
 		this.payAmount = payAmount;
 		this.paymentDate = paymentDate;
+		this.month = month;
 	}
 
 	public int getPaymentId() {
@@ -41,6 +43,10 @@ public class Payment {
 		return paymentDate;
 	}
 
+	public String getMonth() {
+		return month;
+	}
+
 	public void setPaymentId(int paymentId) {
 		this.paymentId = paymentId;
 	}
@@ -61,10 +67,14 @@ public class Payment {
 		this.paymentDate = paymentDate;
 	}
 
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
 	@Override
 	public String toString() {
 		return "Payment [paymentId=" + paymentId + ", tid=" + tid + ", memberId=" + memberId + ", payAmount="
-				+ payAmount + ", paymentDate=" + paymentDate + "]";
+				+ payAmount + ", paymentDate=" + paymentDate + ", month=" + month + "]";
 	}
 
 	

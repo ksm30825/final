@@ -30,16 +30,19 @@ public class PointController {
 	public String selectPointMainView(Model model , HttpServletRequest request) {
 		//포인트충전, 지급, 사용 내역 테이블 전체 조회
 		//페이징 처리도 전부
-		//포인트 충전에 관한 것들 조회
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		//System.out.println(loginUser.getMemberId());
 		int memberId = loginUser.getMemberId();
-		int chargeListCount = ps.getChargeListCount(memberId);
+		
+		//포인트 충전에 관한 것들 조회
+		Payment charge = new Payment();
+		charge.setMemberId(memberId);
+		int chargeListCount = ps.getChargeListCount(charge);
 		//System.out.println("chargeListCount : " + chargeListCount);
 		int chargeCurrentPage = 1;
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		//System.out.println("chPi : " + chPi);
-		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, memberId);
+		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
 		model.addAttribute("chPayList", chPayList);
 		//System.out.println("chmodel : " + model);
 		
@@ -49,21 +52,25 @@ public class PointController {
 //		}
 		
 		//포인트 지급에 관한 것들 조회
-		int receiveListCount = ps.getReceiveListCount(memberId);
+		ReservePoint reserve = new ReservePoint();
+		reserve.setMemberId(memberId);
+		int receiveListCount = ps.getReceiveListCount(reserve);
 		//System.out.println("ReceiveListCount : " + receiveListCount);
 		int receiveCurrentPage = 1;
 		PageInfo rePi = Pagination.getPageInfo(receiveCurrentPage, receiveListCount);
-		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, memberId);
+		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
 		model.addAttribute("rePayList", rePayList);
 		//System.out.println("rePi : " + rePi);
 		
 		//포인트 사용에 관한 것들 조회
-		int useListCount = ps.getUseListCount(memberId);
+		UsePoint use = new UsePoint();
+		use.setMemberId(memberId);
+		int useListCount = ps.getUseListCount(use);
 		//System.out.println("useListCount : " + useListCount);
 		int useCurrentPage = 1;
 		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
 		//System.out.println("usPi : " + usPi);
-		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, memberId);
+		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
 		model.addAttribute("usPayList", usPayList);
 		
 		return "point/pointMain";
@@ -79,7 +86,23 @@ public class PointController {
 	
 	//포인트 충전 월 검색 내역 테이블--수민
 	@RequestMapping("/oneMonthPay.po")
-	public ModelAndView searchOneMonthPay(int memberId, int month, ModelAndView mv) {
+	public ModelAndView searchOneMonthPay(String month, ModelAndView mv, HttpServletRequest request) {
+		
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		int memberId = loginUser.getMemberId();
+		
+		Payment charge = new Payment();
+		charge.setMemberId(memberId);
+		charge.setMonth(month);
+		
+		
+		int chargeListCount = ps.getChargeListCount(charge); 
+		System.out.println("월 검색 chargeListCount : "+chargeListCount);
+		int chargeCurrentPage = 1; 
+		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
+		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
+		
+		mv.addObject("chPayList", chPayList);
 		
 		return mv;
 	}
@@ -138,18 +161,55 @@ public class PointController {
 	//포인트 지급 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(리뷰면 리뷰, 일정작성이면 일정작성)--수민
 	@RequestMapping("/oneBoardRPoint.po")
-	public String selectOneBoardRPoint(int memberId, int bid) {
+	public String selectOneBoardRPoint(String mid, String bid) {
+		int memberId = Integer.parseInt(mid);
+		int boardCode = Integer.parseInt(bid);
 		
-		return "??";
+		//System.out.println("memberID : " + memberId);
+		//System.out.println("boardCode : " + boardCode);
+		
+		return "redirect:/selectTravel.trv?trvId="+boardCode;
 	}
 	//포인트 자동 인서트!!
 	//10:일정작성, 20:일정리뷰, 30:여행지리뷰
 	//일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
 	@RequestMapping("/pointReserve.po")
-	public String insertPointReserve(int memberId, int code, int type, int rPoint) {
+	public String insertPointReserve(int memberId, int code, int reserveType, int rPoint) {
+		//memberId : 작성 회원코드
+		//code : 작성글 코드
+		//type : 10:일정작성, 20:일정리뷰, 30:여행지리뷰
+		//rPoint : 일정작성:300, 일정리뷰:50, 여행지리뷰:10
+		//System.out.println("처리전 memberId : " + memberId);
+		//System.out.println("처리전 code : " + code);
+		//System.out.println("처리전 reserveType : " + reserveType);
+		//System.out.println("처리전 rPoint : " + rPoint);
+		Date reserveDate = new Date(new GregorianCalendar().getTimeInMillis());
+		ReservePoint rp = new ReservePoint();
 		
-		return "??";
+		rp.setReservePoint(rPoint);
+		rp.setReserveDate(reserveDate);
+		rp.setMemberId(memberId);
+		rp.setReserveType(reserveType);
+		
+		switch(reserveType) {
+		case 10 : rp.setTrvId(code); break;
+		case 20 : rp.setReviewId(code);	break;
+		case 30 : rp.setSpotReviewId(code);	break;
+		}
+		
+		//System.out.println("처리전 rp : " + rp);
+		int result = ps.insertReservePoint(rp);
+		//System.out.println("result : " + result);
+		if(result>0) {
+			switch(reserveType) {
+			case 10 : return "redirect:/showMyTravel.trv"; 
+			case 20 : return "redirect:/insertReview.tb"; 
+			case 30 : return "redirect:/showMyTravel.trv"; 
+			}
+		}
+		return "common/errorPage";
 	}
+
 	
 	
 	
@@ -163,7 +223,7 @@ public class PointController {
 	//포인트 사용 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(일정작성이면 일정작성, 의뢰면 의뢰글)--수민
 	@RequestMapping("/oneBoardUPoint.po")
-	public String selectOneBoardUPoint(int memberId, int bid) {
+	public String selectOneBoardUPoint(String memberId, String bid) {
 		
 		return "??";
 	}
@@ -176,8 +236,10 @@ public class PointController {
 	//포인트 사용하는 컨트롤러 -> 자동 차감
 	//10:일정구매, 20:설계의뢰
 	@RequestMapping("/usePoint.po")
-	public String insertPointUse(int memberId, int code, int type, int uPoint) {
-		
+	public String insertPointUse(int memberId, int code, int useType, int uPoint) {
+		//code : 작성글 코드 
+		//useType : 10:일정구매, 20:설계의뢰
+		//uPoint : 사용 포인트
 		return "??";
 	}
 	

@@ -69,7 +69,7 @@
 				    			</div>
 					    		<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
 						            <select name="chargeSelect" id="chargeSelect">
-										<option id="defaultOption" selected>--월--</option>
+										<option value="defaultOption" selected>--월--</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
 										<option value="3">3</option>
@@ -172,7 +172,7 @@
 												<td>
 													<c:if test="${ re.reserveType eq 10}">
 														<input type="text" value="${ re.trvId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">일정작성</a>
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${re.memberId}&bid=${ re.trvId }">일정작성</a>
 													</c:if>
 													<c:if test="${ re.reserveType eq 20}">
 														<input type="text" value="${ re.reviewId }" style="display:none;">
@@ -334,15 +334,23 @@
 				$("#okay").click(function(){
 					$("#myModal2").removeClass('is-active');
 				});
-				
 			});
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
 			
 			$("#chargeSelect").change(function(){
-				console.log($(this).children('option:selected').val());
-				//->ajax처리
+				var month = $(this).children('option:selected').val();
+				if(month!='defaultOption'){
+					$.ajax({
+						url:"oneMonthPay.po",
+						type:"post",
+						data:{month:month},
+						success:function(data){},
+						error:function(data){}
+					});
+					
+				}
 			})
 			
 		});

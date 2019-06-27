@@ -12,16 +12,18 @@ public interface PointService {
 	//포인트 충전
 	int insertPay(Payment pay);
 	//포인트 충전 리스트 전체 카운터
-	int getChargeListCount(int memberId);
+	int getChargeListCount(Payment charge);
 	//포인트 지급 리스트 전체 카운터
-	int getReceiveListCount(int memberId);
+	int getReceiveListCount(ReservePoint reserve);
 	//포인트 사용 리스트 전체 카운터
-	int getUseListCount(int memberId);
+	int getUseListCount(UsePoint use);
 	//포인트 충전리스트 전체 조회
-	ArrayList<Payment> selectChargeList(PageInfo chPi, int memberId);
+	ArrayList<Payment> selectChargeList(PageInfo chPi, Payment charge);
 	//포인트 지급리스트 전체 조회
-	ArrayList<ReservePoint> selectReceiveList(PageInfo rePi, int memberId);
+	ArrayList<ReservePoint> selectReceiveList(PageInfo rePi, ReservePoint reserve);
 	//포인트 사용리스트 전체 조회
-	ArrayList<UsePoint> selectUseList(PageInfo usPi, int memberId);
+	ArrayList<UsePoint> selectUseList(PageInfo usPi, UsePoint use);
+	//포인트 자동으로 적립하기
+	int insertReservePoint(ReservePoint rp);
 
 }
