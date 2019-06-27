@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
 @Service
@@ -32,11 +33,12 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		 * HashMap tbList = new HashMap();
 		 */
 		//여행일정 리스트
-		ArrayList<TravelBoard> tbArr = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardList", null, rowBounds);
+		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardList", null, rowBounds);
 		
-		for (int i = 0 ; i < tbArr.size() ; i++) {
-			TravelBoard tb = (TravelBoard)tbArr.get(i);
-			System.out.println("tbArr["+ i + "] :" + tb);
+		for (int i = 0 ; i < tbList.size() ; i++) {
+			Tag tag = (Tag) tbList.get(i).getTrvTags().get(i);
+			System.out.println("trvTags :" + tag + " 크기 : " + tbList.get(i).getTrvTags().size());
+			
 		}
 		
 		/* tbList.put("tbArr", tbArr); */
@@ -48,7 +50,7 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		
 
 		
-		return tbArr;
+		return tbList;
 	}
 	
 

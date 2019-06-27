@@ -16,17 +16,21 @@ public class TravelBoard implements java.io.Serializable {
 	private Date completeDate;
 	private String status;
 	private int memberId;
+	private String userName;
 	private int trvRef;
 	
 	private ArrayList trvCities;
 	private ArrayList trvTags;
 	private ArrayList schFiles;
 	
-	public TravelBoard() {}
+	private int likeyCount;
+	private int buyCount;
 	
+	public TravelBoard() {}
+
 	public TravelBoard(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, Date openDate,
-			Date modifyDate, Date completeDate, String status, int memberId, int trvRef, ArrayList trvCities,
-			ArrayList trvTags, ArrayList schFiles) {
+			Date modifyDate, Date completeDate, String status, int memberId, String userName, int trvRef,
+			ArrayList trvCities, ArrayList trvTags, ArrayList schFiles, int likeyCount, int buyCount) {
 		super();
 		this.trvId = trvId;
 		this.trvTitle = trvTitle;
@@ -38,10 +42,13 @@ public class TravelBoard implements java.io.Serializable {
 		this.completeDate = completeDate;
 		this.status = status;
 		this.memberId = memberId;
+		this.userName = userName;
 		this.trvRef = trvRef;
 		this.trvCities = trvCities;
 		this.trvTags = trvTags;
 		this.schFiles = schFiles;
+		this.likeyCount = likeyCount;
+		this.buyCount = buyCount;
 	}
 
 	public int getTrvId() {
@@ -124,6 +131,14 @@ public class TravelBoard implements java.io.Serializable {
 		this.memberId = memberId;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public int getTrvRef() {
 		return trvRef;
 	}
@@ -156,14 +171,31 @@ public class TravelBoard implements java.io.Serializable {
 		this.schFiles = schFiles;
 	}
 
+	public int getLikeyCount() {
+		return likeyCount;
+	}
+
+	public void setLikeyCount(int likeyCount) {
+		this.likeyCount = likeyCount;
+	}
+
+	public int getBuyCount() {
+		return buyCount;
+	}
+
+	public void setBuyCount(int buyCount) {
+		this.buyCount = buyCount;
+	}
+
 	@Override
 	public String toString() {
 		return "TravelBoard [trvId=" + trvId + ", trvTitle=" + trvTitle + ", startDate=" + startDate + ", endDate="
 				+ endDate + ", compNumber=" + compNumber + ", openDate=" + openDate + ", modifyDate=" + modifyDate
-				+ ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId + ", trvRef="
-				+ trvRef + ", trvCities=" + trvCities + ", trvTags=" + trvTags + ", schFiles=" + schFiles + "]";
+				+ ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId + ", userName="
+				+ userName + ", trvRef=" + trvRef + ", trvCities=" + trvCities + ", trvTags=" + trvTags + ", schFiles="
+				+ schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount + "]";
 	}
-	
+
 	
 	
 }
