@@ -104,7 +104,7 @@ th, td {
 						<br>
 						<div class="field">
 							<a class="button is-primary"> Day1 </a> &nbsp;
-							<input type="hidden" value="Day1" name="Pday">
+							<input type="hidden" value="Day1" name="list[0].pDay">
 							<!-- X버튼 -->
 							<span data-balloon="size: 3x" data-balloon-pos="up"
 								class="db color-inherit link hover-cyan removeBtn" > <svg
@@ -128,7 +128,7 @@ th, td {
 							<!-- <input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)" > -->
 							<br><br>
 							<p class="control">
-								<textarea class="textarea " placeholder="일정 작성" name="pdayMemo"></textarea>
+								<textarea class="textarea " placeholder="일정 작성" name="list[0].pDayMemo"></textarea>
 							</p>
 						</div>
 						<br>
@@ -264,8 +264,8 @@ th, td {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<button type="submit" class="button is-primary">확인 <button` class="button"
-					onclick="cancel();">취소</a>
+				<button type="submit" class="button is-primary">확인</button>
+				<button` class="button"onclick="cancel();">취소</button>
 			</footer>
 		</div>
 	</div>
@@ -374,7 +374,11 @@ th, td {
 		
 		$(".plusBtn").click(function(){
 			count++;
-			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <input type="hidden" value="Day" ' + count + ' name="Pday"><span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan" onclick="remove()"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><p class="control"><textarea class="textarea " placeholder="일정 작성" name="pdayMemo"></textarea></p></div>');
+			console.log(count);
+			for(var i = 0; i < markers.length; i++) {
+				console.log(markers[i].position.lat());
+			}
+			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <input type="hidden" value="Day' + count + '" name="list[' + (count - 1) + '].pDay"><span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan" onclick="remove()"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><p class="control"><textarea class="textarea " placeholder="일정 작성" name="list[' + (count - 1) + '].pDayMemo"></textarea></p></div>');
 		});
 	});
 
@@ -435,8 +439,10 @@ th, td {
 	        markers.push(marker);
 	        
 	        console.log("위도 : " + marker.position.lat());
+	        var lat = marker.position.lat();
 	        console.log("경도 : " + marker.position.lng());
 	        console.log("마커 순서 : " + marker.title);
+	        console.log("마커 갯수 : " + markers.length);
 	        
 	        var request = {
 	                placeId: event.placeId,

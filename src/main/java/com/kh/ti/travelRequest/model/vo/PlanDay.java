@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 //설계 여행일자
 public class PlanDay implements Serializable {
+	private ArrayList<PlanDayList> list;	//각 일자 및 메모
 	private int PdayId;		//설계일자 코드
 	private String Pday;	//일자
 	private String pdayMemo;	//메모
@@ -14,15 +15,24 @@ public class PlanDay implements Serializable {
 	
 	public PlanDay() {}
 
-	public PlanDay(int pdayId, String pday, String pdayMemo, String openStatus, int planId,
+	public PlanDay(ArrayList<PlanDayList> list, int pdayId, String pday, String pdayMemo, String openStatus, int planId,
 			ArrayList<PlanPlace> placeList) {
 		super();
-		PdayId = pdayId;
-		Pday = pday;
+		this.list = list;
+		this.PdayId = pdayId;
+		this.Pday = pday;
 		this.pdayMemo = pdayMemo;
 		this.openStatus = openStatus;
 		this.planId = planId;
 		this.placeList = placeList;
+	}
+
+	public ArrayList<PlanDayList> getList() {
+		return list;
+	}
+
+	public void setList(ArrayList<PlanDayList> list) {
+		this.list = list;
 	}
 
 	public int getPdayId() {
@@ -75,7 +85,7 @@ public class PlanDay implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PlanDay [PdayId=" + PdayId + ", Pday=" + Pday + ", pdayMemo=" + pdayMemo + ", openStatus=" + openStatus
-				+ ", planId=" + planId + ", placeList=" + placeList + "]";
+		return "PlanDay [list=" + list + ", PdayId=" + PdayId + ", Pday=" + Pday + ", pdayMemo=" + pdayMemo
+				+ ", openStatus=" + openStatus + ", planId=" + planId + ", placeList=" + placeList + "]";
 	}
 }
