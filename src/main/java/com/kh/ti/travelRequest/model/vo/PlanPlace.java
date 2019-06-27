@@ -1,6 +1,7 @@
 package com.kh.ti.travelRequest.model.vo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 //설계일자 장소 - 선우
 public class PlanPlace implements Serializable {
@@ -16,12 +17,22 @@ public class PlanPlace implements Serializable {
 	public PlanPlace(int pplaceId, String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng,
 			int pdayId) {
 		super();
-		PplaceId = pplaceId;
-		PplaceTitle = pplaceTitle;
-		PplaceAddress = pplaceAddress;
-		PplaceLat = pplaceLat;
-		PplaceLng = pplaceLng;
-		PdayId = pdayId;
+		this.PplaceId = pplaceId;
+		this.PplaceTitle = pplaceTitle;
+		this.PplaceAddress = pplaceAddress;
+		this.PplaceLat = pplaceLat;
+		this.PplaceLng = pplaceLng;
+		this.PdayId = pdayId;
+	}
+	
+	
+
+	public PlanPlace(String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng) {
+		super();
+		this.PplaceTitle = pplaceTitle;
+		this.PplaceAddress = pplaceAddress;
+		this.PplaceLat = pplaceLat;
+		this.PplaceLng = pplaceLng;
 	}
 
 	public int getPplaceId() {
@@ -74,7 +85,7 @@ public class PlanPlace implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PPlace [PplaceId=" + PplaceId + ", PplaceTitle=" + PplaceTitle + ", PplaceAddress=" + PplaceAddress
+		return "PlanPlace [PplaceId=" + PplaceId + ", PplaceTitle=" + PplaceTitle + ", PplaceAddress=" + PplaceAddress
 				+ ", PplaceLat=" + PplaceLat + ", PplaceLng=" + PplaceLng + ", PdayId=" + PdayId + "]";
 	}
 }

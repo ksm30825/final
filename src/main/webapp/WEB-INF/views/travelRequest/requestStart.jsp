@@ -97,6 +97,11 @@ th, td {
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="form">
+			<!-- 구글 지도 위경도/지역명/주소 -->
+			<textarea id="lat" name="PplaceLat"></textarea>
+			<textarea id="lng" name="PplaceLng"></textarea>
+			<textarea id="placeName" name="PplaceTitle"></textarea>
+			<textarea id="placeAddress" name="PplaceAddress"></textarea>
 				<h1 class="title">일정작성</h1>
 				<hr>
 				<div class="columns">
@@ -244,20 +249,20 @@ th, td {
 					<table class="table">
 						<tbody>
 							<tr>
-								<td><input type="checkbox">Day1</td>
-								<td><input type="checkbox">Day2</td>
-								<td><input type="checkbox">Day3</td>
-								<td><input type="checkbox">Day4</td>
-								<td><input type="checkbox">Day5</td>
-								<td><input type="checkbox">Day6</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day1</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day2</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day3</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day4</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day5</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day6</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox">Day7</td>
-								<td><input type="checkbox">Day8</td>
-								<td><input type="checkbox">Day9</td>
-								<td><input type="checkbox">Day10</td>
-								<td><input type="checkbox">Day11</td>
-								<td><input type="checkbox">Day12</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day7</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day8</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day9</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day10</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day11</td>
+								<td><input type="checkbox" class="open" name="openStatus" value="N">Day12</td>
 							</tr>
 						</tbody>
 					</table>
@@ -380,6 +385,15 @@ th, td {
 			}
 			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <input type="hidden" value="Day' + count + '" name="list[' + (count - 1) + '].pDay"><span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan" onclick="remove()"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><p class="control"><textarea class="textarea " placeholder="일정 작성" name="list[' + (count - 1) + '].pDayMemo"></textarea></p></div>');
 		});
+		$(".open").click(function() {
+			if($(this).is(":checked")) {
+				$(this).attr("value", "Y");
+				console.log($(this).val());
+			} else {
+				$(this).attr("value", "N");
+				console.log($(this).val());
+			}
+		});
 	});
 
 	function back() {
@@ -438,11 +452,14 @@ th, td {
 	        });
 	        markers.push(marker);
 	        
+	        console.log(marker);
 	        console.log("위도 : " + marker.position.lat());
-	        var lat = marker.position.lat();
 	        console.log("경도 : " + marker.position.lng());
 	        console.log("마커 순서 : " + marker.title);
 	        console.log("마커 갯수 : " + markers.length);
+	        $("#lat").append(marker.position.lng() + "#");
+	        $("#lng").append(marker.position.lng() + "#");
+
 	        
 	        var request = {
 	                placeId: event.placeId,
@@ -463,6 +480,10 @@ th, td {
 	                  place.formatted_address + '</div>');
 	                infowindow.open(map, this);
 	              });
+	              console.log("지역명 : " + place.name);
+	              $("#placeName").append(place.name + "#");
+	              console.log("주소명 : " + place.formatted_address);
+	              $("#placeAddress").append(place.formatted_address + "#");
 	              google.maps.event.addListener(marker, 'rightclick', function() {
 	            	  clearMarkers();
 	              });
