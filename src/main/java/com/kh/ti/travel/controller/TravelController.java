@@ -115,13 +115,21 @@ public class TravelController {
 		
 		if(result > 0) {
 			model.addAttribute("memberId", 5);
-			model.addAttribute("type", "travel");
+			model.addAttribute("reserveType", 10);
 			model.addAttribute("code", trvId);
+			model.addAttribute("rPoint",300);
 			return "redirect:/pointReserve.po";
 		}else {
 			model.addAttribute("msg", "일정 작성완료처리 실패!");
 			return "common/errorPage";
 		}
+	}
+	
+	//상세일정추가-민지
+	@RequestMapping("insertSch.trv")
+	public String insertTrvSchedule(TrvDay day, TrvSchedule sch, TrvCost cost, Place plc) {
+		int result = ts.insertTrvSchedule(sch, cost, plc);
+		return "";
 	}
 	
 	//동행추가-민지
@@ -138,12 +146,7 @@ public class TravelController {
 		return "";
 	}
 	
-	//상세일정추가-민지
-	@RequestMapping("insertSch.trv")
-	public String insertTrvSchedule(TrvDay day, TrvSchedule sch, TrvCost cost, Place plc) {
-		int result = ts.insertTrvSchedule(sch, cost, plc);
-		return "";
-	}
+
 	
 	//가계부 작성-민지
 	@RequestMapping("insertCost.trv")

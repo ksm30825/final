@@ -47,6 +47,7 @@
 		<result property="dayNumber" column="DAY_NUMBER" />
 		<result property="dayDate" column="DAY_DATE" />
 		<result property="dayMemo" column="DAY_MEMO" />
+		<result property="dayWeather" column="DAY_WEATHER" />
 		<result property="isTimeSet" column="ISTIMESET" />
 		<result property="trvId" column="TRV_ID" />
 	</resultMap>
@@ -72,7 +73,7 @@
 	</insert>
 	<insert id="insertTrvDay" parameterType="TrvDay">
 		INSERT INTO TRV_DAY
-		VALUES(TRV_DAY_SEQ.NEXTVAL, #{dayNumber}, #{dayDate}, NULL, 'N', #{trvId})
+		VALUES(TRV_DAY_SEQ.NEXTVAL, #{dayNumber}, #{dayDate}, NULL, NULL, 'N', #{trvId})
 	</insert>
 	<select id="selectTravel" parameterType="_int" resultMap="TravelResultSet">
 		SELECT *

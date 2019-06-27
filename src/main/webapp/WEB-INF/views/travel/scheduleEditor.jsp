@@ -8,7 +8,7 @@
 <title>TI - Schedule Editor</title>
 </head>
 <style>
-	.dayPanel {
+	.overlayPanel {
 		display:inline-block;
 	}
 	.panel-heading {
@@ -83,200 +83,53 @@
 		background:lightgray;
 		opacity:0.7;
 	}
+	.dayList {
+		min-height:400px;
+		overflow-y:scroll;
+	}
+	#likeList, #recommList {
+		min-height:430px;
+		overflow-y:scroll;
+	}
 </style>
 <body>
 	<div id="myNav" class="overlay">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay-content">
-		
-			<% for(int i = 0; i < 9; i++) { %>
-			<nav class="panel dayPanel">
-				<div class="panel-heading" align="center"
-					style="background: whitesmoke; color: black;; height: 30px">
-					<p class="help">2019-07-01</p>
-				</div>
-				<div class="panel-heading columns is-mobile" align="center"
-					style="margin: 0">
-					<div class="column is-2" style="padding-left: 0">
-						<a class="button is-small dayLeftBtn"> 
-							<span class="icon">
-								<i class="fas fa-2x fa-caret-left"></i>
-							</span>
-						</a>
+			<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st" >
+				<nav class="panel dayPanel overlayPanel">
+					<div class="panel-heading" align="center"
+						style="background: whitesmoke; color: black;; height: 30px">
+						<p class="help">${ trvDay.dayDate }</p>
 					</div>
-					<div class="column is-8"
-						style="padding-left: 0; padding-right: 0">
-						<span>DAY 1</span>&nbsp; <input class="input dayMemo is-small"
-							type="text" placeholder="MEMO">
+					<div class="panel-heading" align="center" style="margin: 0">
+						<span>DAY ${ trvDay.dayNumber }</span>&nbsp; 
+						<input class="input dayMemo is-small" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }">
 					</div>
-					<div class="column is-2" style="padding-right: 0">
-						<a class="button is-small dayRightBtn"> 
-							<span class="icon">
-								<i class="fas fa-2x fa-caret-right"></i>
-							</span>
-						</a>
+					<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
+					<ul class="connectedSortable menu-list dayList" style="background:white">
+						<% for(int i = 1; i <= 5; i++) { %>
+						<li class="ui-state-default panel-block">
+							<div class="media-left">
+								<span class="icon schInfoBtn"><i class="fas fa-edit"></i></span>
+							</div>
+							<div class="media-content">
+								<p>Item <%= i %></p>
+							</div>
+							<div class="media-right">
+								<button class="delete" aria-label="close"></button>
+							</div>
+						</li>
+						<% } %>
+					</ul>
+					<div class="panel-block">
+						<button class="button is-primary is-outlined is-fullwidth"
+							onclick="$('#newScheduleModal').toggleClass('is-active')">일정 추가</button>
 					</div>
-				</div>
-				<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
-				<ul class="connectedSortable menu-list">
-					<li class="ui-state-default panel-block">
-						<div class="media-left">
-							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-							</span>
-						</div>
-						<div class="media-content">
-							<p>Item 1</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-left">
-							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-							</span>
-						</div>
-						<div class="media-content">
-							<p>Item 2</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-left">
-							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-							</span>
-						</div>
-						<div class="media-content">
-							<p>Item 3</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-left">
-							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-							</span>
-						</div>
-						<div class="media-content">
-							<p>Item 4</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-left">
-							<span class="icon schInfoBtn"> <i class="fas fa-edit"></i>
-							</span>
-						</div>
-						<div class="media-content">
-							<p>Item 5</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-				</ul>
-				<ul class="connectedSortable menu-list"
-					style="display: none">
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>2- Item 1</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>2- Item 2</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>2- Item 3</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>2- Item 4</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>2- Item 5</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-				</ul>
-				<ul class="connectedSortable menu-list"
-					style="display: none">
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>3- Item 1</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>3- Item 2</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>3- Item 3</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>3- Item 4</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-					<li class="ui-state-default panel-block">
-						<div class="media-content">
-							<p>3- Item 5</p>
-						</div>
-						<div class="media-right">
-							<button class="delete" aria-label="close"></button>
-						</div>
-					</li>
-				</ul>
-				<div class="panel-block">
-					<button class="button is-primary is-outlined is-fullwidth"
-						onclick="$('#scheduleInfoModal').toggleClass('is-active')">
-						일정 추가</button>
-				</div>
-			</nav>
-			<% } %>
-			
+				</nav>
+			</c:forEach>
 		</div>
 	</div>
-
 
 
 	<!-- ------------------------------------------------------------- -->
@@ -288,189 +141,58 @@
 						<div style="height:50px">
 							<span style="font-size:20px;cursor:pointer" onclick="openNav()">&#9776; 일정 펼쳐보기</span>
 						</div>
-						<nav class="panel">
-							<div class="panel-heading" align="center" 
-							style="background:whitesmoke;color:black;;height:30px">
-								<p class="help">2019-07-01</p>
-							</div>
-							<div class="panel-heading columns is-mobile" align="center" style="margin:0">
-								<div class="column is-2" style="padding-left:0">
-									<a class="button is-small dayLeftBtn">
-										<span class="icon"> 
-											<i class="fas fa-2x fa-caret-left"></i>
-										</span>
-									</a>
+						<c:forEach var="trvDay"  items="${ trvDayList }" varStatus="st" >
+							<nav class="panel dayPanel" id="day${ trvDay.dayNumber }" style="display:none">
+								<div class="panel-heading" align="center" 
+								style="background:whitesmoke;color:black;;height:30px">
+									<p class="help">${ trvDay.dayDate }</p>
 								</div>
-								<div class="column is-8 dayTitle"  style="padding-left:0; padding-right:0">
-									<span>DAY 1</span>&nbsp;
-									<input class="input dayMemo is-small" type="text" placeholder="MEMO"></div>
-								<div class="column is-2" style="padding-right:0">
-									<a class="button is-small dayRightBtn">
-										<span class="icon"> 
-											<i class="fas fa-2x fa-caret-right"></i>
-										</span>
-									</a>
+								<div class="panel-heading columns is-mobile" align="center" style="margin:0">
+									<div class="column is-2" style="padding-left:0">
+										<a class="button is-small dayLeftBtn">
+											<span class="icon"> 
+												<i class="fas fa-2x fa-caret-left"></i>
+											</span>
+										</a>
+									</div>
+									<div class="column is-8 dayTitle"  style="padding-left:0; padding-right:0">
+										<span>DAY ${ trvDay.dayNumber }</span>&nbsp;
+										<input class="input dayMemo is-small" type="text" placeholder="MEMO"
+											value="${ trvDay.dayMemo }">
+									</div>
+									<div class="column is-2" style="padding-right:0">
+										<a class="button is-small dayRightBtn">
+											<span class="icon"> 
+												<i class="fas fa-2x fa-caret-right"></i>
+											</span>
+										</a>
+									</div>
 								</div>
-							</div>
-							<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
-							<!-- <div class="panel-block"> -->
-							<ul id="day1" class="connectedSortable menu-list">
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn">
-											<i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 1</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn">
-											<i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 2</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn">
-											<i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 3</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn">
-											<i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 4</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-left">
-										<span class="icon schInfoBtn">
-											<i class="fas fa-edit"></i>
-										</span>
-									</div>
-									<div class="media-content">
-										<p>Item 5</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-							</ul>
-							<ul id="day2" class="connectedSortable menu-list" style="display:none">
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>2- Item 1</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>2- Item 2</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>2- Item 3</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>2- Item 4</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>2- Item 5</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-							</ul>
-							<ul id="day3" class="connectedSortable menu-list" style="display:none">
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>3- Item 1</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>3- Item 2</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>3- Item 3</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>3- Item 4</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-								<li class="ui-state-default panel-block">
-									<div class="media-content">
-										<p>3- Item 5</p>
-									</div>
-									<div class="media-right">
-										<button class="delete" aria-label="close"></button>	
-									</div>
-								</li>
-							</ul>
-							<div class="panel-block">
-								<button class="button is-primary is-outlined is-fullwidth"
-								onclick="$('#scheduleInfoModal').toggleClass('is-active')">
-								일정 추가</button>
-							</div>
-						</nav>
+								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
+								<ul class="connectedSortable menu-list dayList" id="day${ trvDay.dayNumber }List">
+									<% for(int i = 1; i <= 5; i++) { %>
+									<li class="ui-state-default panel-block">
+										<div class="media-left">
+											<span class="icon schInfoBtn">
+												<i class="fas fa-edit"></i>
+											</span>
+										</div>
+										<div class="media-content">
+											<p>Item <%= i %></p>
+										</div>
+										<div class="media-right">
+											<button class="delete" aria-label="close"></button>	
+										</div>
+									</li>
+									<% } %>
+								</ul>
+								<div class="panel-block">
+									<button class="button is-primary is-outlined is-fullwidth"
+									onclick="$('#newScheduleModal').toggleClass('is-active')">
+									일정 추가</button>
+								</div>
+							</nav>
+						</c:forEach>
 					</div>	
 					
 								
@@ -499,7 +221,7 @@
 								</ul>
 							</div>
 							<!-- <label class="panel-block"><input type="checkbox">선택</label> -->
-							<ul id="likeList" class="connectedSortable menu-list">
+							<ul id="likeList" class="connectedSortable menu-list" >
 								<li class="ui-state-highlight panel-block">
 									<div class="media-content">
 										<p>좋아요 1</p>
@@ -618,7 +340,7 @@
 								</div>
 							</div>
 						</div>
-						<div style="border:1px solid gray; height:400px">
+						<div style="border:1px solid gray; height:500px">
 							<div id="left-panel" class="panel">
 								<div class="panel-heading">검색 결과
 								</div>
@@ -655,13 +377,17 @@
 		</div>
 	</div>
 	
+	<jsp:include page="newScheduleModel.jsp" />
 	<jsp:include page="scheduleInfoModal.jsp" />
 
 	<script>
 		$(function() {
-			$("#day1, #day2, #day3").sortable();
+			$("#day1").show();
+			$(".dayList").sortable({
+				connectWith:".dayList"
+			});
 			$("#likeList, #recommList").sortable({
-				connectWith : "#day1"
+				connectWith : ".dayList"
 			});
 			
 			$(".placeTab").find("li").click(function() {
@@ -679,28 +405,18 @@
 			
 			$(".dayLeftBtn").click(function() {
 				
-				var day = $(".dayTitle").children("span").text();
-				console.log(day);
-				switch(day) {
-				case 'DAY 2': $(".dayTitle").children("span").text('DAY 1');
-								$("#day1").show();
-								$("#day2, #day3").hide(); break;
-				case 'DAY 3': $(".dayTitle").children("span").text('DAY 2');
-								$("#day2").show();
-								$("#day1, #day3").hide(); break;
+				var nav = $(this).parents("nav");
+				if(!nav.is("#day1")) {
+					nav.hide();
+					nav.prev().show();
 				}
 			});
 			$(".dayRightBtn").click(function() {
 				
-				var day = $(".dayTitle").children("span").text();
-				console.log(day);
-				switch(day) {
-				case 'DAY 1': $(".dayTitle").children("span").text('DAY 2');
-								$("#day2").show();
-								$("#day1, #day3").hide(); break;
-				case 'DAY 2': $(".dayTitle").children("span").text('DAY 3');
-								$("#day3").show();
-								$("#day2, #day3").hide(); break;
+				var nav = $(this).parents("nav");
+				if(!nav.is("#day${ trvDayList.size() }")) {
+					nav.hide();
+					nav.next().show();
 				}
 			});
 			
