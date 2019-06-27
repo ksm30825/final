@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -78,13 +78,13 @@
 							<div class="field is-grouped">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-calendar-check"></i></span>
-									<input class="input" type="text" id="startPicker" placeholder="시작일" value="${ trv.startDate }" name="startDate"/>
+									<input class="input" type="text" id="startPicker2" placeholder="시작일" value="${ trv.startDate }" name="startDate"/>
 								</p>
 							</div>
 							<div class="field">
 								<p class="control is-expanded has-icons-left has-icons-right">
 									<span class="icon is-small is-left"><i class="far fa-calendar-check"></i></span> 
-									<input class="input" type="text" id="endPicker" placeholder="종료일" value="${ trv.endDate }" name="endDate"/>
+									<input class="input" type="text" id="endPicker2" placeholder="종료일" value="${ trv.endDate }" name="endDate"/>
 								</p>
 							</div>
 						</div>
@@ -112,33 +112,52 @@
 		</div>
 	</div>
 	<script>
+		var trvInfoModal;
 		$(function() {
-			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
+			$('.modal-card-head>.delete, .cancelBtn').click(function() {
         		$('html').removeClass('is-clipped');
         	    $(this).parents(".modal").removeClass('is-active');
+        		$("#travelInfoModal").empty();
+        		$("#travelInfoModal").append(trvInfoModal);
+        	    /* $("#startPicker2").datepicker("setDate", "${ trv.startDate }");
+        	    $("#endPicker2").datepicker("setDate", "${ trv.endDate }"); */
+        		$("#startPicker2, #endPicker2").datepicker("destroy");
+        		
+        		var startDate;
+            	$("#startPicker2").datepicker({
+            		dateFormat:"yy-mm-dd",
+            		onSelect:function(selectedDate) {
+    					startDate = $(this).datepicker('getDate');
+    					$("#endPicker2").datepicker("option", "minDate", startDate);
+    				}
+            	});
+            	$("#endPicker2").datepicker({
+            		dateFormat:"yy-mm-dd"
+            	});
         	});
 			
 			var startDate;
-        	$("#startPicker").datepicker({
+        	$("#startPicker2").datepicker({
         		dateFormat:"yy-mm-dd",
         		onSelect:function(selectedDate) {
 					startDate = $(this).datepicker('getDate');
-					$("#endPicker").datepicker("option", "minDate", startDate);
+					$("#endPicker2").datepicker("option", "minDate", startDate);
 				}, 
         	});
-        	$("#endPicker").datepicker({
+        	$("#endPicker2").datepicker({
         		dateFormat:"yy-mm-dd"
         	});
         	
         	//cityField추가
         	$(".cityPlusBtn2").click(function() {
         		var field = $(this).parent().parent().parent().clone(true);
+        		field.addClass('newField');
         		field.find("select[name=trvCountry]").addClass('newField');
         		field.find("select[name=trvCity]").addClass('newField');
         		field.find(".travelCityLabel").text('');
-        		//field.find("select[name=trvCity]").children().remove();
+        		field.find("select[name=trvCity]").children().remove();
         		$(this).parent().parent().parent().after(field[0]);
-        		//showCityList(field.find("select[name=trvCountry]"));
+        		showCityList(field.find("select[name=trvCountry]"));
         	});
         	
         	//cityField삭제
@@ -146,7 +165,6 @@
         		if($(this).parents(".travelCityField").find(".travelCityLabel") != '') {
         			$(this).parents(".travelCityField").next().find(".travelCityLabel").text('여행지');
         		}
-        		console.log($(this).parents(".travelCityField").siblings());
         		if($(this).parents(".travelCityField").siblings().length == 3) {
 					alert("마지막 여행지입니다.");
         		}else {
@@ -230,8 +248,7 @@
 				});
 			});
 			$('#travelInfoModal').toggleClass('is-active');
-			
-			
+			trvInfoModal = $("#travelInfoModal").children().clone(true);
 		}
 		
 		

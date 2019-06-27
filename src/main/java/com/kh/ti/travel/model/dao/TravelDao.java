@@ -65,7 +65,7 @@ public interface TravelDao {
 
 	HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityCode);
 
-	int completeTravel(SqlSessionTemplate sqlSession, Travel trv);
+	int completeTravel(SqlSessionTemplate sqlSession, int trvId);
 
 	int deleteTravel(SqlSessionTemplate sqlSession, Travel trv);
 

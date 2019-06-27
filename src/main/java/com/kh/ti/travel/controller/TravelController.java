@@ -107,6 +107,22 @@ public class TravelController {
 		}
 	}
 	
+	//작성완료처리-민지
+	@RequestMapping("completeTravel.trv")
+	public String completeTravel(int trvId, Model model) {
+		System.out.println(trvId);
+		int result = ts.completeTravel(trvId);
+		
+		if(result > 0) {
+			model.addAttribute("memberId", 5);
+			model.addAttribute("type", "travel");
+			model.addAttribute("code", trvId);
+			return "redirect:/pointReserve.po";
+		}else {
+			model.addAttribute("msg", "일정 작성완료처리 실패!");
+			return "common/errorPage";
+		}
+	}
 	
 	//동행추가-민지
 	@RequestMapping("insertCompany.trv")
@@ -167,13 +183,7 @@ public class TravelController {
 	}
 	
 
-	
-	//작성완료처리-민지
-	@RequestMapping("completeTravel.trv")
-	public String completeTravel(Travel trv) {
-		int result = ts.completeTravel(trv);
-		return "";
-	}
+
 	
 	//여행일정 삭제-민지
 	@RequestMapping("deleteTravel.trv")

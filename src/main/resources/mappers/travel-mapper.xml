@@ -109,9 +109,9 @@
 	</select>
 	<update id="updateTravel" parameterType="Travel">
 		UPDATE TRAVEL
-		SET TRAVEL_TITLE = #{trvTitle} AND START_DATE = #{startDate} AND END_DATE = #{endDate} 
-		AND COMP_NUMBER = #{compNumber} AND MODIFY_DATE = SYSDATE
-		WHERE TRAVEL_ID = #{trvId}
+		SET TRV_TITLE = #{trvTitle}, START_DATE = #{startDate}, END_DATE = #{endDate}, 
+		COMP_NUMBER = #{compNumber}, MODIFY_DATE = SYSDATE
+		WHERE TRV_ID = #{trvId}
 	</update>
 	<delete id="deleteTrvCity" parameterType="TrvCity">
 		DELETE FROM TRV_CITY
@@ -126,6 +126,11 @@
 		DELETE FROM TRV_DAY
 		WHERE DAY_ID = #{dayId}
 	</delete>
+	<update id="completeTravel" parameterType="_int">
+		UPDATE TRAVEL
+		SET COMPLETE_DATE = SYSDATE
+		WHERE TRV_ID = #{trvId}
+	</update>
 </mapper>
 
 

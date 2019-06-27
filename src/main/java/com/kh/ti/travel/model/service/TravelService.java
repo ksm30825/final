@@ -23,6 +23,8 @@ public interface TravelService {
 	ArrayList<Country> selectCountryList();
 	
 	ArrayList<City> selectCityList(int countryId);
+	
+	int completeTravel(int trvId);
 
 	int insertTrvCompany(Travel trv, Member m);
 
@@ -45,8 +47,6 @@ public interface TravelService {
 	HashMap selectSpotList(Travel trv);
 
 	int updateTravel(Travel trv);
-
-	int completeTravel(Travel trv);
 
 	int deleteTravel(Travel trv);
 

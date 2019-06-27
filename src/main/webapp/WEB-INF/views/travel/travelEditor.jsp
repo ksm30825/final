@@ -48,7 +48,7 @@
                     </a>
                 </p>
                 <p class="control">
-                    <a class="button is-info is-rounded" href="#"> 
+                    <a class="button is-info is-rounded" onclick="completeTravel();"> 
                         <span>작성완료</span>
                     </a>
                 </p>
@@ -105,7 +105,9 @@
 								${ trvCity.countryNameKo }&nbsp; ${ trvCity.cityNameKo } 
 								<c:if test="${ st.count ne trvCityList.size() }">/</c:if>&nbsp;
 							</c:forEach>
-							<c:set var="days" value="${ ((trv.endDate.getTime() - trv.startDate.getTime()) / (1000 * 60 * 60 * 24)) }"/>
+							<c:set var="end" value="${ trv.endDate.getTime() }" />
+							<c:set var="start" value="${ trv.startDate.getTime() }"	/>
+							<c:set var="days" value="${ (end - start) / (1000 * 60 * 60 * 24) }"/>
 							&nbsp;&nbsp;
 							<span><strong>
 								(<fmt:formatNumber value="${ days }" pattern="#" />박 
@@ -270,6 +272,12 @@
 		});
 		function goToMyTravel() {
 			location.href="showMyTravel.trv";
+		}
+		function completeTravel() {
+			var answer = window.confirm("작성완료 처리시 사이트에 내 일정이 공개되고 다른 사람들이 구입할 수 있습니다. 공개하시겠습니까?");
+			if(answer) {
+				location.href="completeTravel.trv?trvId=${ trv.trvId }";
+			}
 		}
 		
 	</script>
