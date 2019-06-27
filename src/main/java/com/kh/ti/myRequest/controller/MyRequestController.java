@@ -1,12 +1,15 @@
 package com.kh.ti.myRequest.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.ti.travelRequest.model.vo.PlanDay;
+import com.kh.ti.travelRequest.model.vo.PlanPlace;
+import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Controller
 public class MyRequestController {
@@ -20,11 +23,35 @@ public class MyRequestController {
 
 	// 여행 설계 - 이선우
 	@RequestMapping("myRequestPlan.mr")
-	public String selectMyPlan(@ModelAttribute PlanDay pd, Model modle) {
+	public String selectMyPlan(@ModelAttribute PlanDay pd, 
+							   @ModelAttribute PlanPlace pp,
+							   @ModelAttribute TravelRequestPlan tp, Model modle) {
+		//각 일정및 메모
 		System.out.println(pd);
 		for(int i = 0; i < pd.getList().size(); i++) {
 			System.out.println(pd.getList().get(i));
 		}
+		//각 일정의 장소
+		System.out.println(pp);
+		String[] placeTitle = pp.getPplaceTitle().split("#");	//장소명
+		String[] placeAddress = pp.getPplaceAddress().split("#");	//주소
+		String[] placeLat = pp.getPplaceLat().split("#");	//위도
+		String[] placeLng = pp.getPplaceLng().split("#");	//경도
+		
+		ArrayList<PlanPlace> planList = new ArrayList<PlanPlace>();
+		
+		for(int i = 0; i < placeLat.length; i++) {
+			System.out.println("장소 : " + placeTitle[i]);
+			System.out.println("주소 : " + placeAddress[i]);
+			System.out.println("위도 : " + placeLat[i]);
+			System.out.println("경도 : " + placeLng[i]);
+			System.out.println("========================");
+			PlanPlace place = new PlanPlace(placeTitle[i], placeAddress[i], placeLat[i], placeLng[i]);
+			planList.add(place);
+			System.out.println(planList);
+		}
+		//여행설계글
+		System.out.println(tp);
 		 //설계여행일자(PlanDay) 
 //		 String[] pDay = request.getParameterValues("Pday"); //일자
 //		 String[] pDayMemo = request.getParameterValues("pdayMemo"); //메모
