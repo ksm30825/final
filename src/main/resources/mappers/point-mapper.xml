@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Payment">
-	<resultMap type="com.kh.ti.point.model.vo.Payment" id="paymentResultSet">
+	<resultMap type="Payment" id="paymentResultSet">
 		<id property="paymentId" column="PAYMENT_ID"/>
 		
 		<result property="tid" column="TID"/>
@@ -11,7 +11,7 @@
 		<result property="payAmount" column="PAY_AMOUNT"/>
 		<result property="paymentDate" column="PAYMENT_DATE"/>
 	</resultMap>
-	<resultMap type="com.kh.ti.point.model.vo.ReservePoint" id="reserveResultSet">
+	<resultMap type="ReservePoint" id="reserveResultSet">
 		<id property="pointId" column="POINT_ID"/>
 		
 		<result property="reservePoint" column="RESERVE_POINT"/>
@@ -22,7 +22,7 @@
 		<result property="spotReviewId" column="SPOT_REVIEW_ID"/>
 		<result property="trvId" column="TRV_ID"/>
 	</resultMap>
-	<resultMap type="com.kh.ti.point.model.vo.UsePoint" id="useResultSet">
+	<resultMap type="UsePoint" id="useResultSet">
 		<id property="pointId" column="POINT_ID"/>
 		
 		<result property="usePoint" column="USE_POINT"/>
@@ -38,42 +38,88 @@
 		VALUES(PAYMENT_SEQ.NEXTVAL, #{tid}, #{memberId}, #{payAmount}, #{paymentDate})
 	</insert>	
 	<!-- 포인트 충전 리스트 전체 카운터 -->
-	<select id="getChargeListCount" resultType="_int">
+	<select id="getChargeListCount" parameterType="Payment" resultType="_int">
 		SELECT COUNT(*)
 		FROM PAYMENT
 		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+			</when>
+		</choose>
 	</select>
 	<!-- 포인트 지급 리스트 전체 카운터 -->
-	<select id="getReceiveListCount" resultType="_int">
+	<select id="getReceiveListCount" parameterType="ReservePoint" resultType="_int">
 		SELECT COUNT(*)
 		FROM RESERVE_POINT
 		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+			</when>
+		</choose>
 	</select>
 	<!-- 포인트 사용 리스트 전체 카운터 -->
-	<select id="getUseListCount" resultType="_int">
+	<select id="getUseListCount" parameterType="UsePoint" resultType="_int">
 		SELECT COUNT(*)
 		FROM USE_POINT
 		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+			</when>
+		</choose>
 	</select>
 	<!-- 포인트 충전리스트 전체 조회 -->
-	<select id="selectChargeList" resultMap="paymentResultSet">
+	<select id="selectChargeList" parameterType="Payment" resultMap="paymentResultSet">
 		SELECT *
 		FROM PAYMENT
 		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+			</when>
+		</choose>
 		ORDER BY PAYMENT_DATE DESC
 	</select>
 	<!-- 포인트 지급리스트 전체 조회 -->
-	<select id="selectReceiveList" resultMap="reserveResultSet">
+	<select id="selectReceiveList" parameterType="ReservePoint" resultMap="reserveResultSet">
 		SELECT *
 		FROM RESERVE_POINT
 		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+			</when>
+		</choose>
 		ORDER BY RESERVE_DATE DESC
 	</select>
 	<!-- 포인트 사용리스트 전체 조회 -->
-	<select id="selectUseList" resultMap="useResultSet">
+	<select id="selectUseList" parameterType="UsePoint" resultMap="useResultSet">
 		SELECT *
 		FROM USE_POINT
 		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+			</when>
+		</choose>
 		ORDER BY USE_DATE DESC
 	</select>
+	<!-- 포인트 자동으로 적립하기 -->
+	<insert id="insertReservePoint" parameterType="ReservePoint">
+		INSERT INTO RESERVE_POINT
+		VALUES( RESERVE_POINT_SEQ.NEXTVAL, #{reservePoint}, #{reserveDate}, #{memberId}, #{reserveType},
+		<choose>
+			<when test="reviewId != 0">#{reviewId}, null, null</when>
+			<when test="spotReviewId != 0">null, #{spotReviewId}, null </when>
+			<when test="trvId != 0">null, null, #{trvId}</when>
+		</choose> )
+	</insert>	
+	<!-- 
+	SELECT * 
+FROM PAYMENT 
+WHERE MEMBER_ID=5 
+AND EXTRACT(MONTH FROM PAYMENT_DATE)=${}
+ORDER BY PAYMENT_DATE DESC -->
 </mapper>

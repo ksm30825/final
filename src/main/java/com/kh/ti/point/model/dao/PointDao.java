@@ -14,16 +14,18 @@ public interface PointDao {
 	//포인트 충전
 	int insertPay(SqlSessionTemplate sqlSession, Payment pay);
 	//포인트 충전 리스트 전체 카운터
-	int getChargeListCount(SqlSessionTemplate sqlSession, int memberId);
+	int getChargeListCount(SqlSessionTemplate sqlSession, Payment charge);
 	//포인트 지급 리스트 전체 카운터
-	int getReceiveListCount(SqlSessionTemplate sqlSession, int memberId);
+	int getReceiveListCount(SqlSessionTemplate sqlSession, ReservePoint reserve);
 	//포인트 사용 리스트 전체 카운터
-	int getUseListCount(SqlSessionTemplate sqlSession, int memberId);
+	int getUseListCount(SqlSessionTemplate sqlSession, UsePoint use);
 	//포인트 충전리스트 전체 조회
-	ArrayList<Payment> selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, int memberId);
+	ArrayList<Payment> selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, Payment charge);
 	//포인트 지급리스트 전체 조회
-	ArrayList<ReservePoint> selectReceiveList(SqlSessionTemplate sqlSession, PageInfo rePi, int memberId);
+	ArrayList<ReservePoint> selectReceiveList(SqlSessionTemplate sqlSession, PageInfo rePi, ReservePoint reserve);
 	//포인트 사용리스트 전체 조회
-	ArrayList<UsePoint> selectUseList(SqlSessionTemplate sqlSession, PageInfo usPi, int memberId);
+	ArrayList<UsePoint> selectUseList(SqlSessionTemplate sqlSession, PageInfo usPi, UsePoint use);
+	//포인트 자동으로 적립하기
+	int insertReservePoint(SqlSessionTemplate sqlSession, ReservePoint rp);
 
 }

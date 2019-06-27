@@ -28,33 +28,44 @@ public class PointServiceImpl implements PointService{
 	
 	//포인트 충전 리스트 전체 카운터
 	@Override
-	public int getChargeListCount(int memberId) {
-		return pd.getChargeListCount(sqlSession, memberId);
+	public int getChargeListCount(Payment charge) {
+		return pd.getChargeListCount(sqlSession, charge);
 	}
 	//포인트 지급 리스트 전체 카운터
 	@Override
-	public int getReceiveListCount(int memberId) {
-		return pd.getReceiveListCount(sqlSession, memberId);
+	public int getReceiveListCount(ReservePoint reserve) {
+		return pd.getReceiveListCount(sqlSession, reserve);
 	}
 	//포인트 사용 리스트 전체 카운터
 	@Override
-	public int getUseListCount(int memberId) {
-		return pd.getUseListCount(sqlSession, memberId);
+	public int getUseListCount(UsePoint use) {
+		return pd.getUseListCount(sqlSession, use);
 	}
 	//포인트 충전리스트 전체 조회
 	@Override
-	public ArrayList<Payment> selectChargeList(PageInfo chPi, int memberId) {
-		return pd.selectChargeList(sqlSession, chPi, memberId);
+	public ArrayList<Payment> selectChargeList(PageInfo chPi, Payment charge) {
+		return pd.selectChargeList(sqlSession, chPi, charge);
 	}
 	//포인트 지급리스트 전체 조회
 	@Override
-	public ArrayList<ReservePoint> selectReceiveList(PageInfo rePi, int memberId) {
-		return pd.selectReceiveList(sqlSession, rePi, memberId);
+	public ArrayList<ReservePoint> selectReceiveList(PageInfo rePi, ReservePoint reserve) {
+		return pd.selectReceiveList(sqlSession, rePi, reserve);
 	}
 	//포인트 사용리스트 전체 조회
 	@Override
-	public ArrayList<UsePoint> selectUseList(PageInfo usPi, int memberId) {
-		return pd.selectUseList(sqlSession, usPi, memberId);
+	public ArrayList<UsePoint> selectUseList(PageInfo usPi, UsePoint use) {
+		return pd.selectUseList(sqlSession, usPi, use);
 	}
+	//포인트 자동으로 적립하기
+	@Override
+	public int insertReservePoint(ReservePoint rp) {
+		return pd.insertReservePoint(sqlSession, rp);
+	}
+
+	
+
+	
+
+	
 
 }

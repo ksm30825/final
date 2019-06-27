@@ -13,20 +13,22 @@ public class ReservePoint {
 	private int spotReviewId;	//장소리뷰코드
 	private int trvId;			//여행일정번호
 	//가입:3000P, 일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
+	private String month;		//검색월
 	
 	public ReservePoint() {}
 
-	public ReservePoint(int pointId, int reservePoint, Date reserveDate, int trvId, int memberId, int reserveType,
-			int reviewId, int spotReviewId) {
+	public ReservePoint(int pointId, int reservePoint, Date reserveDate, int memberId, int reserveType, int reviewId,
+			int spotReviewId, int trvId, String month) {
 		super();
 		this.pointId = pointId;
 		this.reservePoint = reservePoint;
 		this.reserveDate = reserveDate;
-		this.trvId = trvId;
 		this.memberId = memberId;
 		this.reserveType = reserveType;
 		this.reviewId = reviewId;
 		this.spotReviewId = spotReviewId;
+		this.trvId = trvId;
+		this.month = month;
 	}
 
 	public int getPointId() {
@@ -39,10 +41,6 @@ public class ReservePoint {
 
 	public Date getReserveDate() {
 		return reserveDate;
-	}
-
-	public int getTrvId() {
-		return trvId;
 	}
 
 	public int getMemberId() {
@@ -61,6 +59,14 @@ public class ReservePoint {
 		return spotReviewId;
 	}
 
+	public int getTrvId() {
+		return trvId;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
 	public void setPointId(int pointId) {
 		this.pointId = pointId;
 	}
@@ -71,10 +77,6 @@ public class ReservePoint {
 
 	public void setReserveDate(Date reserveDate) {
 		this.reserveDate = reserveDate;
-	}
-
-	public void setTrvId(int trvId) {
-		this.trvId = trvId;
 	}
 
 	public void setMemberId(int memberId) {
@@ -93,10 +95,19 @@ public class ReservePoint {
 		this.spotReviewId = spotReviewId;
 	}
 
+	public void setTrvId(int trvId) {
+		this.trvId = trvId;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
 	@Override
 	public String toString() {
 		return "ReservePoint [pointId=" + pointId + ", reservePoint=" + reservePoint + ", reserveDate=" + reserveDate
-				+ ", trvId=" + trvId + ", memberId=" + memberId + ", reserveType=" + reserveType + ", reviewId="
-				+ reviewId + ", spotReviewId=" + spotReviewId + "]";
+				+ ", memberId=" + memberId + ", reserveType=" + reserveType + ", reviewId=" + reviewId
+				+ ", spotReviewId=" + spotReviewId + ", trvId=" + trvId + ", month=" + month + "]";
 	}
+
 }

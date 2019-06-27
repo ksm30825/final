@@ -9,6 +9,8 @@
 			<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
 		<!-- 수민 -->
 			<typeAlias type="com.kh.ti.point.model.vo.Payment" alias="Payment"/>
+			<typeAlias type="com.kh.ti.point.model.vo.UsePoint" alias="UsePoint"/>
+			<typeAlias type="com.kh.ti.point.model.vo.ReservePoint" alias="ReservePoint"/>
 	    <!-- 선우 -->
 	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequest" alias="TravelRequest"/>
 	    <!-- 민지 추가 -->
