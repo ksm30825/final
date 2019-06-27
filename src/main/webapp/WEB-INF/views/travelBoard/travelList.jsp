@@ -1,88 +1,110 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-   
+<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-	#travelListArea {
-		padding: 3rem 1.5rem;
-		padding-top: 0;
-	}
-	.card {
-		cursor: pointer;
-	}
+   #travelListArea {
+      padding: 3rem 1.5rem;
+      padding-top: 0;
+   }
+   .card {
+      cursor: pointer;
+   }
 </style>
 </head>
 <body>
-	<jsp:include page="travelSearchBar.jsp" />
-	
-	<!-- 본문 -->
-	<div class="columns is-mobile" id="travelListArea" align="center">
-		<div class="column">
-			
-			<!-- 게시글 영역 -->
-			<div class="ui special cards">
-			
-				<div class="card" onclick="location.href='travelDetailForm.tb?num=게시판번호'">
-					<div class="blurring dimmable image">
-						<div class="ui dimmer">
-							<div class="content">
-								<div class="center">
-									<p class="title is-4" style="color: white;">TITLE</p>
-								</div>
-							</div>
-						</div>
-						<img src="resources/images/sample1.jpg">
-					</div>
-					
-					<div class="content">
-						<div class="header">
-							<p class="title is-3">TITLE</p>
-						</div>
-						<div class="meta">
-							<div>
-								<a>@도시 </a>
-								<a>@도시 </a>
-							</div>
-							<p class="date"><small>[00DAYS] 2019-01-01 ~ 2019-01-10</small></p>
-							<a class="button is-small"> 
-								<span class="icon is-small"><i class="fa fa-user"></i></span> 
-								<span> 작성자 </span>
-							</a>
-						</div>
-					</div>
-					
-					<div class="extra content">
-							<a>#먹방여행 </a>
-							<a>#혼자여행 </a>
-							<a>#자유여행 </a>
-					</div>
-					<div class="extra content">
-						<span>
-							<a data-tooltip="구매수"><i class="fas fa-shopping-cart"></i>&nbsp;&nbsp;0</a>
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a data-tooltip="좋아요수"><i class="fas fa-star"></i>&nbsp;&nbsp;0</a>
-						</span>
-					</div>	
-				</div>	<!-- class="card" 글 하나-->
-				
-			  
-			</div>	<!-- class="ui special cards" -->
-			
-		</div>	<!-- class="column" -->
-	</div>	<!-- class="columns is-mobile" -->
-	
-	
+   <jsp:include page="travelSearchBar.jsp" />
+   
+   <!-- 본문 -->
+   <div class="columns is-mobile" id="travelListArea" align="center">
+      <div class="column">
+      
+         <!-- 게시글 영역 -->
+         <div class="ui special cards">
+            <c:forEach var="tbList" items="${ tbList }" varStatus="status">
+            <div class="card" onclick="location.href='travelDetailForm.tb?num=${ tbList.trvId }'">
+               <div class="blurring dimmable image">
+                  <div class="ui dimmer">
+                     <div class="content">
+                        <div class="center">
+                           <p class="title is-4" style="color: white;">${ tbList.trvTitle }</p>
+                        </div>
+                     </div>
+                  </div>
+                  <img src="resources/images/sample1.jpg">
+               </div>
+               
+               <div class="content">
+                  <div class="header">
+                     <p class="title is-3">${ tbList.trvTitle }</p>
+                  </div>
+                  <div class="meta">
+                     <div>
+	                     <c:choose>
+	                     	<c:when test="${ fn:length(tbList.trvCities) > 0 }">
+	                     		<c:forEach var="city" items="${ tbList.trvCities }">
+	                     			<a>@${ city.cityNameKo }</a>
+	                     		</c:forEach>
+	                     	</c:when>
+	                     	<c:otherwise>
+	                     		<p>도시태그 없음</p>
+	                     	</c:otherwise>
+	                     </c:choose>
+                     </div>
+                     <fmt:parseDate var="startDate" value="${ tbList.startDate }" pattern="yyyy-MM-dd" />
+                     <fmt:parseNumber value="${ startDate.time / (1000*60*60*24) }" integerOnly="true" var="startDay" />
+                     <fmt:parseDate var="endDate" value="${ tbList.endDate }" pattern="yyyy-MM-dd" />
+                     <fmt:parseNumber value="${ endDate.time / (1000*60*60*24) }" integerOnly="true" var="endDay" />
+                     <p class="date"><small>[${ endDay - startDay }DAYS] ${ tbList.startDate } ~ ${ tbList.endDate }</small></p>
+                     <a class="button is-small"> 
+                        <span class="icon is-small"><i class="fa fa-user"></i></span> 
+                        <span> ${ tbList.userName } </span>
+                     </a>
+                  </div>
+               </div>
+               
+               <div class="extra content">
+					<c:choose>
+						<c:when test="${ fn:length(tbList.trvTags) > 0 }">
+                     		<c:forEach var="trvTags" items="${ tbList.trvTags }">
+                     			<a>#${ trvTags.tagName }</a>
+                     		</c:forEach>
+                     	</c:when>
+                     	<c:otherwise>
+                     		<p>여행태그 없음</p>
+                     	</c:otherwise>
+                     </c:choose>
+               	
+               </div>
+               <div class="extra content">
+                  <span>
+                     <a data-tooltip="구매수"><i class="fas fa-shopping-cart"></i>&nbsp;&nbsp;${ tbList.buyCount }</a>
+                     &nbsp;&nbsp;&nbsp;&nbsp;
+                     <a data-tooltip="좋아요수"><i class="fas fa-star"></i>&nbsp;&nbsp;${ tbList.likeyCount }</a>
+                  </span>
+               </div>   
+            </div>   <!-- class="card" 글 하나-->
+            </c:forEach>
+           
+         </div>   <!-- class="ui special cards" -->
+         
+      </div>   <!-- class="column" -->
+   </div>   <!-- class="columns is-mobile" -->
+   
+   
 <script>
-	
-	//각 글에 마우스 올렸을 때 설명글
-	$('.special.cards .image').dimmer({
-	  on: 'hover'
-	});
-	
+   
+   //각 글에 마우스 올렸을 때 설명글
+   $('.special.cards .image').dimmer({
+     on: 'hover'
+   });
+   
 </script>
 </body>
 </html>

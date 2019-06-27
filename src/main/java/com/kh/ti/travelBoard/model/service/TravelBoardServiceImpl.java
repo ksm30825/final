@@ -1,6 +1,7 @@
 package com.kh.ti.travelBoard.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +20,25 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	@Autowired
 	private TravelBoardDao tbd;
 	
-	//페이징 처리용
+	//페이징 처리용 - 예랑
 	@Override
-	public int getListCount() {
+	public int getListCount(TravelBoard tb) {
 		
-		return tbd.getListCount(sqlSession);
+		return tbd.getListCount(sqlSession, tb);
 	}
 	
 	//여행일정 리스트 조회 - 예랑
 	@Override
-	public ArrayList<TravelBoard> travelList(PageInfo pi) {
-		//private ArrayList trvCities;
-		//private ArrayList trvTags;
-		return tbd.travelList(sqlSession, pi);
+	public HashMap travelList(PageInfo pi, TravelBoard tb) {
+		
+		return tbd.travelList(sqlSession, pi, tb);
+	}
+	
+	//여행일정 상세 조회 - 예랑
+	@Override
+	public HashMap travelDetailForm(TravelBoard tb) {
+		
+		return tbd.travelDetailForm(sqlSession, tb);
 	}
 
 

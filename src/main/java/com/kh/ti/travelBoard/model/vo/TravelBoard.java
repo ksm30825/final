@@ -26,11 +26,13 @@ public class TravelBoard implements java.io.Serializable {
 	private int likeyCount;
 	private int buyCount;
 	
+	private String buyStatus;
+	
 	public TravelBoard() {}
 
 	public TravelBoard(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, Date openDate,
 			Date modifyDate, Date completeDate, String status, int memberId, String userName, int trvRef,
-			ArrayList trvCities, ArrayList trvTags, ArrayList schFiles, int likeyCount, int buyCount) {
+			ArrayList trvCities, ArrayList trvTags, ArrayList schFiles, int likeyCount, int buyCount, String buyStatus) {
 		super();
 		this.trvId = trvId;
 		this.trvTitle = trvTitle;
@@ -49,6 +51,7 @@ public class TravelBoard implements java.io.Serializable {
 		this.schFiles = schFiles;
 		this.likeyCount = likeyCount;
 		this.buyCount = buyCount;
+		this.buyStatus = buyStatus;
 	}
 
 	public int getTrvId() {
@@ -186,6 +189,15 @@ public class TravelBoard implements java.io.Serializable {
 	public void setBuyCount(int buyCount) {
 		this.buyCount = buyCount;
 	}
+	
+
+	public String getBuyStatus() {
+		return buyStatus;
+	}
+
+	public void setBuyStatus(String buyStatus) {
+		this.buyStatus = buyStatus;
+	}
 
 	@Override
 	public String toString() {
@@ -193,9 +205,7 @@ public class TravelBoard implements java.io.Serializable {
 				+ endDate + ", compNumber=" + compNumber + ", openDate=" + openDate + ", modifyDate=" + modifyDate
 				+ ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId + ", userName="
 				+ userName + ", trvRef=" + trvRef + ", trvCities=" + trvCities + ", trvTags=" + trvTags + ", schFiles="
-				+ schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount + "]";
+				+ schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount + ", buyStatus=" + buyStatus + "]";
 	}
 
-	
-	
 }

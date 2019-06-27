@@ -1,9 +1,10 @@
 package com.kh.ti.travelBoard.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
+import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travelBoard.model.service.TravelBoardService;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 
@@ -27,16 +29,18 @@ public class TravelBoardController {
 		
 		int currentPage = 1;
 		
+		TravelBoard tb = new TravelBoard();
+		
 		//전체 목록 조회(페이징용)
-		int listCount = tbs.getListCount();
+		int listCount = tbs.getListCount(tb);
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
 		
 		//일정 리스트 조회
-		ArrayList<TravelBoard> tbList = tbs.travelList(pi);
+		HashMap tbMap = tbs.travelList(pi, tb);
 		
-		System.out.println("tblist : " + tbList);
-		
-		model.addAttribute("tbList", tbList);
+		model.addAttribute("tbList", tbMap.get("tbList"));
+		model.addAttribute("tagList", tbMap.get("tagList"));
+		model.addAttribute("cityList", tbMap.get("cityList"));
 		
 		return "travelBoard/travelList";
 		
@@ -44,15 +48,57 @@ public class TravelBoardController {
 	
 	//여행일정 리스트 검색 - 예랑
 	@RequestMapping("searchTravelList.tb")
-	public String searchTravelList() {
+	public String searchTravelList(String orderBy, String searchCondition, String searchContent, Model model) {
+		
+		int currentPage = 1;
+		
+		TravelBoard tb = new TravelBoard();
+		
+		//검색어 선택
+		if(searchContent != null) {
+			switch (searchCondition) {
+			case "trvTitle": tb.setTrvTitle(searchContent); break;
+			case "userName": tb.setUserName(searchContent); break;
+			}
+		}
+		
+		//order by 선택
+		switch (orderBy) {
+			case "completeDate" : tb.setCompleteDate(new Date(1)); break;
+			case "likeyCount" : tb.setLikeyCount(-1); break;
+			case "buyCount" : tb.setBuyCount(-1); break;
+		}
+		
+		//전체 목록 조회(페이징용)
+		int listCount = tbs.getListCount(tb);
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		
+		//일정 리스트 조회
+		HashMap tbMap = tbs.travelList(pi, tb);
+		
+		model.addAttribute("tbList", tbMap.get("tbList"));
+		model.addAttribute("tagList", tbMap.get("tagList"));
+		model.addAttribute("cityList", tbMap.get("cityList"));
 		
 		return "travelBoard/travelList";
+		
 	}
 	
 	//여행일정 상세 조회 - 예랑
 	@RequestMapping("travelDetailForm.tb")
-	public String travelDetailForm(String num) {
-		System.out.println(num);
+	public String travelDetailForm(int num, Model model, HttpServletRequest request) {
+		
+		TravelBoard tb = new TravelBoard();
+		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			tb.setMemberId(loginUser.getMemberId());
+		}
+		tb.setTrvId(num);
+		
+		HashMap tbMap = tbs.travelDetailForm(tb);
+		
+		model.addAttribute("tb", tbMap.get("tb"));
 		
 		return "travelBoard/travelDetail";
 	}
