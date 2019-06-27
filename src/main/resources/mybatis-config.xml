@@ -20,6 +20,7 @@
 			<typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="Tag" />
     	<!-- TravelBoard Part (예랑) -->
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelBoard" alias="TravelBoard"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.Likey" alias="Likey"/>
 		<!-- <typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="TravelTag"/> -->
 	</typeAliases>
 	<mappers>
