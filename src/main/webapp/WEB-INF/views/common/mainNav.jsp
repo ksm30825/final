@@ -53,7 +53,7 @@
             		<!-- 로그인 되었을 시 수정 세령-->
             		<c:if test="${ !empty loginUser }">
             			<div class="control navbar-item has-dropdown is-hoverable"  style="margin-right:20px;">
-	                     	<a class="button is-info is-rounded navbar-link" href="logout.me"> 
+	                     	<a class="button is-info is-rounded navbar-link" href="#"> 
 	                        	<span class="icon"><i class="fa fa-user"></i></span>
 	                        	<span>${ loginUser.email }</span>
 	                    	</a>
@@ -117,7 +117,7 @@
 	            		<!-- 로그인 되었을 시 수정 세령 -->
 	            		<c:if test="${ !empty loginUser }">
 	            			<div class="control navbar-item has-dropdown is-hoverable"  style="margin-right:20px;">
-		                     	<a class="button is-info is-rounded navbar-link" href="logout.me"> 
+		                     	<a class="button is-info is-rounded navbar-link" href="#"> 
 		                        	<span class="icon"><i class="fa fa-user"></i></span>
 		                        	<span>${ loginUser.email }</span>
 		                    	</a>

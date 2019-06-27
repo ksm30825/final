@@ -6,6 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class SpotController {
 	
+	//메인화면으로 가는 용 메소드 -- 세령
+	@RequestMapping("showIndex.me")
+	public String showIndexPage() {
+		return "redirect:index.jsp";
+	}
+	
 	//관리자 입력폼으로 여행지추가용 메소드 --세령
 	@RequestMapping("showInserOneSpot.sp")
 	public String showAdminAddOneSpot() {
@@ -93,7 +99,7 @@ public class SpotController {
 	//명소상세보기용메소드
 	@RequestMapping("selectSpotDetailInfo.sp")
 	public String selectSpotDetailInfo() {
-		return null;
+		return "spot/spotDetailPage";
 	}
 	
 	//사용자명소리뷰등록용메소드
