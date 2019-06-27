@@ -5,6 +5,10 @@
 
 <mapper namespace="TravelBoard">
 	<!-- trvCities -->
+	<resultMap type="City" id="travelCityResultSet">
+		<id property="cityId" column="CITY_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+	</resultMap>
 	
 	<!-- trvTags -->
 	<resultMap type="Tag" id="travelTagResultSet">
@@ -13,6 +17,16 @@
 	</resultMap>
 	
 	<!-- schFile -->
+	
+	<!-- likey -->
+	<resultMap type="Likey" id="likeyResultSet">
+		<id property="likeyId" column="LIKEY_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="likeyType" column="LIKEY_TYPE"/>
+		<result property="spotId" column="SPOT_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+	</resultMap>
 	
 	<!-- TravelBoard -->
 	<resultMap type="TravelBoard" id="travelBoardResultSet">
@@ -26,8 +40,12 @@
 		<result property="completeDate" column="COMPLETE_DATE"/>
 		<result property="status" column="STATUS"/>
 		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
 		<result property="trvRef" column="TRV_REF"/>
-		<!-- <collection property="trvCities" javaType="java.util.ArrayList" resultMap=""/> -->
+		<result property="likeyCount" column="LIKEY_COUNT"/>
+		<result property="buyCount" column="BUY_COUNT"/>
+		
+		<collection property="trvCities" javaType="java.util.ArrayList" resultMap="travelCityResultSet"/>
 		<collection property="trvTags" javaType="java.util.ArrayList" resultMap="travelTagResultSet"/>
 		<!-- <collection property="schFiles" javaType="java.util.ArrayList" resultMap=""/> -->
 	</resultMap>
@@ -42,13 +60,28 @@
 	
 	<!-- 여행일정 전체 조회용 -->
 	<select id="selectTravelBoardList" resultMap="travelBoardResultSet">
-		SELECT *
+		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
+       M.USER_NAME, T.TRV_REF, TA.TAG_NAME, LIKEY_COUNT, BUY_COUNT
 	    FROM TRAVEL T
+	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
 	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
 	    JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
 	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
 	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) TRL ON (TRL.TRV_ID = T.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(U.USE_POINT) as BUY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
 	    WHERE T.STATUS = 'Y'
 	    AND T.TRV_REF IS NULL
+        ORDER BY T.COMPLETE_DATE DESC
 </select>
 </mapper>

@@ -2,8 +2,12 @@ package com.kh.ti.travelBoard.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.ti.common.PageInfo;
@@ -19,7 +23,7 @@ public class TravelBoardController {
 	
 	//여행일정 리스트 조회 - 예랑
 	@RequestMapping("travelList.tb")
-	public String travelList() {
+	public String travelList(Model model) {
 		
 		int currentPage = 1;
 		
@@ -30,7 +34,9 @@ public class TravelBoardController {
 		//일정 리스트 조회
 		ArrayList<TravelBoard> tbList = tbs.travelList(pi);
 		
+		System.out.println("tblist : " + tbList);
 		
+		model.addAttribute("tbList", tbList);
 		
 		return "travelBoard/travelList";
 		
