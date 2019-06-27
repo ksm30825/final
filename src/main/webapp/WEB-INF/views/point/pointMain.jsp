@@ -67,21 +67,21 @@
 					    		<div id="chargeTitle" style="color:purple; font-size:28px;margin-top:3%;">
 					    			포인트 충전내역
 				    			</div>
-					    		<div class="select" style="display:inline-block;float:right;">
+					    		<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
 						            <select name="chargeSelect" id="chargeSelect">
-										<option id="defaultOption">--월--</option>
-										<option>1</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-										<option>5</option>
-										<option>6</option>
-										<option>7</option>
-										<option>8</option>
-										<option>9</option>
-										<option>10</option>
-										<option>11</option>
-										<option>12</option>
+										<option id="defaultOption" selected>--월--</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
 									</select>
 						        </div>
 						        <div style="float:right;">
@@ -132,18 +132,18 @@
 					    		<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
 					    			<select name="receiveSelect" id="receiveSelect">
 					    				<option id="defaultOption">--월--</option>
-							            <option>1</option>
-							            <option>2</option>
-							            <option>3</option>
-							            <option>4</option>
-							            <option>5</option>
-							            <option>6</option>
-							            <option>7</option>
-							            <option>8</option>
-							            <option>9</option>
-							            <option>10</option>
-							            <option>11</option>
-							            <option>12</option>
+							            <option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
 									</select>
 								</div>
 				    		</div>
@@ -206,18 +206,18 @@
 				    			<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
 					    			<select name="useSelect" id="useSelect">
 					    				<option id="defaultOption">--월--</option>
-							            <option>1</option>
-							            <option>2</option>
-							            <option>3</option>
-							            <option>4</option>
-							            <option>5</option>
-							            <option>6</option>
-							            <option>7</option>
-							            <option>8</option>
-							            <option>9</option>
-							            <option>10</option>
-							            <option>11</option>
-							            <option>12</option>
+							            <option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
 									</select>
 								</div>
 				    		</div>
@@ -339,6 +339,12 @@
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
+			
+			$("#chargeSelect").change(function(){
+				console.log($(this).children('option:selected').val());
+				//->ajax처리
+			})
+			
 		});
 		function yes(){
 			//환불신청확인
