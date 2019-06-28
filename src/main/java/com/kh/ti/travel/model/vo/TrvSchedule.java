@@ -13,14 +13,17 @@ public class TrvSchedule implements java.io.Serializable {
 	private String schContent;
 	private String schTransp;
 	private int plcId;
+	private String plcName;
 	private int dayId;
 	private int likeyId;
 	private int spotId;
+	private TrvCost trvCost;
 	
 	public TrvSchedule() {}
 
 	public TrvSchedule(int schId, String schTitle, int schNumber, String startTime, String endTime, String isTimeset,
-			String schContent, String schTransp, int plcId, int dayId, int likeyId, int spotId) {
+			String schContent, String schTransp, int plcId, String plcName, int dayId, int likeyId, int spotId,
+			TrvCost trvCost) {
 		super();
 		this.schId = schId;
 		this.schTitle = schTitle;
@@ -31,9 +34,11 @@ public class TrvSchedule implements java.io.Serializable {
 		this.schContent = schContent;
 		this.schTransp = schTransp;
 		this.plcId = plcId;
+		this.plcName = plcName;
 		this.dayId = dayId;
 		this.likeyId = likeyId;
 		this.spotId = spotId;
+		this.trvCost = trvCost;
 	}
 
 	public int getSchId() {
@@ -108,6 +113,14 @@ public class TrvSchedule implements java.io.Serializable {
 		this.plcId = plcId;
 	}
 
+	public String getPlcName() {
+		return plcName;
+	}
+
+	public void setPlcName(String plcName) {
+		this.plcName = plcName;
+	}
+
 	public int getDayId() {
 		return dayId;
 	}
@@ -132,14 +145,23 @@ public class TrvSchedule implements java.io.Serializable {
 		this.spotId = spotId;
 	}
 
+	public TrvCost getTrvCost() {
+		return trvCost;
+	}
+
+	public void setTrvCost(TrvCost trvCost) {
+		this.trvCost = trvCost;
+	}
+
 	@Override
 	public String toString() {
 		return "TrvSchedule [schId=" + schId + ", schTitle=" + schTitle + ", schNumber=" + schNumber + ", startTime="
 				+ startTime + ", endTime=" + endTime + ", isTimeset=" + isTimeset + ", schContent=" + schContent
-				+ ", schTransp=" + schTransp + ", plcId=" + plcId + ", dayId=" + dayId + ", likeyId=" + likeyId
-				+ ", spotId=" + spotId + "]";
+				+ ", schTransp=" + schTransp + ", plcId=" + plcId + ", plcName=" + plcName + ", dayId=" + dayId
+				+ ", likeyId=" + likeyId + ", spotId=" + spotId + ", trvCost=" + trvCost + "]";
 	}
 
+	
 	
 
 	

@@ -30,13 +30,21 @@ public interface TravelService {
 	
 	int selectSchNumber(int dayId, String startTime);
 
+	int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc);
+	
+	int deleteTrvSchedule(int schId);
+
+	
+	
+	
+	
+	
+
 	int insertTrvCompany(Travel trv, Member m);
 
 	int insertTrvTag(Travel trv, Tag tag);
 
 	int insertTrvPlace(Travel trv, Place plc);
-
-	int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc);
 
 	int insertTrvCost(TrvDay day, TrvCost cost);
 
@@ -65,8 +73,6 @@ public interface TravelService {
 	int deleteTrvCost(TrvCost cost);
 
 	int deleteSchFile(SchFile file);
-
-	int deleteTrvSchedule(TrvSchedule sch);
 
 
 

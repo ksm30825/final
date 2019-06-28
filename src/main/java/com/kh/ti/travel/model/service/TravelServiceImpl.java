@@ -77,6 +77,16 @@ public class TravelServiceImpl implements TravelService {
 		ArrayList<TrvCity> trvCityList = td.selectTrvCity(sqlSession, trvId);
 		ArrayList<TrvDay> trvDayList = td.selectTrvDay(sqlSession, trvId);
 		ArrayList<Tag> allTagList = td.selectTagList(sqlSession);
+		for(int i = 0; i < trvDayList.size(); i++) {
+			int dayId = trvDayList.get(i).getDayId();
+			ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, dayId);
+			for(int j = 0; j < schList.size(); j++) {
+				int schId = schList.get(j).getSchId();
+				TrvCost cost = td.selectTrvCost(sqlSession, schId);
+				schList.get(j).setTrvCost(cost);
+			}
+			trvDayList.get(i).setSchList(schList);
+		}
 		trvMap.put("trv", trv);
 		trvMap.put("trvCityList", trvCityList);
 		trvMap.put("trvDayList", trvDayList);
@@ -127,7 +137,6 @@ public class TravelServiceImpl implements TravelService {
 			}
 			duplicated = 0;
 		}
-		
 		
 		ArrayList<TrvDay> trvDayList = td.selectTrvDay(sqlSession, trv.getTrvId());
 		Date startDate = trv.getStartDate();
@@ -223,20 +232,63 @@ public class TravelServiceImpl implements TravelService {
 	public int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc) {
 		int result2 = 0;
 		int result3 = 0;
+		int result4 = 0;
 		
 		int result = td.insertTrvSchedule(sqlSession, sch);
 		
-		if(cost.getCostAmount() != 0) {
-			result2 = td.insertTrvCost(sqlSession, cost);
+		int schId = td.selectSchId(sqlSession);
+		if(cost.getCostAmount() != 0.0) {
+			cost.setSchId(schId);
+			result2 += td.insertTrvCost(sqlSession, cost);
 		}
 		
 		if(plc.getPlcId() != 0) {
-			result3 = td.insertTrvPlace(sqlSession, plc);
+			result3 += td.insertPlace(sqlSession, plc);
+			int plcId = td.selectPlcId(sqlSession);
+			sch.setPlcId(plcId);
+			result4 += td.updateSchPlcId(sqlSession, sch);
 		}
-		
 		return result;
 	}
 
+	
+	@Override
+	public int deleteTrvSchedule(int schId) {
+		
+		TrvSchedule sch = td.selectTrvSchedule(sqlSession, schId);
+		int schNumber = sch.getSchNumber();
+		int dayId = sch.getDayId();
+		int result = td.deleteTrvSchedule(sqlSession, schId);
+		int result1 = 0;
+		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, dayId);
+		for(int i = 0; i < schList.size(); i++) {
+			if(schList.get(i).getSchNumber() > schNumber) {
+				schList.get(i).setSchNumber(schList.get(i).getSchNumber() - 1);
+				result1 += td.updateSchNumber(sqlSession, schList.get(i));
+			}
+		}
+		return result;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	@Override
@@ -270,7 +322,7 @@ public class TravelServiceImpl implements TravelService {
 	@Override
 	public int updateTrvSchedule(TrvSchedule sch, Place plc) {
 		int result1 = td.updateTrvSchedule(sqlSession, sch);
-		int result2 = td.insertTrvPlace(sqlSession, plc);
+		int result2 = td.insertPlace(sqlSession, plc);
 		return 0;
 	}
 	
@@ -339,11 +391,7 @@ public class TravelServiceImpl implements TravelService {
 		return 0;
 	}
 
-	@Override
-	public int deleteTrvSchedule(TrvSchedule sch) {
-		int result = td.deleteTrvSchedule(sqlSession, sch);
-		return 0;
-	}
+
 
 
 

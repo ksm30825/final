@@ -73,7 +73,7 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left" style="margin:0">
 									<span class="icon is-small is-left"><i class="far fa-clock"></i></span> 
-									<input class="input" type="time" min="0" max="23" value="1" name="startTime">
+									<input class="input" type="time" name="startTime">
 								</p>
 								<p class="help">시작시간</p>
 							</div>
@@ -83,7 +83,7 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left" style="margin:0">
 									<span class="icon is-small is-left"><i class="far fa-clock"></i></span> 
-									<input class="input" type="time" min="0" max="23" value="1" name="endTime">
+									<input class="input" type="time" name="endTime">
 								</p>
 								<p class="help">종료시간</p>
 							</div>
@@ -112,8 +112,20 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-receipt"></i></span>
-									<input class="input" type="text" placeholder="현지화 가격 입력 (선택)" 
+									<input class="input" type="number" placeholder="현지화 가격 입력 (선택 )" value="0" 
 									name="costAmount" />
+								</p>
+							</div>
+							<div class="field">
+								<p class="control is-expanded has-icons-left">
+									<span class="icon is-small is-left"><i class="fas fa-dollar-sign"></i></span>
+									<span class="select"> 
+										<select name="currency">
+											<c:forEach var="trvCity" items="${ trvCityList }" varStatus="st" >
+												<option>${ trvCity.currencyUnit }</option>
+											</c:forEach>
+										</select>
+									</span>
 								</p>
 							</div>
 						</div>
@@ -126,7 +138,7 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-subway"></i></span>
-									<input class="input" type="text" placeholder="교통정보 입력(선택)"
+									<input class="input" type="text" placeholder="교통정보 입력(선택 )"
 									name="schTransp"/>
 								</p>
 							</div>
@@ -150,6 +162,13 @@
 		var transp = $("input[name=schTransp]");
 		$(function() {
 			defaultModal = $("#newScheduleModal").children().clone(true);
+			
+			$("select[name=currency]").children().each(function() {
+				if($(this).text() == $(this).siblings().text()) {
+					$(this).remove();
+				}
+			});
+			
 			
 			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
         		$('html').removeClass('is-clipped');

@@ -128,20 +128,6 @@ public class TravelController {
 	//상세일정추가-민지
 	@RequestMapping("insertSch.trv")
 	public String insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc, int trvId, Model model) {
-		/*
-		 * SCH : TrvSchedule [schId=0, schTitle=브런치, startTime=10:00, endTime=13:00,
-		 * schContent=null, schTransp=지하철, plcId=0, dayId=1, likeyId=0] COST : TrvCost
-		 * [costId=0, costContent=null, costAmount=50, schId=0, dayId=1, costType=식비]
-		 * PLC : Place [plcId=0, cityId=0, plcName=, plcAddress=null, plcTypeId=0,
-		 * plcEngName=null, plcLat=null, plcLng=null, plcCount=0] isTimeset : null
-		 */
-		/*
-		 * SCH : TrvSchedule [schId=0, schTitle=브런치2~~, startTime=, endTime=,
-		 * schContent=null, schTransp=지하철, plcId=0, dayId=1, likeyId=0] COST : TrvCost
-		 * [costId=0, costContent=null, costAmount=500, schId=0, dayId=1, costType=교통]
-		 * PLC : Place [plcId=0, cityId=0, plcName=, plcAddress=null, plcTypeId=0,
-		 * plcEngName=null, plcLat=null, plcLng=null, plcCount=0] isTimeset : on
-		 */
 		System.out.println("SCH : " + sch);
 		System.out.println("COST : " + cost);
 		
@@ -159,6 +145,7 @@ public class TravelController {
 				sch.setSchNumber(count + 1);
 			}
 		}
+		cost.setCostContent(sch.getSchTitle());
 		
 		
 		int result = ts.insertTrvSchedule(sch, cost, plc);
@@ -170,6 +157,36 @@ public class TravelController {
 		}
 		
 	}
+	
+	//상세일정삭제-민지
+	@RequestMapping("/deleteSch.trv") 
+	public String deleteSchedule(int schId, int trvId, Model model) {
+		
+		int result = ts.deleteTrvSchedule(schId);
+		if(result > 0) {
+			return "redirect:/selectTravel.trv?trvId=" + trvId;
+		}else {
+			model.addAttribute("msg", "일정 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	//동행추가-민지
 	@RequestMapping("insertCompany.trv")
@@ -276,13 +293,7 @@ public class TravelController {
 		return "";
 	}
 	
-	//일정삭제-민지
-	@RequestMapping("/deleteSch.trv") 
-	public String deleteSchedule(TrvSchedule sch) {
-		int result = ts.deleteTrvSchedule(sch);
-		return "";
-	}
-	
+
 	
 
 

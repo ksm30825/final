@@ -64,11 +64,31 @@
 		<result property="schContent" column="SCH_CONTENT" />
 		<result property="schTransp" column="SCH_TRANSP" />
 		<result property="plcId" column="PLC_ID" />
+		<result property="plcName" column="PLC_NAME" />
 		<result property="dayId" column="DAY_ID" />
 		<result property="likeyId" column="LIKEY_ID" />
 		<result property="spotId" column="SPOT_ID" />
 	</resultMap>
-	
+	<resultMap id="TrvCostResultSet" type="TrvCost">
+		<id property="costId" column="COST_ID" />
+		<result property="costContent" column="COST_CONTENT" />
+		<result property="costAmount" column="COST_AMOUNT" />
+		<result property="currency" column="CURRENCY" />
+		<result property="schId" column="SCH_ID" />
+		<result property="dayId" column="DAY_ID" />
+		<result property="costType" column="COST_TYPE" />
+	</resultMap>
+	<!-- <resultMap id="PlaceResutSet" type="Place">
+		<id property="plcId" column="PLC_ID" />
+		<result property="cityId" column="CITY_ID" />
+		<result property="plcName" column="PLC_NAME" />
+		<result property="plcAddress" column="PLC_ADDRESS" />
+		<result property="plcTypeId" column="PLC_TYPE_CODE" />
+		<result property="plcEngName" column="PLC_ENGNAME" />
+		<result property="plcLat" column="PLC_LAT" />
+		<result property="plcLng" column="COST_TYPE" />
+		<result property="plcCount" column="COST_TYPE" />
+	</resultMap> -->
 	
 	<insert id="insertTravel" parameterType="Travel">
 		INSERT INTO TRAVEL
@@ -154,9 +174,11 @@
 		WHERE DAY_ID = #{dayId}
 	</select>
 	<select id="selectSchList" parameterType="_int" resultMap="TrvSchResultSet">
-		SELECT *
-		FROM TRV_SCH
+		SELECT SCH.*, P.PLC_NAME
+		FROM TRV_SCH SCH
+		LEFT JOIN PLACE P ON (P.PLC_ID = SCH.PLC_ID)
 		WHERE DAY_ID = #{dayId}
+		ORDER BY SCH.SCH_NUMBER
 	</select>
 	<insert id="insertSch" parameterType="TrvSch">
 		INSERT INTO TRV_SCH
@@ -168,6 +190,28 @@
 		SET SCH_NUMBER = #{schNumber}
 		WHERE SCH_ID = #{schId}
 	</update>
+	<select id="selectSchId" resultType="_int">
+		SELECT TRV_SCH_SEQ.CURRVAL FROM DUAL
+	</select>
+	<insert id="insertTrvCost" parameterType="TrvCost">
+		INSERT INTO TRV_COST
+		VALUES(TRV_COST_SEQ.NEXTVAL, #{costContent}, #{costAmount}, #{currency}, #{schId}, #{dayId}, #{costType})
+	</insert>
+	<select id="selectTrvCost" parameterType="_int" resultMap="TrvCostResultSet">
+		SELECT *
+		FROM TRV_COST
+		WHERE SCH_ID = #{schId}
+	</select>
+	<select id="selectSch" parameterType="_int" resultMap="TrvSchResultSet">
+		SELECT *
+		FROM TRV_SCH
+		WHERE SCH_ID = #{schId}
+	</select>
+	<delete id="deleteSch" parameterType="_int">
+		DELETE FROM TRV_SCH
+		WHERE SCH_ID = #{schId}
+	</delete>
+	
 	
 	
 	
