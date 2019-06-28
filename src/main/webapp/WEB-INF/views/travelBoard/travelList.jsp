@@ -51,8 +51,9 @@
                      <div>
 	                     <c:choose>
 	                     	<c:when test="${ fn:length(tbList.trvCities) > 0 }">
-	                     		<c:forEach var="city" items="${ tbList.trvCities }">
-	                     			<a>@${ city.countryNameKo }</a>
+	                     		<c:forEach var="city" items="${ tbList.trvCities }" varStatus="st">
+	                     			<a>@${ city.countryNameKo } ${ city.cityNameKo }</a>
+	                     			<c:if test="${ st.count ne fn:length(tbList.trvCities) }">&nbsp;/&nbsp;</c:if>
 	                     		</c:forEach>
 	                     	</c:when>
 	                     	<c:otherwise>
@@ -64,7 +65,7 @@
                      <fmt:parseNumber value="${ startDate.time / (1000*60*60*24) }" integerOnly="true" var="startDay" />
                      <fmt:parseDate var="endDate" value="${ tbList.endDate }" pattern="yyyy-MM-dd" />
                      <fmt:parseNumber value="${ endDate.time / (1000*60*60*24) }" integerOnly="true" var="endDay" />
-                     <p class="date"><small>[${ endDay - startDay }DAYS] ${ tbList.startDate } ~ ${ tbList.endDate }</small></p>
+                     <p class="date"><small>[${ endDay - startDay + 1 }DAYS] ${ tbList.startDate } ~ ${ tbList.endDate }</small></p>
                      <a class="button is-small"> 
                         <span class="icon is-small"><i class="fa fa-user"></i></span> 
                         <span> ${ tbList.userName } </span>

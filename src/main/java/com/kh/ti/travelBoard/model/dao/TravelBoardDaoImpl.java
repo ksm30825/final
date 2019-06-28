@@ -11,6 +11,7 @@ import com.kh.ti.common.PageInfo;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 @Service
 public class TravelBoardDaoImpl implements TravelBoardDao {
@@ -49,19 +50,27 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 
 	//여행일정 상세 조회 - 예랑
 	@Override
-	public HashMap travelDetailForm(SqlSessionTemplate sqlSession, TravelBoard tb) {
+	public HashMap travelDetailForm(SqlSessionTemplate sqlSession, TravelBoard tb, TrvDaySchedule tds) {
 		//여행일정 상세 정보를 담을 HashMap
 		HashMap tbMap = new HashMap();
 		
 		//일정 상세정보 조회
-		tb = sqlSession.selectOne("TravelBoard.selectTravelDetailForm", tb);
-		tbMap.put("tb", tb);
+		TravelBoard detailTb = new TravelBoard();
+		detailTb = sqlSession.selectOne("TravelBoard.selectTravelDetailForm", tb);
 		
 		//해당 일정 구매여부 확인
-		tb.setBuyStatus(sqlSession.selectOne("TravelBoard.checkBuyStatus", tb));
+		detailTb.setBuyStatus(sqlSession.selectOne("TravelBoard.checkBuyStatus", tb));
 		
 		//해당 일정 좋아요여부 확인
-		tb.setLikeyStatus(sqlSession.selectOne("TravelBoard.checkLikeyStatus", tb));
+		detailTb.setLikeyStatus(sqlSession.selectOne("TravelBoard.checkLikeyStatus", tb));
+		
+		tbMap.put("detailTb", detailTb);
+		
+		//여행 일자별 스케쥴 조회
+		TrvDaySchedule detailDay = sqlSession.selectOne("TravelBoard.selectDaySchOne", tds);
+		System.out.println("detailDay : " + detailDay);
+		System.out.println("detailDay.getTrvSchedule().size() : " + detailDay.getTrvSchedule().size());
+		tbMap.put("detailDay", detailDay);
 		
 		return tbMap;
 	}

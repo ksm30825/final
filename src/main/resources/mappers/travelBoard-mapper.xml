@@ -18,6 +18,7 @@
 		<id property="cityId" column="CITY_ID"/>
 		<result property="cityNameKo" column="CITY_NAME_KO"/>
 		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN" />
 	</resultMap>
 	
 	<!-- city -->
@@ -85,6 +86,32 @@
 		<collection property="schFiles" javaType="java.util.ArrayList" resultMap="schFileResultSet"/>
 	</resultMap>
 	
+	<resultMap type="TrvBoardSch" id="trvScheduleResultSet">
+		<id property="schId" column="SCH_ID" />
+		<result property="schTitle" column="SCH_TITLE" />
+		<result property="schNumber" column="SCH_NUMBER" />
+		<result property="startTime" column="START_TIME" />
+		<result property="endTime" column="END_TIME" />
+		<result property="isTimeset" column="IS_TIMESET" />
+		<result property="schContent" column="SCH_CONTENT" />
+		<result property="schTransp" column="SCH_TRANSP" />
+		<result property="plcId" column="PLC_ID" />
+		<result property="placeName" column="PLACE_NAME"/>
+		<result property="dayId" column="DAY_ID" />
+		<result property="likeyId" column="LIKEY_ID" />
+		<result property="spotId" column="SPOT_ID" />
+	</resultMap>
+	
+	<resultMap type="TrvDaySchedule" id="trvDayScheduleResultSet">
+		<id property="dayId" column="DAY_ID"/>
+		<result property="dayNumber" column="DAY_NUMBER"/>
+		<result property="dayDate" column="DAY_DATE"/>
+		<result property="dayMemo" column="DAY_MEMO"/>
+		<result property="dayWeather" column="DAY_WEATHER"/>
+		<result property="trvId" column="TRV_ID"/>
+		<collection property="trvSchedule" javaType="java.util.ArrayList" resultMap="trvScheduleResultSet"/>
+	</resultMap>
+	
 	<!-- 페이징용 -->
 	<select id="getListCount" resultType="_int">
 		SELECT COUNT(*)
@@ -100,7 +127,7 @@
 	<!-- 여행일정 전체 조회용 -->
 	<select id="selectTravelBoardList" resultMap="travelBoardResultSet">
 		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
-       		   M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, LIKEY_COUNT, BUY_COUNT,
+       		   M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, COU.COUNTRY_NAME_KO, LIKEY_COUNT, BUY_COUNT,
                SFI.ORIGIN_NAME, SFI.CHANGE_NAME, SFI.FILE_PATH
 	    FROM TRAVEL T
 	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
@@ -111,6 +138,7 @@
 	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
         LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
         LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+        LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
         JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
               FROM TRAVEL T
               LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
@@ -152,7 +180,7 @@
 	
 	<select id="selectTravelDetailForm" resultMap="travelBoardResultSet">
 		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
-       		   T.MEMBER_ID, M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, LIKEY_COUNT, BUY_COUNT
+       		   T.MEMBER_ID, M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CI.CITY_NAME_KO, COU.COUNTRY_NAME_KO, COU.COUNTRY_NAME_EN, LIKEY_COUNT, BUY_COUNT
 	    FROM TRAVEL T
 	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
 	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
@@ -161,6 +189,7 @@
 	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
         LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
         LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+        LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
         JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
               FROM TRAVEL T
               LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
@@ -208,4 +237,13 @@
 		WHERE MEMBER_ID = #{ memberId }
 		AND TRV_ID = #{ trvId }
 	</delete>
+	
+	<select id="selectDaySchOne" resultMap="trvDayScheduleResultSet">
+		SELECT TD.DAY_NUMBER, TD.DAY_DATE, TSCH.SCH_ID, TSCH.PLC_ID, TSCH.IS_TIMESET, PL.PLC_NAME
+		FROM TRV_DAY TD
+		LEFT JOIN TRV_SCH TSCH ON (TD.DAY_ID = TSCH.DAY_ID)
+		LEFT JOIN PLACE PL ON (TSCH.PLC_ID = PL.PLC_ID)
+		WHERE TD.TRV_ID = #{ trvId }
+		AND TD.DAY_NUMBER = #{ dayNumber }
+	</select>
 </mapper>

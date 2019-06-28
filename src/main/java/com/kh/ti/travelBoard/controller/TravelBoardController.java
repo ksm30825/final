@@ -17,6 +17,7 @@ import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travelBoard.model.service.TravelBoardService;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 @Controller
 public class TravelBoardController {
@@ -85,8 +86,9 @@ public class TravelBoardController {
 	
 	//여행일정 상세 조회 - 예랑
 	@RequestMapping("travelDetailForm.tb")
-	public String travelDetailForm(int trvId, Model model, HttpServletRequest request) {
+	public String travelDetailForm(int trvId, Integer dayNumber, Model model, HttpServletRequest request) {
 		
+		//여행일정 전체 정보 조회용
 		TravelBoard tb = new TravelBoard();
 		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
 		
@@ -95,9 +97,21 @@ public class TravelBoardController {
 		}
 		tb.setTrvId(trvId);
 		
-		HashMap tbMap = tbs.travelDetailForm(tb);
+		//여행일정 일자별 스케쥴 조회용 - 처음은 DAY1 조회
+		TrvDaySchedule tds = new TrvDaySchedule();
 		
-		model.addAttribute("tb", tbMap.get("tb"));
+		tds.setTrvId(trvId);
+		
+		 if(dayNumber == null) {
+			 tds.setDayNumber(1);
+		 }else { 
+			 tds.setDayNumber((int) dayNumber);
+		 }
+		
+		HashMap tbMap = tbs.travelDetailForm(tb, tds);
+		
+		model.addAttribute("detailTb", tbMap.get("detailTb"));
+		model.addAttribute("detailDay", tbMap.get("detailDay"));
 		
 		return "travelBoard/travelDetail";
 	}
@@ -117,7 +131,7 @@ public class TravelBoardController {
 	}
 	
 	//여행일정 좋아요 - 예랑
-	@RequestMapping("travelLikey.tb")
+	@RequestMapping("travelLikeyInsert.tb")
 	public ModelAndView travelLikeyInsert(ModelAndView mv, int trvId, int memberId) {
 		
 		Likey likey = new Likey();
@@ -126,6 +140,7 @@ public class TravelBoardController {
 		
 		tbs.travelLikeyInsert(likey);
 		
+		mv.addObject("likey", likey);
 		mv.setViewName("jsonView");
 		
 		return mv;
