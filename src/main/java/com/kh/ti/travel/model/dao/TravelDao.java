@@ -51,12 +51,38 @@ public interface TravelDao {
 
 	int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);	
 	
-	int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
-
-	int insertTrvPlace(SqlSessionTemplate sqlSession, Place plc);	
+	int selectSchId(SqlSessionTemplate sqlSession);
+	
+	int insertTrvCost(SqlSessionTemplate sqlSession, Travel trv, TrvCost cost);
 
 	int updateSchNumber(SqlSessionTemplate sqlSession, TrvSchedule sch);
+	
+	int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
+	
+	TrvCost selectTrvCost(SqlSessionTemplate sqlSession, int schId);
 
+	TrvSchedule selectTrvSchedule(SqlSessionTemplate sqlSession, int schId);
+	
+	int deleteTrvSchedule(SqlSessionTemplate sqlSession, int schId);
+	
+	
+	
+	
+
+	int insertPlace(SqlSessionTemplate sqlSession, Place plc);	
+	
+	int selectPlcId(SqlSessionTemplate sqlSession);
+	
+	int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch);
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -64,11 +90,6 @@ public interface TravelDao {
 	int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m);
 
 	int insertTag(SqlSessionTemplate sqlSession, Travel trv, Tag tag);
-
-
-
-
-	int insertTrvCost(SqlSessionTemplate sqlSession, Travel trv, TrvCost cost);
 
 	int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile);
 
@@ -92,11 +113,17 @@ public interface TravelDao {
 
 	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
 
-	int deleteTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);
 
 	ArrayList<TrvCity> selectTrvCity(SqlSessionTemplate sqlSession, int trvId);
 
 	ArrayList<TrvDay> selectTrvDay(SqlSessionTemplate sqlSession, int trvId);
+
+
+
+
+
+
+
 
 
 

@@ -4,18 +4,21 @@ public class TrvCost implements java.io.Serializable {
 
 	private int costId;
 	private String costContent;
-	private int costAmount;
+	private double costAmount;
+	private String currency;
 	private int schId;
 	private int dayId;
 	private String costType;
 	
 	public TrvCost() {}
 
-	public TrvCost(int costId, String costContent, int costAmount, int schId, int dayId, String costType) {
+	public TrvCost(int costId, String costContent, double costAmount, String currency, int schId, int dayId,
+			String costType) {
 		super();
 		this.costId = costId;
 		this.costContent = costContent;
 		this.costAmount = costAmount;
+		this.currency = currency;
 		this.schId = schId;
 		this.dayId = dayId;
 		this.costType = costType;
@@ -37,12 +40,20 @@ public class TrvCost implements java.io.Serializable {
 		this.costContent = costContent;
 	}
 
-	public int getCostAmount() {
+	public double getCostAmount() {
 		return costAmount;
 	}
 
-	public void setCostAmount(int costAmount) {
+	public void setCostAmount(double costAmount) {
 		this.costAmount = costAmount;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	public int getSchId() {
@@ -71,9 +82,14 @@ public class TrvCost implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "TrvCost [costId=" + costId + ", costContent=" + costContent + ", costAmount=" + costAmount + ", schId="
-				+ schId + ", dayId=" + dayId + ", costType=" + costType + "]";
+		return "TrvCost [costId=" + costId + ", costContent=" + costContent + ", costAmount=" + costAmount
+				+ ", currency=" + currency + ", schId=" + schId + ", dayId=" + dayId + ", costType=" + costType + "]";
 	}
+
+	
+
+
+	
 
 	
 	
