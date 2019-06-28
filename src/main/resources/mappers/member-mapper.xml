@@ -72,4 +72,15 @@
 		WHERE EMAIL = #{ email }
 		AND ENROLL_STATUS = 'Y'
 	</update>
+	
+	<!-- 회원정보수정용 세령 -->
+	<update id="updateUserInfo" parameterType="Member">
+		UPDATE MEMBER
+		SET USER_NAME = #{ userName },
+		    EMAIL = #{ email },
+		    GENDER = #{ gender },
+		    BIRTHDAY = #{ birthday }
+		WHERE MEMBER_ID = #{ memberId }
+		AND ENROLL_STATUS = 'Y'
+	</update>
 </mapper>

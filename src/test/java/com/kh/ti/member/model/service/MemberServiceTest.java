@@ -30,11 +30,12 @@ public class MemberServiceTest {
 	@Before
 	public void setup() {
 		m = new Member();
-		m.setEmail("user20@gmail.com");
+		m.setMemberId(20);
+		m.setEmail("jk@gmail.com");
 		m.setPassword("0000");
-		m.setUserName("testName");
-		m.setBirthday("970922");
-		m.setGender("M");
+		m.setUserName("jk");
+		m.setBirthday("1997-09-02");
+		m.setGender("F");
 		m.setPhone("010-1234-5678");
 		System.out.println("셋팅 완료!");
 	}
@@ -60,10 +61,16 @@ public class MemberServiceTest {
 		log.info("비밀번호 수정 성공!");
 	}
 	
+	@Ignore
 	@Test
 	public void testDropOutUserInfo() {
 		ms.dropOutUserInfo(m);
 		log.info("회원 탈퇴 성공!");
 	}
 	
+	@Test
+	public void testUpdateUserInfo() {
+		ms.updateUserInfo(m);
+		log.info("회원 정보 수정 성공!");
+	}
 }

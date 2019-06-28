@@ -44,5 +44,11 @@ public class MemberDaoImpl implements MemberDao{
 		return sqlSession.update("Member.updateEnrollStatus", loginUser);
 	}
 
+	//회원수정용 메소드 - 세령
+	@Override
+	public int updateUserInfo(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("Member.updateUserInfo", m);
+	}
+
 
 }

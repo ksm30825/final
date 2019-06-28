@@ -18,4 +18,6 @@ public interface MemberDao {
 
 	int dropOutUserInfo(SqlSessionTemplate sqlSession, Member loginUser);
 
+	int updateUserInfo(SqlSessionTemplate sqlSession, Member m);
+
 }

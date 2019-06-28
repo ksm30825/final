@@ -3,6 +3,7 @@ package com.kh.ti.member.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,12 @@ public class MemberController {
 	@RequestMapping("adminMemberListForm.me")
 	public String showAdminMemberList() {
 		return "admin/member/adminMemberList";
+	}
+	
+	//계좌정보변경 창 띄우기용 메소드(forward confirmAccountPopup.jsp) --세령
+	@RequestMapping("showConfirmAcc.me")
+	public String showConfirmAccPopup() {
+		return "member/confirmAccount";
 	}
 	
 	//로그인용메소드--세령--세령
@@ -100,14 +107,28 @@ public class MemberController {
 	
 	//계좌정보수정용메소드--세령
 	@RequestMapping("updateUserAcc.me")
-	public void updateUserAcc() {
-		
+	public void updateUserAcc(@RequestParam("bankcode") String accCode, @RequestParam("accnum") String accNumber,
+							  Model model, HttpServletRequest request) {
+		System.out.println("은행코드 : " + accCode + " | " + "계좌 : " + accNumber);
 	}
 	
 	//회원정보수정용메소드--세령
 	@RequestMapping("updateUserInfo.me")
-	public String updateUserInfo() {
-		return null;
+	public String updateUserInfo(@ModelAttribute Member m, Model model, HttpServletRequest request) {
+		int result = ms.updateUserInfo(m);
+		if(result > 0) {
+			//세션 정보 업데이트
+			Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+			loginUser.setUserName(m.getUserName());
+			loginUser.setEmail(m.getEmail());
+			loginUser.setGender(m.getGender());
+			loginUser.setBirthday(m.getBirthday());
+			model.addAttribute("loginUser", loginUser);			
+			return "member/updateMemberInfo";
+		} else {
+			model.addAttribute("msg", "회원정보수정 실패!");
+			return "common/errorPage";
+		}
 	}
 	
 	//회원탈퇴용메소드--세령
