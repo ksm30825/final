@@ -5,34 +5,31 @@ import java.util.ArrayList;
 
 //설계 여행일자
 public class PlanDay implements Serializable {
-	private ArrayList<PlanDayList> list;	//각 일자 및 메모
 	private int PdayId;		//설계일자 코드
-	private String Pday;	//일자
-	private String pdayMemo;	//메모
-	private String openStatus;	//공개여부
+	private String pDay;	//일자
+	private String pDayMemo;	//메모
+	private String openStatus = "N";	//공개여부
 	private int planId;	//설계번호
 	private ArrayList<PlanPlace> placeList;	//일자장소들
 	
 	public PlanDay() {}
 
-	public PlanDay(ArrayList<PlanDayList> list, int pdayId, String pday, String pdayMemo, String openStatus, int planId,
+	public PlanDay(String pDay, String pDayMemo, String openStatus) {
+		super();
+		this.pDay = pDay;
+		this.pDayMemo = pDayMemo;
+		this.openStatus = openStatus;
+	}
+
+	public PlanDay(int pdayId, String pDay, String pDayMemo, String openStatus, int planId,
 			ArrayList<PlanPlace> placeList) {
 		super();
-		this.list = list;
 		this.PdayId = pdayId;
-		this.Pday = pday;
-		this.pdayMemo = pdayMemo;
+		this.pDay = pDay;
+		this.pDayMemo = pDayMemo;
 		this.openStatus = openStatus;
 		this.planId = planId;
 		this.placeList = placeList;
-	}
-
-	public ArrayList<PlanDayList> getList() {
-		return list;
-	}
-
-	public void setList(ArrayList<PlanDayList> list) {
-		this.list = list;
 	}
 
 	public int getPdayId() {
@@ -43,20 +40,20 @@ public class PlanDay implements Serializable {
 		PdayId = pdayId;
 	}
 
-	public String getPday() {
-		return Pday;
+	public String getpDay() {
+		return pDay;
 	}
 
-	public void setPday(String pday) {
-		Pday = pday;
+	public void setpDay(String pDay) {
+		this.pDay = pDay;
 	}
 
-	public String getPdayMemo() {
-		return pdayMemo;
+	public String getpDayMemo() {
+		return pDayMemo;
 	}
 
-	public void setPdayMemo(String pdayMemo) {
-		this.pdayMemo = pdayMemo;
+	public void setpDayMemo(String pDayMemo) {
+		this.pDayMemo = pDayMemo;
 	}
 
 	public String getOpenStatus() {
@@ -85,7 +82,7 @@ public class PlanDay implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PlanDay [list=" + list + ", PdayId=" + PdayId + ", Pday=" + Pday + ", pdayMemo=" + pdayMemo
-				+ ", openStatus=" + openStatus + ", planId=" + planId + ", placeList=" + placeList + "]";
+		return "PlanDay [PdayId=" + PdayId + ", pDay=" + pDay + ", pDayMemo=" + pDayMemo + ", openStatus=" + openStatus
+				+ ", planId=" + planId + ", placeList=" + placeList + "]";
 	}
 }
