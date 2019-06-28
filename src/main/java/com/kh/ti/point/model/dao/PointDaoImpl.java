@@ -28,7 +28,9 @@ public class PointDaoImpl implements PointDao{
 	//포인트 지급 리스트 전체 카운터
 	@Override
 	public int getReceiveListCount(SqlSessionTemplate sqlSession, ReservePoint reserve) {
-		return sqlSession.selectOne("Payment.getReceiveListCount", reserve);
+		int count = sqlSession.selectOne("Payment.getReceiveListCount", reserve);
+		System.out.println("count" + count);
+		return count;
 	}
 	//포인트 사용 리스트 전체 카운터
 	@Override
@@ -37,14 +39,20 @@ public class PointDaoImpl implements PointDao{
 	}
 	//포인트 충전리스트 전체 조회
 	@Override
-	public ArrayList<Payment> selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, Payment charge) {
+	public ArrayList selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, Payment charge) {
 		int offset = (chPi.getCurrentPage() - 1) * chPi.getLimit();
 		//System.out.println("chPayList offset : " + offset);
 		RowBounds rowBounds = new RowBounds(offset, chPi.getLimit());
 		//System.out.println("chPayList rowBounds : " + rowBounds);
 		
-		ArrayList<Payment> chPayList = (ArrayList)sqlSession.selectList("Payment.selectChargeList",	charge, rowBounds);
+		ArrayList chPayList = (ArrayList)sqlSession.selectList("Payment.selectChargeList",	charge, rowBounds);
 		//System.out.println("chPayList chPayList : " + chPayList);
+		
+		/*
+		 * for(int i=0 ; i<chPayList.size() ; i++) {
+		 * System.out.println("dao : chPayList.get("+i+").getPaymentDate() : "+chPayList
+		 * .get(i).getPaymentDate()); }
+		 */
 		return chPayList;
 	}
 	//포인트 지급리스트 전체 조회

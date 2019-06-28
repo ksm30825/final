@@ -92,7 +92,7 @@
 					    		<table class="table is-narrow" align="center" style="width:100%;">
 								    <thead>
 										<tr style="background:skyblue;">
-											<th> No </th>
+											<th width="10px"> No </th>
 											<th> 충전액 </th>
 											<th> 충전일 </th>
 										</tr>
@@ -131,7 +131,7 @@
 				    			</div>
 					    		<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
 					    			<select name="receiveSelect" id="receiveSelect">
-					    				<option id="defaultOption">--월--</option>
+					    				<option value="defaultOption">--월--</option>
 							            <option value="1">1</option>
 										<option value="2">2</option>
 										<option value="3">3</option>
@@ -151,7 +151,7 @@
 								<table class="table is-narrow" align="center" style="width:100%;">
 								    <thead>
 										<tr style="background:skyblue;">
-											<th> No </th>
+											<th width="10px"> No </th>
 											<th> 지급포인트 </th>
 											<th> 지급일 </th>
 											<th> 지급게시글 </th>
@@ -225,7 +225,7 @@
 								<table class="table is-narrow" align="center" style="width:100%;">
 								    <thead>
 								      <tr style="background:skyblue">
-								        <th> No </th>
+								        <th width="10px"> No </th>
 								        <th> 사용포인트 </th>
 								        <th> 사용일 </th>
 								        <th> 사용게시글 </th>
@@ -338,7 +338,7 @@
 			$("#del").click(function(){
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
-			
+			//포인트 충전 월검색 시
 			$("#chargeSelect").change(function(){
 				var month = $(this).children('option:selected').val();
 				if(month!='defaultOption'){
@@ -348,16 +348,197 @@
 						type:"post",
 						data:{month:month},
 						success:function(data){
-							console.log(data.chPayList);
+							//console.log(data.hmap.chPayList.length);
+							var len = data.hmap.chPayList.length;
+							if(len>0){
+								for(var i=0 ; i<len ; i++){
+									//console.log(data.chPayList[i].paymentDate);
+									var date = new Date(data.hmap.chPayList[i].paymentDate);
+									date = getFormatDate(date);
+									//console.log(date);
+								}
+							}else{
+								//console.log('nnnn');
+							}
+							makeChargeTable(data,date);
 						},
 						error:function(data){
 							console.log('error');
 						}
 					});
 				}
-			})
-			
+			});
+			//포인트 지급 월 검색시
+			$("#receiveSelect").change(function(){
+				var month = $(this).children('option:selected').val();
+				if(month!='defaultOption'){
+					console.log("month : " + month );
+					$.ajax({
+						url:"oneMonthRPoint.po",
+						type:"post",
+						data:{month:month},
+						success:function(data){
+							console.log(data.hmap.rePayList.length);
+							
+							var len = data.hmap.rePayList.length;
+							if(len>0){
+								for(var i=0 ; i<len ; i++){
+									var date = new Date(data.hmap.rePayList[i].reserveDate);
+									date = getFormatDate(date);
+									console.log(date);
+								}
+							}else{
+								console.log('nnnn');
+							}
+							makeReserveTable(data,date);
+						},
+						error:function(data){
+							console.log('error');
+						}
+					});
+				}
+			});
 		});
+		//포인트 충전 테이블
+		function makeChargeTable(data,date){
+			//console.log(data);
+			//console.log(date);
+			$("#chargeTBody").empty();
+			var len = data.hmap.chPayList.length;
+			for(var i=0 ; i<len ; i++){
+				var list = data.hmap.chPayList[i];
+				console.log(list);
+				var pi = data.hmap.chPi;
+				console.log(pi);
+				
+				var $listTr = $("<tr>");
+				
+				var $noTd = $("<td width='10px'>").text(i+1);
+				
+				var $paymentIdIn = $("<input type='hidden' class='paymentId' name='paymentId'>");
+				$paymentIdIn.val(list.paymentId);
+				$noTd.append($paymentIdIn);
+				
+				var pay = comma(list.payAmount);
+				var $payAmountTd = $("<td>").text(pay+"P");
+				
+				var $paymentDate = $("<td>").text(date);
+				
+				$listTr.append($noTd);
+				$listTr.append($payAmountTd);
+				$listTr.append($paymentDate);
+				
+				$("#chargeTBody").append($listTr);
+			}
+		};
+		
+		$("body").on("click", "#test",function(){
+			alert('test')
+		})
+		
+		function makeReserveTable(data, date){
+			$("#receiveTBody").empty();			
+			var len = data.hmap.rePayList.length;
+			
+			for(var i=0 ; i<len ; i++){
+				var list = data.hmap.rePayList[i];
+				console.log(list);
+				var pi = data.hmap.rePi;
+				console.log(pi);
+				
+				var $listTr = $("<tr>");
+				
+				var $noTd = $("<td width='10px'>").text(i+1);
+				
+				var $reserveIdIn = $("<input type='hidden' class='reserveId' name='reserveId'>");
+				$reserveIdIn.val(list.pointId);
+				$noTd.append($reserveIdIn);
+				
+				var point = comma(list.reservePoint);
+				var $reservePointTd = $("<td>").text(point+"P");
+				
+				var $reserveDate = $("<td>").text(date);
+				
+				var reserveType = list.reserveType;
+				var $reserveTypeTd = $("<td>");
+				var $reserveTypeIn, $reserveTypeA, mid, bid;
+				
+				if(reserveType==10){
+					mid = list.memberId;
+					bid = list.trvId;
+					
+					$reserveTypeIn = $('<input type="text" style="display:none;">');
+					$reserveTypeIn.val(list.trvId);
+					
+					$reserveTypeA = $('<button id="test" class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" onclick="oneBoardLink()">일정작성</button>');
+					
+					$reserveTypeTd.append($reserveTypeIn);
+					$reserveTypeTd.append($reserveTypeA);
+				}else if(reserveType==20){
+					
+				}else if(reserveType==30){
+					
+				}
+				/*
+				<tr>
+					<td>
+						<c:if test="${ re.reserveType eq 20}">
+							<input type="text" value="${ re.reviewId }" style="display:none;">
+							<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">일정리뷰</a>
+						</c:if>
+						<c:if test="${ re.reserveType eq 30}">
+							<input type="text" value="${ re.spotReviewId }" style="display:none;">
+							<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">명소리뷰</a>
+						</c:if>
+					</td>
+				</tr>
+				*/
+				$listTr.append($noTd);
+				$listTr.append($reservePointTd);
+				$listTr.append($reserveDate);
+				$listTr.append($reserveTypeTd);
+				$("#receiveTBody").append($listTr);
+			}
+		};
+		function oneBoardLink(mid, bid){
+			console.log('ok');
+			location.href="oneBoardRPoint.po?mid="+mid+"&bid="+bid;
+		}
+		//ajax 천단위마다 콤마찍기
+		function comma(num){
+		    var len, point, str; 
+		       
+		    num = num + ""; 
+		    point = num.length % 3 ;
+		    len = num.length; 
+		   
+		    str = num.substring(0, point); 
+		    while (point < len) { 
+		        if (str != "") str += ","; 
+		        str += num.substring(point, point + 3); 
+		        point += 3; 
+		    } 
+		    return str;
+		 
+		}
+		//long형 날짜를 yy/mm/dd hh:MM으로 변환
+		function getFormatDate(date){ 
+			var year = date.getFullYear()+'';	//yyyy 
+			year = year.substring( 2, 4 );
+			var month = (1 + date.getMonth());	//M 
+			month = month >= 10 ? month : '0' + month;	//month 두자리로 저장 
+			var day = date.getDate();	//d
+			day = day >= 10 ? day : '0' + day;	//day 두자리로 저장
+			var hour = date.getHours();
+			hour = hour >=10 ? hour : '0' + hour;
+			var minu = date.getMinutes();
+			minu = minu >=10 ? minu : '0' + minu;
+			return year + '/' + month + '/' + day + '	' + hour + ':' + minu; 
+		}
+		//포인트 충전 테이블 만들기
+		/* function(){
+			
+		} */
 		function yes(){
 			//환불신청확인
 			$("#myModal").removeClass('is-active');

@@ -1,8 +1,9 @@
 package com.kh.ti.point.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class UsePoint {
+public class UsePoint implements Serializable {
 	//포인트 사용내역
 	private int pointId;	//사용내역코드
 	private int usePoint;	//사용포인트

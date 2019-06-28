@@ -1,8 +1,9 @@
 package com.kh.ti.point.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Rebate {
+public class Rebate implements Serializable {
 	//환급내역
 	private int rebateId;		//환급코드
 	private Date applyDate;		//환급신청일

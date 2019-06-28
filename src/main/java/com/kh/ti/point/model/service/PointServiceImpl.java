@@ -24,8 +24,7 @@ public class PointServiceImpl implements PointService{
 	@Override
 	public int insertPay(Payment pay) {
 		return pd.insertPay(sqlSession, pay);
-	}
-	
+	}	
 	//포인트 충전 리스트 전체 카운터
 	@Override
 	public int getChargeListCount(Payment charge) {
@@ -43,8 +42,15 @@ public class PointServiceImpl implements PointService{
 	}
 	//포인트 충전리스트 전체 조회
 	@Override
-	public ArrayList<Payment> selectChargeList(PageInfo chPi, Payment charge) {
-		return pd.selectChargeList(sqlSession, chPi, charge);
+	public ArrayList selectChargeList(PageInfo chPi, Payment charge) {
+		ArrayList chPayList =  pd.selectChargeList(sqlSession, chPi, charge);
+		for(int i=0 ; i<chPayList.size() ; i++) {
+			/*
+			 * System.out.println("service : chPayList.get("+i+").getPaymentDate() : "
+			 * +chPayList.get(i).getPaymentDate());
+			 */
+		}
+		return chPayList;
 	}
 	//포인트 지급리스트 전체 조회
 	@Override
