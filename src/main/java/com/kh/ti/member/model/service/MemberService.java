@@ -12,5 +12,7 @@ public interface MemberService {
 	int updateUserPwd(Member loginUser, String oldPassword, String newPassword) throws LoginException;
 
 	int dropOutUserInfo(Member loginUser);
+
+	int updateUserInfo(Member m);
 	
 }

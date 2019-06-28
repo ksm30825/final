@@ -75,5 +75,11 @@ public class MemberServiceImpl implements MemberService{
 		return result;
 	}
 
+	//회원수정용 메소드 - 세령
+	@Override
+	public int updateUserInfo(Member m) {
+		return md.updateUserInfo(sqlSession, m);
+	}
+
 
 }
