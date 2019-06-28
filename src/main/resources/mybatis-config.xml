@@ -27,6 +27,8 @@
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelBoard" alias="TravelBoard"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.Likey" alias="Likey"/>
 			<typeAlias type="com.kh.ti.travel.model.vo.SchFile" alias="SchFile"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TrvDaySchedule" alias="TrvDaySchedule"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TrvBoardSch" alias="TrvBoardSch"/>
 	</typeAliases>
 	<mappers>
 		<!-- Member Part 수정(세령) -->

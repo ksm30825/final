@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,15 +43,15 @@
 				
 					<div class="column" id="btnArea" align="right">
 						<c:choose>
-							<c:when test="${ !empty loginUser && tb.likeyStatus eq 'N' }">
+							<c:when test="${ !empty loginUser && detailTb.likeyStatus eq 'N' }">
 								<a class="button is-primary" onclick="travelLikeyInsert()">
 									<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
 						          	<span> &nbsp;좋아요 </span>
 				        		</a>
 							</c:when>
-							<c:when test="${ !empty loginUser && tb.likeyStatus eq 'Y' }">
+							<c:when test="${ !empty loginUser && detailTb.likeyStatus eq 'Y' }">
 								<a class="button is-primary" onclick="travelLikeyDelete()">
-									<span class="icon"><i class="fas fa-star"></i></span>
+									<span class="icon" id="starIcon"><i class="fas fa-star"></i></span>
 						          	<span> &nbsp;좋아요 </span>
 				        		</a>
 							</c:when>
@@ -80,14 +82,26 @@
 							<span class="icon" style="color:skyblue">
 								<i class="fas fa-plane"></i>
 							</span>
-							<span>&nbsp; ${ tb.trvTitle }</span>
+							<span>&nbsp; ${ detailTb.trvTitle }</span>
 							<span id="bell" data-tooltip="이 글 신고하기"><i class="fas fa-bell" onclick="penalty()"></i></span>
 						</h3>
 						
 						<h6 class="subtitle is-6">
 							<i class="fas fa-map-marker-alt"></i>
-							Australia / 시드니, 멜버른
-							&nbsp;&nbsp;<span style="color:gray;"><strong>9박 10일</strong></span>
+							<c:choose>
+								
+								<c:when test="${ fn:length(detailTb.trvCities) > 0 }">
+									<c:forEach var="trvCities" items="${ detailTb.trvCities }" varStatus="st">
+										<span>${ trvCities.countryNameKo } ${ trvCities.cityNameKo }</span>
+										<c:if test="${ st.count ne fn:length(detailTb.trvCities) }">&nbsp;/&nbsp;</c:if>
+									</c:forEach>
+								</c:when>
+							</c:choose>
+							<fmt:parseDate var="startDate" value="${ detailTb.startDate }" pattern="yyyy-MM-dd" />
+							<fmt:parseNumber value="${ startDate.time / (1000*60*60*24) }" integerOnly="true" var="startDay" />
+							<fmt:parseDate var="endDate" value="${ detailTb.endDate }" pattern="yyyy-MM-dd" />
+							<fmt:parseNumber value="${ endDate.time / (1000*60*60*24) }" integerOnly="true" var="endDay" />
+							&nbsp;&nbsp;<span style="color:gray;"><strong>${ endDay - startDay }박 ${ endDay - startDay + 1 }일</strong></span>
 						</h6>
 					</div>
 				</div>
@@ -107,12 +121,18 @@
 				<ul id="travelThemaTag">
 					<li><p class="title thema"><i class="fas fa-tags"></i> 여행테마</p></li>
 					<li>
-						<div class="buttons themaBtn">
-      						<a class="button is-info is-rounded">#여행테마1</a>
-    						</div>
-    						<div class="buttons themaBtn">
-      						<a class="button is-info is-rounded">#여행테마2</a>
-   						</div>
+						<c:choose>
+							<c:when test="${ fn:length(detailTb.trvTags) > 0 }">
+								<div class="buttons themaBtn">
+		     						<a class="button is-info is-rounded">#${ detailTb.trvTags.tagName }</a>
+		   						</div>
+							</c:when>
+							<c:otherwise>
+								<p>여행태그 없음</p>
+							</c:otherwise>
+						</c:choose>
+						
+   						
 					</li>
 				</ul>
 			</section>
@@ -228,7 +248,7 @@
 	</div>	<!-- <div class="columns"> -->
 			
 			<c:choose>
-				<c:when test="${ loginUser.memberId eq tb.memberId }">
+				<c:when test="${ loginUser.memberId eq detailTb.memberId }">
 					<section class="section" align="center">
 						<div class="columns">
 							<div class="column">
@@ -237,7 +257,7 @@
 						          	<span> &nbsp;목록으로 </span>
 				        		</a>
 				        		&nbsp;
-				        		<a class="button is-primary" onclick="location.href='selectTravel.trv?trvId=${ tb.trvId }'">
+				        		<a class="button is-primary" onclick="location.href='selectTravel.trv?trvId=${ detailTb.trvId }'">
 									<span class="icon"><i class="fas fa-pen"></i></span>
 						          	<span> &nbsp;수정하기 </span>
 				        		</a>
@@ -305,8 +325,11 @@
 	
 	function travelLikeyInsert() {
 	console.log("좋아요 추가 실행");
-		var trvId = ${ tb.trvId };
+		var trvId = ${ detailTb.trvId };
 		var memberId = ${ loginUser.memberId };
+		
+		console.log("trvId : " + trvId);
+		console.log("memberId : " + memberId);
 		
 		$.ajax({
 			url : "travelLikeyInsert.tb",
@@ -315,6 +338,7 @@
 				
 				alert("해당 일정 좋아요 추가");
 				
+				location.href="travelDetailForm.tb?trvId=" + trvId;
 			},
 			error:function(data) {
     			alert("서버 전송실패");
@@ -324,7 +348,7 @@
 	
 	function travelLikeyDelete() {
 		console.log("좋아요 취소 실행");
-		var trvId = ${ tb.trvId };
+		var trvId = ${ detailTb.trvId };
 		var memberId = ${ loginUser.memberId };
 		
 		$.ajax({
@@ -333,6 +357,8 @@
 			success : function(data) {
 				
 				alert("해당 일정 좋아요 삭제");
+				
+				location.href="travelDetailForm.tb?trvId=" + trvId;
 				
 			},
 			error:function(data) {
@@ -370,7 +396,7 @@
 		
 		$("#travelDelete").click(function() {
 			alert("해당 일정 삭제");
-			location.href="travelDelete.tb?trvId=" + ${ tb.trvId };
+			location.href="travelDelete.tb?trvId=" + ${ detailTb.trvId };
 		})
 		
 		$(".cancel").click(function(){

@@ -11,6 +11,7 @@ import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelBoard.model.dao.TravelBoardDao;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 @Service
 public class TravelBoardServiceImpl implements TravelBoardService{
@@ -37,9 +38,9 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	
 	//여행일정 상세 조회 - 예랑
 	@Override
-	public HashMap travelDetailForm(TravelBoard tb) {
+	public HashMap travelDetailForm(TravelBoard tb, TrvDaySchedule tds) {
 		
-		return tbd.travelDetailForm(sqlSession, tb);
+		return tbd.travelDetailForm(sqlSession, tb, tds);
 	}
 	
 	//여행일정 삭제 - 예랑

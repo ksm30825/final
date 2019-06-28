@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 public interface TravelBoardService {
 
@@ -13,7 +14,7 @@ public interface TravelBoardService {
 	
 	HashMap travelList(PageInfo pi, TravelBoard tb);
 
-	HashMap travelDetailForm(TravelBoard tb);
+	HashMap travelDetailForm(TravelBoard tb, TrvDaySchedule tds);
 
 	int travelDelete(int trvId);
 

@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,44 +59,62 @@
 			<div id="calendar">
 				<div class="calendarArea">
 				
-					<!-- DAY1 -->
-					<div class="tabs is-fullwidth" style="margin-bottom: 0.5em;">
-						<ul>
-							<li>
-								<a>
-								<span class="icon"><i class="fa fa-angle-left"></i></span>
-								</a>
-							</li>
-							<li>
-								<span><strong>DAY 1</strong></span>
-							</li>
-							<li>
-								<a>
-								<span class="icon"><i class="fa fa-angle-right"></i></span>
-								</a>
-							</li>
-						</ul>
-					</div>
-					<div align="right" style="border-bottom: 1px solid lightgray; padding-bottom: 0.3em;">
-						<input type="checkbox" id="timeCheck" checked="checked">
-						<label for="timeCheck">시간 표시</label>
-					</div>
-					<table id="calendarTable">
-						<% for(int i = 1; i < 25; i++) { %>
-						<tr>
-							<% if(i < 10) { %>
-							<th class="times">0<%= i %></th>
-							<% }else { %>
-							<th class="times"><%= i %></th>
-							<% } %>
-							<td>
-								<span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; 장소이름</span>
-							</td>
-						</tr>
-						<% } %>
-					</table>
-					<!-- DAY1 끝 -->
-					
+					<c:choose>
+						<%-- <c:when test="${ detailTb.buyStatus eq 'Y' }"> --%>
+						<c:when test="${ !empty loginUser || empty loginUser }">
+							<!-- 로그인 + 일정 구매했을 때 -->
+							<!-- DAY1 -->
+							<div class="tabs is-fullwidth" style="margin-bottom: 0.5em;">
+								<ul>
+									<li>
+										<a>
+										<span class="icon"><i class="fa fa-angle-left"></i></span>
+										</a>
+									</li>
+									<li>
+										<span><strong>DAY ${ detailDay.dayNumber }</strong></span>
+									</li>
+									<li>
+										<a>
+										<span class="icon"><i class="fa fa-angle-right"></i></span>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div align="right" style="border-bottom: 1px solid lightgray; padding-bottom: 0.3em;">
+								<c:choose>
+									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 && detailDay.trvSchedule.isTimeset eq 'Y' }">
+										<input type="checkbox" id="timeCheck" checked="checked">
+										<label for="timeCheck">시간 표시</label>
+									</c:when>
+									<c:otherwise>
+										<input type="checkbox" id="timeCheck" disabled="disabled">
+										<label for="timeCheck" style="color: gray">시간 표시</label>
+									</c:otherwise>
+								</c:choose>
+								
+							</div>
+							<table id="calendarTable">
+								<c:choose>
+									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
+										<tr>
+										<c:forEach var="trvSchedule" items="${ detailDay.trvSchedule }" varStatus="st">
+											<th class="times" style="display: none;">${ trvSchedule.startTime }  ${ trvSchedule.endTime }</th>
+											<td>
+												<span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; 장소이름</span>
+											</td>
+										</c:forEach>
+										</tr>
+									</c:when>
+									<c:otherwise>
+										<p>상세스케줄 없음</p>
+									</c:otherwise>
+								</c:choose>
+							</table>
+							<!-- DAY1 끝 -->
+						</c:when>
+						
+					</c:choose>
 				</div>
 			</div>
 			
