@@ -109,7 +109,7 @@ th, td {
 						<br>
 						<div class="field">
 							<a class="button is-primary"> Day1 </a> &nbsp;
-							<input type="hidden" value="Day1" name="list[0].pDay">
+							<input type="hidden" value="Day1" name="pDay">
 							<!-- X버튼 -->
 							<span data-balloon="size: 3x" data-balloon-pos="up"
 								class="db color-inherit link hover-cyan removeBtn" > <svg
@@ -133,7 +133,7 @@ th, td {
 							<!-- <input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)" > -->
 							<br><br>
 							<p class="control">
-								<textarea class="textarea " placeholder="일정 작성" name="list[0].pDayMemo"></textarea>
+								<textarea class="textarea " placeholder="일정 작성" name="pDayMemo"></textarea>
 							</p>
 						</div>
 						<br>
@@ -193,7 +193,7 @@ th, td {
 											<a class="card-footer-item">중간저장</a> <a
 												class="card-footer-item" onclick="back();">돌아가기</a> <a
 												class="card-footer-item" data-target="#okModal"
-												onclick="$('#okModal').toggleClass('is-active')">최종 저장</a> <a
+												onclick="endSave();">최종 저장</a> <a
 												class="card-footer-item"
 												onclick="$('#loadModal').toggleClass('is-active')">불러오기</a>
 										</footer>
@@ -244,26 +244,10 @@ th, td {
 				<p class="modal-card-title">하이라이트 일정</p>
 			</header>
 			<section class="modal-card-body">
-				<p>3개만 선택하세요</p>
+				<p id="choose"></p>
 				<section class="section choose" id="table">
 					<table class="table">
-						<tbody>
-							<tr>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day1</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day2</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day3</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day4</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day5</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day6</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day7</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day8</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day9</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day10</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day11</td>
-								<td><input type="checkbox" class="open" name="openStatus" value="N">Day12</td>
-							</tr>
+						<tbody id="chooseBody">
 						</tbody>
 					</table>
 				</section>
@@ -383,9 +367,10 @@ th, td {
 			for(var i = 0; i < markers.length; i++) {
 				console.log(markers[i].position.lat());
 			}
-			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <input type="hidden" value="Day' + count + '" name="list[' + (count - 1) + '].pDay"><span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan" onclick="remove()"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><p class="control"><textarea class="textarea " placeholder="일정 작성" name="list[' + (count - 1) + '].pDayMemo"></textarea></p></div>');
+			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <input type="hidden" value="Day' + count + '" name="pDay"><span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><p class="control"><textarea class="textarea " placeholder="일정 작성" name="pDayMemo"></textarea></p></div>');
 		});
-		$(".open").click(function() {
+		/* $(".open").click(function() {
+			alert("dd");
 			if($(this).is(":checked")) {
 				$(this).attr("value", "Y");
 				console.log($(this).val());
@@ -393,8 +378,43 @@ th, td {
 				$(this).attr("value", "N");
 				console.log($(this).val());
 			}
-		});
+		}); */
 	});
+	
+	function endSave(){
+		var choose = Math.floor(count/3);
+		console.log(choose);
+		console.log(count);
+		if(count <= 3) {
+			$("#choose").append("하이라이트 일정 선택 불가");
+			$("#chooseBody").append("<tr id='chooseTr'>");
+			for(var i = 1; i <= count; i++) {
+				$("#chooseTr").append("<td><input type='checkbox' class='open' checked value='Y'>Day" + i + "<input type='hidden' name='openStatus' value='Y'></td>");
+			}
+			$("#chooseBody").append("</td>");
+			$('#okModal').toggleClass('is-active');
+		} else {
+			$("#choose").append(choose + "개의 일정을 선택하세요");
+			$("#chooseBody").append("<tr id='chooseTr'>");
+			for(var i = 1; i <= count; i++) {
+				$("#chooseTr").append("<td><input type='checkbox' class='open' onclick='choose();'>Day" + i + "<input type='hidden' name='openStatus' value='N'></td>");
+			}
+			$("#chooseBody").append("</td>");
+			$('#okModal').toggleClass('is-active');
+		}
+	}
+	function choose() {
+		console.log($(".open"));
+		$(".open").each(function() {
+			if($(this).is(":checked")) {
+				$(this).next().val("Y");
+				console.log($(this).next().val("Y"));
+			} else {
+				$(this).next().val("N");
+				console.log($(this).next().val("N"));
+			}		
+		});
+	}
 
 	function back() {
 		location = "requestDetail.tr";
@@ -555,14 +575,7 @@ th, td {
           markers[i].setMap(map);
         }
       }
-	/* function remove() {
-		var num = $(".day").text();
-		console.log(num);
-		var numArr= $(".day").text().split(" ");
-		console.log(numArr);
-		console.log(count);
-		$(this).parent().remove();
-	} */
+
 
 	$(document).on("click",".hover-cyan",function(){
 		console.log($(this).parent());
@@ -580,9 +593,8 @@ th, td {
 			$(this).text(count);
 			count++;
 		});
-		count = 1;
+		count--;
 	});
-	
 </script>
 	<!-- <script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap&libraries=places"

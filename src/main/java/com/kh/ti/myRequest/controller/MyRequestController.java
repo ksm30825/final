@@ -2,18 +2,24 @@ package com.kh.ti.myRequest.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.kh.ti.myRequest.model.service.MyRequestService;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Controller
+@SessionAttributes("loginUser")
 public class MyRequestController {
 
+//	@Autowired
+//	private MyRequestService mrs;
 	// 여행 의뢰 - 이선우
 	@RequestMapping("myRequestList.mr")
 	public String selectRequestList() {
@@ -26,19 +32,29 @@ public class MyRequestController {
 	public String selectMyPlan(@ModelAttribute PlanDay pd, 
 							   @ModelAttribute PlanPlace pp,
 							   @ModelAttribute TravelRequestPlan tp, Model modle) {
-		//각 일정및 메모
+		//각 일정및 메모, 공개여부
+		//설계여행일자(PlanDay) 
 		System.out.println(pd);
-		for(int i = 0; i < pd.getList().size(); i++) {
-			System.out.println(pd.getList().get(i));
+		String[] pDay = pd.getpDay().split(",");
+		String[] pDayMemo = pd.getpDayMemo().split(",");
+		String[] openStatus = pd.getOpenStatus().split(",");
+		
+		ArrayList<PlanDay> dayList = new ArrayList<PlanDay>();
+		for(int i = 0; i < pDay.length; i++) {
+			System.out.println("일자 : " + pDay[i]);
+			System.out.println((i+1) + "일자 메모 : " + pDayMemo[i]);
+			System.out.println((i+1) + "일자 공개여부 : " + openStatus[i]);
 		}
+		
 		//각 일정의 장소
+		//일자장소(PlanPlace)
 		System.out.println(pp);
 		String[] placeTitle = pp.getPplaceTitle().split("#");	//장소명
 		String[] placeAddress = pp.getPplaceAddress().split("#");	//주소
 		String[] placeLat = pp.getPplaceLat().split("#");	//위도
 		String[] placeLng = pp.getPplaceLng().split("#");	//경도
 		
-		ArrayList<PlanPlace> planList = new ArrayList<PlanPlace>();
+		ArrayList<PlanPlace> placeList = new ArrayList<PlanPlace>();
 		
 		for(int i = 0; i < placeLat.length; i++) {
 			System.out.println("장소 : " + placeTitle[i]);
@@ -47,33 +63,13 @@ public class MyRequestController {
 			System.out.println("경도 : " + placeLng[i]);
 			System.out.println("========================");
 			PlanPlace place = new PlanPlace(placeTitle[i], placeAddress[i], placeLat[i], placeLng[i]);
-			planList.add(place);
-			System.out.println(planList);
+			placeList.add(place);
+			System.out.println(placeList);
 		}
-		//여행설계글
+		
+		//int result = mrs.insertRequestPlan()
+		//여행설계(TravelRequestPlan)
 		System.out.println(tp);
-		 //설계여행일자(PlanDay) 
-//		 String[] pDay = request.getParameterValues("Pday"); //일자
-//		 String[] pDayMemo = request.getParameterValues("pdayMemo"); //메모
-//		  
-//		 //여행 설계(TravelRequestPlan) 
-//		 String planTitle = request.getParameter("planTitle"); //설계제목
-//		 String planContent = request.getParameter("planContent"); //설계 소개
-//		 int roomCharge = Integer.parseInt(request.getParameter("roomCharge")); //숙비 
-//		 int trafficCharge = Integer.parseInt(request.getParameter("trafficCharge")); //경비 
-//		 int etcCharge = Integer.parseInt(request.getParameter("etcCharge")); //기타비
-//		  
-//		 for(int i = 0; i < pDay.length; i++) {
-//			 System.out.println("일자 : " + pDay[i]);
-//		 }
-//		 for(int i = 0; i < pDayMemo.length; i++) {
-//			 System.out.println((i+1) + "일자 메모 : " + pDayMemo[i]);
-//		 }
-//		 System.out.println("설계 제목 : " + planTitle);
-//		 System.out.println("설계 소개 : " + planContent); 
-//		 System.out.println("숙비 : " + roomCharge);
-//		 System.out.println("경비 : " + trafficCharge); 
-//		 System.out.println("기타비 : " + etcCharge);
 
 		return "travelRequest/myRequestPlan";
 	}
