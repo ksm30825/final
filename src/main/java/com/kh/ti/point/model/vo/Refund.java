@@ -1,8 +1,9 @@
 package com.kh.ti.point.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Refund {
+public class Refund implements Serializable {
 	//환불내역
 	private int refundId;		//환불코드
 	private String refundReason;//환불사유

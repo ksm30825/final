@@ -1,8 +1,9 @@
 package com.kh.ti.point.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Proceeds {
+public class Proceeds implements Serializable {
 	//수익금 발생 내역
 	private int proceedsId;		//수익금발생코드	
 	private int proceeds;		//수익발생액

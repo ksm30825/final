@@ -20,7 +20,7 @@ public interface PointDao {
 	//포인트 사용 리스트 전체 카운터
 	int getUseListCount(SqlSessionTemplate sqlSession, UsePoint use);
 	//포인트 충전리스트 전체 조회
-	ArrayList<Payment> selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, Payment charge);
+	ArrayList selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, Payment charge);
 	//포인트 지급리스트 전체 조회
 	ArrayList<ReservePoint> selectReceiveList(SqlSessionTemplate sqlSession, PageInfo rePi, ReservePoint reserve);
 	//포인트 사용리스트 전체 조회

@@ -1,8 +1,9 @@
 package com.kh.ti.point.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Payment {
+public class Payment implements Serializable{
 	//결제내역
 	private int paymentId;		//결제코드
 	private String tid;			//거래번호

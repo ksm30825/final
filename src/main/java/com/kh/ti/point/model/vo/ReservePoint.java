@@ -1,8 +1,9 @@
 package com.kh.ti.point.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class ReservePoint {
+public class ReservePoint implements Serializable {
 	//포인트적립내역
 	private int pointId;		//포인트적립코드
 	private int reservePoint;	//적립포인트

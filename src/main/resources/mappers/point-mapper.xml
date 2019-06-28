@@ -55,7 +55,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null">
-				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+				AND EXTRACT(MONTH FROM RESERVE_DATE)=${month}
 			</when>
 		</choose>
 	</select>
@@ -66,18 +66,18 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null">
-				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+				AND EXTRACT(MONTH FROM USE_DATE)=${month}
 			</when>
 		</choose>
 	</select>
 	<!-- 포인트 충전리스트 전체 조회 -->
 	<select id="selectChargeList" parameterType="Payment" resultMap="paymentResultSet">
-		SELECT *
+		SELECT *<!-- PAYMENT_ID, TID, MEMBER_ID, PAY_AMOUNT, TO_CHAR(PAYMENT_DATE,'YYYY/MM/DD') -->
 		FROM PAYMENT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null">
-				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=#{month}
 			</when>
 		</choose>
 		ORDER BY PAYMENT_DATE DESC
@@ -89,7 +89,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null">
-				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+				AND EXTRACT(MONTH FROM RESERVE_DATE)=${month}
 			</when>
 		</choose>
 		ORDER BY RESERVE_DATE DESC
@@ -101,7 +101,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null">
-				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+				AND EXTRACT(MONTH FROM USE_DATE)=${month}
 			</when>
 		</choose>
 		ORDER BY USE_DATE DESC
@@ -116,10 +116,4 @@
 			<when test="trvId != 0">null, null, #{trvId}</when>
 		</choose> )
 	</insert>	
-	<!-- 
-	SELECT * 
-FROM PAYMENT 
-WHERE MEMBER_ID=5 
-AND EXTRACT(MONTH FROM PAYMENT_DATE)=${}
-ORDER BY PAYMENT_DATE DESC -->
 </mapper>

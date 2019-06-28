@@ -3,6 +3,7 @@ package com.kh.ti.point.controller;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -88,7 +89,7 @@ public class PointController {
 	//포인트 충전 월 검색 내역 테이블--수민
 	@ResponseBody
 	@RequestMapping("/oneMonthPay.po")
-	public ModelAndView searchOneMonthPay(String month, ModelAndView mv, HttpServletRequest request) {
+	public Object searchOneMonthPay(String month, ModelAndView mv, HttpServletRequest request) {
 		
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
@@ -98,20 +99,30 @@ public class PointController {
 		charge.setMonth(month);
 		//System.out.println("month : " + month);
 		//System.out.println("memberID : "+ memberId);
-		System.out.println("charge : " + charge);
+		//System.out.println("charge : " + charge);
 		
 		int chargeListCount = ps.getChargeListCount(charge); 
-		System.out.println("월 검색 chargeListCount : "+chargeListCount);
+		//System.out.println("월 검색 chargeListCount : "+chargeListCount);
 		int chargeCurrentPage = 1; 
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
-		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
+		ArrayList chPayList = ps.selectChargeList(chPi, charge);
 		//System.out.println("chPayList : "+ chPayList);
-		mv.addObject("chPayList", chPayList);
+		/*
+		 * for(int i=0 ; i<chPayList.size() ; i++) {
+		 * System.out.println("chPayList.get("+i+").getPaymentDate().getTime()"+
+		 * chPayList.get(i).getPaymentDate().getTime()); }
+		 */
+		//mv.addObject("chPayList", chPayList);
+		//mv.addObject("chPi", chPi);
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("chPayList", chPayList);
+		hmap.put("chPi", chPi);
+		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
-		System.out.println("mv : " + mv);
+		//System.out.println("mv : " + mv);
 		
-		return mv;
+		return mv.getModel();
 	}
 	//포인트 충전하는 페이지로 이동--수민
 	@RequestMapping("/toPayView.po")
@@ -160,10 +171,35 @@ public class PointController {
 	
 	
 	//포인트 지급 월 검색 내역 테이블--수민
+	@ResponseBody
 	@RequestMapping("/oneMonthRPoint.po")
-	public ModelAndView searchOneMonthRPoint(int memberId, int month, ModelAndView mv) {
+	public Object searchOneMonthRPoint(String month, ModelAndView mv, HttpServletRequest request) {
+		System.out.println("month : " + month);
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		int memberId = loginUser.getMemberId();
 		
-		return mv;
+		ReservePoint reserve = new ReservePoint();
+		reserve.setMemberId(memberId);
+		reserve.setMonth(month);
+		System.out.println("reserve : " + reserve);
+		
+		int reserveListCount = ps.getReceiveListCount(reserve); 
+		System.out.println("월 검색 reserveListCount : "+reserveListCount);
+		int reserveCurrentPage = 1; 
+		PageInfo rePi = Pagination.getPageInfo(reserveCurrentPage, reserveListCount);
+		ArrayList rePayList = ps.selectReceiveList(rePi, reserve);
+		System.out.println("rePayList : "+ rePayList);
+		
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("rePayList", rePayList);
+		hmap.put("rePi", rePi);
+		mv.addObject("hmap", hmap);
+		
+		mv.setViewName("jsonView");
+		System.out.println("mv : " + mv);
+		
+		return mv.getModel();
 	}
 	//포인트 지급 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(리뷰면 리뷰, 일정작성이면 일정작성)--수민

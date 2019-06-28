@@ -18,7 +18,7 @@ public interface PointService {
 	//포인트 사용 리스트 전체 카운터
 	int getUseListCount(UsePoint use);
 	//포인트 충전리스트 전체 조회
-	ArrayList<Payment> selectChargeList(PageInfo chPi, Payment charge);
+	ArrayList selectChargeList(PageInfo chPi, Payment charge);
 	//포인트 지급리스트 전체 조회
 	ArrayList<ReservePoint> selectReceiveList(PageInfo rePi, ReservePoint reserve);
 	//포인트 사용리스트 전체 조회
