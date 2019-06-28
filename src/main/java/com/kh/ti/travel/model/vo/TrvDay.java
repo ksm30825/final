@@ -9,20 +9,17 @@ public class TrvDay implements java.io.Serializable {
 	private Date dayDate;
 	private String dayMemo;
 	private String dayWeather;
-	private String isTimeSet;
 	private int trvId;
 	
 	public TrvDay() {}
 
-	public TrvDay(int dayId, int dayNumber, Date dayDate, String dayMemo, String dayWeather, String isTimeSet,
-			int trvId) {
+	public TrvDay(int dayId, int dayNumber, Date dayDate, String dayMemo, String dayWeather, int trvId) {
 		super();
 		this.dayId = dayId;
 		this.dayNumber = dayNumber;
 		this.dayDate = dayDate;
 		this.dayMemo = dayMemo;
 		this.dayWeather = dayWeather;
-		this.isTimeSet = isTimeSet;
 		this.trvId = trvId;
 	}
 
@@ -66,14 +63,6 @@ public class TrvDay implements java.io.Serializable {
 		this.dayWeather = dayWeather;
 	}
 
-	public String getIsTimeSet() {
-		return isTimeSet;
-	}
-
-	public void setIsTimeSet(String isTimeSet) {
-		this.isTimeSet = isTimeSet;
-	}
-
 	public int getTrvId() {
 		return trvId;
 	}
@@ -85,7 +74,7 @@ public class TrvDay implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "TrvDay [dayId=" + dayId + ", dayNumber=" + dayNumber + ", dayDate=" + dayDate + ", dayMemo=" + dayMemo
-				+ ", dayWeather=" + dayWeather + ", isTimeSet=" + isTimeSet + ", trvId=" + trvId + "]";
+				+ ", dayWeather=" + dayWeather + ", trvId=" + trvId + "]";
 	}
 
 	

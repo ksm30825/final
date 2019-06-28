@@ -6,28 +6,34 @@ public class TrvSchedule implements java.io.Serializable {
 
 	private int schId;
 	private String schTitle;
+	private int schNumber;
 	private String startTime;
 	private String endTime;
+	private String isTimeset;
 	private String schContent;
 	private String schTransp;
 	private int plcId;
 	private int dayId;
 	private int likeyId;
+	private int spotId;
 	
 	public TrvSchedule() {}
 
-	public TrvSchedule(int schId, String schTitle, String startTime, String endTime, String schContent,
-			String schTransp, int plcId, int dayId, int likeyId) {
+	public TrvSchedule(int schId, String schTitle, int schNumber, String startTime, String endTime, String isTimeset,
+			String schContent, String schTransp, int plcId, int dayId, int likeyId, int spotId) {
 		super();
 		this.schId = schId;
 		this.schTitle = schTitle;
+		this.schNumber = schNumber;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.isTimeset = isTimeset;
 		this.schContent = schContent;
 		this.schTransp = schTransp;
 		this.plcId = plcId;
 		this.dayId = dayId;
 		this.likeyId = likeyId;
+		this.spotId = spotId;
 	}
 
 	public int getSchId() {
@@ -46,6 +52,14 @@ public class TrvSchedule implements java.io.Serializable {
 		this.schTitle = schTitle;
 	}
 
+	public int getSchNumber() {
+		return schNumber;
+	}
+
+	public void setSchNumber(int schNumber) {
+		this.schNumber = schNumber;
+	}
+
 	public String getStartTime() {
 		return startTime;
 	}
@@ -60,6 +74,14 @@ public class TrvSchedule implements java.io.Serializable {
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getIsTimeset() {
+		return isTimeset;
+	}
+
+	public void setIsTimeset(String isTimeset) {
+		this.isTimeset = isTimeset;
 	}
 
 	public String getSchContent() {
@@ -102,13 +124,25 @@ public class TrvSchedule implements java.io.Serializable {
 		this.likeyId = likeyId;
 	}
 
-	@Override
-	public String toString() {
-		return "TrvSchedule [schId=" + schId + ", schTitle=" + schTitle + ", startTime=" + startTime + ", endTime="
-				+ endTime + ", schContent=" + schContent + ", schTransp=" + schTransp + ", plcId=" + plcId + ", dayId="
-				+ dayId + ", likeyId=" + likeyId + "]";
+	public int getSpotId() {
+		return spotId;
 	}
 
+	public void setSpotId(int spotId) {
+		this.spotId = spotId;
+	}
+
+	@Override
+	public String toString() {
+		return "TrvSchedule [schId=" + schId + ", schTitle=" + schTitle + ", schNumber=" + schNumber + ", startTime="
+				+ startTime + ", endTime=" + endTime + ", isTimeset=" + isTimeset + ", schContent=" + schContent
+				+ ", schTransp=" + schTransp + ", plcId=" + plcId + ", dayId=" + dayId + ", likeyId=" + likeyId
+				+ ", spotId=" + spotId + "]";
+	}
+
+	
+
+	
 	
 	
 	

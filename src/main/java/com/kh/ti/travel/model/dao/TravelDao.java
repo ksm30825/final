@@ -45,15 +45,28 @@ public interface TravelDao {
 	
 	int deleteTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay);
 
+	int selectSchCount(SqlSessionTemplate sqlSession, int dayId);
+	
+	ArrayList<TrvSchedule> selectSchList(SqlSessionTemplate sqlSession, int dayId);
+
+	int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);	
+	
+	int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
+
+	int insertTrvPlace(SqlSessionTemplate sqlSession, Place plc);	
+
+	int updateSchNumber(SqlSessionTemplate sqlSession, TrvSchedule sch);
+
+	
+	
+	
+	
 	int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m);
 
 	int insertTag(SqlSessionTemplate sqlSession, Travel trv, Tag tag);
 
-	int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);
 
-	int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
 
-	int insertTrvPlace(SqlSessionTemplate sqlSession, Place plc);
 
 	int insertTrvCost(SqlSessionTemplate sqlSession, Travel trv, TrvCost cost);
 
@@ -84,6 +97,10 @@ public interface TravelDao {
 	ArrayList<TrvCity> selectTrvCity(SqlSessionTemplate sqlSession, int trvId);
 
 	ArrayList<TrvDay> selectTrvDay(SqlSessionTemplate sqlSession, int trvId);
+
+
+
+
 
 
 

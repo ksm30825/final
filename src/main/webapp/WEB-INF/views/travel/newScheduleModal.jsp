@@ -20,6 +20,7 @@
 				<form action="insertSch.trv" method="post" id="newSchForm">
 					<div class="field">
 						<p class="control">
+							<input type="hidden" value="${ trv.trvId }" name="trvId">
 							<input class="input is-primary is-large" type="text" placeholder="일정 제목 입력" name="schTitle">
 						</p>
 					</div>
@@ -31,8 +32,9 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-map-marker-alt"></i></span>
+									<!-- <input type="hidden" name="plcId"> -->
 									<input class="input" type="text" id="costAmount" placeholder="장소정보없음"
-										readOnly name="place"/>
+										readOnly name="plcName"/>
 								</p>
 							</div>
 						</div>
@@ -76,7 +78,7 @@
 								<p class="help">시작시간</p>
 							</div>
 							<div class="field">
-								<p style="font-size:15px">~</p>
+								<p style="font-size:20px">~</p>
 							</div>
 							<div class="field">
 								<p class="control is-expanded has-icons-left" style="margin:0">
@@ -110,7 +112,7 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-receipt"></i></span>
-									<input class="input" type="text" id="costAmount" placeholder="가격 입력(현지화)" 
+									<input class="input" type="text" placeholder="현지화 가격 입력 (선택)" 
 									name="costAmount" />
 								</p>
 							</div>
@@ -124,7 +126,8 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-subway"></i></span>
-									<input class="input" type="text" id="costAmount" placeholder="교통정보 입력"/>
+									<input class="input" type="text" placeholder="교통정보 입력(선택)"
+									name="schTransp"/>
 								</p>
 							</div>
 						</div>
@@ -132,32 +135,50 @@
 				</form>
 			</section>
 			<footer class="modal-card-foot" >
-				<a class="button is-primary okBtn">완료</a> 
+				<a class="button is-primary" id="submitSchBtn">완료</a> 
 				<a class="button cancelBtn">취소</a>
 			</footer>
 		</div>
 	</div>
 	<script>
+		var title =  $("input[name=schTitle]");
+		var dayId = $("select[name=dayId]");
+		var isTimeset = $("input[name=isTimeset]");
+		var startTime = $("input[name=startTime]");
+		var endTime = $("input[name=endTime]");
+		var costAmount = $("input[name=costAmount]");
+		var transp = $("input[name=schTransp]");
 		$(function() {
+			defaultModal = $("#newScheduleModal").children().clone(true);
+			
 			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
         		$('html').removeClass('is-clipped');
         	    $(this).parents(".modal").removeClass('is-active');
+        	   	title.val('');
+        	   	dayId.val('');
+        	   	isTimeset.prop("checked", false);
+        	   	startTime.val('');
+        	   	endTime.val('');
+        	   	costAmount.val('');
+        	   	transp.val('');
+        		
         	});
+			
+			$("input[name=isTimeset]").click(function() {
+				if($(this).prop("checked")) {
+					startTime.val('');
+	        		endTime.val('');
+				}
+			});
 
-        	$(".okBtn").click(function() {
-        		var title = $("input[name=schTitle]").val();
-        		var dayId = $("select[name=dayId]").val();
-        		console.log("dayId : " + dayId)
-        		var isTimeset = $("input[name=isTimeset]");
-        		var startTime = $("input[name=startTime]").val();
-        		var endTime = $("input[name=endTime]").val();
+        	$("#submitSchBtn").click(function() {
         		console.log("start : " + startTime);
         		console.log("end : " + endTime);
-        		if(title == '') {
+        		if(title.val() == '') {
         			alert("일정제목을 입력해주세요.");
-        		}else if(!isTimeset.prop("checked") && (startTime == '' || endTime == '')) {
+        		}else if(!isTimeset.prop("checked") && (startTime.val() == '' || endTime.val() == '')) {
         			alert('시간을 지정하지 않으시려면 시간미지정 박스에 체크해주세요.');
-        		}else if(startTime > endTime) {
+        		}else if(startTime.val() > endTime.val()) {
         			alert('시작시간과 종료시간을 다시 확인하세요');
         		}else {
         			$("#newSchForm").submit();

@@ -127,9 +127,48 @@ public class TravelController {
 	
 	//상세일정추가-민지
 	@RequestMapping("insertSch.trv")
-	public String insertTrvSchedule(TrvDay day, TrvSchedule sch, TrvCost cost, Place plc) {
+	public String insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc, int trvId, Model model) {
+		/*
+		 * SCH : TrvSchedule [schId=0, schTitle=브런치, startTime=10:00, endTime=13:00,
+		 * schContent=null, schTransp=지하철, plcId=0, dayId=1, likeyId=0] COST : TrvCost
+		 * [costId=0, costContent=null, costAmount=50, schId=0, dayId=1, costType=식비]
+		 * PLC : Place [plcId=0, cityId=0, plcName=, plcAddress=null, plcTypeId=0,
+		 * plcEngName=null, plcLat=null, plcLng=null, plcCount=0] isTimeset : null
+		 */
+		/*
+		 * SCH : TrvSchedule [schId=0, schTitle=브런치2~~, startTime=, endTime=,
+		 * schContent=null, schTransp=지하철, plcId=0, dayId=1, likeyId=0] COST : TrvCost
+		 * [costId=0, costContent=null, costAmount=500, schId=0, dayId=1, costType=교통]
+		 * PLC : Place [plcId=0, cityId=0, plcName=, plcAddress=null, plcTypeId=0,
+		 * plcEngName=null, plcLat=null, plcLng=null, plcCount=0] isTimeset : on
+		 */
+		System.out.println("SCH : " + sch);
+		System.out.println("COST : " + cost);
+		
+		int count = ts.selectSchCount(sch.getDayId());
+		if(sch.getIsTimeset() != null) {
+			sch.setIsTimeset("N");
+			sch.setSchNumber(count + 1);
+		}else {
+			sch.setIsTimeset("Y");
+			if(count > 0) {
+				int number = ts.selectSchNumber(sch.getDayId(), sch.getStartTime());
+				sch.setSchNumber(number);
+				System.out.println("number : " + number);
+			}else {
+				sch.setSchNumber(count + 1);
+			}
+		}
+		
+		
 		int result = ts.insertTrvSchedule(sch, cost, plc);
-		return "";
+		if(result > 0) {
+			return "redirect:/selectTravel.trv?trvId=" + trvId;
+		}else {
+			model.addAttribute("msg", "상세일정 등록 실패!");
+			return "common/errorPage";
+		}
+		
 	}
 	
 	//동행추가-민지

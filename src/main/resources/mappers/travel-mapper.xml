@@ -48,13 +48,28 @@
 		<result property="dayDate" column="DAY_DATE" />
 		<result property="dayMemo" column="DAY_MEMO" />
 		<result property="dayWeather" column="DAY_WEATHER" />
-		<result property="isTimeSet" column="ISTIMESET" />
 		<result property="trvId" column="TRV_ID" />
 	</resultMap>
 	<resultMap id="TagResultSet" type="Tag">
 		<id property="tagId" column="TAG_ID" />
 		<result property="tagName" column="TAG_NAME"/>
 	</resultMap>
+	<resultMap id="TrvSchResultSet" type="TrvSch">
+		<id property="schId" column="SCH_ID" />
+		<result property="schTitle" column="SCH_TITLE" />
+		<result property="schNumber" column="SCH_NUMBER" />
+		<result property="startTime" column="START_TIME" />
+		<result property="endTime" column="END_TIME" />
+		<result property="isTimeset" column="IS_TIMESET" />
+		<result property="schContent" column="SCH_CONTENT" />
+		<result property="schTransp" column="SCH_TRANSP" />
+		<result property="plcId" column="PLC_ID" />
+		<result property="dayId" column="DAY_ID" />
+		<result property="likeyId" column="LIKEY_ID" />
+		<result property="spotId" column="SPOT_ID" />
+	</resultMap>
+	
+	
 	<insert id="insertTravel" parameterType="Travel">
 		INSERT INTO TRAVEL
 		VALUES(TRAVEL_SEQ.NEXTVAL, #{trvTitle}, #{startDate}, #{endDate}, #{compNumber}, SYSDATE, SYSDATE, NULL, 'Y', 5, NULL)
@@ -73,7 +88,7 @@
 	</insert>
 	<insert id="insertTrvDay" parameterType="TrvDay">
 		INSERT INTO TRV_DAY
-		VALUES(TRV_DAY_SEQ.NEXTVAL, #{dayNumber}, #{dayDate}, NULL, NULL, 'N', #{trvId})
+		VALUES(TRV_DAY_SEQ.NEXTVAL, #{dayNumber}, #{dayDate}, NULL, NULL, #{trvId})
 	</insert>
 	<select id="selectTravel" parameterType="_int" resultMap="TravelResultSet">
 		SELECT *
@@ -131,6 +146,38 @@
 		UPDATE TRAVEL
 		SET COMPLETE_DATE = SYSDATE
 		WHERE TRV_ID = #{trvId}
+	</update>
+	
+	<select id="selectSchCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRV_SCH
+		WHERE DAY_ID = #{dayId}
+	</select>
+	<select id="selectSchList" parameterType="_int" resultMap="TrvSchResultSet">
+		SELECT *
+		FROM TRV_SCH
+		WHERE DAY_ID = #{dayId}
+	</select>
+	<insert id="insertSch" parameterType="TrvSch">
+		INSERT INTO TRV_SCH
+		VALUES(TRV_SCH_SEQ.NEXTVAL, #{schTitle}, #{schNumber}, #{startTime}, #{endTime}, #{isTimeset},
+		NULL, #{schTransp}, NULL, #{dayId}, NULL, NULL)
+	</insert>
+	<update id="updateSchNumber" parameterType="TrvSch">
+		UPDATE TRV_SCH
+		SET SCH_NUMBER = #{schNumber}
+		WHERE SCH_ID = #{schId}
+	</update>
+	
+	
+	
+	
+	
+	<update id="updateSch" parameterType="TrvSch">
+		UPDATE TRV_SCH
+		SET SCH_TITLE = #{schTitle}, SCH_NUMBER = #{schNumber}, START_TIME = #{startTime}, END_TIME = #{endTime},
+		IS_TIMESET = #{isTimeset}, SCH_CONTENT = #{schContent}, SCH_TRANSP = #{schTransp}
+		WHERE SCH_ID = #{schId}
 	</update>
 </mapper>
 

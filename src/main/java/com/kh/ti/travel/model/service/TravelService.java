@@ -26,6 +26,10 @@ public interface TravelService {
 	
 	int completeTravel(int trvId);
 
+	int selectSchCount(int dayId);
+	
+	int selectSchNumber(int dayId, String startTime);
+
 	int insertTrvCompany(Travel trv, Member m);
 
 	int insertTrvTag(Travel trv, Tag tag);
@@ -63,6 +67,9 @@ public interface TravelService {
 	int deleteSchFile(SchFile file);
 
 	int deleteTrvSchedule(TrvSchedule sch);
+
+
+
 
 
 
