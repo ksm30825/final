@@ -91,6 +91,52 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.update("Travel.completeTravel", trvId);
 	}	
 	
+	@Override
+	public int selectSchCount(SqlSessionTemplate sqlSession, int dayId) {
+		return sqlSession.selectOne("Travel.selectSchCount", dayId);
+	}
+	
+	@Override
+	public ArrayList<TrvSchedule> selectSchList(SqlSessionTemplate sqlSession, int dayId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectSchList", dayId);
+	}
+	
+	@Override
+	public int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch) {
+		return sqlSession.insert("Travel.insertSch", sch);
+	}
+		
+	@Override
+	public int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int insertTrvPlace(SqlSessionTemplate sqlSession, Place plc) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public int updateTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch) {
+		return sqlSession.update("Travel.updateSch", sch);
+	}
+	
+	@Override
+	public int updateSchNumber(SqlSessionTemplate sqlSession, TrvSchedule sch) {
+		return sqlSession.update("Travel.updateSchNumber", sch);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 
@@ -107,23 +153,7 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 
-	@Override
-	public int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int insertTrvPlace(SqlSessionTemplate sqlSession, Place plc) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public int insertTrvCost(SqlSessionTemplate sqlSession, Travel trv, TrvCost cost) {
@@ -137,11 +167,7 @@ public class TravelDaoImpl implements TravelDao {
 		return 0;
 	}
 
-	@Override
-	public int updateTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 	@Override
 	public ArrayList selectAllSchList(SqlSessionTemplate sqlSession, Travel trv, int day) {
@@ -199,6 +225,7 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 
 	

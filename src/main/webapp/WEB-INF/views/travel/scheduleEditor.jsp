@@ -377,7 +377,7 @@
 		</div>
 	</div>
 	
-	<jsp:include page="newScheduleModel.jsp" />
+	<jsp:include page="newScheduleModal.jsp" />
 	<jsp:include page="scheduleInfoModal.jsp" />
 
 	<script>

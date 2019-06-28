@@ -176,6 +176,67 @@ public class TravelServiceImpl implements TravelService {
 		return td.completeTravel(sqlSession, trvId);
 	}
 	
+	@Override
+	public int selectSchCount(int dayId) {
+		return td.selectSchCount(sqlSession, dayId);
+	}
+	@Override
+	public int selectSchNumber(int dayId, String startTime) {
+		int difference = 1440;
+		int number = 0;
+		int hour = Integer.parseInt(startTime.substring(0, startTime.indexOf(":")));
+		int minute = Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1));
+		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, dayId);
+		for(int i = 0; i < schList.size(); i++) {
+			String start = schList.get(i).getStartTime();
+			System.out.println(start);
+			if(start != null) {
+				int hr = Integer.parseInt(start.substring(0, startTime.indexOf(":")));
+				int min = Integer.parseInt(start.substring(startTime.indexOf(":") + 1));
+				int diff = (hour * 60 + minute) - (hr * 60 + min);
+				if(diff > 0 && diff < difference) {
+					difference = diff;
+					number = schList.get(i).getSchNumber() + 1;
+				}
+			}
+		}
+		
+		if(number == 0) {
+			number = 1;
+			for(int i = 0; i < schList.size(); i++) {
+				schList.get(i).setSchNumber(schList.get(i).getSchNumber() + 1);
+				int result = td.updateSchNumber(sqlSession, schList.get(i));
+			}
+		}else {
+			for(int i = 0; i < schList.size(); i++) {
+				if(schList.get(i).getSchNumber() >= number) {
+					schList.get(i).setSchNumber(schList.get(i).getSchNumber() + 1);
+					int result = td.updateSchNumber(sqlSession, schList.get(i));
+				}
+			}
+		}
+		
+		return number;
+	}
+
+	@Override
+	public int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc) {
+		int result2 = 0;
+		int result3 = 0;
+		
+		int result = td.insertTrvSchedule(sqlSession, sch);
+		
+		if(cost.getCostAmount() != 0) {
+			result2 = td.insertTrvCost(sqlSession, cost);
+		}
+		
+		if(plc.getPlcId() != 0) {
+			result3 = td.insertTrvPlace(sqlSession, plc);
+		}
+		
+		return result;
+	}
+
 	
 	
 	@Override
@@ -195,13 +256,6 @@ public class TravelServiceImpl implements TravelService {
 		return 0;
 	}
 
-	@Override
-	public int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc) {
-		int result1 = td.insertTrvSchedule(sqlSession, sch);
-		int result2 = td.insertTrvCost(sqlSession, cost);
-		int result3 = td.insertTrvPlace(sqlSession, plc);
-		return 0;
-	}
 
 	@Override
 	public int insertTrvCost(TrvDay day, TrvCost cost) {
@@ -290,6 +344,9 @@ public class TravelServiceImpl implements TravelService {
 		int result = td.deleteTrvSchedule(sqlSession, sch);
 		return 0;
 	}
+
+
+
 
 
 
