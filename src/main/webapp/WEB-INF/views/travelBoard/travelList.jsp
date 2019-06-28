@@ -26,9 +26,12 @@
       <div class="column">
       
          <!-- 게시글 영역 -->
-         <div class="ui special cards">
+         
+         	<c:choose>
+         	<c:when test="${ fn:length(tbList) > 0 }">
+         	<div class="ui special cards">
             <c:forEach var="tbList" items="${ tbList }" varStatus="status">
-            <div class="card" onclick="location.href='travelDetailForm.tb?num=${ tbList.trvId }'">
+            <div class="card" onclick="location.href='travelDetailForm.tb?trvId=${ tbList.trvId }'">
                <div class="blurring dimmable image">
                   <div class="ui dimmer">
                      <div class="content">
@@ -49,11 +52,11 @@
 	                     <c:choose>
 	                     	<c:when test="${ fn:length(tbList.trvCities) > 0 }">
 	                     		<c:forEach var="city" items="${ tbList.trvCities }">
-	                     			<a>@${ city.cityNameKo }</a>
+	                     			<a>@${ city.countryNameKo }</a>
 	                     		</c:forEach>
 	                     	</c:when>
 	                     	<c:otherwise>
-	                     		<p>도시태그 없음</p>
+	                     		<p>나라태그 없음</p>
 	                     	</c:otherwise>
 	                     </c:choose>
                      </div>
@@ -91,8 +94,18 @@
                </div>   
             </div>   <!-- class="card" 글 하나-->
             </c:forEach>
-           
-         </div>   <!-- class="ui special cards" -->
+            </div>   <!-- class="ui special cards" -->
+           </c:when>
+           <c:otherwise>
+           	<div class="ui special cards" style="justify-content: center;">
+           		<div style="width: 500px; height: 500px;">
+           			<h3 class="title is-1"><i class="fas fa-search"></i></h3>
+           			<p>리스트가 없습니다.</p>
+           		</div>
+           	</div>
+           </c:otherwise>
+           </c:choose>
+         
          
       </div>   <!-- class="column" -->
    </div>   <!-- class="columns is-mobile" -->

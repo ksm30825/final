@@ -27,12 +27,14 @@ public class TravelBoard implements java.io.Serializable {
 	private int buyCount;
 	
 	private String buyStatus;
+	private String likeyStatus;
 	
 	public TravelBoard() {}
 
 	public TravelBoard(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, Date openDate,
 			Date modifyDate, Date completeDate, String status, int memberId, String userName, int trvRef,
-			ArrayList trvCities, ArrayList trvTags, ArrayList schFiles, int likeyCount, int buyCount, String buyStatus) {
+			ArrayList trvCities, ArrayList trvTags, ArrayList schFiles, int likeyCount, int buyCount, String buyStatus,
+			String likeyStatus) {
 		super();
 		this.trvId = trvId;
 		this.trvTitle = trvTitle;
@@ -52,6 +54,7 @@ public class TravelBoard implements java.io.Serializable {
 		this.likeyCount = likeyCount;
 		this.buyCount = buyCount;
 		this.buyStatus = buyStatus;
+		this.likeyStatus = likeyStatus;
 	}
 
 	public int getTrvId() {
@@ -189,7 +192,6 @@ public class TravelBoard implements java.io.Serializable {
 	public void setBuyCount(int buyCount) {
 		this.buyCount = buyCount;
 	}
-	
 
 	public String getBuyStatus() {
 		return buyStatus;
@@ -199,13 +201,22 @@ public class TravelBoard implements java.io.Serializable {
 		this.buyStatus = buyStatus;
 	}
 
+	public String getLikeyStatus() {
+		return likeyStatus;
+	}
+
+	public void setLikeyStatus(String likeyStatus) {
+		this.likeyStatus = likeyStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "TravelBoard [trvId=" + trvId + ", trvTitle=" + trvTitle + ", startDate=" + startDate + ", endDate="
 				+ endDate + ", compNumber=" + compNumber + ", openDate=" + openDate + ", modifyDate=" + modifyDate
 				+ ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId + ", userName="
 				+ userName + ", trvRef=" + trvRef + ", trvCities=" + trvCities + ", trvTags=" + trvTags + ", schFiles="
-				+ schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount + ", buyStatus=" + buyStatus + "]";
+				+ schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount + ", buyStatus=" + buyStatus
+				+ ", likeyStatus=" + likeyStatus + "]";
 	}
-
+	
 }
