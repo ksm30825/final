@@ -43,14 +43,7 @@ public class PointServiceImpl implements PointService{
 	//포인트 충전리스트 전체 조회
 	@Override
 	public ArrayList selectChargeList(PageInfo chPi, Payment charge) {
-		ArrayList chPayList =  pd.selectChargeList(sqlSession, chPi, charge);
-		for(int i=0 ; i<chPayList.size() ; i++) {
-			/*
-			 * System.out.println("service : chPayList.get("+i+").getPaymentDate() : "
-			 * +chPayList.get(i).getPaymentDate());
-			 */
-		}
-		return chPayList;
+		return pd.selectChargeList(sqlSession, chPi, charge);
 	}
 	//포인트 지급리스트 전체 조회
 	@Override
