@@ -35,12 +35,12 @@
 	<resultMap id="TrvCityResultMap" type="TrvCity">
 		<id property="cityId" column="CITY_ID" />
 		<id property="trvId" column="TRV_ID" />
-		<id property="cityNameKo" column="CITY_NAME_KO" />
-		<id property="cityNameEn" column="CITY_NAME_EN" />
-		<id property="countryId" column="COUNTRY_ID" />
-		<id property="countryNameKo" column="COUNTRY_NAME_KO" />
-		<id property="countryNameEn" column="COUNTRY_NAME_EN" />
-		<id property="currencyUnit" column="CURRENCY_UNIT" />
+		<result property="cityNameKo" column="CITY_NAME_KO" />
+		<result property="cityNameEn" column="CITY_NAME_EN" />
+		<result property="countryId" column="COUNTRY_ID" />
+		<result property="countryNameKo" column="COUNTRY_NAME_KO" />
+		<result property="countryNameEn" column="COUNTRY_NAME_EN" />
+		<result property="currencyUnit" column="CURRENCY_UNIT" />
 	</resultMap>
 	<resultMap id="TrvDayResultSet" type="TrvDay">
 		<id property="dayId" column="DAY_ID" />
@@ -51,6 +51,11 @@
 		<result property="trvId" column="TRV_ID" />
 	</resultMap>
 	<resultMap id="TagResultSet" type="Tag">
+		<id property="tagId" column="TAG_ID" />
+		<result property="tagName" column="TAG_NAME"/>
+	</resultMap>
+	<resultMap id="TrvTagResultSet" type="TrvTag">
+		<id property="trvId" column="TRV_ID" />
 		<id property="tagId" column="TAG_ID" />
 		<result property="tagName" column="TAG_NAME"/>
 	</resultMap>
@@ -78,58 +83,26 @@
 		<result property="dayId" column="DAY_ID" />
 		<result property="costType" column="COST_TYPE" />
 	</resultMap>
-	<!-- <resultMap id="PlaceResutSet" type="Place">
+	<resultMap id="PlaceResutSet" type="Place">
 		<id property="plcId" column="PLC_ID" />
 		<result property="cityId" column="CITY_ID" />
 		<result property="plcName" column="PLC_NAME" />
 		<result property="plcAddress" column="PLC_ADDRESS" />
-		<result property="plcTypeId" column="PLC_TYPE_CODE" />
 		<result property="plcEngName" column="PLC_ENGNAME" />
 		<result property="plcLat" column="PLC_LAT" />
-		<result property="plcLng" column="COST_TYPE" />
-		<result property="plcCount" column="COST_TYPE" />
-	</resultMap> -->
+		<result property="plcLng" column="PLC_LNG" />
+		<result property="plcCount" column="PLC_COUNT" />
+				<result property="plcTypeId" column="PLCTYPE_ID" />
+	</resultMap>
 	
-	<insert id="insertTravel" parameterType="Travel">
-		INSERT INTO TRAVEL
-		VALUES(TRAVEL_SEQ.NEXTVAL, #{trvTitle}, #{startDate}, #{endDate}, #{compNumber}, SYSDATE, SYSDATE, NULL, 'Y', 5, NULL)
-	</insert>
-	<select id="selectTrvId" resultType="_int">
-		SELECT TRAVEL_SEQ.CURRVAL FROM DUAL
-	</select>
+
+
+	<!-- Country & City -->
 	<select id="selectCity" parameterType="_int" resultMap="CityResultSet">
 		SELECT *
 		FROM CITY
 		WHERE CITY_ID = #{cityId}
-	</select>
-	<insert id="insertTrvCity" parameterType="TrvCity">
-		INSERT INTO TRV_CITY
-		VALUES(#{cityId}, #{trvId})
-	</insert>
-	<insert id="insertTrvDay" parameterType="TrvDay">
-		INSERT INTO TRV_DAY
-		VALUES(TRV_DAY_SEQ.NEXTVAL, #{dayNumber}, #{dayDate}, NULL, NULL, #{trvId})
-	</insert>
-	<select id="selectTravel" parameterType="_int" resultMap="TravelResultSet">
-		SELECT *
-		FROM TRAVEL
-		WHERE TRV_ID = #{trvId}
-		AND STATUS = 'Y'
-	</select>
-	<select id="selectTrvCityList" parameterType="_int" resultMap="TrvCityResultMap">
-		SELECT TC.*, CITY.CITY_NAME_KO, CITY.CITY_NAME_EN, CITY.COUNTRY_ID, CTRY.COUNTRY_NAME_KO, CTRY.COUNTRY_NAME_EN,
-		CTRY.CURRENCY_UNIT
-		FROM TRV_CITY TC
-		JOIN CITY ON (TC.CITY_ID = CITY.CITY_ID)
-		JOIN COUNTRY CTRY ON (CITY.COUNTRY_ID = CTRY.COUNTRY_ID)
-		WHERE TC.TRV_ID = #{trvId}
-	</select>
-	<select id="selectTrvDayList" parameterType="_int" resultMap="TrvDayResultSet">
-		SELECT *
-		FROM TRV_DAY
-		WHERE TRV_ID = #{trvId}
-		ORDER BY DAY_NUMBER
-	</select>
+	</select>	
 	<select id="selectCountryList" resultMap="CountryResultSet">
 		SELECT *
 		FROM COUNTRY
@@ -139,9 +112,28 @@
 		FROM CITY
 		WHERE COUNTRY_ID = #{countryId}
 	</select>
-	<select id="selectAllTagList" resultMap="TagResultSet">
+	
+	
+	
+	<!-- Travel -->
+	<select id="selectTrvList" parameterType="_int" resultMap="TravelResultSet">
 		SELECT *
-		FROM TAG
+		FROM TRAVEL
+		WHERE MEMBER_ID = #{memberId} 
+		AND STATUS = 'Y'
+	</select>
+	<insert id="insertTravel" parameterType="Travel">
+		INSERT INTO TRAVEL
+		VALUES(TRAVEL_SEQ.NEXTVAL, #{trvTitle}, #{startDate}, #{endDate}, #{compNumber}, SYSDATE, SYSDATE, NULL, 'Y', #{memberId}, NULL)
+	</insert>
+	<select id="selectTrvId" resultType="_int">
+		SELECT TRAVEL_SEQ.CURRVAL FROM DUAL
+	</select>
+	<select id="selectTravel" parameterType="_int" resultMap="TravelResultSet">
+		SELECT *
+		FROM TRAVEL
+		WHERE TRV_ID = #{trvId}
+		AND STATUS = 'Y'
 	</select>
 	<update id="updateTravel" parameterType="Travel">
 		UPDATE TRAVEL
@@ -149,10 +141,51 @@
 		COMP_NUMBER = #{compNumber}, MODIFY_DATE = SYSDATE
 		WHERE TRV_ID = #{trvId}
 	</update>
+	<update id="completeTravel" parameterType="_int">
+		UPDATE TRAVEL
+		SET COMPLETE_DATE = SYSDATE
+		WHERE TRV_ID = #{trvId}
+	</update>
+	<update id="deleteTravel" parameterType="_int">
+		UPDATE TRAVEL
+		SET STATUS = 'N'
+		WHERE TRV_ID = #{trvId}
+	</update>
+	
+
+	
+	
+	<!-- TrvCity -->
+	<insert id="insertTrvCity" parameterType="TrvCity">
+		INSERT INTO TRV_CITY
+		VALUES(#{cityId}, #{trvId})
+	</insert>
+	<select id="selectTrvCityList" parameterType="_int" resultMap="TrvCityResultMap">
+		SELECT TC.*, CITY.CITY_NAME_KO, CITY.CITY_NAME_EN, CITY.COUNTRY_ID, CTRY.COUNTRY_NAME_KO, CTRY.COUNTRY_NAME_EN,
+		CTRY.CURRENCY_UNIT
+		FROM TRV_CITY TC
+		JOIN CITY ON (TC.CITY_ID = CITY.CITY_ID)
+		JOIN COUNTRY CTRY ON (CITY.COUNTRY_ID = CTRY.COUNTRY_ID)
+		WHERE TC.TRV_ID = #{trvId}
+	</select>
 	<delete id="deleteTrvCity" parameterType="TrvCity">
 		DELETE FROM TRV_CITY
 		WHERE CITY_ID = #{cityId} AND TRV_ID = #{trvId}
-	</delete>
+	</delete>	
+	
+	
+	
+	<!-- TrvDay -->
+	<insert id="insertTrvDay" parameterType="TrvDay">
+		INSERT INTO TRV_DAY
+		VALUES(TRV_DAY_SEQ.NEXTVAL, #{dayNumber}, #{dayDate}, NULL, NULL, #{trvId})
+	</insert>
+	<select id="selectTrvDayList" parameterType="_int" resultMap="TrvDayResultSet">
+		SELECT *
+		FROM TRV_DAY
+		WHERE TRV_ID = #{trvId}
+		ORDER BY DAY_NUMBER
+	</select>
 	<update id="updateTrvDay" parameterType="TrvDay">
 		UPDATE TRV_DAY
 		SET DAY_DATE = #{dayDate}
@@ -162,12 +195,11 @@
 		DELETE FROM TRV_DAY
 		WHERE DAY_ID = #{dayId}
 	</delete>
-	<update id="completeTravel" parameterType="_int">
-		UPDATE TRAVEL
-		SET COMPLETE_DATE = SYSDATE
-		WHERE TRV_ID = #{trvId}
-	</update>
+
 	
+	
+	
+	<!-- sch -->
 	<select id="selectSchCount" parameterType="_int" resultType="_int">
 		SELECT COUNT(*)
 		FROM TRV_SCH
@@ -193,20 +225,18 @@
 	<select id="selectSchId" resultType="_int">
 		SELECT TRV_SCH_SEQ.CURRVAL FROM DUAL
 	</select>
-	<insert id="insertTrvCost" parameterType="TrvCost">
-		INSERT INTO TRV_COST
-		VALUES(TRV_COST_SEQ.NEXTVAL, #{costContent}, #{costAmount}, #{currency}, #{schId}, #{dayId}, #{costType})
-	</insert>
-	<select id="selectTrvCost" parameterType="_int" resultMap="TrvCostResultSet">
-		SELECT *
-		FROM TRV_COST
-		WHERE SCH_ID = #{schId}
-	</select>
+		
 	<select id="selectSch" parameterType="_int" resultMap="TrvSchResultSet">
 		SELECT *
 		FROM TRV_SCH
 		WHERE SCH_ID = #{schId}
 	</select>
+	<update id="updateSch" parameterType="TrvSch">
+		UPDATE TRV_SCH
+		SET SCH_TITLE = #{schTitle}, SCH_NUMBER = #{schNumber}, START_TIME = #{startTime}, END_TIME = #{endTime},
+		IS_TIMESET = #{isTimeset}, SCH_TRANSP = #{schTransp}, DAY_ID = #{dayId}
+		WHERE SCH_ID = #{schId}
+	</update>
 	<delete id="deleteSch" parameterType="_int">
 		DELETE FROM TRV_SCH
 		WHERE SCH_ID = #{schId}
@@ -215,14 +245,53 @@
 	
 	
 	
-	
-	
-	<update id="updateSch" parameterType="TrvSch">
-		UPDATE TRV_SCH
-		SET SCH_TITLE = #{schTitle}, SCH_NUMBER = #{schNumber}, START_TIME = #{startTime}, END_TIME = #{endTime},
-		IS_TIMESET = #{isTimeset}, SCH_CONTENT = #{schContent}, SCH_TRANSP = #{schTransp}
+	<!-- TrvCost -->
+	<insert id="insertTrvCost" parameterType="TrvCost">
+		INSERT INTO TRV_COST
+		VALUES(TRV_COST_SEQ.NEXTVAL, #{costContent}, #{costAmount}, #{schId}, #{dayId}, #{costType}, #{currency})
+	</insert>
+	<select id="selectTrvCost" parameterType="_int" resultMap="TrvCostResultSet">
+		SELECT *
+		FROM TRV_COST
 		WHERE SCH_ID = #{schId}
+	</select>
+	<update id="updateTrvCost" parameterType="TrvCost">
+		UPDATE TRV_COST
+		SET COST_CONTENT = #{costContent}, COST_AMOUNT = #{costAmount}, DAY_ID = #{dayId}, COST_TYPE = #{costType},
+		CURRENCY = #{currency}
+		WHERE COST_ID = #{costId}
 	</update>
+	<delete id="deleteTrvCost" parameterType="TrvCost">
+		DELETE FROM TRV_COST
+		WHERE COST_ID = #{costId}
+	</delete>
+	
+
+	
+	
+	
+	<!-- TrvTag -->
+	<select id="selectAllTagList" resultMap="TagResultSet">
+		SELECT *
+		FROM TAG
+	</select>
+	<insert id="insertTrvTag" parameterType="TrvTag">
+		INSERT INTO TRV_TAG
+		VALUES(#{trvId}, #{tagId})
+	</insert>
+	<delete id="deleteTrvTag" parameterType="TrvTag">
+		DELETE FROM TRV_TAG
+		WHERE TRV_ID = #{trvId} AND TAG_ID = #{tagId}
+	</delete>
+	<select id="selectTrvTagList" parameterType="_int" resultMap="TrvTagResultSet">
+		SELECT *
+		FROM TRV_TAG TT
+		LEFT JOIN TAG T ON (T.TAG_ID = TT.TAG_ID)
+		WHERE TT.TRV_ID = #{trvId}
+	</select>
+	
+	
+
 </mapper>
 
 

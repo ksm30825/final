@@ -106,36 +106,56 @@
 					</section>
 				</div>
 				<div class="dayArea" id="day${ trvDay.dayNumber }Area" style="display:none">
-					<% for(int i = 0; i < 10; i++) { %>
-					<section class="section">
-						<div class="card">
-							<header class="card-header">
-								<p class="icon is-large" style="color:#8e44ad; margin:5px">
-									<i class="fas fa-2x fa-bookmark"></i>
-								</p>
-								<p class="card-header-title">
-									일정제모오오오오오오오오오옥
-								</p>
-								<a class="card-header-icon">
-									<span class="icon detailEditBtn" 
-									style="color:#8e44ad; margin-right:10px; width:100px">
-										작성하기
-										<i class="fas fa-2x fa-pencil-alt"></i>
-									</span>
-									<span class="icon detailShowBtn"><i class="fa fa-angle-down"></i></span>
-								</a>
-							</header>
-							<div class="card-content" style="display:none">
-								<div class="content editor"></div>
+					<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st" >
+						<section class="section">
+							<div class="card">
+								<header class="card-header">
+									<p class="icon is-large" style="color:#8e44ad; margin:5px">
+										<i class="fas fa-2x fa-bookmark"></i>
+									</p>
+									<div class="card-header-title" style="display:block">
+										<p><strong>${ sch.schTitle }</strong></p>
+										<p class="help">
+											<c:if test="${ !empty sch.trvCost }">
+												${ sch.trvCost.costType } :<strong>${ sch.trvCost.costAmount }</strong> 
+												(${ sch.trvCost.currency }) / 
+											</c:if>&nbsp;&nbsp;&nbsp;
+											${ sch.schTransp }
+										</p> 
+										<small> 
+											<a style="color: purple"> 
+												<span class="icon is-small" style="color: purple"> 
+													<i class="fas fa-map-marker-alt"></i>
+												</span> 
+												<c:if test="${ sch.plcName ne null }">
+													${ sch.plcName }
+												</c:if> 
+												<c:if test="${ sch.plcName eq null }">
+													(장소 정보 없음)
+												</c:if>
+											</a>
+										</small> 
+									</div>
+									<a class="card-header-icon">
+										<span class="icon detailEditBtn" 
+										style="color:#8e44ad; margin-right:10px; width:100px">
+											작성하기
+											<i class="fas fa-2x fa-pencil-alt"></i>
+										</span>
+										<span class="icon detailShowBtn"><i class="fa fa-angle-down"></i></span>
+									</a>
+								</header>
+								<div class="card-content" style="display:none">
+									<div class="content editor"></div>
+								</div>
+								<footer class="card-footer" style="display:none">
+									<a class="card-footer-item" style="background:mediumpurple;color:white">Save</a> 
+									<a class="card-footer-item" style="background:skyblue;color:white">Edit</a>
+									<a class="card-footer-item" style="background:lightgray;color:white">Delete</a>
+								</footer>
 							</div>
-							<footer class="card-footer" style="display:none">
-								<a class="card-footer-item" style="background:mediumpurple;color:white">Save</a> 
-								<a class="card-footer-item" style="background:skyblue;color:white">Edit</a>
-								<a class="card-footer-item" style="background:lightgray;color:white">Delete</a>
-							</footer>
-						</div>
-					</section>
-					<% } %>
+						</section>
+					</c:forEach>
 				</div>
 			
 				<div class="gallaryArea" id="gallary${ trvDay.dayNumber }Area" style="display:none">	

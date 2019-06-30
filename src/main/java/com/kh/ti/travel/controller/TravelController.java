@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +21,11 @@ import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
+import com.kh.ti.travel.model.vo.TrvCity;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
+import com.kh.ti.travel.model.vo.TrvTag;
 
 @Controller
 public class TravelController {
@@ -30,7 +34,20 @@ public class TravelController {
 	private TravelService ts;
 	
 	@RequestMapping("showMyTravel.trv")
-	public String showMyTravel() {
+	public String showMyTravel(HttpSession session, Model model) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		ArrayList<Travel> trvList = ts.selectTrvList(loginUser.getMemberId());
+		ArrayList<Travel> privateTrvList = new ArrayList<Travel>();
+		ArrayList<Travel> publicTrvList = new ArrayList<Travel>();
+		for(int i = 0; i < trvList.size(); i++) {
+			if(trvList.get(i).getCompleteDate() == null) {
+				privateTrvList.add(trvList.get(i));
+			}else {
+				publicTrvList.add(trvList.get(i));
+			}
+		}
+		model.addAttribute("privateTrvList", privateTrvList);
+		model.addAttribute("publicTrvList", publicTrvList);
 		return "travel/myTravel";
 	}
 	
@@ -81,6 +98,7 @@ public class TravelController {
 			model.addAttribute("trvCityList", trvMap.get("trvCityList"));
 			model.addAttribute("trvDayList", trvMap.get("trvDayList"));
 			model.addAttribute("allTagList", trvMap.get("allTagList"));
+			model.addAttribute("trvTagList", trvMap.get("trvTagList"));
 			return "travel/travelEditor";
 		}else {
 			model.addAttribute("msg", "일정 정보 불러오기 실패");
@@ -109,12 +127,13 @@ public class TravelController {
 	
 	//작성완료처리-민지
 	@RequestMapping("completeTravel.trv")
-	public String completeTravel(int trvId, Model model) {
-		System.out.println(trvId);
+	public String completeTravel(int trvId, int memberId, Model model) {
+		System.out.println("trvId : " + trvId);
+		System.out.println("memberId : " + memberId);
 		int result = ts.completeTravel(trvId);
 		
 		if(result > 0) {
-			model.addAttribute("memberId", 5);
+			model.addAttribute("memberId", memberId);
 			model.addAttribute("reserveType", 10);
 			model.addAttribute("code", trvId);
 			model.addAttribute("rPoint",300);
@@ -125,26 +144,27 @@ public class TravelController {
 		}
 	}
 	
+	
+	//여행일정 삭제-민지
+	@RequestMapping("deleteTravel.trv")
+	public String deleteTravel(int trvId, Model model) {
+		int result = ts.deleteTravel(trvId);
+		if(result > 0) {
+			return "redirect:/showMyTravel.trv";
+		}else {
+			model.addAttribute("msg", "일정 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	
+	
 	//상세일정추가-민지
 	@RequestMapping("insertSch.trv")
 	public String insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc, int trvId, Model model) {
 		System.out.println("SCH : " + sch);
 		System.out.println("COST : " + cost);
 		
-		int count = ts.selectSchCount(sch.getDayId());
-		if(sch.getIsTimeset() != null) {
-			sch.setIsTimeset("N");
-			sch.setSchNumber(count + 1);
-		}else {
-			sch.setIsTimeset("Y");
-			if(count > 0) {
-				int number = ts.selectSchNumber(sch.getDayId(), sch.getStartTime());
-				sch.setSchNumber(number);
-				System.out.println("number : " + number);
-			}else {
-				sch.setSchNumber(count + 1);
-			}
-		}
 		cost.setCostContent(sch.getSchTitle());
 		
 		
@@ -158,8 +178,35 @@ public class TravelController {
 		
 	}
 	
+	//상세일정업데이트-민지
+	@RequestMapping("updateSch.trv")
+	public String updateTrvSchedule(TrvSchedule sch,  TrvCost cost, Place plc, int trvId, Model model) {
+		System.out.println("sch: " + sch);
+		System.out.println("cost: " + cost);
+		System.out.println("plc: " + plc);
+		System.out.println("trvId: " + trvId);
+		
+		cost.setCostContent(sch.getSchTitle());
+		
+		int result = ts.updateTrvSchedule(sch, cost, plc);
+		if(result > 0) {
+			return "redirect:/selectTravel.trv?trvId=" + trvId;
+		}else {
+			model.addAttribute("msg", "상세일정 업데이트 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	//상세일정조회 - 민지
+	@RequestMapping("selectSch.trv")
+	public ModelAndView selectSchedule(int schId, ModelAndView mv) {
+		
+		return mv;
+	}
+	
+	
 	//상세일정삭제-민지
-	@RequestMapping("/deleteSch.trv") 
+	@RequestMapping("deleteSch.trv") 
 	public String deleteSchedule(int schId, int trvId, Model model) {
 		
 		int result = ts.deleteTrvSchedule(schId);
@@ -173,8 +220,21 @@ public class TravelController {
 	
 	
 	
+	//여행테마추가-민지
+	@RequestMapping("insertTrvTag.trv")
+	public ModelAndView insertTrvTag(TrvTag trvTag, ModelAndView mv) {
+		int result = ts.insertTrvTag(trvTag);
+		mv.setViewName("jsonView");
+		return mv;
+	}	
 	
-	
+	//여행테마삭제-민지
+	@RequestMapping("deleteTrvTag.trv")
+	public ModelAndView deleteTrvTag(TrvTag trvTag, ModelAndView mv) {
+		int result = ts.deleteTrvTag(trvTag);
+		mv.setViewName("jsonView");
+		return mv;
+	}	
 	
 	
 	
@@ -194,13 +254,7 @@ public class TravelController {
 		int result = ts.insertTrvCompany(trv, m);
 		return "";
 	}
-	
-	//여행테마추가-민지
-	@RequestMapping("/insertTag.trv")
-	public String insertTrvTag(Travel trv, Tag tag) {
-		int result = ts.insertTrvTag(trv, tag);
-		return "";
-	}
+
 	
 
 	
@@ -212,12 +266,7 @@ public class TravelController {
 		return "";
 	}
 	
-	//상세일정업데이트-민지
-	@RequestMapping("updateSch.trv")
-	public String updateTrvSchedule(TrvSchedule sch, Place plc) {
-		int result = ts.updateTrvSchedule(sch, plc);
-		return "";
-	}
+
 	
 	//여행사진추가-민지
 	@RequestMapping("/insertFile.trv")
@@ -243,13 +292,7 @@ public class TravelController {
 	
 
 
-	
-	//여행일정 삭제-민지
-	@RequestMapping("deleteTravel.trv")
-	public String deleteTravel(Travel trv) {
-		int result = ts.deleteTravel(trv);
-		return "";
-	}
+
 	
 	//여행도시삭제-민지
 	@RequestMapping("deleteCity.trv")
@@ -264,13 +307,7 @@ public class TravelController {
 		int result = ts.deleteTrvComp(trv, memberId);
 		return "";
 	}
-	
-	//여행테마삭제-민지
-	@RequestMapping("deleteTag.trv")
-	public String deleteTrvTag(Travel trv, int tagId) {
-		int result = ts.deleteTrvTag(trv, tagId);
-		return "";
-	}
+
 	
 	//가계부수정-민지
 	@RequestMapping("updateCost.trv")

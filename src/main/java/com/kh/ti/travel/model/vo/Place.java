@@ -6,11 +6,11 @@ public class Place implements java.io.Serializable{
 	private int cityId;
 	private String plcName;
 	private String plcAddress;
-	private int plcTypeId;
 	private String plcEngName;
 	private String plcLat;
 	private String plcLng;
 	private int plcCount;
+	private int plcTypeId;
 	
 	public Place() {}
 

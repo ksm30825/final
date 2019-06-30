@@ -80,10 +80,24 @@ var icons = {
 };
 var markers = [];
 function initMap() {
+	
 	var sydney = new google.maps.LatLng(-33.867, 151.195);
 	map = new google.maps.Map(document.getElementById('map'), {zoom:15, center:sydney});
-	mapWide = new google.maps.Map(document.getElementById('mapWide'), {zoom:15, center:sydney});
 	service = new google.maps.places.PlacesService(map);
+
+	var cityRequest = { 
+		query:"${ trvCityList[0].cityNameEn }",
+		fields:[geometry]
+	};
+	console.log("${ trvCityList[0].cityNameEn }");
+	service.findPlaceFromQuery(cityRequest, function(results, status) {
+		if(status === google.maps.places.PlaceServiceStatus.OK) {
+			map.setCenter(results[0].geometry.location);
+		}
+	})
+	
+	
+	mapWide = new google.maps.Map(document.getElementById('mapWide'), {zoom:15, center:sydney});
 	infowindow = new google.maps.InfoWindow();
 	searchBox = new google.maps.places.SearchBox(document.getElementById('searchInput'));
 	//map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('searchInput2'));

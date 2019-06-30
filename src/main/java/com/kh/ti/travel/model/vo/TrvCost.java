@@ -5,10 +5,10 @@ public class TrvCost implements java.io.Serializable {
 	private int costId;
 	private String costContent;
 	private double costAmount;
-	private String currency;
 	private int schId;
 	private int dayId;
 	private String costType;
+	private String currency;
 	
 	public TrvCost() {}
 

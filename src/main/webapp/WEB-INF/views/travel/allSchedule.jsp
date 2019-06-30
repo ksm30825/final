@@ -42,21 +42,45 @@
 										value="${ trvDay.dayMemo }">
 								</div>
 								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
-								<ul class="connectedSortable menu-list"
-									style="background: white">
-									<% for (int i = 1; i <= 5; i++) { %>
-									<li class="ui-state-default panel-block">
-										<div class="media-left">
-											<span class="icon schInfoBtn"><i class="fas fa-edit"></i></span>
-										</div>
-										<div class="media-content">
-											<p>Item<%=i%></p>
-										</div>
-										<div class="media-right">
-											<button class="delete" aria-label="close"></button>
-										</div>
-									</li>
-									<% } %>
+								<ul class="connectedSortable menu-list dayList" style="background: white">
+									<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
+										<li class="panel-block">
+											<div class="media-left" style="width:20%">
+												<p>${ sch.startTime } - ${ sch.endTime }</p>
+												
+											</div>
+											<div class="media-content" style="width:70%">
+												<div class="content">
+													<p>
+														<strong>${ sch.schTitle }</strong>
+													</p>
+													<small>${ sch.trvCost.costType } : <strong>${ sch.trvCost.costAmount }</strong> ${ sch.trvCost.currency }</small>
+													<small>${ sch.schTransp }</small>
+													<small>
+														<a style="color:purple">
+													 		<span class="icon is-small" style="color:purple"> 
+																<i class="fas fa-map-marker-alt"></i>
+															</span>
+															<c:if test="${ sch.plcName ne null }" >
+																${ sch.plcName }
+															</c:if>
+															<c:if test="${ sch.plcName eq null }" >
+																(장소 정보 없음)
+															</c:if>
+													 	</a>
+													</small>
+												</div>
+											</div>
+											<div class="media-right" style="width:10%">
+												<input type="hidden" value="${ sch.schId }" name="schId">
+												<button class="delete schDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
+												<br><br>	
+												<span class="icon schInfoBtn" data-tooltip="일정 정보 수정">
+													<i class="fas fa-edit"></i>
+												</span>
+											</div>
+										</li>
+									</c:forEach>
 								</ul>
 							</nav>
 						</div>

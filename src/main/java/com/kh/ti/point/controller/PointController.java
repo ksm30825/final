@@ -245,9 +245,9 @@ public class PointController {
 		////System.out.println("result : " + result);
 		if(result>0) {
 			switch(reserveType) {
-			case 10 : return "redirect:/showMyTravel.trv"; 
+			case 10 : return "redirect:/showMyTravel.trv?"; 
 			case 20 : return "redirect:/insertReview.tb"; 
-			case 30 : return "redirect:/showMyTravel.trv"; 
+			case 30 : return "redirect:/showMyTravel.trv?"; 
 			}
 		}
 		return "common/errorPage";
