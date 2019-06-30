@@ -55,4 +55,29 @@
 		WHERE TR.CHOOSE_STATUS = 'N'
 		AND TR.REQUEST_ID = #{requestId}
 	</select>
+	
+	<!-- 설계글 인서트 -->
+	<insert id="insertRequestPlan" parameterType="TravelRequestPlan">
+		INSERT INTO TRV_PLAN
+		VALUES (TRV_PLAN_SEQ.NEXTVAL, #{planTitle}, #{memberId}, 
+				NULL, NULL, #{planContent}, NULL, SYSDATE, #{roomCharge}, #{trafficCharge}, #{etcCharge})
+	</insert>
+	
+	<!-- 설계글 일자 인서트 -->
+	<insert id="insertRequestDay" parameterType="PlanDay">
+		<selectKey keyProperty="planId" resultType="_int" order="BEFORE">
+			SELECT TRV_PLAN_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PLAN_DAY
+		VALUES (PLAN_DAY_SEQ.NEXTVAL, #{pDay}, #{pDayMemo}, #{openStatus}, #{planId})
+	</insert>
+	
+	<!-- 설계글 각 장소 인서트 -->
+	<insert id="insertRequestPlace" parameterType="PlanPlace">
+		<selectKey keyProperty="PdayId" resultType="_int" order="BEFORE">
+			SELECT PLAN_DAY_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PLAN_PLACE
+		VALUES (PLAN_PLACE_SEQ.NEXTVAL, #{PplaceTitle}, #{PplaceAddress}, #{PplaceLat}, #{PplaceLng}, #{PdayId}, 1)
+	</insert>
 </mapper>

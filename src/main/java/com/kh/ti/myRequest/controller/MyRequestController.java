@@ -18,8 +18,8 @@ import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 @SessionAttributes("loginUser")
 public class MyRequestController {
 
-//	@Autowired
-//	private MyRequestService mrs;
+	@Autowired
+	private MyRequestService mrs;
 	// 여행 의뢰 - 이선우
 	@RequestMapping("myRequestList.mr")
 	public String selectRequestList() {
@@ -29,7 +29,7 @@ public class MyRequestController {
 
 	// 여행 설계 - 이선우
 	@RequestMapping("myRequestPlan.mr")
-	public String selectMyPlan(@ModelAttribute PlanDay pd, 
+	public String insertMyPlan(@ModelAttribute PlanDay pd, 
 							   @ModelAttribute PlanPlace pp,
 							   @ModelAttribute TravelRequestPlan tp, Model modle) {
 		//각 일정및 메모, 공개여부
@@ -44,6 +44,9 @@ public class MyRequestController {
 			System.out.println("일자 : " + pDay[i]);
 			System.out.println((i+1) + "일자 메모 : " + pDayMemo[i]);
 			System.out.println((i+1) + "일자 공개여부 : " + openStatus[i]);
+			PlanDay day = new PlanDay(pDay[i], pDayMemo[i], openStatus[i]);
+			dayList.add(day);
+			System.out.println(dayList);
 		}
 		
 		//각 일정의 장소
@@ -67,9 +70,8 @@ public class MyRequestController {
 			System.out.println(placeList);
 		}
 		
-		//int result = mrs.insertRequestPlan()
-		//여행설계(TravelRequestPlan)
-		System.out.println(tp);
+		int result = mrs.insertRequestPlan(dayList, placeList, tp);
+		System.out.println(result);
 
 		return "travelRequest/myRequestPlan";
 	}
