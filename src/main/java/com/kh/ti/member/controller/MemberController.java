@@ -1,6 +1,7 @@
 package com.kh.ti.member.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -34,7 +35,7 @@ public class MemberController {
 	
 	//회원정보수정화면 보여주기 전용(forward updateMemberInfo.jsp)--세령
 	@RequestMapping("updateMemberForm.me")
-	public String showMemberInfo() {
+	public String showMemberInfo(Model model, HttpServletRequest request) {
 		return "member/updateMemberInfo";
 	}
 	
@@ -107,9 +108,20 @@ public class MemberController {
 	
 	//계좌정보수정용메소드--세령
 	@RequestMapping("updateUserAcc.me")
-	public void updateUserAcc(@RequestParam("bankcode") String accCode, @RequestParam("accnum") String accNumber,
+	public String updateUserAcc(@RequestParam("bankcode") String accCode, @RequestParam("accnum") String accNumber,
 							  Model model, HttpServletRequest request) {
-		System.out.println("은행코드 : " + accCode + " | " + "계좌 : " + accNumber);
+		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+		loginUser.setAccCode(accCode);
+		loginUser.setAccNumber(accNumber);
+		int result = ms.updateUserAcc(loginUser);
+		if(result > 0) {
+			model.addAttribute("loginUser", loginUser);
+			model.addAttribute("success", "success");
+			return "member/confirmAccount";
+		} else {
+			model.addAttribute("msg", "계좌정보수정 실패!");
+			return "common/erroPage";
+		}
 	}
 	
 	//회원정보수정용메소드--세령

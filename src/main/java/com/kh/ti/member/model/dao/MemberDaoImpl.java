@@ -50,5 +50,11 @@ public class MemberDaoImpl implements MemberDao{
 		return sqlSession.update("Member.updateUserInfo", m);
 	}
 
+	//계좌정보수정용 메소드 - 세령
+	@Override
+	public int updateUserAcc(SqlSessionTemplate sqlSession, Member loginUser) {
+		return sqlSession.update("Member.updateAcc", loginUser);
+	}
+
 
 }

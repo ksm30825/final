@@ -14,5 +14,7 @@ public interface MemberService {
 	int dropOutUserInfo(Member loginUser);
 
 	int updateUserInfo(Member m);
+
+	int updateUserAcc(Member loginUser);
 	
 }

@@ -30,13 +30,15 @@ public class MemberServiceTest {
 	@Before
 	public void setup() {
 		m = new Member();
-		m.setMemberId(20);
-		m.setEmail("jk@gmail.com");
+		m.setMemberId(7);
+		m.setEmail("user07@gmail.com");
 		m.setPassword("0000");
-		m.setUserName("jk");
-		m.setBirthday("1997-09-02");
+		m.setUserName("박세령");
+		m.setBirthday("1997-09-22");
 		m.setGender("F");
-		m.setPhone("010-1234-5678");
+		m.setPhone("010-9226-0374");
+		m.setAccCode("003");
+		m.setAccNumber("01092260374");
 		System.out.println("셋팅 완료!");
 	}
 	
@@ -68,9 +70,16 @@ public class MemberServiceTest {
 		log.info("회원 탈퇴 성공!");
 	}
 	
+	@Ignore
 	@Test
 	public void testUpdateUserInfo() {
 		ms.updateUserInfo(m);
 		log.info("회원 정보 수정 성공!");
+	}
+	
+	@Test
+	public void testUpdateUserAcc() {
+		ms.updateUserAcc(m);
+		log.info("계좌 정보 수정 성공!");
 	}
 }
