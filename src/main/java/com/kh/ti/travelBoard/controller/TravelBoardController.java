@@ -86,7 +86,7 @@ public class TravelBoardController {
 	
 	//여행일정 상세 조회 - 예랑
 	@RequestMapping("travelDetailForm.tb")
-	public String travelDetailForm(int trvId, Integer dayNumber, Model model, HttpServletRequest request) {
+	public String travelDetailForm(int trvId, Model model, HttpServletRequest request) {
 		
 		//여행일정 전체 정보 조회용
 		TravelBoard tb = new TravelBoard();
@@ -102,13 +102,7 @@ public class TravelBoardController {
 		
 		tds.setTrvId(trvId);
 		
-		 if(dayNumber == null) {
-			 tds.setDayNumber(1);
-		 }else { 
-			 tds.setDayNumber((int) dayNumber);
-		 }
-		
-		HashMap tbMap = tbs.travelDetailForm(tb, tds);
+		HashMap tbMap = tbs.travelDetailForm(tb);
 		
 		model.addAttribute("detailTb", tbMap.get("detailTb"));
 		model.addAttribute("detailDay", tbMap.get("detailDay"));

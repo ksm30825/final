@@ -14,7 +14,7 @@ public interface TravelBoardService {
 	
 	HashMap travelList(PageInfo pi, TravelBoard tb);
 
-	HashMap travelDetailForm(TravelBoard tb, TrvDaySchedule tds);
+	HashMap travelDetailForm(TravelBoard tb);
 
 	int travelDelete(int trvId);
 

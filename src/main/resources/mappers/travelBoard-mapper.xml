@@ -238,12 +238,12 @@
 		AND TRV_ID = #{ trvId }
 	</delete>
 	
-	<select id="selectDaySchOne" resultMap="trvDayScheduleResultSet">
+	<select id="selectDaySchOne" parameterType="TravelBoard" resultMap="trvDayScheduleResultSet">
 		SELECT TD.DAY_NUMBER, TD.DAY_DATE, TSCH.SCH_ID, TSCH.PLC_ID, TSCH.IS_TIMESET, PL.PLC_NAME
 		FROM TRV_DAY TD
 		LEFT JOIN TRV_SCH TSCH ON (TD.DAY_ID = TSCH.DAY_ID)
 		LEFT JOIN PLACE PL ON (TSCH.PLC_ID = PL.PLC_ID)
 		WHERE TD.TRV_ID = #{ trvId }
-		AND TD.DAY_NUMBER = #{ dayNumber }
+		AND TD.DAY_NUMBER = 1
 	</select>
 </mapper>
