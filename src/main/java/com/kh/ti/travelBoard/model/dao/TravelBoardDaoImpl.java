@@ -50,7 +50,7 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 
 	//여행일정 상세 조회 - 예랑
 	@Override
-	public HashMap travelDetailForm(SqlSessionTemplate sqlSession, TravelBoard tb, TrvDaySchedule tds) {
+	public HashMap travelDetailForm(SqlSessionTemplate sqlSession, TravelBoard tb) {
 		//여행일정 상세 정보를 담을 HashMap
 		HashMap tbMap = new HashMap();
 		
@@ -67,7 +67,7 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		tbMap.put("detailTb", detailTb);
 		
 		//여행 일자별 스케쥴 조회
-		TrvDaySchedule detailDay = sqlSession.selectOne("TravelBoard.selectDaySchOne", tds);
+		TrvDaySchedule detailDay = sqlSession.selectOne("TravelBoard.selectDaySchOne", tb);
 		System.out.println("detailDay : " + detailDay);
 		System.out.println("detailDay.getTrvSchedule().size() : " + detailDay.getTrvSchedule().size());
 		tbMap.put("detailDay", detailDay);

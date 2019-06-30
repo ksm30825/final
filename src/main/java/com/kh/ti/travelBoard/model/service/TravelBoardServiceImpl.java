@@ -38,9 +38,9 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	
 	//여행일정 상세 조회 - 예랑
 	@Override
-	public HashMap travelDetailForm(TravelBoard tb, TrvDaySchedule tds) {
+	public HashMap travelDetailForm(TravelBoard tb) {
 		
-		return tbd.travelDetailForm(sqlSession, tb, tds);
+		return tbd.travelDetailForm(sqlSession, tb);
 	}
 	
 	//여행일정 삭제 - 예랑

@@ -16,7 +16,7 @@ public interface TravelBoardDao {
 	
 	HashMap travelList(SqlSessionTemplate sqlSession, PageInfo pi, TravelBoard tb);
 
-	HashMap travelDetailForm(SqlSessionTemplate sqlSession, TravelBoard tb, TrvDaySchedule tds);
+	HashMap travelDetailForm(SqlSessionTemplate sqlSession, TravelBoard tb);
 
 	int travelDelete(SqlSessionTemplate sqlSession, int trvId);
 
