@@ -33,45 +33,45 @@ public class PointController {
 		//포인트충전, 지급, 사용 내역 테이블 전체 조회
 		//페이징 처리도 전부
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		//System.out.println(loginUser.getMemberId());
+		////System.out.println(loginUser.getMemberId());
 		int memberId = loginUser.getMemberId();
 		
 		//포인트 충전에 관한 것들 조회
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		int chargeListCount = ps.getChargeListCount(charge);
-		//System.out.println("chargeListCount : " + chargeListCount);
+		////System.out.println("chargeListCount : " + chargeListCount);
 		int chargeCurrentPage = 1;
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
-		//System.out.println("chPi : " + chPi);
+		////System.out.println("chPi : " + chPi);
 		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
 		model.addAttribute("chPayList", chPayList);
-		//System.out.println("chmodel : " + model);
+		////System.out.println("chmodel : " + model);
 		
 //		for(int i=0 ; i<chPayList.size() ; i++) {
 //		//포인트 충전에 관한 것들 조회(일단 임 ; i++) {
-//			System.out.println("chPayList["+i+"] : "+chPayList.get(i)); 
+//			//System.out.println("chPayList["+i+"] : "+chPayList.get(i)); 
 //		}
 		
 		//포인트 지급에 관한 것들 조회
 		ReservePoint reserve = new ReservePoint();
 		reserve.setMemberId(memberId);
 		int receiveListCount = ps.getReceiveListCount(reserve);
-		//System.out.println("ReceiveListCount : " + receiveListCount);
+		////System.out.println("ReceiveListCount : " + receiveListCount);
 		int receiveCurrentPage = 1;
 		PageInfo rePi = Pagination.getPageInfo(receiveCurrentPage, receiveListCount);
 		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
 		model.addAttribute("rePayList", rePayList);
-		//System.out.println("rePi : " + rePi);
+		////System.out.println("rePi : " + rePi);
 		
 		//포인트 사용에 관한 것들 조회
 		UsePoint use = new UsePoint();
 		use.setMemberId(memberId);
 		int useListCount = ps.getUseListCount(use);
-		//System.out.println("useListCount : " + useListCount);
+		////System.out.println("useListCount : " + useListCount);
 		int useCurrentPage = 1;
 		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
-		//System.out.println("usPi : " + usPi);
+		////System.out.println("usPi : " + usPi);
 		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
 		model.addAttribute("usPayList", usPayList);
 		
@@ -97,19 +97,19 @@ public class PointController {
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		charge.setMonth(month);
-		//System.out.println("month : " + month);
-		//System.out.println("memberID : "+ memberId);
-		//System.out.println("charge : " + charge);
+		////System.out.println("month : " + month);
+		////System.out.println("memberID : "+ memberId);
+		////System.out.println("charge : " + charge);
 		
 		int chargeListCount = ps.getChargeListCount(charge); 
-		//System.out.println("월 검색 chargeListCount : "+chargeListCount);
+		////System.out.println("월 검색 chargeListCount : "+chargeListCount);
 		int chargeCurrentPage = 1; 
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		ArrayList chPayList = ps.selectChargeList(chPi, charge);
-		//System.out.println("chPayList : "+ chPayList);
+		////System.out.println("chPayList : "+ chPayList);
 		/*
 		 * for(int i=0 ; i<chPayList.size() ; i++) {
-		 * System.out.println("chPayList.get("+i+").getPaymentDate().getTime()"+
+		 * //System.out.println("chPayList.get("+i+").getPaymentDate().getTime()"+
 		 * chPayList.get(i).getPaymentDate().getTime()); }
 		 */
 		//mv.addObject("chPayList", chPayList);
@@ -120,7 +120,7 @@ public class PointController {
 		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
-		//System.out.println("mv : " + mv);
+		////System.out.println("mv : " + mv);
 		
 		return mv.getModel();
 	}
@@ -133,17 +133,17 @@ public class PointController {
 	//포인트 충전--수민
 	@RequestMapping("/toPay.po")
 	public String toPay(String tid, String pAmount, HttpServletRequest request) {
-		//System.out.println("tid : " + tid);
-		//System.out.println("payAmount : " + pAmount);
+		////System.out.println("tid : " + tid);
+		////System.out.println("payAmount : " + pAmount);
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		//System.out.println(loginUser.getMemberId());
+		////System.out.println(loginUser.getMemberId());
 		int memberId = loginUser.getMemberId();
 		//충전액
 		int payAmount = Integer.parseInt(pAmount);
 		//충전일
 		Date paymentDate = new Date(new GregorianCalendar().getTimeInMillis());
 		
-		//System.out.println("paymentDate : " + paymentDate);
+		////System.out.println("paymentDate : " + paymentDate);
 		
 		Payment pay = new Payment();
 		pay.setTid(tid);
@@ -151,12 +151,12 @@ public class PointController {
 		pay.setPaymentDate(paymentDate);
 		pay.setMemberId(memberId);
 		
-		//System.out.println("넘기기전 pay : " + pay);
+		////System.out.println("넘기기전 pay : " + pay);
 
 		//포인트충전
 		//->결제 테이블에 insert
 		int result = ps.insertPay(pay);
-		//System.out.println("result : " + result);
+		////System.out.println("result : " + result);
 		
 		if(result>0) {
 			return "redirect:/pointMainView.po";
@@ -174,21 +174,21 @@ public class PointController {
 	@ResponseBody
 	@RequestMapping("/oneMonthRPoint.po")
 	public Object searchOneMonthRPoint(String month, ModelAndView mv, HttpServletRequest request) {
-		System.out.println("month : " + month);
+		////System.out.println("month : " + month);
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		
 		ReservePoint reserve = new ReservePoint();
 		reserve.setMemberId(memberId);
 		reserve.setMonth(month);
-		System.out.println("reserve : " + reserve);
+		////System.out.println("reserve : " + reserve);
 		
 		int reserveListCount = ps.getReceiveListCount(reserve); 
-		System.out.println("월 검색 reserveListCount : "+reserveListCount);
+		////System.out.println("월 검색 reserveListCount : "+reserveListCount);
 		int reserveCurrentPage = 1; 
 		PageInfo rePi = Pagination.getPageInfo(reserveCurrentPage, reserveListCount);
 		ArrayList rePayList = ps.selectReceiveList(rePi, reserve);
-		System.out.println("rePayList : "+ rePayList);
+		////System.out.println("rePayList : "+ rePayList);
 		
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
@@ -197,7 +197,7 @@ public class PointController {
 		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
-		System.out.println("mv : " + mv);
+		////System.out.println("mv : " + mv);
 		
 		return mv.getModel();
 	}
@@ -222,10 +222,10 @@ public class PointController {
 		//code : 작성글 코드
 		//type : 10:일정작성, 20:일정리뷰, 30:여행지리뷰
 		//rPoint : 일정작성:300, 일정리뷰:50, 여행지리뷰:10
-		//System.out.println("처리전 memberId : " + memberId);
-		//System.out.println("처리전 code : " + code);
-		//System.out.println("처리전 reserveType : " + reserveType);
-		//System.out.println("처리전 rPoint : " + rPoint);
+		////System.out.println("처리전 memberId : " + memberId);
+		////System.out.println("처리전 code : " + code);
+		////System.out.println("처리전 reserveType : " + reserveType);
+		////System.out.println("처리전 rPoint : " + rPoint);
 		Date reserveDate = new Date(new GregorianCalendar().getTimeInMillis());
 		ReservePoint rp = new ReservePoint();
 		
@@ -240,9 +240,9 @@ public class PointController {
 		case 30 : rp.setSpotReviewId(code);	break;
 		}
 		
-		//System.out.println("처리전 rp : " + rp);
+		////System.out.println("처리전 rp : " + rp);
 		int result = ps.insertReservePoint(rp);
-		//System.out.println("result : " + result);
+		////System.out.println("result : " + result);
 		if(result>0) {
 			switch(reserveType) {
 			case 10 : return "redirect:/showMyTravel.trv"; 
@@ -258,18 +258,44 @@ public class PointController {
 	
 
 	//포인트 사용 월 검색 내역 테이블--수민
+	@ResponseBody
 	@RequestMapping("/oneMonthUPoint.po")
-	public ModelAndView searchOneMonthUPoint(int memberId, int month, ModelAndView mv) {
+	public Object searchOneMonthUPoint(String month, ModelAndView mv, HttpServletRequest request) {
+		//System.out.println("month : " + month);
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		int memberId = loginUser.getMemberId();
 		
-		return mv;
+		UsePoint use = new UsePoint();
+		use.setMemberId(memberId);
+		use.setMonth(month);
+		//System.out.println("use : " + use);
+		
+		int useListCount = ps.getUseListCount(use); 
+		//System.out.println("월 검색 reserveListCount : "+useListCount);
+		int useCurrentPage = 1; 
+		PageInfo usePi = Pagination.getPageInfo(useCurrentPage, useListCount);
+		ArrayList usePayList = ps.selectUseList(usePi, use);
+		//System.out.println("rePayList : "+ usePayList);
+		
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("usePayList", usePayList);
+		hmap.put("usePi", usePi);
+		mv.addObject("hmap", hmap);
+		
+		mv.setViewName("jsonView");
+		//System.out.println("mv : " + mv);
+		
+		return mv.getModel();
 	}
 	//포인트 사용 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(일정작성이면 일정작성, 의뢰면 의뢰글)--수민
-	@RequestMapping("/oneBoardUPoint.po")
+	/*
+	@RequestMapping("/oneBoardUPoint.po") 
 	public String selectOneBoardUPoint(String memberId, String bid) {
-		
-		return "??";
+		return "??"; 
 	}
+	*/
 	//포인트 환불 (사용자가 '환불신청' 눌렀을 때 ->환불테이블에 insert된다!)--수민
 	@RequestMapping("/refundUPoint.po")
 	public String insertRefund(int pointId) {

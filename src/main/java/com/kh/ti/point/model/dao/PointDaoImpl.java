@@ -29,7 +29,7 @@ public class PointDaoImpl implements PointDao{
 	@Override
 	public int getReceiveListCount(SqlSessionTemplate sqlSession, ReservePoint reserve) {
 		int count = sqlSession.selectOne("Payment.getReceiveListCount", reserve);
-		System.out.println("count" + count);
+		System.out.println("receiveCount : " + count);
 		return count;
 	}
 	//포인트 사용 리스트 전체 카운터
@@ -82,8 +82,8 @@ public class PointDaoImpl implements PointDao{
 	//포인트 자동으로 적립하기
 	@Override
 	public int insertReservePoint(SqlSessionTemplate sqlSession, ReservePoint rp) {
-		System.out.println("rp : " + rp);
-		System.out.println("rp.getReservePoint() : " + rp.getReservePoint());
+		//System.out.println("rp : " + rp);
+		//System.out.println("rp.getReservePoint() : " + rp.getReservePoint());
 		return sqlSession.insert("Payment.insertReservePoint",rp);
 	}
 	
