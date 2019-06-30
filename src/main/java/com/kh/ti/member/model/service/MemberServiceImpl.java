@@ -81,5 +81,11 @@ public class MemberServiceImpl implements MemberService{
 		return md.updateUserInfo(sqlSession, m);
 	}
 
+	//계좌정보수정용 메소드 - 세령
+	@Override
+	public int updateUserAcc(Member loginUser) {
+		return md.updateUserAcc(sqlSession, loginUser);
+	}
+
 
 }

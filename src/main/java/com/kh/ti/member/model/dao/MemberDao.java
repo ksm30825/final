@@ -20,4 +20,6 @@ public interface MemberDao {
 
 	int updateUserInfo(SqlSessionTemplate sqlSession, Member m);
 
+	int updateUserAcc(SqlSessionTemplate sqlSession, Member loginUser);
+
 }

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -138,11 +139,14 @@
 		</form>
 	</div> <!-- end hidden area -->
 	
+	<c:if test="${ success eq 'success' }">
+		<script type="text/javascript">
+			window.opener.location.reload();    //부모창 reload
+			window.close();    //현재 팝업창 Close
+		</script>
+	</c:if>
 	<!-- script -->
 	<script type="text/javascript">
-		$(function(){
-			$("#updateAccInfo").hide();
-		});
 		$.support.cors = true;
 		var reqDate = new Date();
 		var year = reqDate.getFullYear() +"";
@@ -200,61 +204,60 @@
 				"account_holder_info" : account_holder_info,
 				"tran_dtime" : tran_dtime
 			};
-			$
-					.ajax({
-						url : "https://testapi.open-platform.or.kr/v1.0/inquiry/real_name",
-						beforeSend : function(request) {
-							request.setRequestHeader("Authorization",
-									access_token);
-						},
-						type : "POST",
-						data : JSON.stringify(resData),
-						dataType : "json",
-						success : function(data, data2, data3) {
-							console.log(data)
-							if (data.account_holder_name == $("#accpnm").val()) {
+			$.ajax({
+				url : "https://testapi.open-platform.or.kr/v1.0/inquiry/real_name",
+				beforeSend : function(request) {
+					request.setRequestHeader("Authorization",
+							access_token);
+				},
+				type : "POST",
+				data : JSON.stringify(resData),
+				dataType : "json",
+				success : function(data, data2, data3) {
+					console.log(data)
+					if (data.account_holder_name == $("#accpnm").val()) {
 
-								$("#sbm-flag").attr("checked", true);
-								$("#sbm-ok").show();
-								$("#sbm-no").hide();
-								var checkacc = "인증됨";
-								var pro_no = $
-								{
-									pro_no
-								}
-								;
-								var bankcode = $('[name=bankcode]').val();
-								var accpnm = $('[name=accpnm]').val();
-								var accnum = $('[name=accnum]').val();
-
-								
-								alert('인증 성공!!!');
-								$("#confirmacc").hide();
-								$("#updateAccInfo").show();
-								$("#changeacc").show();
-								$("#sbm-flag").attr("checked", true);
-										$("#sbm-ok").show();
-								$("#sbm-no").hide();
-								$("[name=accpnm]").attr("readonly",
-												"readonly");
-								$("[name=accnum]").attr("readonly",
-												"readonly");
-								$("[name=bankcode]").not(":selected")
-												.attr("disabled", "disabled");
-								
-								/* location.href = "updateUserAcc.me"; */
-
-							} else {
-								alert('인증 실패');
-								$("#sbm-flag").attr("checked", false);
-								$("#sbm-ok").hide();
-								$("#sbm-no").show();
-							}
-						},
-						error : function(data, data2, data3) {
-							alert('error!!!');
+						$("#sbm-flag").attr("checked", true);
+						$("#sbm-ok").show();
+						$("#sbm-no").hide();
+						var checkacc = "인증됨";
+						var pro_no = $
+						{
+							pro_no
 						}
-					});
+						;
+						var bankcode = $('[name=bankcode]').val();
+						var accpnm = $('[name=accpnm]').val();
+						var accnum = $('[name=accnum]').val();
+						
+						
+						alert('인증 성공!!!');
+						$("#confirmacc").hide();
+						//$("#updateAccInfo").show();
+						$("#changeacc").show();
+						$("#sbm-flag").attr("checked", true);
+								$("#sbm-ok").show();
+						$("#sbm-no").hide();
+						$("[name=accpnm]").attr("readonly",
+										"readonly");
+						$("[name=accnum]").attr("readonly",
+										"readonly");
+						$("[name=bankcode]").not(":selected")
+										.attr("disabled", "disabled");
+						
+						location.href = "updateUserAcc.me?bankcode=" + bankcode + 
+						"&accnum=" + accnum;
+					} else {
+						alert('인증 실패');
+						$("#sbm-flag").attr("checked", false);
+						$("#sbm-ok").hide();
+						$("#sbm-no").show();
+					}
+				},
+				error : function(data, data2, data3) {
+					alert('error!!!');
+				}
+			});
 		}
 	</script>
 </body>

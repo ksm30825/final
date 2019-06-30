@@ -83,4 +83,13 @@
 		WHERE MEMBER_ID = #{ memberId }
 		AND ENROLL_STATUS = 'Y'
 	</update>
+	
+	<!-- 계좌정보수정용 세령 -->
+	<update id="updateAcc" parameterType="Member">
+		UPDATE MEMBER
+		SET ACC_CODE = #{ accCode },
+		    ACC_NUMBER = #{ accNumber }
+		WHERE MEMBER_ID = #{ memberId }
+		AND ENROLL_STATUS = 'Y'
+	</update>
 </mapper>
