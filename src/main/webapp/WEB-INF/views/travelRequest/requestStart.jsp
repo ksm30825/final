@@ -98,10 +98,11 @@ th, td {
 		<div class="column">
 			<section class="section" id="form">
 			<!-- 구글 지도 위경도/지역명/주소 -->
-			<textarea id="lat" name="PplaceLat"></textarea>
-			<textarea id="lng" name="PplaceLng"></textarea>
-			<textarea id="placeName" name="PplaceTitle"></textarea>
-			<textarea id="placeAddress" name="PplaceAddress"></textarea>
+			<textarea id="lat" name="PplaceLat" class="hidden"></textarea>
+			<textarea id="lng" name="PplaceLng" class="hidden"></textarea>
+			<textarea id="placeName" name="PplaceTitle" class="hidden"></textarea>
+			<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
+			<input type="hidden" value="${ loginUser.memberId }" name="memberId">
 				<h1 class="title">일정작성</h1>
 				<hr>
 				<div class="columns">

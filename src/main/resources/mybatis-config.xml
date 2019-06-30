@@ -13,6 +13,9 @@
 			<typeAlias type="com.kh.ti.point.model.vo.ReservePoint" alias="ReservePoint"/>
 	    <!-- 선우 -->
 	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequest" alias="TravelRequest"/>
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequestPlan" alias="TravelRequestPlan"/>
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.PlanDay" alias="PlanDay"/>
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.PlanPlace" alias="PlanPlace"/>
 	    <!-- 민지 추가 -->
 			<typeAlias type="com.kh.ti.travel.model.vo.Travel" alias="Travel" />
 			<typeAlias type="com.kh.ti.travel.model.vo.Country" alias="Country" />
