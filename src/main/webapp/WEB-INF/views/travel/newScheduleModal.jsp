@@ -21,34 +21,35 @@
 					<div class="field">
 						<p class="control">
 							<input type="hidden" value="${ trv.trvId }" name="trvId">
-							<input class="input is-primary is-large" type="text" placeholder="일정 제목 입력" name="schTitle">
+							<input class="input is-primary is-large" type="text" placeholder="일정 제목 입력" name="schTitle"
+								id="schTitle1">
 						</p>
 					</div>
 					<div class="field is-horizontal">
 						<div class="field-label is-normal">
-							<label class="label travelCityLabel">장소</label>
+							<label class="label">장소</label>
 						</div>
 						<div class="field-body">
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-map-marker-alt"></i></span>
 									<!-- <input type="hidden" name="plcId"> -->
-									<input class="input" type="text" id="costAmount" placeholder="장소정보없음"
-										readOnly name="plcName"/>
+									<input class="input" type="text" placeholder="장소정보없음"
+										readOnly name="plcName" />
 								</p>
 							</div>
 						</div>
 					</div>
 					<div class="field is-horizontal">
 						<div class="field-label is-normal">
-							<label class="label travelCityLabel">일자</label>
+							<label class="label">일자</label>
 						</div>
 						<div class="field-body">
 							<div class="field is-grouped">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="far fa-calendar-alt"></i></span>
 									<span class="select"> 
-										<select name="dayId">
+										<select name="dayId" id="dayId1">
 											<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st">
 												<option value="${ trvDay.dayId }">DAY ${ trvDay.dayNumber }</option>
 											</c:forEach>
@@ -59,7 +60,7 @@
 							<div class="field">
 								<p class="control">
 									<label class="checkbox"> 
-										<input type="checkbox" name="isTimeset">시간 지정 안함
+										<input type="checkbox" name="isTimeset" id="isTimeset1">시간 지정 안함
 									</label>
 								</p>
 							</div>
@@ -67,13 +68,13 @@
 					</div>
 					<div class="field is-horizontal">
 						<div class="field-label is-normal">
-							<label class="label travelCityLabel">시간</label>
+							<label class="label travelCityLabel">시간 (선택)</label>
 						</div>
 						<div class="field-body">
 							<div class="field">
 								<p class="control is-expanded has-icons-left" style="margin:0">
 									<span class="icon is-small is-left"><i class="far fa-clock"></i></span> 
-									<input class="input" type="time" name="startTime">
+									<input class="input" type="time" name="startTime" id="startTime1">
 								</p>
 								<p class="help">시작시간</p>
 							</div>
@@ -83,7 +84,7 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left" style="margin:0">
 									<span class="icon is-small is-left"><i class="far fa-clock"></i></span> 
-									<input class="input" type="time" name="endTime">
+									<input class="input" type="time" name="endTime" id="endTime1">
 								</p>
 								<p class="help">종료시간</p>
 							</div>
@@ -91,14 +92,14 @@
 					</div>
 					<div class="field is-horizontal">
 						<div class="field-label is-normal">
-							<label class="label">경비</label>
+							<label class="label">경비 (선택)</label>
 						</div>
 						<div class="field-body">
 							<div class="field is-grouped">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-tasks"></i></span>
 									<span class="select"> 
-										<select name="costType">
+										<select name="costType" id="costType1">
 											<option>숙박</option>
 											<option>교통</option>
 											<option>식비</option>
@@ -113,14 +114,14 @@
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-receipt"></i></span>
 									<input class="input" type="number" placeholder="현지화 가격 입력 (선택 )" value="0" 
-									name="costAmount" />
+									name="costAmount" id="costAmount1" />
 								</p>
 							</div>
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-dollar-sign"></i></span>
 									<span class="select"> 
-										<select name="currency">
+										<select name="currency" id="currency1">
 											<c:forEach var="trvCity" items="${ trvCityList }" varStatus="st" >
 												<option>${ trvCity.currencyUnit }</option>
 											</c:forEach>
@@ -132,14 +133,14 @@
 					</div>
 					<div class="field is-horizontal">
 						<div class="field-label is-normal">
-							<label class="label">교통</label>
+							<label class="label">교통 (선택)</label>
 						</div>
 						<div class="field-body">
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-subway"></i></span>
 									<input class="input" type="text" placeholder="교통정보 입력(선택 )"
-									name="schTransp"/>
+									name="schTransp" id="schTransp1"/>
 								</p>
 							</div>
 						</div>
@@ -153,17 +154,15 @@
 		</div>
 	</div>
 	<script>
-		var title =  $("input[name=schTitle]");
-		var dayId = $("select[name=dayId]");
-		var isTimeset = $("input[name=isTimeset]");
-		var startTime = $("input[name=startTime]");
-		var endTime = $("input[name=endTime]");
-		var costAmount = $("input[name=costAmount]");
-		var transp = $("input[name=schTransp]");
+		var title1 =  $("#schTitle1");
+		var dayId1 = $("#dayId1");
+		var isTimeset1 = $("#isTimeset1");
+		var startTime1 = $("#startTime1");
+		var endTime1 = $("#endTime1");
+		var costAmount1 = $("#costAmount1");
+		var transp1 = $("#schTransp1");
 		$(function() {
-			defaultModal = $("#newScheduleModal").children().clone(true);
-			
-			$("select[name=currency]").children().each(function() {
+			$("#currency1").children().each(function() {
 				if($(this).text() == $(this).siblings().text()) {
 					$(this).remove();
 				}
@@ -173,31 +172,31 @@
 			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
         		$('html').removeClass('is-clipped');
         	    $(this).parents(".modal").removeClass('is-active');
-        	   	title.val('');
-        	   	dayId.val('');
-        	   	isTimeset.prop("checked", false);
-        	   	startTime.val('');
-        	   	endTime.val('');
-        	   	costAmount.val('');
-        	   	transp.val('');
+        	   	title1.val('');
+        	   	dayId1.val('');
+        	   	isTimeset1.prop("checked", false);
+        	   	startTime1.val('');
+        	   	endTime1.val('');
+        	   	costAmount1.val('');
+        	   	transp1.val('');
         		
         	});
 			
-			$("input[name=isTimeset]").click(function() {
+			$("#isTimeset1").click(function() {
 				if($(this).prop("checked")) {
-					startTime.val('');
-	        		endTime.val('');
+					startTime1.val('');
+	        		endTime1.val('');
 				}
 			});
 
         	$("#submitSchBtn").click(function() {
-        		console.log("start : " + startTime);
-        		console.log("end : " + endTime);
-        		if(title.val() == '') {
+        		console.log("start : " + startTime1);
+        		console.log("end : " + endTime1);
+        		if(title1.val() == '') {
         			alert("일정제목을 입력해주세요.");
-        		}else if(!isTimeset.prop("checked") && (startTime.val() == '' || endTime.val() == '')) {
+        		}else if(!isTimeset1.prop("checked") && (startTime1.val() == '' || endTime1.val() == '')) {
         			alert('시간을 지정하지 않으시려면 시간미지정 박스에 체크해주세요.');
-        		}else if(startTime.val() > endTime.val()) {
+        		}else if(startTime1.val() > endTime1.val()) {
         			alert('시작시간과 종료시간을 다시 확인하세요');
         		}else {
         			$("#newSchForm").submit();

@@ -13,9 +13,13 @@ import com.kh.ti.travel.model.vo.Travel;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
+import com.kh.ti.travel.model.vo.TrvTag;
 
 public interface TravelService {
 
+
+	ArrayList<Travel> selectTrvList(int memberId);
+	
 	int insertTravel(Travel trv);
 	
 	HashMap selectTravel(int trvId);
@@ -26,23 +30,30 @@ public interface TravelService {
 	
 	int completeTravel(int trvId);
 
-	int selectSchCount(int dayId);
-	
-	int selectSchNumber(int dayId, String startTime);
+	int deleteTravel(int trvId);
+
+	int selectSchNumber(ArrayList<TrvSchedule> schList, String startTime);
 
 	int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc);
+
+	int updateTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc);
 	
 	int deleteTrvSchedule(int schId);
 
+	int insertTrvTag(TrvTag trvTag);
+
+	int deleteTrvTag(TrvTag trvTag);	
 	
 	
 	
 	
+	
+
+	TrvCost selectTrvCost(int schId);
 	
 
 	int insertTrvCompany(Travel trv, Member m);
 
-	int insertTrvTag(Travel trv, Tag tag);
 
 	int insertTrvPlace(Travel trv, Place plc);
 
@@ -50,7 +61,6 @@ public interface TravelService {
 
 	int insertTrvCost(TrvSchedule sch, TrvCost cost);
 
-	int updateTrvSchedule(TrvSchedule sch, Place plc);
 
 	int insertSchFile(SchFile schFile);
 	
@@ -60,19 +70,19 @@ public interface TravelService {
 
 	int updateTravel(Travel trv);
 
-	int deleteTravel(Travel trv);
 
 	int deleteTrvCity(Travel trv, int cityId);
 
 	int deleteTrvComp(Travel trv, int memberId);
 
-	int deleteTrvTag(Travel trv, int tagId);
 	
 	int updateTrvCost(TrvCost cost);
 
 	int deleteTrvCost(TrvCost cost);
 
 	int deleteSchFile(SchFile file);
+
+
 
 
 

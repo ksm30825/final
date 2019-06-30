@@ -27,6 +27,7 @@
 				<form action="insertTravel.trv" method="post" id="newTrvForm">
 					<div class="field">
 						<p class="control">
+							<input type="hidden" value="${ sessionScope.loginUser.memberId }" name="memberId" />
 							<input class="input is-primary is-large" type="text" placeholder="여행 제목 입력"
 								name="trvTitle">
 						</p>
@@ -196,7 +197,12 @@
 					alert("서버 전송실패");
 				}
 			});
-			$('#newTravelModal').toggleClass('is-active')
+			
+			if(${ !empty sessionScope.loginUser }) {
+				$('#newTravelModal').toggleClass('is-active');
+			}else {
+				alert("로그인을 해주세요.");
+			}
 		}
 		$("select[name=trvCountry]").change(function() {
     		var country = $(this).children("option:selected");

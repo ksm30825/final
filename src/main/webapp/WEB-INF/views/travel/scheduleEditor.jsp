@@ -200,18 +200,23 @@
 									<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
 										<li class=" panel-block" style="background:white">
 											<div class="media-left" style="width:20%">
-												<p>${ sch.startTime } - ${ sch.endTime }</p>
+												<input type="hidden" value="${ sch.dayId }" name="dayId"/>
+												<p class="schTime">${ sch.startTime } - ${ sch.endTime }</p>
 												
 											</div>
 											<div class="media-content" style="width:70%">
 												<div class="content">
 													<p>
-														<strong>${ sch.schTitle }</strong>
+														<strong class="schTitle">${ sch.schTitle }</strong>
 													</p>
-													<small>${ sch.trvCost.costType } : <strong>${ sch.trvCost.costAmount }</strong> ${ sch.trvCost.currency }</small>
-													<small>${ sch.schTransp }</small>
+													<c:if test="${ !empty sch.trvCost }">
+														<small class="costType">${ sch.trvCost.costType } : </small>
+														<small class="costAmount"><strong>${ sch.trvCost.costAmount }</strong></small>
+														<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
+													</c:if>
+													<small class="schTransp">${ sch.schTransp }</small>
 													<small>
-														<a style="color:purple">
+														<a style="color:purple" class="schPlcName">
 													 		<span class="icon is-small" style="color:purple"> 
 																<i class="fas fa-map-marker-alt"></i>
 															</span>
@@ -229,7 +234,8 @@
 												<input type="hidden" value="${ sch.schId }" name="schId">
 												<button class="delete schDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
 												<br><br>	
-												<span class="icon schInfoBtn" data-tooltip="일정 정보 수정">
+												<span class="icon schInfoBtn" data-tooltip="일정 정보 수정" data-variation="mini"
+													data-position="left center">
 													<i class="fas fa-edit"></i>
 												</span>
 											</div>
@@ -434,6 +440,15 @@
 						<i class="fas fa-hashtag"></i>내 여행 테마
 					</h6>
 					<div class="field is-grouped is-grouped-multiline" id="myTagArea">
+						<c:forEach var="trvTag" items="${ trvTagList }" varStatus="st">
+							<div class="control">
+								<div class="tags has-addons">
+									<a class="tag is-primary">${ trvTag.tagName }</a>
+									<a class="tag is-delete tagDelete"></a>
+									<input type="hidden" value="${ trvTag.tagId }" />
+								</div>
+							</div>
+						</c:forEach>
 					</div>
 				</div>
 			</section>
@@ -498,7 +513,68 @@
 			
 			//일정 수정
 			$(".schInfoBtn").click(function() {
-				$('#scheduleInfoModal').toggleClass('is-active');
+				var schId = $(this).siblings().eq(0).val();
+				var li = $(this).parent().parent();
+				var dayId = li.find("input[name=dayId]").val();
+				var schTitle = li.find(".schTitle").text();
+				console.log(schTitle);
+				var schTransp = li.find(".schTransp").text();
+				var schTime = li.find(".schTime").text();
+				var index = schTime.indexOf("-");
+				var startTime = "";
+				var endTime = "";
+				if(schTime != " - ") {
+					startTime = schTime.substring(0, index - 1);
+					endTime = schTime.substring(index + 2);
+				}
+				console.log(startTime, endTime);					
+				var costTypeStr = li.find(".costType").text().substring();
+				var costType = costTypeStr.substring(0, costTypeStr.indexOf(":") - 1);
+				var costAmount = li.find(".costAmount").children().text();
+				var costCurrency = li.find(".costCurrency").text();
+				var currency = costCurrency.substring(1, costCurrency.length - 3);
+				console.log(costType, costAmount, currency);
+				
+				var modal = $("#scheduleInfoModal");
+				
+				modal.find("input[name=schId]").val(schId);
+				modal.find("input[name=schTitle]").val(schTitle);
+				modal.find("select[name=dayId]").children().each(function() {
+					if($(this).val() == dayId) {
+						$(this).prop("selected", true);
+					}
+				});
+				
+				if(startTime == "" && endTime == "") {
+					modal.find("input[name=isTimeset]").prop("checked", true);
+					modal.find("input[name=startTime]").val("");
+					modal.find("input[name=endTime]").val("");
+				}else {
+					modal.find("input[name=isTimeset]").prop("checked", false);
+					modal.find("input[name=startTime]").val(startTime);
+					modal.find("input[name=endTime]").val(endTime);
+				}
+				
+				modal.find("select[name=costType]").children().each(function() {
+					if($(this).text() == costType) {
+						$(this).prop("selected", true);
+					}
+				});
+				
+				
+				if(costAmount == "") {
+					modal.find("input[name=costAmount]").val(0);
+				}else {
+					modal.find("input[name=costAmount]").val(parseInt(costAmount));
+				}
+				modal.find("select[name=currency]").children().each(function() {
+					if($(this).text() == currency) {
+						$(this).prop("selected", true);
+					}
+				});
+				modal.find("input[name=schTransp]").val(schTransp);
+				
+				modal.toggleClass('is-active');
 			});
 			
 			//일정 삭제
@@ -541,34 +617,109 @@
 			});
 			
 			
+			
+			$(".themes").each(function() {
+				var tag = $(this);
+				var tagId = $(this).children().val();
+				$(".tags.has-addons").each(function() {
+					var trvTagId = $(this).children("input").val();
+					if(tagId == trvTagId) {
+						tag.removeClass('is-white').addClass('is-link');
+					}
+				});
+			});
+			
+			
 
 			//여행테마 선택
 			$(".themes").click(function() {
-				var text = $(this).text();
-				if($(this).is(".is-white")) {
-					$(this).removeClass('is-white').addClass('is-link');
-					$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
-							+ $(this).text() + '</a><a class="tag is-delete tagDelete"></a></div></div>'));
-					
-					$(".tagDelete").click(function() {
-						console.log("1");
-						var text = $(this).prev().text();
-						$(this).parent().parent().remove();
-						$(".themes").each(function() {
-							if($(this).text() == text) {
-								$(this).addClass('is-white').removeClass('is-link');
-							}
-						});
+				var tag = $(this);
+				var tagName = $(this).text();
+				var tagId = $(this).children().val();
+				if(tag.is(".is-white")) {
+					$.ajax({
+						url:"insertTrvTag.trv",
+						data:{tagId:tagId, trvId:"${ trv.trvId }"},
+						type:"post",
+						success:function(data) {
+							console.log(data);
+							tag.removeClass('is-white').addClass('is-link');
+							$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
+									+ tagName + '</a><a class="tag is-delete tagDelete"></a><input type="hidden" value="' + tagId + '"></div></div>'));
+							
+							$(".tagDelete").click(function() {
+								var name = $(this).prev().text();
+								var id = parseInt($(this).next().val());
+								var trvTag = $(this).parent().parent();
+								$.ajax({
+									url:"deleteTrvTag.trv",
+									data:{tagId:id, trvId:"${ trv.trvId }"},
+									type:"post",
+									success:function(data) {
+										trvTag.remove();
+										$(".themes").each(function() {
+											if($(this).children().val() == id) {
+												$(this).removeClass('is-link').addClass('is-white');
+											}
+										});
+									},
+									error:function(data) {
+										alert("서버전송 실패");
+									}
+								});
+								
+							});
+						},
+						error:function(data) {
+							alert("여행테마 insert 서버전송 실패");
+						}
 					});
 					
+					
+					
 				}else {
-					$(this).addClass('is-white').removeClass('is-link');
-					$("#myTagArea .tags.has-addons").each(function() {
-						if($(this).children("a").text() == text) {
-							$(this).parent().remove();
+					$.ajax({
+						url:"deleteTrvTag.trv",
+						data:{tagId:tagId, trvId:"${ trv.trvId }"},
+						type:"post",
+						success:function(data) {
+							console.log(data);
+							tag.removeClass('is-link').addClass('is-white');
+							$("#myTagArea .tags.has-addons").each(function() {
+								if($(this).children().last().val() == tagId) {
+									$(this).parent().remove();
+								}
+							});
+						},
+						error:function(data) {
+							alert("서버전송 실패");
 						}
 					});
 				}
+			});
+			
+			$(".tagDelete").click(function() {
+				var tagName = $(this).prev().text();
+				var tagId = parseInt($(this).next().val());
+				var trvTag = $(this).parent().parent();
+				$.ajax({
+					url:"deleteTrvTag.trv",
+					data:{tagId:tagId, trvId:"${ trv.trvId }"},
+					type:"post",
+					success:function(data) {
+						console.log(data);
+						trvTag.remove();
+						$(".themes").each(function() {
+							if($(this).children().val() == tagId) {
+								$(this).removeClass('is-link').addClass('is-white');
+							}
+						});
+					},
+					error:function(data) {
+						alert("deleteTrvTag.trv 서버전송 실패");
+					}
+				});
+				
 			});
 
 		});
