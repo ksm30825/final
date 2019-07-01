@@ -161,14 +161,14 @@ public class TravelController {
 	
 	//상세일정추가-민지
 	@RequestMapping("insertSch.trv")
-	public String insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc, int trvId, Model model) {
+	public String insertTrvSchedule(TrvSchedule sch, TrvCost cost, int trvId, Model model) {
 		System.out.println("SCH : " + sch);
 		System.out.println("COST : " + cost);
 		
 		cost.setCostContent(sch.getSchTitle());
 		
 		
-		int result = ts.insertTrvSchedule(sch, cost, plc);
+		int result = ts.insertTrvSchedule(sch, cost);
 		if(result > 0) {
 			return "redirect:/selectTravel.trv?trvId=" + trvId;
 		}else {
@@ -180,15 +180,14 @@ public class TravelController {
 	
 	//상세일정업데이트-민지
 	@RequestMapping("updateSch.trv")
-	public String updateTrvSchedule(TrvSchedule sch,  TrvCost cost, Place plc, int trvId, Model model) {
+	public String updateTrvSchedule(TrvSchedule sch,  TrvCost cost, int trvId, Model model) {
 		System.out.println("sch: " + sch);
 		System.out.println("cost: " + cost);
-		System.out.println("plc: " + plc);
 		System.out.println("trvId: " + trvId);
 		
 		cost.setCostContent(sch.getSchTitle());
 		
-		int result = ts.updateTrvSchedule(sch, cost, plc);
+		int result = ts.updateTrvSchedule(sch, cost);
 		if(result > 0) {
 			return "redirect:/selectTravel.trv?trvId=" + trvId;
 		}else {
@@ -196,14 +195,6 @@ public class TravelController {
 			return "common/errorPage";
 		}
 	}
-	
-	//상세일정조회 - 민지
-	@RequestMapping("selectSch.trv")
-	public ModelAndView selectSchedule(int schId, ModelAndView mv) {
-		
-		return mv;
-	}
-	
 	
 	//상세일정삭제-민지
 	@RequestMapping("deleteSch.trv") 
@@ -217,6 +208,16 @@ public class TravelController {
 			return "common/errorPage";
 		}
 	}
+	
+	
+	//상세일정조회 - 민지
+	@RequestMapping("selectSch.trv")
+	public ModelAndView selectSchedule(int schId, ModelAndView mv) {
+		
+		return mv;
+	}
+	
+	
 	
 	
 	
@@ -237,7 +238,14 @@ public class TravelController {
 	}	
 	
 	
-	
+	//dayMemo업데이트 - 민지
+	@RequestMapping("updateDayMemo.trv")
+	public ModelAndView updateDayMemo(TrvDay trvDay, ModelAndView mv) {
+		
+		int result = ts.updateDayMemo(trvDay);
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
 	
 	

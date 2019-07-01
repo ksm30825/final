@@ -125,7 +125,8 @@
 								</div>
 								<div class="panel-heading" align="center" style="margin: 0">
 									<span>DAY ${ trvDay.dayNumber }</span>&nbsp; 
-									<input class="input dayMemo is-small" type="text" placeholder="MEMO"
+									<input type="hidden" value="${ trvDay.dayId }">
+									<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO"
 										value="${ trvDay.dayMemo }">
 								</div>
 								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->

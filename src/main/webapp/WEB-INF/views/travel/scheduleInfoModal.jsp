@@ -21,7 +21,7 @@
 					<div class="field">
 						<p class="control">
 							<input type="hidden" value="${ trv.trvId }" name="trvId">
-							<input type="hidden" name="schId" />
+							<input type="hidden" name="schId" id="schId2"/>
 							<input class="input is-primary is-large" type="text" placeholder="일정 제목 입력" name="schTitle"
 							id="schTitle2">
 						</p>
@@ -34,9 +34,9 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-map-marker-alt"></i></span>
-									<!-- <input type="hidden" name="plcId"> -->
+									<input type="hidden" name="plcId" id="plcId2">
 									<input class="input" type="text" placeholder="장소정보없음"
-										readOnly name="plcName"/>
+										readOnly name="plcName" id="plcName2"/>
 								</p>
 							</div>
 						</div>
@@ -188,6 +188,13 @@
 				if($(this).prop("checked")) {
 					startTime2.val('');
 	        		endTime2.val('');
+				}
+			});
+			
+			$("#costAmount2").change(function() {
+				console.log($(this).val());
+				if($(this).val() == "") {
+					$(this).val(0);
 				}
 			});
 

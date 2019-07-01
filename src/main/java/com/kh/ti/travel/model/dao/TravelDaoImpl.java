@@ -160,28 +160,37 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.delete("Travel.deleteSch", schId);
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
 	@Override
-	public int insertPlace(SqlSessionTemplate sqlSession, Place plc) {
-		/* return sqlSession.insert("Travel.insertTrvPlace"); */
-		return 0;
+	public int updateTrvDayMemo(SqlSessionTemplate sqlSession, TrvDay trvDay) {
+		return sqlSession.update("Travel.updateTrvDayMemo", trvDay);
 	}
-	@Override
-	public int selectPlcId(SqlSessionTemplate sqlSession) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+//	@Override
+//	public int insertPlace(SqlSessionTemplate sqlSession, Place plc) {
+//		/* return sqlSession.insert("Travel.insertTrvPlace"); */
+//		return 0;
+//	}
+//	@Override
+//	public int selectPlcId(SqlSessionTemplate sqlSession) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+	
+	
+	
 	@Override
 	public int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch) {
 		// TODO Auto-generated method stub
@@ -277,7 +286,6 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 
 

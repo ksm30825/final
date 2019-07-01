@@ -83,17 +83,6 @@
 		<result property="dayId" column="DAY_ID" />
 		<result property="costType" column="COST_TYPE" />
 	</resultMap>
-	<resultMap id="PlaceResutSet" type="Place">
-		<id property="plcId" column="PLC_ID" />
-		<result property="cityId" column="CITY_ID" />
-		<result property="plcName" column="PLC_NAME" />
-		<result property="plcAddress" column="PLC_ADDRESS" />
-		<result property="plcEngName" column="PLC_ENGNAME" />
-		<result property="plcLat" column="PLC_LAT" />
-		<result property="plcLng" column="PLC_LNG" />
-		<result property="plcCount" column="PLC_COUNT" />
-				<result property="plcTypeId" column="PLCTYPE_ID" />
-	</resultMap>
 	
 
 
@@ -195,7 +184,11 @@
 		DELETE FROM TRV_DAY
 		WHERE DAY_ID = #{dayId}
 	</delete>
-
+	<update id="updateTrvDayMemo" parameterType="TrvDay">
+		UPDATE TRV_DAY
+		SET DAY_MEMO = #{dayMemo}
+		WHERE DAY_ID = #{dayId}
+	</update>
 	
 	
 	
@@ -206,16 +199,15 @@
 		WHERE DAY_ID = #{dayId}
 	</select>
 	<select id="selectSchList" parameterType="_int" resultMap="TrvSchResultSet">
-		SELECT SCH.*, P.PLC_NAME
-		FROM TRV_SCH SCH
-		LEFT JOIN PLACE P ON (P.PLC_ID = SCH.PLC_ID)
+		SELECT *
+		FROM TRV_SCH
 		WHERE DAY_ID = #{dayId}
-		ORDER BY SCH.SCH_NUMBER
+		ORDER BY SCH_NUMBER
 	</select>
 	<insert id="insertSch" parameterType="TrvSch">
 		INSERT INTO TRV_SCH
 		VALUES(TRV_SCH_SEQ.NEXTVAL, #{schTitle}, #{schNumber}, #{startTime}, #{endTime}, #{isTimeset},
-		NULL, #{schTransp}, NULL, #{dayId}, NULL, NULL)
+		NULL, #{schTransp}, #{plcId}, #{plcName}, #{dayId}, NULL, NULL)
 	</insert>
 	<update id="updateSchNumber" parameterType="TrvSch">
 		UPDATE TRV_SCH

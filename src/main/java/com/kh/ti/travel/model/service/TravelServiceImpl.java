@@ -248,7 +248,7 @@ public class TravelServiceImpl implements TravelService {
 	
 	
 	@Override
-	public int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc) {
+	public int insertTrvSchedule(TrvSchedule sch, TrvCost cost) {
 		
 
 		int count = td.selectSchCount(sqlSession, sch.getDayId());
@@ -276,18 +276,17 @@ public class TravelServiceImpl implements TravelService {
 			int result2 = td.insertTrvCost(sqlSession, cost);
 		}
 		
-		if(plc.getPlcId() != 0) {
-			int result3 = td.insertPlace(sqlSession, plc);
-			int plcId = td.selectPlcId(sqlSession);
-			sch.setPlcId(plcId);
-			int result4 = td.updateSchPlcId(sqlSession, sch);
-		}
+		/*
+		 * if(plc.getPlcId() != 0) { int result3 = td.insertPlace(sqlSession, plc); int
+		 * plcId = td.selectPlcId(sqlSession); sch.setPlcId(plcId); int result4 =
+		 * td.updateSchPlcId(sqlSession, sch); }
+		 */
 		return result;
 	}
 
 
 	@Override
-	public int updateTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc) {
+	public int updateTrvSchedule(TrvSchedule sch, TrvCost cost) {
 		int result1 = 0;
 		int result2 = 0;
 		if(sch.getIsTimeset() != null) {
@@ -422,6 +421,15 @@ public class TravelServiceImpl implements TravelService {
 
 	
 	
+	
+	@Override
+	public int updateDayMemo(TrvDay trvDay) {
+		return td.updateTrvDayMemo(sqlSession, trvDay);
+	}
+
+	
+	
+	
 
 	
 //----------------tag---------------------------------------------------------------	
@@ -464,12 +472,12 @@ public class TravelServiceImpl implements TravelService {
 
 
 
-	@Override
-	public int insertTrvPlace(Travel trv, Place plc) {
-		TrvSchedule sch = null;
-		int result2 = td.insertTrvSchedule(sqlSession, sch);
-		return 0;
-	}
+//	@Override
+//	public int insertTrvPlace(Travel trv, Place plc) {
+//		TrvSchedule sch = null;
+//		int result2 = td.insertTrvSchedule(sqlSession, sch);
+//		return 0;
+//	}
 
 
 	@Override
@@ -537,6 +545,7 @@ public class TravelServiceImpl implements TravelService {
 		int result = td.deleteSchFile(sqlSession, file);
 		return 0;
 	}
+
 
 
 
