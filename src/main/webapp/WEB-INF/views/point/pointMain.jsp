@@ -121,6 +121,7 @@
 								    </tbody>
 							  </table>
 					    	</div>
+					    	
 					    	<div align="center" class="chargePagingArea" id="chargePagingArea" style="margin-top:3%;">
 					    		<button class="pageingBtn"> << </button>
 					    		<button class="pageingBtn"> < </button>
