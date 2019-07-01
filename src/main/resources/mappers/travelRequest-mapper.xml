@@ -14,6 +14,16 @@
 		<result property="endDate" column="END_DATE"/>
 	</resultMap>
 	
+	<!-- 설계글 목록 조회 -->
+	<resultMap type="TravelRequestPlan" id="planListResultSet">
+		<id property="planId" column="PLAN_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="planContent" column="PLAN_CONTENT"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+	</resultMap>
+	
 	<!-- 의뢰글 상세 보기 -->
 	<resultMap type="TravelRequest" id="requestDetailResultSet">
 		<id property="requestId" column="REQUEST_ID"/>
@@ -23,6 +33,8 @@
 		<result property="requestPrice" column="REQUEST_PRICE"/>
 		<result property="trvCost" column="TRV_COST"/>
 		<result property="endDate" column="END_DATE"/>
+		<collection property="planList" javaType="java.util.ArrayList"
+					resultMap="planListResultSet"/>
 	</resultMap>
 	<!-- 의뢰하기 -->
 	<insert id="insertRequest" parameterType="TravelRequest">
@@ -49,10 +61,17 @@
 	
 	<!-- 의뢰글 상세보기 -->
 	<select id="selectOneRequest" parameterType="_int" resultMap="requestDetailResultSet">
-		SELECT TR.REQUEST_ID, TR.REQUEST_TITLE, TR.REQUEST_CONTENT, M.USER_NAME, TR.REQUEST_PRICE, TR.TRV_COST, TR.END_DATE
-		FROM TRV_REQUEST TR
-		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
-		WHERE TR.CHOOSE_STATUS = 'N'
+		SELECT TR.REQUEST_ID, TR.REQUEST_TITLE, TR.REQUEST_CONTENT, 
+      		   M.USER_NAME, TR.REQUEST_PRICE, TR.TRV_COST, TR.END_DATE,
+       		   P.PTCP_ID, TP.PLAN_ID, TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ENROLL_DATE,
+       		   (SELECT M.USER_NAME
+				FROM MEMBER M
+				WHERE M.MEMBER_ID = #{memberId})
+        FROM TRV_REQUEST TR
+        JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
+        LEFT JOIN PARTICIPATION P ON (TR.REQUEST_ID =  P.REQUEST_ID)
+        LEFT JOIN TRV_PLAN TP ON (TP.PLAN_ID = P.PLAN_ID)
+        WHERE TR.CHOOSE_STATUS = 'N'
 		AND TR.REQUEST_ID = #{requestId}
 	</select>
 	
@@ -79,5 +98,14 @@
 		</selectKey>
 		INSERT INTO PLAN_PLACE
 		VALUES (PLAN_PLACE_SEQ.NEXTVAL, #{PplaceTitle}, #{PplaceAddress}, #{PplaceLat}, #{PplaceLng}, #{PdayId}, 1)
+	</insert>
+	
+	<!-- 설계글 의뢰참여 인서트 -->
+	<insert id="insertParticipation" parameterType="Participation">
+		<selectKey keyProperty="planId" resultType="_int" order="BEFORE">
+			SELECT TRV_PLAN_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PARTICIPATION
+		VALUES (PARTICIPATION_SEQ.NEXTVAL, 'N', SYSDATE, NULL, #{requestId}, #{planId})
 	</insert>
 </mapper>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ti.myRequest.model.dao.MyRequestDao;
+import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
@@ -24,7 +25,8 @@ public class MyRequestServiceImpl implements MyRequestService{
 	private DataSourceTransactionManager transactionManager;
 	
 	@Override
-	public int insertRequestPlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp) {
+	public int insertRequestPlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList,
+								 TravelRequestPlan tp, Participation p) {
 		int result = 0;
 		
 		//설계글 인서트(1단계) - 이선우
@@ -33,8 +35,10 @@ public class MyRequestServiceImpl implements MyRequestService{
 		int result2 = mrd.insertRequestDay(sqlSession, dayList);
 		//설계글 각 장소 인서트(3단계) - 이선우
 		int result3 = mrd.insertRequestPlace(sqlSession, placeList);
+		//설계글 의뢰참여 인서트(4단계) - 이선우
+		int result4 = mrd.insertParticipation(sqlSession, p);
 		
-		if(result1 > 0 && result2 == dayList.size() && result3 == placeList.size()) {
+		if(result1 > 0 && result2 == dayList.size() && result3 == placeList.size() && result4 > 0) {
 			result = 1;
 		} else {
 			result = 0;

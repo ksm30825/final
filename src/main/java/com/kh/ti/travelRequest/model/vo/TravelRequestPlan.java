@@ -8,6 +8,7 @@ public class TravelRequestPlan implements Serializable{
 	private int planId;		//설계번호
 	private String planTitle;	//설계제목
 	private int memberId;	//회원번호
+	private String userName;	//회원명
 	private String planRef;	//참조구분
 	private int trvId;	//여행일정번호
 	private String planContent;		//여행소개
@@ -20,13 +21,14 @@ public class TravelRequestPlan implements Serializable{
 	
 	public TravelRequestPlan() {}
 
-	public TravelRequestPlan(int planId, String planTitle, int memberId, String planRef, int trvId, String planContent,
-			Date modifyDate, Date enrollDate, int roomCharge, int trafficCharge, int etcCharge,
+	public TravelRequestPlan(int planId, String planTitle, int memberId, String userName, String planRef, int trvId,
+			String planContent, Date modifyDate, Date enrollDate, int roomCharge, int trafficCharge, int etcCharge,
 			ArrayList<PlanDay> dayList) {
 		super();
 		this.planId = planId;
 		this.planTitle = planTitle;
 		this.memberId = memberId;
+		this.userName = userName;
 		this.planRef = planRef;
 		this.trvId = trvId;
 		this.planContent = planContent;
@@ -60,6 +62,14 @@ public class TravelRequestPlan implements Serializable{
 
 	public void setMemberId(int memberId) {
 		this.memberId = memberId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPlanRef() {
@@ -137,8 +147,9 @@ public class TravelRequestPlan implements Serializable{
 	@Override
 	public String toString() {
 		return "TravelRequestPlan [planId=" + planId + ", planTitle=" + planTitle + ", memberId=" + memberId
-				+ ", planRef=" + planRef + ", trvId=" + trvId + ", planContent=" + planContent + ", modifyDate="
-				+ modifyDate + ", enrollDate=" + enrollDate + ", roomCharge=" + roomCharge + ", trafficCharge="
-				+ trafficCharge + ", etcCharge=" + etcCharge + ", dayList=" + dayList + "]";
+				+ ", userName=" + userName + ", planRef=" + planRef + ", trvId=" + trvId + ", planContent="
+				+ planContent + ", modifyDate=" + modifyDate + ", enrollDate=" + enrollDate + ", roomCharge="
+				+ roomCharge + ", trafficCharge=" + trafficCharge + ", etcCharge=" + etcCharge + ", dayList=" + dayList
+				+ "]";
 	}
 }

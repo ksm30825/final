@@ -97,8 +97,9 @@ public class TravelRequestController {
 	
 	//설계해주기 - 이선우
 	@RequestMapping("showrequestStartForm")
-	public String showRequestStartForm() {
-		
+	public String showRequestStartForm(@RequestParam("reqId")String reqId, Model model) {
+		System.out.println(reqId);
+		model.addAttribute("reqId", reqId);
 		return "travelRequest/requestStart";
 	}
 	

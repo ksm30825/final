@@ -2,6 +2,7 @@ package com.kh.ti.travelRequest.model.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class TravelRequest implements Serializable{
 	private int requestId;	//의뢰번호
@@ -14,11 +15,13 @@ public class TravelRequest implements Serializable{
 	private String chooseStatus;	//채택상태
 	private Date chooseDate;	//채택날짜
 	private int trvCost;	//예산
+	private ArrayList<TravelRequestPlan> planList;	//설계글 목록
 	
 	public TravelRequest() {}
 
 	public TravelRequest(int requestId, String requestTitle, String requestContent, Date endDate, int requestPrice,
-			int memberId, String userName, String chooseStatus, Date chooseDate, int trvCost) {
+			int memberId, String userName, String chooseStatus, Date chooseDate, int trvCost,
+			ArrayList<TravelRequestPlan> planList) {
 		super();
 		this.requestId = requestId;
 		this.requestTitle = requestTitle;
@@ -30,6 +33,7 @@ public class TravelRequest implements Serializable{
 		this.chooseStatus = chooseStatus;
 		this.chooseDate = chooseDate;
 		this.trvCost = trvCost;
+		this.planList = planList;
 	}
 
 	public int getRequestId() {
@@ -112,11 +116,19 @@ public class TravelRequest implements Serializable{
 		this.trvCost = trvCost;
 	}
 
+	public ArrayList<TravelRequestPlan> getPlanList() {
+		return planList;
+	}
+
+	public void setPlanList(ArrayList<TravelRequestPlan> planList) {
+		this.planList = planList;
+	}
+
 	@Override
 	public String toString() {
 		return "TravelRequest [requestId=" + requestId + ", requestTitle=" + requestTitle + ", requestContent="
 				+ requestContent + ", endDate=" + endDate + ", requestPrice=" + requestPrice + ", memberId=" + memberId
 				+ ", userName=" + userName + ", chooseStatus=" + chooseStatus + ", chooseDate=" + chooseDate
-				+ ", trvCost=" + trvCost + "]";
+				+ ", trvCost=" + trvCost + ", planList=" + planList + "]";
 	}
 }
