@@ -1,5 +1,7 @@
 package com.kh.ti.Chatting.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +19,7 @@ public class ChattingController {
 	@RequestMapping("/openCompanion.ch")
 	public String popupCompanion() {
 		
-		return "companion/CompanionMain";
+		return "companion/EnterRoomList";
 	}
 	
 	//참가방 - 나의 채팅방 뷰 보여주는 페이지 -지원
@@ -36,10 +38,15 @@ public class ChattingController {
 	
 	//채팅방 들어가는 메소드 - 지원
 	@RequestMapping("/enterChatting.ch")
-	public String showChattingRoom() {
+	public String showChattingRoom(HttpServletRequest request) {
+		String chatid = (String)request.getParameter("num");
 		
+		//System.out.println("chatId :" + chatid);
+		
+		request.setAttribute("chatId", chatid);
 		
 		return "companion/ChattingRoom";
+		
 	}
 	
 	//사용자 정보 창으로 이동 메소드 - 지원

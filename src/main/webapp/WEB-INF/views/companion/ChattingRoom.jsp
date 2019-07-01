@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
 <style>
 	#chatpeopleTable {
 		width : 100%;
@@ -28,9 +27,23 @@
 	.label-danger {
 		margin:5%; float:right;padding: .5em .6em .5em;
 	}
+	
+	#chat_box {
+		overflow-y: auto;
+	   	height: 75%;
+	    position: absolute;
+	    width: 100%;
+	    margin-top: 15%;
+	}
+	
+	#ChatRoomTitle{
+	    margin: 5%;
+	}
+	
 </style>
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
+	<input type = "hidden" value = "${chatId}" id = "ReChatID">
 	
 	<div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;width:80%;" id="rightMenu">
 	  <div style = "height : 7%; width : 100%; background: #6196ed;">
@@ -114,10 +127,10 @@
 	  <button id = "returnBtn" onclick = "location.href = '${contextPath}/enterRoom.ch'"><i class="material-icons" >keyboard_arrow_left</i></button>
 	  <button class="w3-button w3-teal w3-xlarge w3-right" id = "menubtn" onclick="openRightMenu()">&#9776;</button>
 	  <div class="w3-container" id = "header">
-	   	 <h1 align = "center">My Page</h1>
+	   	 <h4 align = "center" id = "ChatRoomTitle">My Page</h4>
 	  </div>
 	</div>
-	<div class="w3-container" id = "content">
+	<div class="w3-container" id = "chat_box">
 		
 	</div>
 	<div id="footer" >
@@ -127,8 +140,8 @@
 	</div>
 	
 	
-	 
-	
+	<script src="http://localhost:8010/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	<script>
 		function openRightMenu() {
 		  document.getElementById("rightMenu").style.display = "block";
@@ -138,9 +151,10 @@
 		  document.getElementById("rightMenu").style.display = "none";
 		}
 		
-		$(function(){
-			$('[data-toggle="tooltip"]').tooltip();   
+		
+		$(document).ready(function() { //start
 			
+	
 			$("#Recruitingicon").click(function(){
 				
 				if(confirm("모집을 종료하시겠습니까?")) {
@@ -153,8 +167,135 @@
 				console.log(status);
 			});
 			
-			
-		});
+			var user = ${ loginUser.memberId };
+			var chatId = $("#ReChatID").val();
+    	 	
+    		console.log("user :"+user);
+    		console.log("chatId :" + chatId);
+    		
+    	  	//서버
+			var socket = io("http://localhost:8010");
+    	  	
+    	  	//메세지 보내기 enter 
+			 $("#message").keydown(function(key) {
+	                //해당하는 키가 엔터키(13) 일떄
+	                if (key.keyCode == 13) {
+	                    //msg_process를 클릭해준다.
+	                    sendbtn.click();
+	                }
+	            });
+	 
+	           //msg_process를 클릭할 때
+	           $("#sendbtn").click(function() {
+	                //소켓에 send_msg라는 이벤트로 input에 #msg의 벨류를 담고 보내준다.
+	                
+	                console.log("message :" + $("#message").val());
+	                
+	                socket.emit('message', {
+	                	user :user, message : $("#message").val() , chatId : chatId
+	                });
+	                //#msg에 벨류값을 비워준다.
+	                $("#message").val("");
+	          });
+	           
+	           //메세지 보낸 후
+	           socket.on('message' , function(data){
+	                var output = '';
+	                
+	                if (data.user == user){
+		                output += '<div class="alert alert-info" id = "msg" style = "background : #f1ccfc; border-color: #f1ccfc;"><strong>';                	
+	                }else {
+	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
+	                }
+	                
+	                if (data.user == user){
+	                	output += '나';
+	                }else {
+	                	output += data.user;
+	                }
+	                
+	                output += '</strong> ';
+	                output += data.message;
+	                output += '</div>';
+	                $(output).appendTo('#chat_box');
+	                
+	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+	            });
+	           
+	           //채팅방  대화 가져오기 위해서 소켓 실행
+	           socket.emit('preChat', { chatId : chatId });
+	            
+	           socket.on('preChat' , function(data){
+	                var output = '';
+	                
+	                if (data.user == user){
+		                output += '<div class="alert alert-info" id = "msg" style = "background : #f1ccfc; border-color: #f1ccfc;"><strong>';                	
+	                }else {
+	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
+	                }
+	                
+	                if (data.user == user){
+	                	output += '나';
+	                }else {
+	                	output += data.user;
+	                }
+	                output += '</strong> ';
+	                output += data.message;
+	                output += '</div>';
+	                
+	                $(output).appendTo('#chat_box');
+	                
+	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+	            });
+	           
+	           //채팅방 정보  가져오기
+	          socket.emit('preChatInfo' , {chatId : chatId});
+	           
+	          socket.on('preChatInfo' , function(data){
+	        	 // console.log(data);
+	        	  
+	        	  var title = data.title;
+	        	  
+	        	  if (title.length > 7){
+	        		  //console.log("제목 :" + title.substr(0,7));
+		        	  
+		        	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
+	        	  }else {
+	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
+	        	  }
+	        	 
+	        	 
+	        	  
+	          });
+	          
+	          
+	          socket.on('newUser' , function(){
+	        	  socket.emit('preChatInfo' , {chatId : chatId});
+	        	  
+	        	  socket.on('preChatInfo' , function(data){
+	 	        	 // console.log(data);
+	 	        	  
+	 	        	  var title = data.title;
+	 	        	  
+	 	        	  if (title.length > 7){
+	 	        		  //console.log("제목 :" + title.substr(0,7));
+	 		        	  
+	 		        	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
+	 	        	  }else {
+	 	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
+	 	        	  }
+	 	        	 
+		                socket.emit('message', {
+		                	user :user, message : "님이 채팅방에 들어왔습니다." , chatId : chatId
+		                });
+	 	        	 
+	 	        	  
+	 	          });
+	          });
+	           
+	           
+	           
+		}); //end
 		
 		$(document).on("click","#chatpeopleTable tr",function(){
  	 		var userid = $(this).parent().children().children().children("#userId").val();
@@ -168,11 +309,8 @@
  	 		
  	 	}); 
 		
-		  
 	
-
-
-			 		
+	
 		
 	</script>
 </body>
