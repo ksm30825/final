@@ -33,9 +33,9 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-map-marker-alt"></i></span>
-									<!-- <input type="hidden" name="plcId"> -->
+									<input type="hidden" name="plcId" id="plcId1">
 									<input class="input" type="text" placeholder="장소정보없음"
-										readOnly name="plcName" />
+										readOnly name="plcName" id="plcName1" />
 								</p>
 							</div>
 						</div>
@@ -113,8 +113,7 @@
 							<div class="field">
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-receipt"></i></span>
-									<input class="input" type="number" placeholder="현지화 가격 입력 (선택 )" value="0" 
-									name="costAmount" id="costAmount1" />
+									<input class="input" type="number" value="0" name="costAmount" id="costAmount1" />
 								</p>
 							</div>
 							<div class="field">
@@ -186,6 +185,13 @@
 				if($(this).prop("checked")) {
 					startTime1.val('');
 	        		endTime1.val('');
+				}
+			});
+			
+			$("#costAmount1").change(function() {
+				console.log($(this).val());
+				if($(this).val() == "") {
+					$(this).val(0);
 				}
 			});
 

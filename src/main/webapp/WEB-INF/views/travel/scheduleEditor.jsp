@@ -67,21 +67,36 @@
 	}
 	#left-panel {
 		background: #fff;
-    	opacity: 0.7;
+    	opacity: 0.8;
 		width:200px;
-		height:300px;
+		height:400px;
 		overflow-y:scroll;
 		display:inline-block;
 		position:absolute;
-		z-index:100;
+		z-index:10;
+	}
+	#detail-panel {
+		background: #fff;
+		height:500px;
+		width:250px;
+		overflow-y:scroll;
+		display:inline-block;
+		position:absolute;
+		z-index:11;
+	}
+	#placeDetail {
+		overflow-y:scroll;
 	}
 	#left-panel>ul {
 		overflow-y:scroll;
 	}
+	#left-panel li {
+		border:1px solid lightgray;
+	}
 	#left-panel li:hover {
 		cursor:pointer;
 		background:lightgray;
-		opacity:0.7;
+		opacity:0.9;
 	}
 	.dayList {
 		min-height:400px;
@@ -104,7 +119,8 @@
 					</div>
 					<div class="panel-heading" align="center" style="margin: 0">
 						<span>DAY ${ trvDay.dayNumber }</span>&nbsp; 
-						<input class="input dayMemo is-small" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }">
+						<input type="hidden" value="${ trvDay.dayId }">
+						<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }">
 					</div>
 					<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
 					<ul class="connectedSortable menu-list dayList" style="background:white">
@@ -184,8 +200,9 @@
 									</div>
 									<div class="column is-8 dayTitle"  style="padding-left:0; padding-right:0">
 										<span>DAY ${ trvDay.dayNumber }</span>&nbsp;
-										<input class="input dayMemo is-small" type="text" placeholder="MEMO"
-											value="${ trvDay.dayMemo }">
+										<input type="hidden" value="${ trvDay.dayId }" />
+										<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO"
+											value="${ trvDay.dayMemo }" >
 									</div>
 									<div class="column is-2" style="padding-right:0">
 										<a class="button is-small dayRightBtn">
@@ -215,18 +232,21 @@
 														<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 													</c:if>
 													<small class="schTransp">${ sch.schTransp }</small>
-													<small>
-														<a style="color:purple" class="schPlcName">
-													 		<span class="icon is-small" style="color:purple"> 
-																<i class="fas fa-map-marker-alt"></i>
-															</span>
-															<c:if test="${ sch.plcName ne null }" >
-																${ sch.plcName }
-															</c:if>
-															<c:if test="${ sch.plcName eq null }" >
+													<small class="schPlc">
+														<c:if test="${ sch.plcId ne null }" >
+															<a style="color:purple" class="schPlc">
+																<input type="hidden" value="${ sch.plcId }" name="plcId"> 
+														 		<span class="icon is-small" style="color:purple"> 
+																	<i class="fas fa-map-marker-alt"></i>
+																</span>
+																<span class="plcName">${ sch.plcName }</span>
+														 	</a>
+														</c:if>
+														<c:if test="${ sch.plcId eq null }" >
+															<a style="color:purple" class="schPlcName">
 																(장소 정보 없음)
-															</c:if>
-													 	</a>
+															</a>
+														</c:if>
 													</small>
 												</div>
 											</div>
@@ -392,6 +412,7 @@
 												<option>쇼핑몰</option>
 												<option>공원</option>
 												<option>박물관</option>
+												<option>호텔</option>
 											</select>
 										</div>
 									</div>
@@ -405,12 +426,43 @@
 						</div>
 						<div style="border:1px solid gray; height:500px">
 							<div id="left-panel" class="panel">
-								<div class="panel-heading">검색 결과
+								<div class="panel-heading media">
+									<div class="media-content" >검색 결과</div>
+									<div class="media-right">
+										<button class="delete" id="typeSearchDelete"></button>
+									</div>
 								</div>
 								<ul id="placeList"></ul>
 								<button class="button is-primary is-outlined is-fullwidth" 
 									id="more">결과 더보기</button>
 							</div>
+							<div id="detail-panel" class="panel" style="display:none">
+								<div class="panel-heading media" >
+									<div class="media-content" id="placeName"></div>
+									<div class="media-right">
+										<button class="delete" id="closePlaceDetail"></button>
+									</div>
+								</div>
+								<div class="card" id="placeDetail">
+									<div class="card-image">
+										<figure class="image" style="margin:0">
+											<img src="" id="placePhoto">
+										</figure>
+									</div>
+									<div class="card-content">
+										<input type="hidden" id="placeId">
+										<button class="button is-small is-link" id="placeInsertBtn">+ 일정에 추가</button>
+										<p id="placeAdd"></p>
+										<p class="subtitle is-6" id="placePhone"></p>
+										<div class="ui star rating" data-rating="" data-max-rating="5" id="ratingStar"></div>
+										<small id="placeRating"></small>
+										
+										<p><small id="openHour"></small></p>
+										<hr style="border:1px solid lightgray">
+										<div id="placeReview"></div>
+									</div>
+								</div>
+							</div>	
 							<div id="map" style="height:100%"></div>
 						</div>
 					</div>
@@ -473,6 +525,13 @@
 			$("#likeList, #recommList").sortable({
 				connectWith : ".dayList"
 			});
+			$('.ui.rating').rating('disable');
+			
+			var places = [];
+			$("#day1").find("input[name=plcId]").each(function() {
+				places.push($(this).val());
+			});
+			showRoute(places);	
 			
 			
 			//좋아요/추천 장소탭
@@ -497,7 +556,14 @@
 				if(!nav.is("#day1")) {
 					nav.hide();
 					nav.prev().show();
+					var places = [];
+					nav.prev().find("input[name=plcId]").each(function() {
+						places.push($(this).val());
+					});
+					console.log(places);
+					showRoute(places);				
 				}
+				
 			});
 			
 			//day+1
@@ -507,7 +573,14 @@
 				if(!nav.is("#day${ trvDayList.size() }")) {
 					nav.hide();
 					nav.next().show();
+					var places = [];
+					nav.next().find("input[name=plcId]").each(function() {
+						places.push($(this).val());
+					});
+					console.log(places);
+					showRoute(places);	
 				}
+				
 			});
 			
 			
@@ -517,7 +590,9 @@
 				var li = $(this).parent().parent();
 				var dayId = li.find("input[name=dayId]").val();
 				var schTitle = li.find(".schTitle").text();
-				console.log(schTitle);
+				var plcId = li.find("input[name=plcId]").val();
+				var plcName = li.find(".plcName").text();
+				
 				var schTransp = li.find(".schTransp").text();
 				var schTime = li.find(".schTime").text();
 				var index = schTime.indexOf("-");
@@ -527,35 +602,35 @@
 					startTime = schTime.substring(0, index - 1);
 					endTime = schTime.substring(index + 2);
 				}
-				console.log(startTime, endTime);					
 				var costTypeStr = li.find(".costType").text().substring();
 				var costType = costTypeStr.substring(0, costTypeStr.indexOf(":") - 1);
 				var costAmount = li.find(".costAmount").children().text();
 				var costCurrency = li.find(".costCurrency").text();
 				var currency = costCurrency.substring(1, costCurrency.length - 3);
-				console.log(costType, costAmount, currency);
+				
 				
 				var modal = $("#scheduleInfoModal");
-				
-				modal.find("input[name=schId]").val(schId);
-				modal.find("input[name=schTitle]").val(schTitle);
-				modal.find("select[name=dayId]").children().each(function() {
+				modal.find("#schId2").val(schId);
+				modal.find("#schTitle2").val(schTitle);
+				modal.find("#plcId2").val(plcId);
+				modal.find("#plcName2").val(plcName);
+				modal.find("#dayId2").children().each(function() {
 					if($(this).val() == dayId) {
 						$(this).prop("selected", true);
 					}
 				});
 				
 				if(startTime == "" && endTime == "") {
-					modal.find("input[name=isTimeset]").prop("checked", true);
-					modal.find("input[name=startTime]").val("");
-					modal.find("input[name=endTime]").val("");
+					modal.find("#isTimeset2").prop("checked", true);
+					modal.find("#startTime2").val("");
+					modal.find("#endTime3").val("");
 				}else {
-					modal.find("input[name=isTimeset]").prop("checked", false);
-					modal.find("input[name=startTime]").val(startTime);
-					modal.find("input[name=endTime]").val(endTime);
+					modal.find("#isTimeset2").prop("checked", false);
+					modal.find("#startTime2").val(startTime);
+					modal.find("#endTime3").val(endTime);
 				}
 				
-				modal.find("select[name=costType]").children().each(function() {
+				modal.find("#costType2").children().each(function() {
 					if($(this).text() == costType) {
 						$(this).prop("selected", true);
 					}
@@ -563,16 +638,16 @@
 				
 				
 				if(costAmount == "") {
-					modal.find("input[name=costAmount]").val(0);
+					modal.find("#costAmount2").val(0);
 				}else {
-					modal.find("input[name=costAmount]").val(parseInt(costAmount));
+					modal.find("#costAmount2").val(parseInt(costAmount));
 				}
-				modal.find("select[name=currency]").children().each(function() {
+				modal.find("#currency2").children().each(function() {
 					if($(this).text() == currency) {
 						$(this).prop("selected", true);
 					}
 				});
-				modal.find("input[name=schTransp]").val(schTransp);
+				modal.find("#schTransp2").val(schTransp);
 				
 				modal.toggleClass('is-active');
 			});
@@ -604,6 +679,8 @@
 			//지도 타입검색
 			$("#placeType").change(function() {
 				var type = $(this).children("option:selected").text();
+				$("#placeList").empty();
+				
 				switch(type) {
 				case '식당': type = 'restaurant'; break;
 				case '카페': type = 'cafe'; break;
@@ -611,13 +688,33 @@
 				case '쇼핑몰': type = 'shopping_mall'; break;
 				case '공원': type = 'park'; break;
 				case '박물관': type = 'museum'; break;
+				case '호텔' : type = 'hotel'; break;
 				case '장소찾기':return;
 				}
 				placeTypeSearch(type);
 			});
 			
+
+			//장소insert
+			$("#placeInsertBtn").click(function() {
+				var plcId = $("#placeId").val();
+				console.log(plcId);
+				var placeName = $("#placeName").text();
+				$("#plcId1").val(plcId);
+				$("#plcName1").val(placeName);
+				$('#newScheduleModal').toggleClass('is-active');
+			});
+			
+			//장소select
+			$(".schPlc").click(function() {
+				var plcId = $(this).children("input[name=plcId]").val();
+				placeDetailSearch(plcId);
+				
+			});
 			
 			
+			
+			//여행테마 선택
 			$(".themes").each(function() {
 				var tag = $(this);
 				var tagId = $(this).children().val();
@@ -629,9 +726,6 @@
 				});
 			});
 			
-			
-
-			//여행테마 선택
 			$(".themes").click(function() {
 				var tag = $(this);
 				var tagName = $(this).text();
@@ -664,7 +758,7 @@
 										});
 									},
 									error:function(data) {
-										alert("서버전송 실패");
+										//alert("서버전송 실패");
 									}
 								});
 								
@@ -723,6 +817,10 @@
 			});
 
 		});
+		
+		
+		
+		
 		
 		//curtain menu open
 		function openNav() {

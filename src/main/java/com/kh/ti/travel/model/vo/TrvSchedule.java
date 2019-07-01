@@ -12,7 +12,7 @@ public class TrvSchedule implements java.io.Serializable {
 	private String isTimeset;
 	private String schContent;
 	private String schTransp;
-	private int plcId;
+	private String plcId;
 	private String plcName;
 	private int dayId;
 	private int likeyId;
@@ -22,7 +22,7 @@ public class TrvSchedule implements java.io.Serializable {
 	public TrvSchedule() {}
 
 	public TrvSchedule(int schId, String schTitle, int schNumber, String startTime, String endTime, String isTimeset,
-			String schContent, String schTransp, int plcId, String plcName, int dayId, int likeyId, int spotId,
+			String schContent, String schTransp, String plcId, String plcName, int dayId, int likeyId, int spotId,
 			TrvCost trvCost) {
 		super();
 		this.schId = schId;
@@ -105,11 +105,11 @@ public class TrvSchedule implements java.io.Serializable {
 		this.schTransp = schTransp;
 	}
 
-	public int getPlcId() {
+	public String getPlcId() {
 		return plcId;
 	}
 
-	public void setPlcId(int plcId) {
+	public void setPlcId(String plcId) {
 		this.plcId = plcId;
 	}
 

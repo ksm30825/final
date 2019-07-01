@@ -81,14 +81,15 @@ public interface TravelDao {
 	
 	int deleteTrvSchedule(SqlSessionTemplate sqlSession, int schId);
 
+	int updateTrvDayMemo(SqlSessionTemplate sqlSession, TrvDay trvDay);
 	
 	
 	
 	
 
-	int insertPlace(SqlSessionTemplate sqlSession, Place plc);	
-	
-	int selectPlcId(SqlSessionTemplate sqlSession);
+//	int insertPlace(SqlSessionTemplate sqlSession, Place plc);	
+//	
+//	int selectPlcId(SqlSessionTemplate sqlSession);
 	
 	int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
@@ -125,6 +126,7 @@ public interface TravelDao {
 
 
 	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
+
 
 
 

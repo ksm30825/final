@@ -59,7 +59,8 @@
 								<div class="level-item">
 									<div class="field">
 										<p class="control">
-											<input class="input" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }">
+											<input type="hidden" value="${ trvDay.dayId }">
+											<input class="input dayMemo day${ trvDay.dayId }Memo" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }" >
 										</p>
 									</div>
 								</div>

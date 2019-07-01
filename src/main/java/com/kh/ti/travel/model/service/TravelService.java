@@ -34,15 +34,20 @@ public interface TravelService {
 
 	int selectSchNumber(ArrayList<TrvSchedule> schList, String startTime);
 
-	int insertTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc);
+	int insertTrvSchedule(TrvSchedule sch, TrvCost cost);
 
-	int updateTrvSchedule(TrvSchedule sch, TrvCost cost, Place plc);
+	int updateTrvSchedule(TrvSchedule sch, TrvCost cost);
 	
 	int deleteTrvSchedule(int schId);
+
+	int updateDayMemo(TrvDay trvDay);
 
 	int insertTrvTag(TrvTag trvTag);
 
 	int deleteTrvTag(TrvTag trvTag);	
+	
+	
+	
 	
 	
 	
@@ -55,7 +60,7 @@ public interface TravelService {
 	int insertTrvCompany(Travel trv, Member m);
 
 
-	int insertTrvPlace(Travel trv, Place plc);
+//	int insertTrvPlace(Travel trv, Place plc);
 
 	int insertTrvCost(TrvDay day, TrvCost cost);
 
@@ -81,6 +86,7 @@ public interface TravelService {
 	int deleteTrvCost(TrvCost cost);
 
 	int deleteSchFile(SchFile file);
+
 
 
 

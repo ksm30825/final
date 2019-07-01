@@ -254,7 +254,29 @@
 			$(".closeBtn").click(function() {
 				$("#inviteDropdown").hide();
 			});
+			
+			//dayMemo
+			$(".dayMemo").change(function() {
+				var memo = $(this).val();
+				var dayId = $(this).prev().val();
+				$.ajax({
+					url:"updateDayMemo.trv",
+					type:"post",
+					data:{dayMemo:memo, dayId: dayId},
+					success:function(data) {
+						console.log(data);
+						console.log($(".day" + dayId + "Memo"));
+						$(".day" + dayId + "Memo").each(function() {
+							$(this).val(memo);
+						});
+					},
+					error:function(data) {
+						alert("memo 서버전송 실패");
+					}
+				});
+			});
 		});
+		
 		$(".editorMenu li").click(function() {
 			$(this).addClass('is-active');
 			$(this).siblings().removeClass('is-active');
@@ -305,6 +327,7 @@
 					path:mapIcons.shapes.MAP_PIN,
 					fillColor: '#8B44F0',
 					fillOpacity:1,
+					scale:0.8,
 					strokeColor:'',
 					strokeWeight:0
 				},
@@ -315,6 +338,7 @@
 					path:mapIcons.shapes.MAP_PIN,
 					fillColor: '#F1BF1E',
 					fillOpacity:1,
+					scale:0.8,
 					strokeColor:'',
 					strokeWeight:0
 				},
@@ -325,6 +349,7 @@
 					path:mapIcons.shapes.MAP_PIN,
 					fillColor: '#DE2C26',
 					fillOpacity:1,
+					scale:0.8,
 					strokeColor:'',
 					strokeWeight:0
 				},
@@ -335,6 +360,7 @@
 					path:mapIcons.shapes.MAP_PIN,
 					fillColor: '#926B25',
 					fillOpacity:1,
+					scale:0.8,
 					strokeColor:'',
 					strokeWeight:0
 				},
@@ -345,6 +371,7 @@
 					path:mapIcons.shapes.MAP_PIN,
 					fillColor: '#888888',
 					fillOpacity:1,
+					scale:0.8,
 					strokeColor:'',
 					strokeWeight:0
 				},
@@ -355,6 +382,7 @@
 					path:mapIcons.shapes.MAP_PIN,
 					fillColor: '#0C6916',
 					fillOpacity:1,
+					scale:0.8,
 					strokeColor:'',
 					strokeWeight:0
 				},
@@ -365,10 +393,22 @@
 					path:mapIcons.shapes.MAP_PIN,
 					fillColor: '#44BCF0',
 					fillOpacity:1,
+					scale:0.8,
 					strokeColor:'',
 					strokeWeight:0
 				},
 				map_icon_label : '<span class="map-icon map-icon-grocery-or-supermarket"></span>'
+			},
+			hotel:{
+				icon:{
+					path:mapIcons.shapes.MAP_PIN,
+					fillColor: '#60D8D0',
+					fillOpacity:1,
+					scale:0.8,
+					strokeColor:'',
+					strokeWeight:0
+				},
+				map_icon_label : '<span class="map-icon map-icon-lodging"></span>'
 			}
 			
 		};
@@ -383,61 +423,50 @@
 			searchBox = new google.maps.places.SearchBox(document.getElementById('searchInput'));
 			//map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('searchInput2'));
 			map.controls[google.maps.ControlPosition.LEFT_TOP].push(document.getElementById('left-panel'));
-	
+			
 			
 			var cityRequest = { 
 				query:"${ trvCityList[0].cityNameEn }",
 				fields:['geometry']
 			};
-			console.log("${ trvCityList[0].cityNameEn }");
 			service.findPlaceFromQuery(cityRequest, function(results, status) {
 				if(status === google.maps.places.PlacesServiceStatus.OK) {
 					map.setCenter(results[0].geometry.location);
 				}
 			})
 			
-			
-			
-			var cityMarkers = [
-				{
-					location:sydney, 
-					icon:icons.basic.icon,
-					map_icon_label:icons.basic.map_icon_label,
-					info:'<h1>Sydney</h1><h5>NSW, Australia</h5>'
-				}
-			];
-	
 			map.addListener('bounds_changed', function() {
 				searchBox.setBounds(map.getBounds());
 			});
 	
+			
+			
 			searchBox.addListener('places_changed', function() {
 				var places = searchBox.getPlaces();
-	
 				if(places.length === 0) {
 					return;
 				}
-	
 				//clear out the old markers
 				markers.forEach(function(m) {
-					//m.setMap(null);
+					m.setMap(null);
 				});
 				markers = [];
-	
 				//for each place, get the icon, name, and location
 				var bounds = new google.maps.LatLngBounds();
-	
 				places.forEach(function (p) {
 					if(!p.geometry) {
 						return;
 					}
 					//create marker for each place
-					markers.push(new google.maps.Marker({
-						map:map,
-						title: p.name,
-						position: p.geometry.location
-					}));
-	
+					addMarker({
+						location:p.geometry.location,
+						icon:icons.basic.icon,
+						map_icon_label:icons.basic.map_icon_label,
+						place_id:p.place_id,
+						info: '<h5 class="title is-5">' + p.name + "'</h5>" + p.formatted_address
+					});
+					
+					
 					if(p.geometry.viewport) {
 						//only geocodes have viewport
 						bounds.union(p.geometry.viewport);
@@ -445,34 +474,147 @@
 						bounds.extend(p.geometry.location);
 					}
 				});
+				
+				placeDetailSearch(places[0].place_id);
 				map.fitBounds(bounds);
 			});
 	
-	
-			/*for(var i = 0; i < markers.length; i++) {
-				addMarker(markers[i]);
-			}*/
+		}
+		
+		function showRoute(places) {
+			var latlngs = [];
 			
-			//places result
-			//basic:address_component, adr_address, formatted_address, geometry, icon, name, 
-			//permanently_closed, photo, place_id, plus_code, type, url, utc_offset, vicinity
-			//contact:formatted_phone_number, international_phone_number,opening_hours, website
-			//atmosphere:rating, review, user_ratings_total
+			//clear out the old markers
+			markers.forEach(function(m) {
+				m.setMap(null);
+			});
+			markers = [];
+			//var bounds = new google.maps.LatLngBounds();
+			places.forEach(function(place, index) {
+				
+				var request = {
+					placeId:place,
+					fiels:['geometry', 'name']
+				}
+					
+				service.getDetails(request, function(place, status) {
+					if(status == google.maps.places.PlacesServiceStatus.OK) {
+						
+						var m = new google.maps.Marker({
+							map:map,
+							/* icon:{
+								path: mapIcons.shapes.SQUARE_PIN,
+								fillColor: '#FB0303',
+								fillOpacity:1,
+								scale:0.8,
+								strokeColor:'',
+								strokeWeight:0
+							}, */
+							label: {
+								fontSize:'20px',
+								text:index + 1 + "",
+								color:'#fff'
+							},
+							animation: google.maps.Animation.DROP,
+							title: place.name,
+							position: place.geometry.location
+						});
+						
+						markers.push(m);
+						latlngs.push(place.geometry.location);
+						console.log(latlngs);
+						
+						/* if(place.geometry.viewport) {
+							bounds.union(place.geometry.viewport);
+						}else {
+							bounds.extend(place.geometry.location);
+						} */
+						
+						m.addListener('click', function() {
+							placeDetailSearch(place.place_id);
+						});
+					}
+				});
+				
+			});
+			
+			//map.fitBounds(bounds);
 			
 			
-			var request = {
-					query: 'Museum of Contemporary Art Australia',
-					fields: ['name', 'icon', 'geometry', 'formatted_address', 'place_id', 'types'],
-			};
-	
-			//service.findPlaceFromQuery(request, callback);
-	
-	
-			/*google.maps.event.addListener(map, 'click', function(event) {
-				addMarker({location:event.latLng});
-			});*/
+			/* console.log(markers);
+			markers.forEach(function(marker) {
+				latlngs.push(marker.position);
+			});
+			console.log(latlngs); */
+			
+			var path = new google.maps.Polyline({
+			    path: latlngs,
+			    geodesic: true,
+			    strokeColor: '#FF0000',
+			    strokeOpacity: 1.0,
+			    strokeWeight: 2
+			});
+			console.log(path);
+			path.setMap(map);
+			
+			
 		}
 	
+		
+		function placeDetailSearch(placeId) {
+			var request = {
+				placeId: placeId,
+				fields:['name', 'formatted_address', 'international_phone_number', 'geometry',
+					'rating', 'opening_hours', 'photos', 'reviews', 'website']
+			};
+			
+			service.getDetails(request, function(place, status) {
+				if(status == google.maps.places.PlacesServiceStatus.OK) {
+					$("#detail-panel").show();
+					$("#placeId").val(placeId);
+					$("#placeName").text(place.name);
+					$("#placeAdd").text(place.formatted_address);
+					$("#placePhone").text(place.international_phone_number);
+					$("#placePhoto").attr("src", place.photos[0].getUrl());
+					$("#openHour").text(place.opening_hours.weekday_text.toString());
+					$("#ratingStar").rating("set rating", Math.floor(place.rating));
+					$("#placeRating").text(place.rating);
+					
+					for(var i = 0; i < place.reviews.length; i++) {
+						if(i < 5) {
+							$('<p><small><em>' + place.reviews[i].text + '(' +  place.reviews[i].relative_time_description 
+									+ ') - ' + place.reviews[i].author_name + '</em></small></p>').appendTo($("#placeReview"));
+						}
+					}
+					if(place.reviews.length > 5) {
+						$('<p><small><em>.....</em></small></p>').appendTo($("#placeReview"));
+					}
+					
+					
+					var m = new google.maps.Marker({
+						map:map,
+						title: place.name,
+						position: place.geometry.location
+					});
+					
+					markers.push(m);
+					var bounds = new google.maps.LatLngBounds();
+					if(place.geometry.viewport) {
+						bounds.union(place.geometry.viewport);
+					}else {
+						bounds.extend(place.geometry.location);
+					}
+					map.fitBounds(bounds);
+					
+					$("#closePlaceDetail").click(function() {
+						$("#detail-panel").hide();
+						$("#searchInput").val('');
+						m.setMap(null);
+					});
+					
+				}
+			});
+		}
 	
 	
 		function placeTypeSearch(placeType) {
@@ -487,28 +629,28 @@
 			markers.forEach(function(marker) {
 				marker.setMap(null);
 			});
+			markers = [];
 			var request = {
 					location: map.getCenter(),
 					radius: '1000',
 					type: [placeType]
 			};
-			service.nearbySearch(request, function(results, status, pagination) {
+			service.textSearch(request, function(results, status, pagination) {
 				var bounds = new google.maps.LatLngBounds();
 				var placeList = document.getElementById('placeList');
 				if (status === google.maps.places.PlacesServiceStatus.OK) {
 					for (var i = 0; i < results.length; i++) {
 						var li = document.createElement('li');
-	//					li.classList.add('panel-block');
-						li.textContent = results[i].name;
-						li.classList.add('panel-block');
+						li.innerHTML += '<input type="hidden" name="placeId" value="' + results[i].place_id + '" />' + '<p><strong>' 
+										+ results[i].name + '<small style="color:purple"> review:' + results[i].rating + '/5.0 </small></strong></p><p class="help">' + results[i].formatted_address  + '</p>'
 						placeList.appendChild(li);
 						bounds.extend(results[i].geometry.location);
 						addMarker({
 							location:results[i].geometry.location,
 							icon:icons[placeType].icon,
 							map_icon_label:icons[placeType].map_icon_label,
-							info: '<h1>' + results[i].name + "'</h1>" + results[i].formatted_address 
-								+ ", (placeId : " + results[i].place_id + ")"
+							place_id:results[i].place_id,
+							info: '<h5 class="title is-5">' + results[i].name + "'</h5>" + results[i].formatted_address
 						});
 					}
 					map.fitBounds(bounds);
@@ -518,6 +660,21 @@
 					}
 					map.setCenter(results[0].geometry.location);
 				}else return;
+				
+				$("#placeList").children("li").click(function() {
+					var placeId = $(this).children("input[name=placeId]").val();
+					console.log(placeId);
+					placeDetailSearch(placeId);
+				});
+				
+				$("#typeSearchDelete").click(function() {
+					markers.forEach(function(marker) {
+						marker.setMap(null);
+					});
+					markers = [];
+					$("#placeList").empty();
+				});
+				
 			});
 		}
 	
@@ -532,9 +689,6 @@
 			});
 			
 			markers.push(marker);
-			/*if(props.icon) {
-				marker.setIcon(props.icon);
-			}*/
 			if(props.info) {
 				var infoWindow = new google.maps.InfoWindow({
 					content:props.info
@@ -544,9 +698,12 @@
 				});
 			}
 			
+			marker.addListener('click', function() {
+				
+				placeDetailSearch(props.place_id);
+			});
+			
 		}
-	
-	
 	
 	</script>
 </body>

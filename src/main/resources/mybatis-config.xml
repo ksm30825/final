@@ -26,7 +26,6 @@
 			<typeAlias type="com.kh.ti.travel.model.vo.TrvTag" alias="TrvTag" />
 			<typeAlias type="com.kh.ti.travel.model.vo.TrvSchedule" alias="TrvSch" />
 			<typeAlias type="com.kh.ti.travel.model.vo.TrvCost" alias="TrvCost" />
-			<typeAlias type="com.kh.ti.travel.model.vo.Place" alias="Place" />
     	<!-- TravelBoard Part (예랑) -->
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelBoard" alias="TravelBoard"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.Likey" alias="Likey"/>
