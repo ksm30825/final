@@ -1,5 +1,7 @@
 package com.kh.ti.member.model.service;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,6 +13,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.common.Pagination;
 import com.kh.ti.member.model.exception.LoginException;
 import com.kh.ti.member.model.vo.Member;
 
@@ -26,6 +30,8 @@ public class MemberServiceTest {
 	private Member m;
 	@Autowired
 	private MemberService ms;
+	PageInfo pi;
+	String status;
 	
 	@Before
 	public void setup() {
@@ -39,6 +45,12 @@ public class MemberServiceTest {
 		m.setPhone("010-9226-0374");
 		m.setAccCode("003");
 		m.setAccNumber("01092260374");
+		
+		int currentPage = 1;
+		int listCount = 20;
+		pi = Pagination.getPageInfo(currentPage, listCount);
+		status = "ALL";
+		
 		System.out.println("셋팅 완료!");
 	}
 	
@@ -77,9 +89,24 @@ public class MemberServiceTest {
 		log.info("회원 정보 수정 성공!");
 	}
 	
+	@Ignore
 	@Test
 	public void testUpdateUserAcc() {
 		ms.updateUserAcc(m);
 		log.info("계좌 정보 수정 성공!");
+	}
+	
+	@Ignore
+	@Test
+	public void testGetListCount() {
+		int result = ms.getListCount(status);
+		System.out.println(status);
+		log.info("회원 수 조회 성공! : " + result);
+	}
+	
+	@Test
+	public void testSelectAllMember() {
+		ArrayList<Member> mList = ms.selectAllMember(pi, status);
+		log.info("회원 전체 조회 성공!" + mList.size());
 	}
 }

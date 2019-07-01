@@ -1,8 +1,12 @@
 package com.kh.ti.member.model.dao;
 
+import java.util.ArrayList;
+
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.vo.Member;
 
 @Repository
@@ -56,5 +60,19 @@ public class MemberDaoImpl implements MemberDao{
 		return sqlSession.update("Member.updateAcc", loginUser);
 	}
 
+	//(관리자) 회원수 조회용 메소드 - 세령
+	@Override
+	public int getListCount(SqlSessionTemplate sqlSession, String status) {
+		return sqlSession.selectOne("Member.selectListCount", status);
+	}
 
+	//(관리자) 회원정보 전체 조회용 메소드 - 세령
+	@Override
+	public ArrayList<Member> selectAllMember(SqlSessionTemplate sqlSession, PageInfo pi, String status) {
+		ArrayList<Member> mList = null;
+		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
+		mList = (ArrayList) sqlSession.selectList("Member.selectAllMemberList", status, rowBounds);
+		return mList;
+	}
 }

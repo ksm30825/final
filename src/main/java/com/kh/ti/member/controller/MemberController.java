@@ -1,10 +1,10 @@
 package com.kh.ti.member.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.common.Pagination;
 import com.kh.ti.member.model.exception.LoginException;
 import com.kh.ti.member.model.service.MemberService;
 import com.kh.ti.member.model.vo.Member;
@@ -41,7 +43,17 @@ public class MemberController {
 	
 	//관리자회원관리화면 보여주기 전용(forward adminMemberList.jsp)--세령
 	@RequestMapping("adminMemberListForm.me")
-	public String showAdminMemberList() {
+	public String showAdminMemberList(Model model, @RequestParam("currentPage") int currentPage, 
+									  @RequestParam("status") String status) {
+		//조회 기능 추가
+		int listCount = ms.getListCount(status);
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		
+		ArrayList<Member> mList = ms.selectAllMember(pi, status);
+		model.addAttribute("mList", mList);
+		model.addAttribute("listCount", listCount);
+		model.addAttribute("pi", pi);
+		model.addAttribute("status", status);
 		return "admin/member/adminMemberList";
 	}
 	
@@ -157,15 +169,12 @@ public class MemberController {
 		}
 	}
 	
-	//회원전체조회용메소드--세령
-	@RequestMapping("selectAll.me")
-	public String selectAllMemberList() {
-		return null;
-	}
-	
 	//회원조건조회용메소드--세령
 	@RequestMapping("selectCondition.me")
-	public String selectConditionMemberList() {
+	public String selectConditionMemberList(@RequestParam("condition") String condition, 
+											@RequestParam("conditionValue") String conditionValue) {
+		System.out.println("condition : " + condition);
+		System.out.println("conditionValue : " + conditionValue);
 		return null;
 	}
 	

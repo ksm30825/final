@@ -34,7 +34,7 @@
       <div id="mainNav" class="navbar-menu">
          <div class="navbar-start">
 
-            <a class="navbar-item is-active" href="adminMemberListForm.me"> <strong>회원관리</strong> </a> <!-- href 경로수정(세령) -->
+            <a class="navbar-item is-active" href="adminMemberListForm.me?currentPage=1&status=ALL"> <strong>회원관리</strong> </a> <!-- href 경로수정(세령) -->
 
             <div class="navbar-item has-dropdown is-hoverable">
 	            <a class="navbar-link " href="#"> <strong>고객센터관리</strong> </a>

@@ -92,4 +92,23 @@
 		WHERE MEMBER_ID = #{ memberId }
 		AND ENROLL_STATUS = 'Y'
 	</update>
+	
+	<!-- 회원수 조회용 세령 -->
+	<select id="selectListCount" resultType="_int" parameterType="String">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE 1 = 1
+		<if test="_parameter != null and !_parameter.equals('ALL')">
+			AND ENROLL_STATUS = #{ _parameter }
+		</if>
+	</select>
+	
+	<!-- 회원정보조회용 세령 -->
+	<select id="selectAllMemberList" resultMap="memberResultSet" parameterType="String">
+		SELECT * FROM MEMBER
+		WHERE MEMBER_TYPE = 'M'
+		<if test="_parameter != null and !_parameter.equals('ALL')">
+			AND ENROLL_STATUS = #{ _parameter }
+		</if>
+		ORDER BY MEMBER_ID DESC
+	</select>
 </mapper>

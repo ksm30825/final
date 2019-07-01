@@ -1,14 +1,14 @@
 package com.kh.ti.member.model.service;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.dao.MemberDao;
 import com.kh.ti.member.model.exception.LoginException;
 import com.kh.ti.member.model.vo.Member;
@@ -85,6 +85,18 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int updateUserAcc(Member loginUser) {
 		return md.updateUserAcc(sqlSession, loginUser);
+	}
+
+	//회원수 조회용 메소드 - 세령
+	@Override
+	public int getListCount(String status) {
+		return md.getListCount(sqlSession, status);
+	}
+
+	//회원정보전체조회용메소드 - 세령
+	@Override
+	public ArrayList<Member> selectAllMember(PageInfo pi, String status) {
+		return md.selectAllMember(sqlSession, pi, status);
 	}
 
 
