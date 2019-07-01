@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
@@ -41,6 +42,12 @@ public class MyRequestDaoImpl implements MyRequestDao{
 		}
 		System.out.println(result3);
 		return result3;
+	}
+
+	//설계글 의뢰참여 인서트(4단계) - 이선우
+	@Override
+	public int insertParticipation(SqlSessionTemplate sqlSession, Participation p) {
+		return sqlSession.insert("TravelRequest.insertParticipation", p);
 	}
 
 }

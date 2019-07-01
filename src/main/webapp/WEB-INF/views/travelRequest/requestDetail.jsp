@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <title>Insert title here</title>
 <style>
 .is-half {
@@ -29,7 +30,7 @@
 .table {
 	margin-right: auto;
 	margin-left: auto;
-	width:100%;
+	width: 100%;
 }
 
 .table th {
@@ -48,8 +49,9 @@
 	height: 300px !important;
 	resize: none !important;
 }
+
 .request:hover {
-	cursor:pointer;
+	cursor: pointer;
 }
 </style>
 </head>
@@ -72,11 +74,13 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><b>${ tr.requestId }</b></td>
+							<td id="reqId"><b>${ tr.requestId }</b></td>
 							<td>${ tr.requestTitle }</td>
 							<td>${ tr.userName }</td>
-							<td><fmt:formatNumber value="${ tr.requestPrice }" groupingUsed="true"></fmt:formatNumber>원</td>
-							<td><fmt:formatNumber value="${ tr.requestPrice }" groupingUsed="true"></fmt:formatNumber>원</td>
+							<td><fmt:formatNumber value="${ tr.requestPrice }"
+									groupingUsed="true"></fmt:formatNumber>원</td>
+							<td><fmt:formatNumber value="${ tr.requestPrice }"
+									groupingUsed="true"></fmt:formatNumber>원</td>
 							<td>${ tr.endDate }</td>
 						</tr>
 					</tbody>
@@ -101,173 +105,49 @@
 			<section class="section" id="card">
 				<h1 class="title">설계글</h1>
 				<hr>
-				<div class="columns">
-					<div class="column">
-						<div class="card request">
-							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
-								</figure>
-							</div>
-							<div class="card-content">
-								<div class="media">
-									<div class="media-left">
-										
-									</div>
-									<div class="media-content">
-										<p class="title is-4">설계제목</p>
-										<p class="subtitle is-6">설계자</p>
-										<p class="subtitle is-6">2019/07/03</p>
-									</div>
+				<c:forEach var="plan" items="${ tr.planList }">
+					<div class="columns">
+						<div class="column">
+							<div class="card request">
+								<div class="card-image">
+									<figure class="image is-4by3">
+										<img src="https://source.unsplash.com/random/800x600"
+											alt="Image">
+									</figure>
 								</div>
-								<div class="content">
-									<textarea class="col-lg-12" rows="5" style="resize:none;" readonly>여행 소개</textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="column">
-						<div class="card request">
-							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
-								</figure>
-							</div>
-							<div class="card-content">
-								<div class="media">
-									<div class="media-left">
-										
+								<div class="card-content">
+									<div class="media">
+										<div class="media-left"></div>
+										<div class="media-content">
+											<p class="title is-4">제목 : ${ plan.planTitle }</p><br>
+											<p class="subtitle is-6">설계 번호 : ${ plan.userName }</p>
+											<p class="subtitle is-6">작성일 : ${ plan.enrollDate }</p>
+										</div>
 									</div>
-									<div class="media-content">
-										<p class="title is-4">설계제목</p>
-										<p class="subtitle is-6">설계자</p>
-										<p class="subtitle is-6">2019/07/03</p>
+									<div class="content">
+										<textarea class="col-lg-12" style="width: 100%; resize: none;"
+											readonly>${ plan.planContent }</textarea>
 									</div>
-								</div>
-								<div class="content">
-									<textarea class="col-lg-12" rows="5" style="resize:none;" readonly>여행 소개</textarea>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="column">
-						<div class="card request">
-							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
-								</figure>
-							</div>
-							<div class="card-content">
-								<div class="media">
-									<div class="media-left">
-										
-									</div>
-									<div class="media-content">
-										<p class="title is-4">설계제목</p>
-										<p class="subtitle is-6">설계자</p>
-										<p class="subtitle is-6">2019/07/03</p>
-									</div>
-								</div>
-								<div class="content">
-									<textarea class="col-lg-12" rows="5" style="resize:none;" readonly>여행 소개</textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="column">
-						<div class="card request">
-							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
-								</figure>
-							</div>
-							<div class="card-content">
-								<div class="media">
-									<div class="media-left">
-										
-									</div>
-									<div class="media-content">
-										<p class="title is-4">설계제목</p>
-										<p class="subtitle is-6">설계자</p>
-										<p class="subtitle is-6">2019/07/03</p>
-									</div>
-								</div>
-								<div class="content">
-									<textarea class="col-lg-12" rows="5" style="resize:none;" readonly>여행 소개</textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="column">
-						<div class="card request">
-							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
-								</figure>
-							</div>
-							<div class="card-content">
-								<div class="media">
-									<div class="media-left">
-										
-									</div>
-									<div class="media-content">
-										<p class="title is-4">설계제목</p>
-										<p class="subtitle is-6">설계자</p>
-										<p class="subtitle is-6">2019/07/03</p>
-									</div>
-								</div>
-								<div class="content">
-									<textarea class="col-lg-12" rows="5" style="resize:none;" readonly>여행 소개</textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="column">
-						<div class="card request">
-							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
-								</figure>
-							</div>
-							<div class="card-content">
-								<div class="media">
-									<div class="media-left">
-										
-									</div>
-									<div class="media-content">
-										<p class="title is-4">설계제목</p>
-										<p class="subtitle is-6">설계자</p>
-										<p class="subtitle is-6">2019/07/03</p>
-									</div>
-								</div>
-								<div class="content">
-									<textarea class="col-lg-12" rows="5" style="resize:none;" readonly>여행 소개</textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				</c:forEach>
 			</section>
-			
+
 		</div>
 	</div>
 </body>
 <script>
-	$(function () {
+	$(function() {
 		$(".request").click(function() {
-				location = "requestPlan.tr";
-			});
+			location = "requestPlan.tr";
 		});
+	});
 	function start() {
-		location = "showrequestStartForm.tr";
+		var reqId = $("#reqId").text();
+		console.log(reqId);
+		location = "showrequestStartForm.tr?reqId=" + reqId;
 	}
 	function reset() {
 		location = "travelRequest.tr";

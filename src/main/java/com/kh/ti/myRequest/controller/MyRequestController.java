@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.kh.ti.myRequest.model.service.MyRequestService;
+import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
@@ -31,7 +32,8 @@ public class MyRequestController {
 	@RequestMapping("myRequestPlan.mr")
 	public String insertMyPlan(@ModelAttribute PlanDay pd, 
 							   @ModelAttribute PlanPlace pp,
-							   @ModelAttribute TravelRequestPlan tp, Model modle) {
+							   @ModelAttribute TravelRequestPlan tp,
+							   @ModelAttribute Participation p, Model modle) {
 		//각 일정및 메모, 공개여부
 		//설계여행일자(PlanDay) 
 		System.out.println(pd);
@@ -70,7 +72,9 @@ public class MyRequestController {
 			System.out.println(placeList);
 		}
 		
-		int result = mrs.insertRequestPlan(dayList, placeList, tp);
+		System.out.println(p);
+		System.out.println(tp);
+		int result = mrs.insertRequestPlan(dayList, placeList, tp, p);
 		System.out.println(result);
 
 		return "travelRequest/myRequestPlan";
