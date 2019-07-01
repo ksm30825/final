@@ -1,7 +1,10 @@
 package com.kh.ti.member.model.dao;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.vo.Member;
 
 public interface MemberDao {
@@ -21,5 +24,9 @@ public interface MemberDao {
 	int updateUserInfo(SqlSessionTemplate sqlSession, Member m);
 
 	int updateUserAcc(SqlSessionTemplate sqlSession, Member loginUser);
+
+	ArrayList<Member> selectAllMember(SqlSessionTemplate sqlSession, PageInfo pi, String status);
+
+	int getListCount(SqlSessionTemplate sqlSession, String status);
 
 }

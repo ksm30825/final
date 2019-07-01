@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Travel Interface</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <style>
 	.pageingBtn{
@@ -43,16 +46,16 @@
 					<div class="field-body">
 						<!-- condition button area 1 -->
 						<div class="field buttons">
-								<a class="button is-primary"> 전체회원 </a>
-								<a class="button is-primary"> 가입회원 </a>
-								<a class="button is-primary"> 탈퇴회원 </a>
+							<a class="button is-primary" href="adminMemberListForm.me?currentPage=1&status=ALL"> 전체회원 </a>
+							<a class="button is-primary" href="adminMemberListForm.me?currentPage=1&status=Y"> 가입회원 </a>
+							<a class="button is-primary" href="adminMemberListForm.me?currentPage=1&status=N"> 탈퇴회원 </a>
 						</div> <!-- end condition button area 1 -->
 						
 						<!-- condition keyword -->
 						<div class="field has-addons" style="justify-content: flex-end;">
 					      <p class="control">
 					        <span class="select">
-					          <select>
+					          <select name="condition" id="condition">
 					            <option>이름</option>
 					            <option>이메일</option>
 					            <option>연락처</option>
@@ -60,10 +63,10 @@
 					       </span>
 					      </p>
 					      <p class="control">
-					        <input class="input" type="text" placeholder="Search Member">
+					        <input class="input" type="text" placeholder="Search Member" name="conditionValue" id="conditionValue">
 					      </p>
 					      <p class="control">
-					        <a class="button"><i class="fas fa-search"></i></a>
+					        <a class="button" id="conditionBtn"><i class="fas fa-search"></i></a>
 					      </p>
 					    </div>
 					</div><!-- end condition keyword -->
@@ -72,7 +75,7 @@
 				<!-- page forward btn -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<label class="label">전체회원 수 : 100명</label>
+						<label class="label">전체회원 수 : ${ listCount } 명</label>
 						<div class="field is-grouped" style="justify-content: flex-end;">
 							<div class="field-label is-normal">
 					          <label class="label">상세보기</label>
@@ -103,7 +106,30 @@
 								<th width="10%"> 가입여부 </th>
 							</tr>
 						</thead>
-						<tbody></tbody>
+						<!-- member list -->
+						<tbody>
+							<c:forEach var="member" items="${ mList }">
+								<tr>
+									<td>${ member.memberId }</td>
+									<td>${ member.userName }</td>
+									<td>${ member.email }</td>
+									<td>${ member.phone }</td>
+									<td>${ member.birthday }</td>
+									<c:choose>
+										<c:when test="${ member.gender == 'M' }">
+											<td>남</td>
+										</c:when>
+										<c:otherwise>
+											<td>여</td>
+										</c:otherwise>
+									</c:choose>
+									<td>${ member.enrollDate }</td>
+									<td>${ member.secessionDate }</td>
+									<td>${ member.enrollStatus }</td>
+								</tr>
+							</c:forEach>
+						</tbody> <!-- end member list -->
+						
 					</table>
 				</div> <!-- end member list -->
 				
@@ -111,17 +137,71 @@
 				<div class="field" >
 					<nav class="pagination">
 				  	<ul class="pagination-list" style="justify-content: center;">
-				  		<li><button class="pageingBtn"> << </button></li>
-				  		<li><button class="pageingBtn"> < </button></li>
-				  		<li><button class="pageingBtn"> 1 </button></li>
-				  		<li><button class="pageingBtn"> 2 </button></li>
-				  		<li><button class="pageingBtn"> > </button></li>
-				  		<li<button class="pageingBtn"> >> </button>></li>
+				  		
+				  		<!-- 이전 -->
+				  		<c:if test="${ pi.currentPage <= 1 }"> 
+				  			<li><button class="pageingBtn" style="border-color: gray;"> < </button></li>
+				  		</c:if>
+				  		<c:if test="${ pi.currentPage > 1 }">
+				  			<c:url var="mListBack" value="adminMemberListForm.me">
+				  				<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
+				  				<c:param name="status" value="${ status }"/>
+				  			</c:url>
+				  			<li><button class="pageingBtn" onclick="location.href='${ mListBack }'"> < </button></li>
+				  		</c:if><!-- end 이전 -->
+				  		
+				  		<!-- page number -->
+				  		<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				  			<c:if test="${ p eq pi.currentPage }">
+				  				<li><button class="pageingBtn" style="border-color: gray;"> ${ p } </button></li>
+				  			</c:if>
+				  			<c:if test="${ p ne pi.currentPage }">
+				  				<c:url var="mListCheck" value="adminMemberListForm.me">
+				  					<c:param name="currentPage" value="${ p }"/>
+				  					<c:param name="status" value="${ status }"/>
+				  				</c:url>
+				  				<li><button class="pageingBtn" onclick="location.href='${ mListCheck }'"> ${ p } </button></li>
+				  			</c:if>
+				  		</c:forEach> <!-- end page number -->
+				  		
+				  		<!-- 다음 -->
+				  		<c:if test="${ pi.currentPage >= pi.maxPage }">
+				  			<li><button class="pageingBtn" style="border-color: gray;"> > </button></li>
+				  		</c:if>
+				  		<c:if test="${ pi.currentPage < pi.maxPage }">
+				  			<c:url var="mListEnd" value="adminMemberListForm.me">
+				  				<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
+				  				<c:param name="status" value="${ status }"/>
+				  			</c:url>
+				  			<li><button class="pageingBtn" onclick="location.href='${ mListEnd }'"> > </button></li>
+				  		</c:if> <!-- end 다음 -->
+
 				  	</ul>
 				  </nav>
 				</div> <!-- end paging -->
+				
 			</section> <!-- end section -->
 		</div> <!-- end column -->
 	</div> <!-- end columns -->
+	
+	<!-- script -->
+	<script>
+		//검색 조회용 함수
+		$("#conditionBtn").click(function(){
+			var condition = $("#condition").val();
+			var conditionValue = $("#conditionValue").val();
+			$.ajax({
+				uri: "selectCondition.me",
+				type: "post",
+				data: {condition : condition, conditionValue : conditionValue},
+				success: function(data){
+					
+				},
+				error: function(data){
+					
+				}
+			});
+		});
+	</script>
 </body>
 </html>

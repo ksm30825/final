@@ -1,5 +1,8 @@
 package com.kh.ti.member.model.service;
 
+import java.util.ArrayList;
+
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.exception.LoginException;
 import com.kh.ti.member.model.vo.Member;
 
@@ -16,5 +19,9 @@ public interface MemberService {
 	int updateUserInfo(Member m);
 
 	int updateUserAcc(Member loginUser);
+
+	int getListCount(String status);
+
+	ArrayList<Member> selectAllMember(PageInfo pi, String status);
 	
 }
