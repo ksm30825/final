@@ -22,5 +22,7 @@ public interface TravelBoardService {
 
 	int travelLikeyDelete(Likey likey);
 
+	TrvDaySchedule selectTravelDetailDays(TrvDaySchedule tds);
+
 
 }

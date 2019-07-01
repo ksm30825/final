@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD19cUtWTevnQL9Nh6Nd8BMgPoQs6OWyX0&callback=initialize" async defer></script>
 </head>
 <style>
 	#calendar{
@@ -30,7 +31,6 @@
 		width: 100%;
 	}
 	#calendarTable th {
-		width: 20%;
 		text-align: center;
 	}
 	#calendarTable td {
@@ -67,24 +67,42 @@
 							<div class="tabs is-fullwidth" style="margin-bottom: 0.5em;">
 								<ul>
 									<li>
-										<a>
-										<span class="icon"><i class="fa fa-angle-left"></i></span>
-										</a>
+										<c:choose>
+											<c:when test="${ detailDay.dayNumber eq 1}">
+												<a>
+													<span id="left" class="icon" style="color: lightgray; cursor: default;"><i class="fa fa-angle-left"></i></span>
+												</a>
+											</c:when>
+											<c:otherwise>
+												<a onclick="selectTravelDetailDays('left')">
+													<span id="left" class="icon"><i class="fa fa-angle-left"></i></span>
+												</a>
+											</c:otherwise>
+										</c:choose>
 									</li>
 									<li>
-										<span><strong>DAY ${ detailDay.dayNumber }</strong></span>
+										<span style="font-weight: 1px;">DAY</span><span id="day" style="font-weight: 1px;"> ${ detailDay.dayNumber }</span>
 									</li>
 									<li>
-										<a>
-										<span class="icon"><i class="fa fa-angle-right"></i></span>
-										</a>
+										<c:choose>
+											<c:when test="${ detailDay.dayNumber eq fn:length(detailDay.trvSchedule) }">
+												<a>
+													<span id="right" class="icon" style="color: lightgray; cursor: default;"><i class="fa fa-angle-right"></i></span>
+												</a>
+											</c:when>
+											<c:otherwise>
+												<a onclick="selectTravelDetailDays('right')">
+													<span id="right" class="icon"><i class="fa fa-angle-right"></i></span>
+												</a>
+											</c:otherwise>
+										</c:choose>
 									</li>
 								</ul>
 							</div>
 							<div align="right" style="border-bottom: 1px solid lightgray; padding-bottom: 0.3em;">
 								<c:choose>
-									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 && detailDay.trvSchedule.isTimeset eq 'Y' }">
-										<input type="checkbox" id="timeCheck" checked="checked">
+									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
+										<input type="checkbox" id="timeCheck">
 										<label for="timeCheck">시간 표시</label>
 									</c:when>
 									<c:otherwise>
@@ -97,17 +115,21 @@
 							<table id="calendarTable">
 								<c:choose>
 									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-										<tr>
+										
 										<c:forEach var="trvSchedule" items="${ detailDay.trvSchedule }" varStatus="st">
-											<th class="times" style="display: none;">${ trvSchedule.startTime }  ${ trvSchedule.endTime }</th>
-											<td>
-												<span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; 장소이름</span>
-											</td>
+											<tr>
+												<th class="times" style="display: none;">${ trvSchedule.startTime } ~ ${ trvSchedule.endTime }</th>
+												<td>
+													<span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ${ trvSchedule.placeName }</span>
+												</td>
+											</tr>
 										</c:forEach>
-										</tr>
+										
 									</c:when>
 									<c:otherwise>
-										<p>상세스케줄 없음</p>
+										<tr>
+											<td><p>상세스케줄 없음</p></td>
+										</tr>
 									</c:otherwise>
 								</c:choose>
 							</table>
@@ -124,7 +146,6 @@
 					<option value="2">DAY 2</option>
 					<option value="3">DAY 3</option>
 				</select>
-				지도~~
 			</div>
 		</div>
 	</section>
@@ -153,6 +174,96 @@
 			$(".times").css("display","none");
 		}
 	});
+	
+	//상세 스케쥴 보기
+	function selectTravelDetailDays(text) {
+		
+		var dayNumber = $("#day").text();
+		
+		if(text == 'left') {
+			dayNumber = Number($("#day").text()) - 1;
+		}else {
+			dayNumber = Number($("#day").text()) + 1;
+		}
+		var trvId = ${ detailTb.trvId };
+		
+		console.log("trvId : " + trvId);
+		console.log("dayNumber : " + dayNumber);
+		
+		var lastDay = ${ detailDay.trvSchedule.size()};
+		
+		console.log("lastDay : " + lastDay);
+		
+		if(lastDay == dayNumber) {
+			$('#right').css("color", "lightgray");
+		}else {
+			$('#right').removeAttr("style");
+			$('#right').attr("onclick", "selectTravelDetailDays('right')");
+		}
+		
+		if(1 == dayNumber) {
+			$('#left').css("color", "lightgray");
+		}else {
+			$('#left').removeAttr("style");
+			$('#left').attr("onclick", "selectTravelDetailDays('left')");
+		}
+		
+		$.ajax({
+			url : "travelDetailDays.tb",
+			data : {trvId : trvId, dayNumber : dayNumber},
+			success : function(detailDay) {
+				console.log(detailDay.dayNumber);
+				
+				$("#day").empty();
+				$("#day").append('&nbsp;' + detailDay.dayNumber);
+				
+				$("#calendarTable > tbody").children().remove();
+				
+				for (var key in detailDay.trvSchedule) {
+					var startTime = detailDay.trvSchedule[key].startTime;
+					var endTime = detailDay.trvSchedule[key].endTime;
+					var placeName = detailDay.trvSchedule[key].placeName;
+					var isTimeset = detailDay.trvSchedule[key].isTimeset;
+					
+					console.log("startTime : " + startTime);
+					console.log("endTime : " + endTime);
+					console.log("placeName : " + placeName);
+					
+					var value;
+					
+					if(isTimeset == 'N' || isTimeset == null) {
+						$("#timeCheck").attr('disabled', true).css("color", 'gray');
+						
+						value = '<tr><td><p>상세스케줄 없음</p></td></tr>';
+						$("#calendarTable > tbody").append(value).css("text");
+					}else {
+						value = '<tr><th class="times" style="display: none;">' + startTime + ' ~ ' + endTime + "</th>"
+						+ '<td><span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ' + placeName + '</span></td></tr>';
+			
+						$("#calendarTable > tbody").append(value);
+					}
+				}
+				
+			},
+			error : function(data) {
+				alert("연결 실패");
+			}
+		});
+	}
+	
+	//지도보기
+	/* function initMap() { 
+		var map = new google.maps.Map(document.getElementById('map'),
+			    mapOptions);
+		var myLatlng = new google.maps.LatLng(-34.397, 150.644);
+		var mapOptions = {
+		  zoom: 8,
+		  center: myLatlng,
+		  mapTypeId: 'satellite'
+		};
+	} */
+	
+	
 </script>
 
 </body>

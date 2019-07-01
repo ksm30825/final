@@ -24,5 +24,7 @@ public interface TravelBoardDao {
 
 	int travelLikeyDelete(SqlSessionTemplate sqlSession, Likey likey);
 
+	TrvDaySchedule selectTravelDetailDays(SqlSessionTemplate sqlSession, TrvDaySchedule tds);
+
 
 }
