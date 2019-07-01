@@ -37,13 +37,14 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		//여행일정 리스트
 		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardList", tb, rowBounds);
 		tbMap.put("tbList", tbList);
+		
 		//여행테마 태그 리스트
 		ArrayList tagList = (ArrayList) sqlSession.selectList("TravelBoard.selectTagList");
 		tbMap.put("tagList", tagList);
+		
 		//도시태그 리스트
 		ArrayList cityList = (ArrayList) sqlSession.selectList("TravelBoard.selectCityList");
 		tbMap.put("cityList", cityList);
-		
 		
 		return tbMap;
 	}
@@ -58,6 +59,8 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		TravelBoard detailTb = new TravelBoard();
 		detailTb = sqlSession.selectOne("TravelBoard.selectTravelDetailForm", tb);
 		
+		System.out.println("detailTb : " + detailTb);
+		
 		//해당 일정 구매여부 확인
 		detailTb.setBuyStatus(sqlSession.selectOne("TravelBoard.checkBuyStatus", tb));
 		
@@ -65,12 +68,6 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		detailTb.setLikeyStatus(sqlSession.selectOne("TravelBoard.checkLikeyStatus", tb));
 		
 		tbMap.put("detailTb", detailTb);
-		
-		//여행 일자별 스케쥴 조회
-		TrvDaySchedule detailDay = sqlSession.selectOne("TravelBoard.selectDaySchOne", tb);
-		System.out.println("detailDay : " + detailDay);
-		System.out.println("detailDay.getTrvSchedule().size() : " + detailDay.getTrvSchedule().size());
-		tbMap.put("detailDay", detailDay);
 		
 		return tbMap;
 	}
@@ -94,6 +91,13 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 	public int travelLikeyDelete(SqlSessionTemplate sqlSession, Likey likey) {
 		
 		return sqlSession.delete("TravelBoard.travelLikeyDelete", likey);
+	}
+
+	//여행일정 일자별 스케쥴 조회용
+	@Override
+	public TrvDaySchedule selectTravelDetailDays(SqlSessionTemplate sqlSession, TrvDaySchedule tds) {
+		
+		return sqlSession.selectOne("TravelBoard.selectDaySchOne", tds);
 	}
 	
 

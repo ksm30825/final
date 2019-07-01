@@ -5,10 +5,14 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ti.common.PageInfo;
@@ -18,6 +22,10 @@ import com.kh.ti.travelBoard.model.service.TravelBoardService;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
+
+import net.sf.json.JSON;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 public class TravelBoardController {
@@ -97,17 +105,38 @@ public class TravelBoardController {
 		}
 		tb.setTrvId(trvId);
 		
-		//여행일정 일자별 스케쥴 조회용 - 처음은 DAY1 조회
-		TrvDaySchedule tds = new TrvDaySchedule();
-		
-		tds.setTrvId(trvId);
-		
 		HashMap tbMap = tbs.travelDetailForm(tb);
 		
+		
+		 TrvDaySchedule tds = new TrvDaySchedule(); tds.setTrvId(trvId);
+		 tds.setDayNumber(1); 
+		 TrvDaySchedule detailDay = tbs.selectTravelDetailDays(tds);
+		 
+		 System.out.println("detailDay : " + detailDay);
+		
 		model.addAttribute("detailTb", tbMap.get("detailTb"));
-		model.addAttribute("detailDay", tbMap.get("detailDay"));
+		model.addAttribute("detailDay", detailDay);
 		
 		return "travelBoard/travelDetail";
+	}
+	
+	//여행일정 일자별 스케쥴 조회용
+	@ResponseBody
+	@RequestMapping("travelDetailDays.tb")
+	public ResponseEntity<TrvDaySchedule> selectTravelDetailDays(int trvId, int dayNumber) {
+		
+		System.out.println("trvId : " + trvId);
+		System.out.println("dayNumber : " + dayNumber);
+		
+		TrvDaySchedule tds = new TrvDaySchedule();
+		tds.setTrvId(trvId);
+		tds.setDayNumber(dayNumber);
+		
+		TrvDaySchedule detailDay = tbs.selectTravelDetailDays(tds);
+		
+		System.out.println("detailDay : " + detailDay.getTrvSchedule());
+		
+		return new ResponseEntity<TrvDaySchedule>(detailDay, HttpStatus.OK);
 	}
 	
 	//여행일정 삭제 - 예랑

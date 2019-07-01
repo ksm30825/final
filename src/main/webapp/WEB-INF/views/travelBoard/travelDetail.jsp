@@ -123,9 +123,11 @@
 					<li>
 						<c:choose>
 							<c:when test="${ fn:length(detailTb.trvTags) > 0 }">
-								<div class="buttons themaBtn">
-		     						<a class="button is-info is-rounded">#${ detailTb.trvTags.tagName }</a>
-		   						</div>
+								<c:forEach var="trvTags" items="${ detailTb.trvTags }" varStatus="st">
+									<div class="buttons themaBtn">
+			     						<a class="button is-info is-rounded">#${ trvTags.tagName }</a>
+			   						</div>
+								</c:forEach>
 							</c:when>
 							<c:otherwise>
 								<p>여행태그 없음</p>

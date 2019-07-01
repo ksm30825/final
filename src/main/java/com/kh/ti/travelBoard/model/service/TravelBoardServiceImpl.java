@@ -63,6 +63,13 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 		
 		return tbd.travelLikeyDelete(sqlSession, likey);
 	}
+	
+	//여행일정 일자별 스케쥴 조회용
+	@Override
+	public TrvDaySchedule selectTravelDetailDays(TrvDaySchedule tds) {
+		
+		return tbd.selectTravelDetailDays(sqlSession, tds);
+	}
 
 
 }
