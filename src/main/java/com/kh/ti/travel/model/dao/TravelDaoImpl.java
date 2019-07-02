@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
-import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
@@ -155,6 +154,13 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.update("Travel.updateSch", sch);
 	}
 	
+
+	@Override
+	public int deleteSchTime(SqlSessionTemplate sqlSession, TrvSchedule sch) {
+		return sqlSession.update("Travel.deleteSchTime", sch);
+	}
+
+	
 	@Override
 	public int deleteTrvSchedule(SqlSessionTemplate sqlSession, int schId) {
 		return sqlSession.delete("Travel.deleteSch", schId);
@@ -166,29 +172,6 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 
-
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-//	@Override
-//	public int insertPlace(SqlSessionTemplate sqlSession, Place plc) {
-//		/* return sqlSession.insert("Travel.insertTrvPlace"); */
-//		return 0;
-//	}
-//	@Override
-//	public int selectPlcId(SqlSessionTemplate sqlSession) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-	
 	
 	
 	@Override
@@ -242,27 +225,12 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 
-
-
-	@Override
-	public int insertTrvCost(SqlSessionTemplate sqlSession, Travel trv, TrvCost cost) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	@Override
 	public int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-
-
-	@Override
-	public ArrayList selectAllSchList(SqlSessionTemplate sqlSession, Travel trv, int day) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityId) {
@@ -271,14 +239,11 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 
-
-
 	@Override
 	public int deleteTrvComp(SqlSessionTemplate sqlSession, Travel trv, int memberId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 
 	@Override

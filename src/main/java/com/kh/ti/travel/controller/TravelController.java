@@ -17,7 +17,6 @@ import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.service.TravelService;
 import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
-import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
@@ -196,6 +195,18 @@ public class TravelController {
 		}
 	}
 	
+	
+	//상세일정 순서변경-민지
+	@RequestMapping("updateSchNumber.trv")
+	public ModelAndView updateSchNumber(int dayId, int[] sch, ModelAndView mv) {
+		int result = ts.updateSchNumber(dayId, sch);
+		ArrayList<TrvSchedule> updList = ts.selectSchList(dayId);
+		mv.addObject("updList", updList);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
 	//상세일정삭제-민지
 	@RequestMapping("deleteSch.trv") 
 	public String deleteSchedule(int schId, int trvId, Model model) {
@@ -216,6 +227,8 @@ public class TravelController {
 		
 		return mv;
 	}
+	
+	
 	
 	
 	
@@ -263,7 +276,13 @@ public class TravelController {
 		return "";
 	}
 
-	
+
+	//여행동행삭제-민지
+	@RequestMapping("deleteComp.trv")
+	public String deleteTrvComp(Travel trv, int memberId) {
+		int result = ts.deleteTrvComp(trv, memberId);
+		return "";
+	}	
 
 	
 	//가계부 작성-민지
@@ -274,48 +293,6 @@ public class TravelController {
 		return "";
 	}
 	
-
-	
-	//여행사진추가-민지
-	@RequestMapping("/insertFile.trv")
-	public String insertSchFile(SchFile schFile) {
-		int result = ts.insertSchFile(schFile);
-		return "";
-	}
-	
-	
-	//전체일정조회-민지
-	@RequestMapping("selectSchList.trv")
-	public String selectAllSchList(Travel trv) {
-		HashMap schMap = ts.selectAllSchList(trv);
-		return "";
-	}
-	
-	//인기명소 불러오기-민지
-	@RequestMapping("selectSpotList.trv")
-	public String selectSpotList(Travel trv) {
-		HashMap spotMap = ts.selectSpotList(trv);
-		return "";
-	}
-	
-
-
-
-	
-	//여행도시삭제-민지
-	@RequestMapping("deleteCity.trv")
-	public String deleteTrvCity(Travel trv, int cityId) {
-		int result = ts.deleteTrvCity(trv, cityId);
-		return "";
-	}
-	
-	//여행동행삭제-민지
-	@RequestMapping("deleteComp.trv")
-	public String deleteTrvComp(Travel trv, int memberId) {
-		int result = ts.deleteTrvComp(trv, memberId);
-		return "";
-	}
-
 	
 	//가계부수정-민지
 	@RequestMapping("updateCost.trv")
@@ -330,6 +307,24 @@ public class TravelController {
 		int result = ts.deleteTrvCost(cost);
 		return "";
 	}
+	
+
+	
+	//인기명소 불러오기-민지
+	@RequestMapping("selectSpotList.trv")
+	public String selectSpotList(Travel trv) {
+		HashMap spotMap = ts.selectSpotList(trv);
+		return "";
+	}
+	
+
+	//여행사진추가-민지
+	@RequestMapping("/insertFile.trv")
+	public String insertSchFile(SchFile schFile) {
+		int result = ts.insertSchFile(schFile);
+		return "";
+	}
+
 	
 	//사진삭제-민지
 	@RequestMapping("/deleteFile.trv")

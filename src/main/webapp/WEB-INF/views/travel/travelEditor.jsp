@@ -433,7 +433,16 @@
 				if(status === google.maps.places.PlacesServiceStatus.OK) {
 					map.setCenter(results[0].geometry.location);
 				}
-			})
+			});
+			
+			
+			var places = [];
+			$("#day1").find("input[name=plcId]").each(function() {
+				places.push($(this).val());
+			});
+			showRoute(places);
+			
+			
 			
 			map.addListener('bounds_changed', function() {
 				searchBox.setBounds(map.getBounds());
