@@ -44,6 +44,7 @@
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
 	<input type = "hidden" value = "${chatId}" id = "ReChatID">
+
 	
 	<div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;width:80%;" id="rightMenu">
 	  <div style = "height : 7%; width : 100%; background: #6196ed;">
@@ -61,8 +62,8 @@
 	  <div style = "height : 7%; width : 100%; background : #a8c9ff">
 	  	 <label style = "margin: 20px;">대화상대</label>
 	  </div>
-	  <div style = "height : 50%; width : 100%; overflow-y : auto;">
-	  		<table id = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">
+	  <div id = "MemberInfoDiv" style = "height : 50%; width : 100%; overflow-y : auto;">
+	  		<!-- <table id = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">
 				<tr>
 					<td colspan = "2">
 					<input type = "hidden" value = "wldnjs7781" name = "userId" id = "userId">
@@ -79,7 +80,7 @@
 						<p id = "bad">5</p>
 					</td>
 				</tr>	  		
-	  		</table>
+	  		</table> -->
 	  </div>
 	  <div style = "height : 5%;">
 	  	<ul class="list-inline" style = "border-top:1px solid lightgray;">
@@ -158,9 +159,51 @@
     	 	
     		console.log("user :"+user);
     		console.log("chatId :" + chatId);
-    		
-    	  	//서버
-			var socket = io("http://localhost:8010");
+    		  		
+    	   //서버
+		   var socket = io("http://localhost:8010");
+    	  	
+		   //채팅Manager 값 가져오기
+	       socket.emit('preChatManager' , {chatId : chatId});
+	          
+	       socket.on('preChatManager', function(data){
+	        	   console.log(data);
+	      
+	        	   
+	        	   $.ajax({
+	        		   url : "${contextPath}/memberInfo.ch",
+	        		   data : {userId : data.user},
+	        	       success : function(userInfo) {
+	        	    	   
+	        	    	   var output = "";
+	        	    	   output += '<table id = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
+	    	        	   output += '<tr><td colspan = "2">';
+	    	        	   output += '<input type = "hidden" value = "'+ userInfo.email +'" name = "userId" id = "userId">';
+	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
+	    				   output += '<label>'+ userInfo.userName +'('+userInfo.email+')</label></td>';					
+	    				   output += '</tr><tr><td>';
+	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
+	    				   output += '<p id = "good">0</p>';
+	    				   output += '</td>';
+	    				   output += '<td>';
+	    				   output += '<i id = "badicon" class="material-icons">thumb_down_alt</i>';
+	    				   output += '<p id = "bad">0</p>';
+	    				   output +=  '</td>';
+	    				   output += '</tr>';	  		
+	    		  		   output += '</table>';
+	    		  		   $(output).appendTo("#MemberInfoDiv");
+	    		  	
+	        	       },
+	        	       error : function(){
+	        	    	   console.log("에러발생");
+	        	       }
+	        	   });
+	        	   
+	        	   if (user == data.user){
+	        		 
+	        	   }
+	        	
+	          });
     	  	
     	  	//메세지 보내기 enter 
 			 $("#message").keydown(function(key) {
@@ -186,30 +229,49 @@
 	           
 	           //메세지 보낸 후
 	           socket.on('message' , function(data){
+	        	   var userName = "";
+	        	   $.ajax({
+  	        		   url : "${contextPath}/memberInfo.ch",
+  	        		   data : {userId : data.user},
+  	        		   success : function(userInfo) {
+  	        			 userName =  userInfo.userName;
+  	        		 }
+                	});
+	        	   
 	                var output = '';
 	                
-	                if (data.user == user){
-		                output += '<div class="alert alert-info" id = "msg" style = "background : #f1ccfc; border-color: #f1ccfc;"><strong>';                	
-	                }else {
-	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
+	                console.log(data);
+	                
+	                var mchatId = data.chat_id;
+	                
+	                if (mchatId == chatId){
+	                	
+	                	 if (data.user == user){
+	 		                output += '<div class="alert alert-info" id = "msg" style = "background : #f1ccfc; border-color: #f1ccfc;"><strong>';                	
+	 	                }else {
+	 	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
+	 	                }
+	                	 
+	                	
+	                	
+	 	              	output += userName;
+	 	                
+	 	                output += '</strong> ';
+	 	                output += data.message;
+	 	                output += '</div>';
+	 	                $(output).appendTo('#chat_box');
+	 	                
+	 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
 	                }
-	                
-	                if (data.user == user){
-	                	output += '나';
-	                }else {
-	                	output += data.user;
-	                }
-	                
-	                output += '</strong> ';
-	                output += data.message;
-	                output += '</div>';
-	                $(output).appendTo('#chat_box');
-	                
-	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+	               
 	            });
 	           
+	           
+		         
+	        
+	           
 	           //채팅방  대화 가져오기 위해서 소켓 실행
-	           socket.emit('preChat', { chatId : chatId });
+	           socket.emit('preChat', { chatId : chatId});
 	            
 	           socket.on('preChat' , function(data){
 	                var output = '';
@@ -220,14 +282,13 @@
 	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
 	                }
 	                
-	                if (data.user == user){
-	                	output += '나';
-	                }else {
-	                	output += data.user;
-	                }
+	                
+	                
+	                //output += data.user;
+	                
 	                output += '</strong> ';
-	                output += data.message;
-	                output += '</div>';
+		            output += data.message;
+		            output += '</div>';
 	                
 	                $(output).appendTo('#chat_box');
 	                
@@ -299,7 +360,8 @@
 	  	  			$("#Recruitingicon").style("color" , "blue");
 	  	  		 }
 	        	 
-	        	 
+	  	  		 
+			        	 
 	        	  
 	          });
 	          
@@ -320,13 +382,18 @@
 	 	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
 	 	        	  }
 	 	        	 
-		              socket.emit('message', {
-		                	user :user, message : "님이 채팅방에 들어왔습니다." , chatId : chatId
-		              });
-	 	        	 
 	 	        	  
 	 	          });
+	        	  
+	        	
+	        	
+	 			//채팅Manager 값 가져오기
+		        socket.emit('preChatManager' , {chatId : chatId});
+	 	        	 
 	          });
+	          
+	          
+	         
 	           
 	           
 	           

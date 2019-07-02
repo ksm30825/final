@@ -1,15 +1,22 @@
 package com.kh.ti.Chatting.model.dao;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.kh.ti.member.model.vo.Member;
 
 @Repository
 public class ChattingDaoImpl implements ChattingDao{
 
-	//채팅방 만들기 - 지원
+	//사용자 정보 불러오는 메소드 -- 지원 
 	@Override
-	public int insertChatting() {
-		// TODO Auto-generated method stub
-		return 0;
+	public Member selectMemberInfo(SqlSessionTemplate sqlSession, int userId) {
+		
+		
+		return sqlSession.selectOne("Chatting.selectMemberInfo", userId);
 	}
+
+
+	
 
 }

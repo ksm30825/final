@@ -3,10 +3,13 @@ package com.kh.ti.Chatting.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.ti.Chatting.model.service.ChattingService;
+import com.kh.ti.member.model.vo.Member;
 
 @Controller
 public class ChattingController {
@@ -72,6 +75,20 @@ public class ChattingController {
 		
 		return "companion/DeclarationChatting";
 	}
+	
+	//사용자 정보 불러오기
+	//여행일정 일자별 스케쥴 조회용
+	@RequestMapping("/memberInfo.ch")
+	public ResponseEntity<Member> selectMemberInfo(int userId) {
+	      
+	     System.out.println("userId : " + userId);
+	      
+	     Member userInfo = cs.selectMemberInfo(userId);
+	      
+	     System.out.println("detailDay : " + userInfo);
+	      
+	     return new ResponseEntity<Member>(userInfo, HttpStatus.OK);
+	   }
 	
 	
 	
