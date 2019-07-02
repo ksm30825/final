@@ -55,4 +55,10 @@ public class MyRequestDaoImpl implements MyRequestDao{
 	public ArrayList<TravelRequestPlan> selectRequestPlanList(SqlSessionTemplate sqlSession, TravelRequestPlan trp) {
 		return (ArrayList) sqlSession.selectList("TravelRequest.selectRequestPlanList", trp);
 	}
+
+	//선택한 설계글 불러오기 - 이선우
+	@Override
+	public ArrayList<TravelRequestPlan> selectLoadRequestPlan(SqlSessionTemplate sqlSession, int planId) {
+		return (ArrayList) sqlSession.selectList("TravelRequest.selectLoadRequestPlan", planId);
+	}
 }

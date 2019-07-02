@@ -13,4 +13,6 @@ public interface MyRequestService {
 
 	ArrayList<TravelRequestPlan> selectRequestPlanList(TravelRequestPlan trp);
 
+	ArrayList<TravelRequestPlan> selectLoadRequestPlan(int planId);
+
 }

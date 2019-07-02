@@ -84,7 +84,7 @@ public class MyRequestController {
 		return "travelRequest/myRequestPlan";
 	}
 	
-	//설계 불러오기 - 이선우
+	//설계 목록 불러오기 - 이선우
 	@RequestMapping("loadRequestPlan.mr")
 	public ResponseEntity<ArrayList> selectLoadRequestPlan(
 			@RequestParam("memberId")int memberId) {
@@ -97,6 +97,22 @@ public class MyRequestController {
 		ArrayList<TravelRequestPlan> planList = mrs.selectRequestPlanList(trp);
 		System.out.println(planList);
 		return new ResponseEntity<ArrayList>(planList, HttpStatus.OK);
+	}
+	
+	//선택된 설계글 불러오기 - 이선우
+	@RequestMapping("loadRequetPlan.mr")
+	public String selectLoadRequestPlan(@RequestParam("reqId")int reqId,
+									    @RequestParam("planId")int planId, Model model) {
+		System.out.println("의뢰번호 : " + reqId);
+		System.out.println("설계번호 : " + planId);
+		
+		ArrayList<TravelRequestPlan> trp = mrs.selectLoadRequestPlan(planId);
+		System.out.println("조회 결과 : " + trp);
+		
+		model.addAttribute("trp", trp);
+		model.addAttribute("reqId", reqId);
+		model.addAttribute("planId", planId);
+		return "travelRequest/travelRequestLoad";
 	}
 
 	// 나의 문의 내역 - 이선우

@@ -113,8 +113,9 @@ th, td {
 				<div class="columns">
 					<div class="column">
 						<br>
-						<div class="field">
-							<a class="button is-primary"> Day1 </a> &nbsp;
+						<c:forEach var="day" items="${ trp }" varStatus="number">
+							<div class="field">
+							<a class="button is-primary">Day${ number.count }</a> &nbsp;
 							<input type="hidden" value="Day1" name="pDay">
 							<!-- X버튼 -->
 							<span data-balloon="size: 3x" data-balloon-pos="up"
@@ -136,12 +137,13 @@ th, td {
 									</path>
 								</svg>
 							</span>
-							<!-- <input class="input" type="text" placeholder="하루 일정을 입력해주세요(지역 - 지역 - 지역)" > -->
 							<br><br>
 							<p class="control">
-								<textarea class="textarea " placeholder="일정 작성" name="pDayMemo"></textarea>
+								<textarea class="textarea " placeholder="일정 작성" name="pDayMemo">${ day.getDayList().get(0).getpDayMemo() }</textarea>
+								${ day.getDayList().get(0).getPlaceList() }
 							</p>
 						</div>
+						</c:forEach>
 						<br>
 						<hr>
 						<br>
@@ -190,9 +192,9 @@ th, td {
 									<div class="card">
 										<div class="card-content">
 											<div class="content">
-												<input class="input" type="text" placeholder="여행 제목 입력" name="planTitle">
+												<textarea class="input" type="text" placeholder="여행 제목 입력" name="planTitle">${ trp.get(0).getPlanTitle() }</textarea>
 												<hr>
-												<textarea class="textarea" placeholder="여행 소개" name="planContent"></textarea>
+												<textarea class="textarea" placeholder="여행 소개" name="planContent">${ trp.get(0).getPlanContent() }</textarea>
 											</div>
 										</div>
 										<footer class="card-footer">
@@ -225,9 +227,9 @@ th, td {
 													</thead>
 													<tbody>
 														<tr>
-															<td><textarea name="roomCharge" placeholder="비용을 입력하세요"></textarea></td>
-															<td><textarea name="trafficCharge" placeholder="비용을 입력하세요"></textarea></td>
-															<td><textarea name="etcCharge" placeholder="비용을 입력하세요"></textarea></td>
+															<td><textarea name="roomCharge" placeholder="비용을 입력하세요">${ trp.get(0).getRoomCharge() }</textarea></td>
+															<td><textarea name="trafficCharge" placeholder="비용을 입력하세요">${ trp.get(0).getTrafficCharge() }</textarea></td>
+															<td><textarea name="etcCharge" placeholder="비용을 입력하세요">${ trp.get(0).getEtcCharge() }</textarea></td>
 													</tbody>
 												</table>
 											</section>
@@ -330,7 +332,6 @@ th, td {
 		   	});
 		}
 		//+버튼
-		
 		$(".plusBtn").click(function(){
 			count++;
 			console.log(count);
