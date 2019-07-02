@@ -45,6 +45,8 @@
 			<mapper resource="mappers/travel-mapper.xml" />
     	<!-- TravelBoard Part (예랑) -->
 			<mapper resource="mappers/travelBoard-mapper.xml"/>
+		<!-- 지원  채팅  -->
+			<mapper resource="mappers/chatting-mapper.xml"/>
 	</mappers>
 	
 	

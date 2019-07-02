@@ -147,6 +147,10 @@
 			 $("#trStartDate").datepicker();      
 		 	 $("#trEndDate").datepicker();
 		 	 
+		 	
+
+
+		 	 
 		 	 
 	        //팝업 Close 기능
 	        function close_pop(flag) {
@@ -159,8 +163,10 @@
 	        
 	        //여기서부터 서버
 	        $(document).ready(function() {
+	        
+	        	
 	        	//서버
-				var socket = io("http://192.168.0.25:8010");
+				var socket = io("http://localhost:8010");
 	        	
 	        /* 	//console.log( ${ loginUser.memberId } + "?"); */
 				
