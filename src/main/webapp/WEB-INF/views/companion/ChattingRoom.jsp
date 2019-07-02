@@ -57,21 +57,7 @@
 		 <label style = "font-size :15px; padding : 15px; margin-left : 15%; margin-top:1%;">채팅방 정보</label>
 		 <span id = "Recruitingicon" class="label label-danger">모집중</span>
 	  </div>
-	  <div style = "height : 30%; width : 100%; overflow-y: auto; ">
-	  	<table id = "Chattinginfor">
-	  		<tr>
-	  			<td><b>여행지</b></td>
-	  			<td>파리</td>
-	  		</tr>
-	  		<tr>
-	  			<td><b>여행 날짜 </b></td>
-	  			<td>2019/06/23 ~ 2019/07/31</td>
-	  		</tr>
-	  		<tr>
-	  			<td colspan = "2"><p>이것이야말로 사랑의 두손을 대한 만천하의 꾸며 청춘 그들의 뿐이다. 얼마나 이것은 곳이 끓는다. 산야에 구하지 할지니, 새가 지혜는 동력은 원질이 심장은 뼈 듣는다. 황금시대를 행복스럽고 피어나기 살 이상을 황금시대다. 그와 만천하의 구하지 실현에 생명을 뿐이다. 바로 스며들어 가는 무엇을 있다. 있으며, 용감하고 이상의 것이다. 이상은 것은 속에서 듣는다. 황금시대의 이상의 아니한 품에 때문이다.</p></td>
-	  		</tr>
-	  	</table>
-	  </div>
+	  <div id = "RoomInfoDIV" style = "height : 30%; width : 100%; overflow-y: auto; "></div>
 	  <div style = "height : 7%; width : 100%; background : #a8c9ff">
 	  	 <label style = "margin: 20px;">대화상대</label>
 	  </div>
@@ -263,12 +249,61 @@
 	        	  }else {
 	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
 	        	  }
+	        	  
+	        	  var formattedStartDate = new Date(data.start);
+	        	  var sd = formattedStartDate.getDate();
+	        	  var sm =  formattedStartDate.getMonth();
+	        	  sm += 1;  // JavaScript months are 0-11
+	        	  var sy = formattedStartDate.getFullYear();
+
+				 var startDate = sy + "/" + sm  + '/' + sd;
+				 
+				 var formattedEndDate = new Date(data.end);
+	        	  var ed = formattedEndDate.getDate();
+	        	  var em =  formattedEndDate.getMonth();
+	        	  em += 1;  // JavaScript months are 0-11
+	        	  var ey = formattedEndDate.getFullYear();
+
+				 var endDate = ey + "/" + em  + '/' + ed;
+
+	        	  
+	        	  
+	        	 var output = "";
+	        	  
+	        	 output += '<table id = "Chattinginfor">';
+	        	 output += '<tr><td><b>채팅방 제목</b></td>';
+	  	  		 output += '<td>'+title+'</td>';
+	  	  		 output += '</tr><tr>';
+	  	  		 output += '<td><b>여행지</b></td>';
+	  	  		 output += '<td>'+data.place+'</td>'
+	  	  		 output +=	'</tr><tr>'
+	  	  		 output += '<td><b>여행날짜</b></td>';
+	  	  		 output += '<td>' + startDate + "~" + endDate + "</td>"
+	  	  		 output += "</tr>"
+	  	  		 output += '<tr><td><b>상세설명</b></td>';
+	  	  		 output += "</tr>"
+	  	  		 output += "<tr>"
+	  	  		 output += "<td colspan = '2'>" + data.detail + "</td>"
+	  	  		 output += '</table>';
+	        	  
+	  	  		 $(output).appendTo('#RoomInfoDIV');
+	  	  		 
+	  	  		 $("#Recruitingicon").text(data.status); 
+	  	  		 if (data.status == "여행중"){
+	  	  		 	$("#Recruitingicon").style("color" , "yellow");
+	  	  		 }else if (data.status == "모집완료"){
+	  	  			$("#Recruitingicon").style("color" , "green");
+	  	  		 }else if (data.status == "여행준비중"){
+	  	  			$("#Recruitingicon").style("color" , "pink");
+	  	  		 }else if (data.status == "여행종료"){
+	  	  			$("#Recruitingicon").style("color" , "blue");
+	  	  		 }
 	        	 
 	        	 
 	        	  
 	          });
 	          
-	          
+	          //새로운 회원이 채팅방에 들어왔을 ㄸ
 	          socket.on('newUser' , function(){
 	        	  socket.emit('preChatInfo' , {chatId : chatId});
 	        	  
@@ -285,9 +320,9 @@
 	 	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
 	 	        	  }
 	 	        	 
-		                socket.emit('message', {
+		              socket.emit('message', {
 		                	user :user, message : "님이 채팅방에 들어왔습니다." , chatId : chatId
-		                });
+		              });
 	 	        	 
 	 	        	  
 	 	          });

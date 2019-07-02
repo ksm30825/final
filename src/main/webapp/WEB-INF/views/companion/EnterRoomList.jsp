@@ -36,7 +36,7 @@
 	     $(document).ready(function() {
 	    		var user = ${ loginUser.memberId };
 	    	 	
-	    		console.log("user :"+user);
+	    		//console.log("user :"+user);
 	    		
 	        	//서버
 				var socket = io("http://localhost:8010");
@@ -46,7 +46,7 @@
 		        	
 					 socket.on('mychatting' , function(data){
 						 	 var output = '';
-			                 output += '<table class = "MyChatList" style = "width: 100%;">';
+			                 output += '<table id = "MyChatTable" class = "MyChatList" style = "width: 100%;">';
 			                 output += '<tr>';
 				     		 output += '<td colspan = "4" class = "chName">';
 				     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.chatnum +'">';
@@ -60,10 +60,24 @@
 				     		 output +=	'&nbsp;&nbsp;&nbsp;<label>('+ data.activityNum + '/' + data.peoplenum +')</label>';
 				     		 output +=	'</td></tr>'
 			                 output += '</table>';
-			                 $(output).prependTo('#listWrap');
+			                 $(output).appendTo('#listWrap');
 			                 
-			                 console.log(data.title);
+			                 console.log(data.chatnum);
 	        		 });
+					 
+					 
+					//채팅방 들어가기 하는 함수
+			    	  $(document).on("click","#MyChatTable tr",function(){
+			    		 var chatList = $(this).parent().children().children();
+			 	 	 		//var chatTitle = chatList.children("label").html(); 
+			 	 	 	 var chatNum = chatList.children("#chatNum").val();
+				 				
+			 	 	 	console.log("chatNum :" + chatNum);	
+				 		
+			 	 	 	location.href = "${contextPath}/enterChatting.ch?num=" + chatNum;
+				 		
+				 			
+			        });
 	        	}
 				
 				

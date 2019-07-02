@@ -160,7 +160,7 @@
 	        //여기서부터 서버
 	        $(document).ready(function() {
 	        	//서버
-				var socket = io("http://localhost:8010");
+				var socket = io("http://192.168.0.25:8010");
 	        	
 	        /* 	//console.log( ${ loginUser.memberId } + "?"); */
 				
