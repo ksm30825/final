@@ -160,6 +160,12 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.update("Travel.deleteSchTime", sch);
 	}
 
+	@Override
+	public int updateSchDay(SqlSessionTemplate sqlSession, TrvSchedule sch) {
+		return sqlSession.update("Travel.updateSchDay", sch);
+	}
+
+	
 	
 	@Override
 	public int deleteTrvSchedule(SqlSessionTemplate sqlSession, int schId) {

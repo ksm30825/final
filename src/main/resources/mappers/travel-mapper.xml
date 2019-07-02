@@ -234,6 +234,11 @@
 		SET START_TIME = NULL, END_TIME = NULL
 		WHERE SCH_ID = #{schId}
 	</update>
+	<update id="updateSchDay" parameterType="TrvSch">
+		UPDATE TRV_SCH
+		SET DAY_ID = #{dayId}
+		WHERE SCH_ID = #{schId}
+	</update>
 	<delete id="deleteSch" parameterType="_int">
 		DELETE FROM TRV_SCH
 		WHERE SCH_ID = #{schId}

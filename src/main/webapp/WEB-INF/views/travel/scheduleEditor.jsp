@@ -125,40 +125,44 @@
 					<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
 					<ul class="connectedSortable menu-list dayList" style="background:white">
 						<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
-							<li class=" panel-block" style="background: white">
+							<li class=" panel-block" style="background: white" id="sch_${ sch.schId }">
 								<div class="media-left" style="width: 20%">
-									<p>${ sch.startTime } - ${ sch.endTime }</p>
+									<p class="schTime">${ sch.startTime } - ${ sch.endTime }</p>
 									<input type="hidden" value="${ sch.schNumber }" name="schNumber">
 								</div>
 								<div class="media-content" style="width: 70%">
 									<div class="content">
-										<p><strong>${ sch.schTitle }</strong></p>
-										<small>${ sch.trvCost.costType } : 
-											<strong>${ sch.trvCost.costAmount }</strong>
-											${ sch.trvCost.currency }
-										</small> 
-										<small>${ sch.schTransp }</small> 
-										<small>
-											<a style="color: purple"> 
-												<span class="icon is-small"style="color: purple"> 
-													<i class="fas fa-map-marker-alt"></i>
-												</span> 
-												<c:if test="${ sch.plcName ne null }">
-													${ sch.plcName }
-												</c:if> 
-												<c:if test="${ sch.plcName eq null }">
+										<p><strong class="schTitle">${ sch.schTitle }</strong></p>
+										<c:if test="${ !empty sch.trvCost }">
+											<small class="costType">${ sch.trvCost.costType } : </small>
+											<small class="costAmount"><strong>${ sch.trvCost.costAmount }</strong></small>
+											<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
+										</c:if>
+										<small class="schTransp">${ sch.schTransp }</small>
+										<small class="schPlc">
+											<c:if test="${ sch.plcId ne null }" >
+												<a style="color:purple" class="schPlc">
+													<input type="hidden" value="${ sch.plcId }" name="plcId"> 
+													<span class="icon is-small" style="color:purple"> 
+														<i class="fas fa-map-marker-alt"></i>
+													</span>
+													<span class="plcName">${ sch.plcName }</span>
+												</a>
+											</c:if>
+											<c:if test="${ sch.plcId eq null }" >
+												<a style="color:purple" class="schPlcName">
 													(장소 정보 없음)
-												</c:if>
-											</a>
+												</a>
+											</c:if>
 										</small>
 									</div>
 								</div>
 								<div class="media-right" style="width: 10%">
-									<input type="hidden" value="${ sch.schId }" name="schId"> 
-									<button class="delete schDeleteBtn" aria-label="close" ></button>
-									<br><br> 
+									<input type="hidden" value="${ sch.schId }" name="schId">
+									<button class="delete schDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
+									<br><br>	
 									<span class="icon schInfoBtn" data-tooltip="일정 정보 수정" data-variation="mini"
-									data-position="left center">
+										data-position="left center">
 										<i class="fas fa-edit"></i>
 									</span>
 								</div>
@@ -215,7 +219,7 @@
 								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
 								<ul class="connectedSortable menu-list dayList" id="day${ trvDay.dayNumber }List">
 									<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
-										<li class=" panel-block" style="background:white" id="sch_${ sch.schNumber }">
+										<li class=" panel-block" style="background:white" id="sch_${ sch.schId }">
 											<div class="media-left" style="width:20%">
 												<p class="schTime">${ sch.startTime } - ${ sch.endTime }</p>
 												<input type="hidden" value="${ sch.schNumber }" name="schNumber">
@@ -518,25 +522,70 @@
 	<script>
 		$(function() {
 			$("#day1").show();
+			
+			var start;
+			var startArr;
+			var startDayId;
 			$(".dayList").sortable({
 				connectWith:".dayList",
+				start:function(event, ui) {
+					startDayId = $(this).parent().find("input[name=dayId]").val();
+					start = $(this).sortable("serialize", { key: "sch" });
+					startArr = $(this).sortable("toArray");
+				},
 				update:function(event, ui) {
-					var li = ui.item[0];
-					console.log(li);
-					//var dayId = item.find("input[name=dayId]");
-					var dayId = $(this).parent().find("input[name=dayId]").val();
 					var ul = $(this);
-					
+					var item = ui.item.attr("id");
+					var schId = item.substring(item.indexOf("_") + 1);
+					var changeDayId = $(this).parent().find("input[name=dayId]").val();
+					var change = $(this).sortable("serialize", { key: "sch" });
+					var changeArr = $(this).sortable("toArray");
 					
 					if(ui.sender == null) {
-						var orderStr = $(this).sortable("serialize", { key: "sch" });
-						console.log(orderStr);
-						console.log(typeof(orderStr));
+						
+						if(startArr.length == changeArr.length) { //1.같은 day에서 수정할때
+							
+							$.ajax({
+								url:"updateSchNumber.trv?" + change,
+								type:"post",
+								data:{dayId:changeDayId},
+								success:function(data) {
+									ul.children().each(function(index) {
+										var schList = data.updList;
+										var startTime = schList[index].startTime;
+										var endTime = schList[index].endTime;
+										$(this).find(".schTime").text(startTime + " - " + endTime);
+									});
+								},
+								error:function(data) {
+									alert('updateSchNumber 서버전송 실패');
+								}
+							});
+							
+						}else { //2.다른쪽으로 나갈때
+							
+							$.ajax({
+								url:"deleteSchNumber.trv?" + change,
+								type:"post",
+								data:{originDayId:startDayId},
+								success:function(data) {
+									console.log("schNumber 삭제완료");
+								},
+								error:function(data) {
+									alert('deleteSchNumber 서버전송 실패');
+								}
+							});
+						}
+					
+					
+					}else { //1. 다른쪽에서 들어올때
+						
 						$.ajax({
-							url:"updateSchNumber.trv?" + orderStr,
+							url:"changeSchDay.trv?" + change,
 							type:"post",
-							data:{dayId:dayId},
+							data:{schId:schId, dayId:changeDayId},
 							success:function(data) {
+								console.log("day수정완료");
 								ul.children().each(function(index) {
 									var schList = data.updList;
 									var startTime = schList[index].startTime;
@@ -545,31 +594,15 @@
 								});
 							},
 							error:function(data) {
-								alert('updateSchNumber 서버전송 실패');
+								alert('changeSchDay 서버전송 실패');
 							}
 						});
 						
-						
-					}else {
-						
-						
-						
 					}
-					
-					//console.log($(this));
-					//console.log(event);
-					//console.log(ui);
-					//console.log(ui.position);
-					//console.log($(this).sortable("toArray"));
-					//console.log($(this).sortable( "serialize", { key: "sch" } ));
-				},
-				remove:function(event, ui) {
-					console.log("removed");
-				},
-				receive:function(event, ui) {
-					console.log("received");
 				}
 			});
+			
+			
 			$("#likeList, #recommList").sortable({
 				connectWith : ".dayList"
 			});
