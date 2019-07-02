@@ -200,11 +200,35 @@ public class TravelController {
 	@RequestMapping("updateSchNumber.trv")
 	public ModelAndView updateSchNumber(int dayId, int[] sch, ModelAndView mv) {
 		int result = ts.updateSchNumber(dayId, sch);
+		
+		
+		
 		ArrayList<TrvSchedule> updList = ts.selectSchList(dayId);
 		mv.addObject("updList", updList);
 		mv.setViewName("jsonView");
 		return mv;
 	}
+	
+	//상세일정 날짜 변경-민지
+	@RequestMapping("deleteSchNumber.trv")
+	public ModelAndView deleteSchNumber(int originDayId, int[] sch, ModelAndView mv) {
+		int result = ts.deleteSchNumber(originDayId, sch);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	//상세일정 날짜 변경-민지
+	@RequestMapping("changeSchDay.trv")
+	public ModelAndView changeSchDay(TrvSchedule trvSch, int[] sch, ModelAndView mv) {
+
+		System.out.println("sch" + sch);
+		int result = ts.updateSchDay(trvSch, sch);
+		ArrayList<TrvSchedule> updList = ts.selectSchList(trvSch.getDayId());
+		mv.addObject("updList", updList);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	
 	
 	//상세일정삭제-민지

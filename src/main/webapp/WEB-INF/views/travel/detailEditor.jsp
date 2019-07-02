@@ -60,7 +60,8 @@
 									<div class="field">
 										<p class="control">
 											<input type="hidden" value="${ trvDay.dayId }">
-											<input class="input dayMemo day${ trvDay.dayId }Memo" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }" >
+											<input class="input dayMemo day${ trvDay.dayId }Memo" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }" 
+											style="width:100%">
 										</p>
 									</div>
 								</div>

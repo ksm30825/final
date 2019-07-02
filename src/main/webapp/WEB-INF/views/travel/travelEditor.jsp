@@ -413,6 +413,7 @@
 			
 		};
 		var markers = [];
+		var coords = [];
 		function initMap() {
 			
 			var sydney = new google.maps.LatLng(-33.867, 151.195);
@@ -491,16 +492,18 @@
 		}
 		
 		function showRoute(places) {
-			var latlngs = [];
+			
 			
 			//clear out the old markers
 			markers.forEach(function(m) {
 				m.setMap(null);
 			});
 			markers = [];
-			//var bounds = new google.maps.LatLngBounds();
+			coords = [];
+			var bounds = new google.maps.LatLngBounds();
+
+			
 			places.forEach(function(place, index) {
-				
 				var request = {
 					placeId:place,
 					fiels:['geometry', 'name']
@@ -530,14 +533,13 @@
 						});
 						
 						markers.push(m);
-						latlngs.push(place.geometry.location);
-						console.log(latlngs);
+						coords.push(place.geometry.location);
 						
-						/* if(place.geometry.viewport) {
+						if(place.geometry.viewport) {
 							bounds.union(place.geometry.viewport);
 						}else {
 							bounds.extend(place.geometry.location);
-						} */
+						}
 						
 						m.addListener('click', function() {
 							placeDetailSearch(place.place_id);
@@ -547,24 +549,19 @@
 				
 			});
 			
-			//map.fitBounds(bounds);
+			map.fitBounds(bounds);
 			
 			
-			/* console.log(markers);
-			markers.forEach(function(marker) {
-				latlngs.push(marker.position);
-			});
-			console.log(latlngs); */
-			
-			var path = new google.maps.Polyline({
-			    path: latlngs,
+			console.log(coords);
+			var dayPath = new google.maps.Polyline({
+			    path:coords,
 			    geodesic: true,
-			    strokeColor: '#FF0000',
+			    strokeColor: '#FB0303',
 			    strokeOpacity: 1.0,
 			    strokeWeight: 2
 			});
-			console.log(path);
-			path.setMap(map);
+			
+			dayPath.setMap(map);
 			
 			
 		}

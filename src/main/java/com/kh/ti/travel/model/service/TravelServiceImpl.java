@@ -405,11 +405,17 @@ public class TravelServiceImpl implements TravelService {
 		int result = 0;
 		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, dayId);
 		
-		for(int i = 0; i < schList.size(); i++) {
-			schList.get(i).setSchNumber(sch[i]);
-			result += td.updateSchNumber(sqlSession, schList.get(i));
+		for(int i = 0; i < sch.length; i++) {
+			for(int j = 0; j < schList.size(); j++) {
+				if(schList.get(j).getSchId() == sch[i]) {
+					schList.get(j).setSchNumber(i + 1);
+					result += td.updateSchNumber(sqlSession, schList.get(j));
+					break;
+				}
+			}
+			
+			
 		}
-		
 		
 		
 		ArrayList<TrvSchedule> updList = td.selectSchList(sqlSession, dayId);
@@ -440,6 +446,71 @@ public class TravelServiceImpl implements TravelService {
 		return result;
 	}
 
+
+	@Override
+	public int deleteSchNumber(int originDayId, int[] sch) {
+		int result = 0;
+		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, originDayId);
+		for(int i = 0; i < sch.length; i++) {
+			for(int j = 0; j < schList.size(); j++) {
+				if(schList.get(j).getSchId() == sch[i]) {
+					schList.get(j).setSchNumber(i + 1);
+					result += td.updateSchNumber(sqlSession, schList.get(j));
+					break;
+				}
+			}
+		}
+				
+		return result;
+	}
+
+	
+	@Override
+	public int updateSchDay(TrvSchedule trvSch, int[] sch) {
+		
+		int result = td.updateSchDay(sqlSession, trvSch);
+		
+		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, trvSch.getDayId());
+		
+		for(int i = 0; i < sch.length; i++) {
+			for(int j = 0; j < schList.size(); j++) {
+				if(schList.get(j).getSchId() == sch[i]) {
+					schList.get(j).setSchNumber(i + 1);
+					result += td.updateSchNumber(sqlSession, schList.get(j));
+					break;
+				}
+			}
+		}
+		
+		ArrayList<TrvSchedule> updList = td.selectSchList(sqlSession, trvSch.getDayId());
+		for(int i = 0; i < updList.size(); i++) {
+			System.out.println(updList.get(i));
+			String startTime = updList.get(i).getStartTime();
+			if(i > 0) {
+				if(startTime != null) {
+					int hour = Integer.parseInt(startTime.substring(0, startTime.indexOf(":")));
+					int minute = Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1));
+					int time = hour * 60 + minute;
+					String start = updList.get(i - 1).getStartTime();
+					if(start != null) {
+						int hr = Integer.parseInt(start.substring(0, start.indexOf(":")));
+						int min = Integer.parseInt(start.substring(start.indexOf(":") + 1));
+						int tm = hr * 60 + min;
+						if(time < tm) {
+							updList.get(i).setStartTime(null);
+							updList.get(i).setEndTime(null);
+							System.out.println("startTime, endtime null로 바꿈");
+							int result1 = td.deleteSchTime(sqlSession, updList.get(i));
+						}
+					}
+				}
+			}
+		}
+		
+				
+		return result;
+	}
+	
 	
 	@Override
 	public ArrayList<TrvSchedule> selectSchList(int dayId) {
@@ -569,6 +640,7 @@ public class TravelServiceImpl implements TravelService {
 		int result = td.deleteSchFile(sqlSession, file);
 		return 0;
 	}
+
 
 
 

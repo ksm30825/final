@@ -44,6 +44,10 @@ public interface TravelService {
 	ArrayList<TrvSchedule> selectSchList(int dayId);
 	
 	int updateSchNumber(int dayId, int[] sch);
+
+	int deleteSchNumber(int originDayId, int[] sch);
+
+	int updateSchDay(TrvSchedule trvSch, int[] sch);
 	
 	int deleteTrvSchedule(int schId);
 
@@ -86,6 +90,8 @@ public interface TravelService {
 	int updateTrvCost(TrvCost cost);
 
 	int deleteTrvCost(TrvCost cost);
+
+
 
 
 
