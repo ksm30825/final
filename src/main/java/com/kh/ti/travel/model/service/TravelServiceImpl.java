@@ -16,7 +16,6 @@ import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.dao.TravelDao;
 import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
-import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
@@ -402,6 +401,54 @@ public class TravelServiceImpl implements TravelService {
 	}
 	
 	@Override
+	public int updateSchNumber(int dayId, int[] sch) {
+		int result = 0;
+		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, dayId);
+		
+		for(int i = 0; i < schList.size(); i++) {
+			schList.get(i).setSchNumber(sch[i]);
+			result += td.updateSchNumber(sqlSession, schList.get(i));
+		}
+		
+		
+		
+		ArrayList<TrvSchedule> updList = td.selectSchList(sqlSession, dayId);
+		for(int i = 0; i < updList.size(); i++) {
+			System.out.println(updList.get(i));
+			String startTime = updList.get(i).getStartTime();
+			if(i > 0) {
+				if(startTime != null) {
+					int hour = Integer.parseInt(startTime.substring(0, startTime.indexOf(":")));
+					int minute = Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1));
+					int time = hour * 60 + minute;
+					String start = updList.get(i - 1).getStartTime();
+					if(start != null) {
+						int hr = Integer.parseInt(start.substring(0, start.indexOf(":")));
+						int min = Integer.parseInt(start.substring(start.indexOf(":") + 1));
+						int tm = hr * 60 + min;
+						if(time < tm) {
+							updList.get(i).setStartTime(null);
+							updList.get(i).setEndTime(null);
+							System.out.println("startTime, endtime null로 바꿈");
+							int result1 = td.deleteSchTime(sqlSession, updList.get(i));
+						}
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+
+	
+	@Override
+	public ArrayList<TrvSchedule> selectSchList(int dayId) {
+		return td.selectSchList(sqlSession, dayId);
+	}
+
+	
+	
+	@Override
 	public int deleteTrvSchedule(int schId) {
 		
 		TrvSchedule sch = td.selectTrvSchedule(sqlSession, schId);
@@ -472,14 +519,6 @@ public class TravelServiceImpl implements TravelService {
 
 
 
-//	@Override
-//	public int insertTrvPlace(Travel trv, Place plc) {
-//		TrvSchedule sch = null;
-//		int result2 = td.insertTrvSchedule(sqlSession, sch);
-//		return 0;
-//	}
-
-
 	@Override
 	public int insertTrvCost(TrvDay day, TrvCost cost) {
 		return td.insertTrvCost(sqlSession, cost);
@@ -498,14 +537,6 @@ public class TravelServiceImpl implements TravelService {
 	}
 
 	@Override
-	public HashMap selectAllSchList(Travel trv) {
-		HashMap schMap = null;
-		int day = 0;
-		ArrayList schList = td.selectAllSchList(sqlSession, trv, day);
-		return schMap;
-	}
-
-	@Override
 	public HashMap selectSpotList(Travel trv) {
 		HashMap spotMap = null;
 		int cityId = 0;
@@ -513,13 +544,6 @@ public class TravelServiceImpl implements TravelService {
 		return spotMap;
 	}
 
-
-
-	@Override
-	public int deleteTrvCity(Travel trv, int cityId) {
-		//int result = td.deleteTrvCity(sqlSession, trv, cityId);
-		return 0;
-	}
 
 	@Override
 	public int deleteTrvComp(Travel trv, int memberId) {

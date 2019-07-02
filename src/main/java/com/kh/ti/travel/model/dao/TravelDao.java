@@ -8,7 +8,6 @@ import org.mybatis.spring.SqlSessionTemplate;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
-import com.kh.ti.travel.model.vo.Place;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
@@ -62,8 +61,6 @@ public interface TravelDao {
 	int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);	
 	
 	int selectSchId(SqlSessionTemplate sqlSession);
-	
-	int insertTrvCost(SqlSessionTemplate sqlSession, Travel trv, TrvCost cost);
 
 	int updateSchNumber(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
@@ -79,6 +76,8 @@ public interface TravelDao {
 
 	int updateTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
+	int deleteSchTime(SqlSessionTemplate sqlSession, TrvSchedule sch);
+	
 	int deleteTrvSchedule(SqlSessionTemplate sqlSession, int schId);
 
 	int updateTrvDayMemo(SqlSessionTemplate sqlSession, TrvDay trvDay);
@@ -87,10 +86,6 @@ public interface TravelDao {
 	
 	
 
-//	int insertPlace(SqlSessionTemplate sqlSession, Place plc);	
-//	
-//	int selectPlcId(SqlSessionTemplate sqlSession);
-	
 	int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
 	
@@ -113,9 +108,6 @@ public interface TravelDao {
 
 	int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile);
 
-
-	ArrayList selectAllSchList(SqlSessionTemplate sqlSession, Travel trv, int day);
-
 	HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityCode);
 
 	int completeTravel(SqlSessionTemplate sqlSession, int trvId);
@@ -126,6 +118,7 @@ public interface TravelDao {
 
 
 	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
+
 
 
 

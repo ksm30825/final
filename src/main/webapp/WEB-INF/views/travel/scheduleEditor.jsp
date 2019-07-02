@@ -99,7 +99,7 @@
 		opacity:0.9;
 	}
 	.dayList {
-		min-height:400px;
+		height:400px;
 		overflow-y:scroll;
 	}
 	#likeList, #recommList {
@@ -119,7 +119,7 @@
 					</div>
 					<div class="panel-heading" align="center" style="margin: 0">
 						<span>DAY ${ trvDay.dayNumber }</span>&nbsp; 
-						<input type="hidden" value="${ trvDay.dayId }">
+						<input type="hidden" value="${ trvDay.dayId }" name="dayId" />
 						<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }">
 					</div>
 					<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
@@ -127,8 +127,8 @@
 						<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
 							<li class=" panel-block" style="background: white">
 								<div class="media-left" style="width: 20%">
-									
 									<p>${ sch.startTime } - ${ sch.endTime }</p>
+									<input type="hidden" value="${ sch.schNumber }" name="schNumber">
 								</div>
 								<div class="media-content" style="width: 70%">
 									<div class="content">
@@ -200,7 +200,7 @@
 									</div>
 									<div class="column is-8 dayTitle"  style="padding-left:0; padding-right:0">
 										<span>DAY ${ trvDay.dayNumber }</span>&nbsp;
-										<input type="hidden" value="${ trvDay.dayId }" />
+										<input type="hidden" value="${ trvDay.dayId }" name="dayId"/>
 										<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO"
 											value="${ trvDay.dayMemo }" >
 									</div>
@@ -215,11 +215,10 @@
 								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
 								<ul class="connectedSortable menu-list dayList" id="day${ trvDay.dayNumber }List">
 									<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
-										<li class=" panel-block" style="background:white">
+										<li class=" panel-block" style="background:white" id="sch_${ sch.schNumber }">
 											<div class="media-left" style="width:20%">
-												<input type="hidden" value="${ sch.dayId }" name="dayId"/>
 												<p class="schTime">${ sch.startTime } - ${ sch.endTime }</p>
-												
+												<input type="hidden" value="${ sch.schNumber }" name="schNumber">
 											</div>
 											<div class="media-content" style="width:70%">
 												<div class="content">
@@ -520,18 +519,63 @@
 		$(function() {
 			$("#day1").show();
 			$(".dayList").sortable({
-				connectWith:".dayList"
+				connectWith:".dayList",
+				update:function(event, ui) {
+					var li = ui.item[0];
+					console.log(li);
+					//var dayId = item.find("input[name=dayId]");
+					var dayId = $(this).parent().find("input[name=dayId]").val();
+					var ul = $(this);
+					
+					
+					if(ui.sender == null) {
+						var orderStr = $(this).sortable("serialize", { key: "sch" });
+						console.log(orderStr);
+						console.log(typeof(orderStr));
+						$.ajax({
+							url:"updateSchNumber.trv?" + orderStr,
+							type:"post",
+							data:{dayId:dayId},
+							success:function(data) {
+								ul.children().each(function(index) {
+									var schList = data.updList;
+									var startTime = schList[index].startTime;
+									var endTime = schList[index].endTime;
+									$(this).find(".schTime").text(startTime + " - " + endTime);
+								});
+							},
+							error:function(data) {
+								alert('updateSchNumber 서버전송 실패');
+							}
+						});
+						
+						
+					}else {
+						
+						
+						
+					}
+					
+					//console.log($(this));
+					//console.log(event);
+					//console.log(ui);
+					//console.log(ui.position);
+					//console.log($(this).sortable("toArray"));
+					//console.log($(this).sortable( "serialize", { key: "sch" } ));
+				},
+				remove:function(event, ui) {
+					console.log("removed");
+				},
+				receive:function(event, ui) {
+					console.log("received");
+				}
 			});
 			$("#likeList, #recommList").sortable({
 				connectWith : ".dayList"
 			});
 			$('.ui.rating').rating('disable');
 			
-			var places = [];
-			$("#day1").find("input[name=plcId]").each(function() {
-				places.push($(this).val());
-			});
-			showRoute(places);	
+				
 			
 			
 			//좋아요/추천 장소탭
@@ -588,7 +632,7 @@
 			$(".schInfoBtn").click(function() {
 				var schId = $(this).siblings().eq(0).val();
 				var li = $(this).parent().parent();
-				var dayId = li.find("input[name=dayId]").val();
+				var dayId = li.parent().prev().find("input[name=dayId]").val();
 				var schTitle = li.find(".schTitle").text();
 				var plcId = li.find("input[name=plcId]").val();
 				var plcName = li.find(".plcName").text();
