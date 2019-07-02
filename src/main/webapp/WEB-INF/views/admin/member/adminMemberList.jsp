@@ -66,7 +66,7 @@
 					        <input class="input" type="text" placeholder="Search Member" name="conditionValue" id="conditionValue">
 					      </p>
 					      <p class="control">
-					        <a class="button" id="conditionBtn"><i class="fas fa-search"></i></a>
+					        <a class="button" onclick="conditionAction();"><i class="fas fa-search"></i></a>
 					      </p>
 					    </div>
 					</div><!-- end condition keyword -->
@@ -187,21 +187,27 @@
 	<!-- script -->
 	<script>
 		//검색 조회용 함수
-		$("#conditionBtn").click(function(){
-			var condition = $("#condition").val();
-			var conditionValue = $("#conditionValue").val();
+		function conditionAction(){
 			$.ajax({
-				uri: "selectCondition.me",
-				type: "post",
-				data: {condition : condition, conditionValue : conditionValue},
-				success: function(data){
-					
-				},
-				error: function(data){
-					
-				}
+   				url:"selectCondition.me",
+   				type:"post",
+   				data:{condition : $("#condition").val(), conditionValue : $("#conditionValue").val()},
+   				success:function(data){
+   					console.log(data);
+   				},
+   				error:function(status){
+   					alert(status);
+   				}
+   			});
+		}
+		/*  $(function(){		
+			$("#conditionBtn").click(function(){
+			 	Map map = new Map();
+			 	map.put("condition", $("#condition").val());
+			 	map.put("conditionValue", $("#conditionValue").val());
+				location.href = "selectCondition.me?map=" + map;
 			});
-		});
+		}); */
 	</script>
 </body>
 </html>
