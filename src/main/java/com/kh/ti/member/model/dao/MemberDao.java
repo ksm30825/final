@@ -1,6 +1,7 @@
 package com.kh.ti.member.model.dao;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
@@ -28,5 +29,7 @@ public interface MemberDao {
 	ArrayList<Member> selectAllMember(SqlSessionTemplate sqlSession, PageInfo pi, String status);
 
 	int getListCount(SqlSessionTemplate sqlSession, String status);
+
+	ArrayList<Member> selectConditionMember(SqlSessionTemplate sqlSession, Map<String, String> map);
 
 }

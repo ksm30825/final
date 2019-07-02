@@ -1,6 +1,7 @@
 package com.kh.ti.member.model.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,12 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public ArrayList<Member> selectAllMember(PageInfo pi, String status) {
 		return md.selectAllMember(sqlSession, pi, status);
+	}
+
+	//회원정보 조건 조회용 메소드 - 세령
+	@Override
+	public ArrayList<Member> selectConditionMember(Map<String, String> map) {
+		return md.selectConditionMember(sqlSession, map);
 	}
 
 

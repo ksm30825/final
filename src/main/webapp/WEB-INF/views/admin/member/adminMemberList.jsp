@@ -56,9 +56,9 @@
 					      <p class="control">
 					        <span class="select">
 					          <select name="condition" id="condition">
-					            <option>이름</option>
-					            <option>이메일</option>
-					            <option>연락처</option>
+					            <option value="name">이름</option>
+					            <option value="email">이메일</option>
+					            <option value="phone">연락처</option>
 					          </select>
 					       </span>
 					      </p>
@@ -66,7 +66,7 @@
 					        <input class="input" type="text" placeholder="Search Member" name="conditionValue" id="conditionValue">
 					      </p>
 					      <p class="control">
-					        <a class="button" onclick="conditionAction();"><i class="fas fa-search"></i></a>
+					        <a class="button" id="conditionBtn"><i class="fas fa-search"></i></a>
 					      </p>
 					    </div>
 					</div><!-- end condition keyword -->
@@ -187,27 +187,14 @@
 	<!-- script -->
 	<script>
 		//검색 조회용 함수
-		function conditionAction(){
-			$.ajax({
-   				url:"selectCondition.me",
-   				type:"post",
-   				data:{condition : $("#condition").val(), conditionValue : $("#conditionValue").val()},
-   				success:function(data){
-   					console.log(data);
-   				},
-   				error:function(status){
-   					alert(status);
-   				}
-   			});
-		}
-		/*  $(function(){		
+		$(function(){		
 			$("#conditionBtn").click(function(){
-			 	Map map = new Map();
-			 	map.put("condition", $("#condition").val());
-			 	map.put("conditionValue", $("#conditionValue").val());
-				location.href = "selectCondition.me?map=" + map;
+			 	var condition = $("#condition").val();
+			 	var conditionValue = $("#conditionValue").val();
+				location.href = "selectCondition.me?condition=" + condition +
+								 "&conditionValue=" + conditionValue;
 			});
-		}); */
+		});
 	</script>
 </body>
 </html>
