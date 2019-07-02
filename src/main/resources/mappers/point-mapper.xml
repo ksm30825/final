@@ -32,6 +32,15 @@
 		<result property="trvId" column="TRV_ID"/>
 		<result property="requestId" column="REQUEST_ID"/>
 	</resultMap>
+	<resultMap type="Refund" id="refundResultSet">
+		<id property="refundId" column="REFUND_ID"/>
+		
+		<result property="refundReason" column="REFUND_REASON"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="processedDate" column="PROCESSED_DATE"/>
+		<result property="refundStatus" column="REFUND_STATUS"/>
+		<result property="pointId" column="POINT_ID"/>
+	</resultMap>
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
 		INSERT INTO PAYMENT
@@ -43,7 +52,7 @@
 		FROM PAYMENT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
-			<when test="month != null">
+			<when test="month != null and month != 0">
 				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
 			</when>
 		</choose>
@@ -54,7 +63,7 @@
 		FROM RESERVE_POINT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
-			<when test="month != null">
+			<when test="month != null and month != 0">
 				AND EXTRACT(MONTH FROM RESERVE_DATE)=${month}
 			</when>
 		</choose>
@@ -65,7 +74,7 @@
 		FROM USE_POINT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
-			<when test="month != null">
+			<when test="month != null and month != 0">
 				AND EXTRACT(MONTH FROM USE_DATE)=${month}
 			</when>
 		</choose>
@@ -76,7 +85,7 @@
 		FROM PAYMENT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
-			<when test="month != null">
+			<when test="month != null and month != 0">
 				AND EXTRACT(MONTH FROM PAYMENT_DATE)=#{month}
 			</when>
 		</choose>
@@ -88,7 +97,7 @@
 		FROM RESERVE_POINT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
-			<when test="month != null">
+			<when test="month != null and month != 0">
 				AND EXTRACT(MONTH FROM RESERVE_DATE)=${month}
 			</when>
 		</choose>
@@ -100,7 +109,7 @@
 		FROM USE_POINT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
-			<when test="month != null">
+			<when test="month != null and month != 0">
 				AND EXTRACT(MONTH FROM USE_DATE)=${month}
 			</when>
 		</choose>
@@ -116,4 +125,14 @@
 			<when test="trvId != 0">null, null, #{trvId}</when>
 		</choose> )
 	</insert>	
+	<!-- 포인트 환불신청하기-> 환불 내역에 인서트 -->
+	<!-- <insert id="insertRefund" parameterType="Refund">
+		INSERT INTO REFUND
+		VALUES( REFUND_SEQ.NEXTVAL, #{reservePoint}, #{reserveDate}, #{memberId}, #{reserveType})
+	</insert> -->
+	<select id="selectOneTrv" resultType="_int">
+		SELECT TRV_ID
+		FROM TOUR_REVIEW
+		WHERE REVIEW_ID = #{reviewId}
+	</select>
 </mapper>

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
 
@@ -85,6 +86,15 @@ public class PointDaoImpl implements PointDao{
 		//System.out.println("rp : " + rp);
 		//System.out.println("rp.getReservePoint() : " + rp.getReservePoint());
 		return sqlSession.insert("Payment.insertReservePoint",rp);
+	}
+	//포인트 환불신청하기-> 환불 내역에 인서트
+	@Override
+	public int insertRefund(SqlSessionTemplate sqlSession, Refund refund) {
+		return sqlSession.insert("Payment.insertRefund", refund);
+	}
+	@Override
+	public int selectOneTrv(SqlSessionTemplate sqlSession, ReservePoint rp) {
+		return sqlSession.selectOne("Payment.selectOneTrv", rp);
 	}
 	
 	

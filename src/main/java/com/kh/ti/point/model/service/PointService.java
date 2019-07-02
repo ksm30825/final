@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
 
@@ -25,5 +26,8 @@ public interface PointService {
 	ArrayList<UsePoint> selectUseList(PageInfo usPi, UsePoint use);
 	//포인트 자동으로 적립하기
 	int insertReservePoint(ReservePoint rp);
+	//포인트 환불신청하기-> 환불 내역에 인서트
+	int insertRefund(Refund refund);
+	int selectOneTrv(ReservePoint rp);
 
 }
