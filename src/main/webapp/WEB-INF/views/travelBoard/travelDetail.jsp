@@ -43,19 +43,38 @@
 				
 					<div class="column" id="btnArea" align="right">
 						<c:choose>
-							<c:when test="${ !empty loginUser && detailTb.likeyStatus eq 'N' }">
-								<a class="button is-primary" onclick="travelLikeyInsert()">
-									<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
-						          	<span> &nbsp;좋아요 </span>
-				        		</a>
+							<c:when test="${ !empty loginUser }">
+								<c:choose>
+									<c:when test="${ detailTb.buyStatus eq 'N' }">
+										<a class="button is-primary" onclick="travelBuy()">
+											<span class="icon" id="starIcon"><i class="fas fa-shopping-cart"></i></span>
+								          	<span> &nbsp;일정구매 </span>
+					        			</a>
+					        			&nbsp;
+									</c:when>
+								</c:choose>
+								<c:choose>
+									<c:when test="${ detailTb.likeyStatus eq 'N' }">
+										<a class="button is-primary" onclick="travelLikeyInsert()">
+											<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
+								          	<span> &nbsp;좋아요 </span>
+					        			</a>
+									</c:when>
+									<c:when test="${ detailTb.likeyStatus eq 'Y' }">
+										<a class="button is-primary" onclick="travelLikeyDelete()">
+											<span class="icon" id="starIcon"><i class="fas fa-star"></i></span>
+								          	<span> &nbsp;좋아요 </span>
+						        		</a>
+									</c:when>
+								</c:choose>
 							</c:when>
-							<c:when test="${ !empty loginUser && detailTb.likeyStatus eq 'Y' }">
-								<a class="button is-primary" onclick="travelLikeyDelete()">
-									<span class="icon" id="starIcon"><i class="fas fa-star"></i></span>
-						          	<span> &nbsp;좋아요 </span>
-				        		</a>
-							</c:when>
+							
 							<c:otherwise>
+								<a class="button is-primary" onclick="loginInfo()">
+									<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
+						          	<span> &nbsp;일정구매 </span>
+				        		</a>
+				        		&nbsp;
 								<a class="button is-dark" onclick="loginInfo()">
 									<span class="icon"><i class="far fa-star"></i></span>
 						          	<span> &nbsp;좋아요 </span>
@@ -307,6 +326,39 @@
 		    </div>
 		</div>
 	</section>
+	
+	<!-- 일정구매 안내 모달 -->
+	<section class="section" id="travelBuySection">
+		<div class="modal" id="travelBuyModal">
+		    <div class="modal-background"></div>
+		    <div class="modal-card">
+		    
+				<header class="modal-card-head">
+					<p class="modal-card-title"><i class="fas fa-exclamation-triangle"></i>&nbsp;일정 구매 안내</p>
+					<button class="cancel delete"></button>
+				</header>
+			
+				<section class="modal-card-body" align="center">
+					
+					<p>
+						해당 일정글을 구매하시겠습니까?<br>
+						현재 보유 포인트 : ${ loginUser.userPoint }P <br>
+						일정 결제 포인트 : ${ (endDay - startDay + 1) * 100 }P
+					</p>
+					<hr style="border: 1px solid lightgray;">
+					<p>
+						결제 후 잔액 포인트 : ${ loginUser.userPoint - ((endDay - startDay + 1) * 100) }P
+					</p>
+				</section>
+			
+				<footer class="modal-card-foot" style="justify-content: center">
+					<a class="button is-primary" id="travelBuy">일정구매</a>
+					<a class="button cancel">닫기</a>
+				</footer>
+			
+		    </div>
+		</div>
+	</section>
 
 <script>
 	function penalty() {
@@ -326,7 +378,6 @@
 	}
 	
 	function travelLikeyInsert() {
-	console.log("좋아요 추가 실행");
 		var trvId = ${ detailTb.trvId };
 		var memberId = ${ loginUser.memberId };
 		
@@ -349,7 +400,6 @@
 	}
 	
 	function travelLikeyDelete() {
-		console.log("좋아요 취소 실행");
 		var trvId = ${ detailTb.trvId };
 		var memberId = ${ loginUser.memberId };
 		
@@ -400,6 +450,38 @@
 			alert("해당 일정 삭제");
 			location.href="travelDelete.tb?trvId=" + ${ detailTb.trvId };
 		})
+		
+		$(".cancel").click(function(){
+			$('#travelDeleteModal').removeClass('is-active');
+	    });
+	}
+	
+	function travelBuy() {
+		
+		$("#travelBuyModal").toggleClass('is-active').removeAttr('style');
+		
+		$("#travelBuy").click(function() {
+			
+			var memberId = ${ loginUser.memberId };
+			var code = ${ detailTb.trvId };
+			var userPoint = ${ loginUser.userPoint };
+			var payment = ${ (endDay - startDay + 1) * 100 };
+			
+			if((userPoint - payment) > 0) {
+				
+				alert("해당 일정을 구매하였습니다.");
+				
+				location.href="usePoint.po?memberId=" + memberId + "&code=" + code + "&useType=10&uPoint=" + payment;
+				
+			}else {
+				var answer = confirm("잔여 포인트가 부족합니다. 포인트를 충전하시겠습니까?");
+				
+				if(answer) {
+					location.href='toPayView.po';
+				}
+			}
+			
+		});
 		
 		$(".cancel").click(function(){
 			$('#travelDeleteModal').removeClass('is-active');
