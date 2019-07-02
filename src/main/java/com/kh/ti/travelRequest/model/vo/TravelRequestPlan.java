@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class TravelRequestPlan implements Serializable{
 	private int planId;		//설계번호
 	private String planTitle;	//설계제목
@@ -13,6 +15,7 @@ public class TravelRequestPlan implements Serializable{
 	private int trvId;	//여행일정번호
 	private String planContent;		//여행소개
 	private Date modifyDate;	//수정일
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date enrollDate;	//작성일
 	private int roomCharge;	//숙박비
 	private int trafficCharge;	//교통비

@@ -11,4 +11,6 @@ public interface MyRequestService {
 
 	int insertRequestPlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp, Participation p);
 
+	ArrayList<TravelRequestPlan> selectRequestPlanList(TravelRequestPlan trp);
+
 }

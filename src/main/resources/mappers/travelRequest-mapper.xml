@@ -61,18 +61,18 @@
 	
 	<!-- 의뢰글 상세보기 -->
 	<select id="selectOneRequest" parameterType="_int" resultMap="requestDetailResultSet">
-		SELECT TR.REQUEST_ID, TR.REQUEST_TITLE, TR.REQUEST_CONTENT, 
-      		   M.USER_NAME, TR.REQUEST_PRICE, TR.TRV_COST, TR.END_DATE,
-       		   P.PTCP_ID, TP.PLAN_ID, TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ENROLL_DATE,
-       		   (SELECT M.USER_NAME
-				FROM MEMBER M
-				WHERE M.MEMBER_ID = #{memberId})
-        FROM TRV_REQUEST TR
-        JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
-        LEFT JOIN PARTICIPATION P ON (TR.REQUEST_ID =  P.REQUEST_ID)
-        LEFT JOIN TRV_PLAN TP ON (TP.PLAN_ID = P.PLAN_ID)
-        WHERE TR.CHOOSE_STATUS = 'N'
-		AND TR.REQUEST_ID = #{requestId}
+	   SELECT SUB.REQUEST_ID, SUB.REQUEST_TITLE, SUB.REQUEST_CONTENT,
+             SUB.USER_NAME, SUB.MEMBER_ID, SUB.REQUEST_PRICE, SUB.TRV_COST, SUB.END_DATE,
+             SUB.PLAN_TITLE, SUB.PLAN_CONTENT, SUB.ENROLL_DATE, M.USER_NAME
+       FROM (SELECT M.USER_NAME, TR.REQUEST_ID, TR.REQUEST_TITLE, TR.REQUEST_CONTENT, 
+             TR.MEMBER_ID, TR.REQUEST_PRICE, TR.TRV_COST, TR.END_DATE,
+             TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ENROLL_DATE
+             FROM MEMBER M
+             RIGHT JOIN TRV_PLAN TP ON (TP.MEMBER_ID= M.MEMBER_ID)
+             RIGHT JOIN PARTICIPATION P ON (TP.PLAN_ID = P.PLAN_ID)
+             RIGHT JOIN TRV_REQUEST TR ON (TR.REQUEST_ID = P.REQUEST_ID)) SUB
+       LEFT JOIN MEMBER M ON (SUB.MEMBER_ID = M.MEMBER_ID)
+	   WHERE SUB.REQUEST_ID  = #{requestId}
 	</select>
 	
 	<!-- 설계글 인서트 -->
@@ -108,4 +108,11 @@
 		INSERT INTO PARTICIPATION
 		VALUES (PARTICIPATION_SEQ.NEXTVAL, 'N', SYSDATE, NULL, #{requestId}, #{planId})
 	</insert>
+	
+	<!-- 설계글 불러오기 목록 조회 -->
+	<select id="selectRequestPlanList" parameterType="TravelRequestPlan" resultMap="planListResultSet">
+		SELECT *
+		FROM TRV_PLAN
+		WHERE MEMBER_ID = #{memberId}
+	</select>
 </mapper>
