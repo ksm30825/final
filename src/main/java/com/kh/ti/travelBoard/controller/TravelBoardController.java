@@ -1,6 +1,7 @@
 package com.kh.ti.travelBoard.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.travelBoard.model.service.TravelBoardService;
 import com.kh.ti.travelBoard.model.vo.Likey;
+import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
@@ -42,7 +45,10 @@ public class TravelBoardController {
 		TravelBoard tb = new TravelBoard();
 		
 		//전체 목록 조회(페이징용)
-		int listCount = tbs.getListCount(tb);
+		HashMap pageMap = new HashMap();
+		pageMap.put("tb", tb);
+		
+		int listCount = tbs.getListCount(pageMap);
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
 		
 		//일정 리스트 조회
@@ -79,7 +85,10 @@ public class TravelBoardController {
 		}
 		
 		//전체 목록 조회(페이징용)
-		int listCount = tbs.getListCount(tb);
+		HashMap pageMap = new HashMap();
+		pageMap.put("tb", tb);
+		
+		int listCount = tbs.getListCount(pageMap);
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
 		
 		//일정 리스트 조회
@@ -107,12 +116,10 @@ public class TravelBoardController {
 		
 		HashMap tbMap = tbs.travelDetailForm(tb);
 		
-		
-		 TrvDaySchedule tds = new TrvDaySchedule(); tds.setTrvId(trvId);
-		 tds.setDayNumber(1); 
-		 TrvDaySchedule detailDay = tbs.selectTravelDetailDays(tds);
-		 
-		 System.out.println("detailDay : " + detailDay);
+		//상세 스케쥴 1일차 조회
+		TrvDaySchedule tds = new TrvDaySchedule(); tds.setTrvId(trvId);
+		tds.setDayNumber(1); 
+		TrvDaySchedule detailDay = tbs.selectTravelDetailDays(tds);
 		
 		model.addAttribute("detailTb", tbMap.get("detailTb"));
 		model.addAttribute("detailDay", detailDay);
@@ -121,7 +128,6 @@ public class TravelBoardController {
 	}
 	
 	//여행일정 일자별 스케쥴 조회용
-	@ResponseBody
 	@RequestMapping("travelDetailDays.tb")
 	public ResponseEntity<TrvDaySchedule> selectTravelDetailDays(int trvId, int dayNumber) {
 		
@@ -137,6 +143,35 @@ public class TravelBoardController {
 		System.out.println("detailDay : " + detailDay.getTrvSchedule());
 		
 		return new ResponseEntity<TrvDaySchedule>(detailDay, HttpStatus.OK);
+	}
+	
+	//여행일정 구매리뷰 조회용
+	@RequestMapping("selectTourReview.tb")
+	public ResponseEntity selectTourReview(int trvId, int currentPage, HttpServletRequest request) {
+		
+		if(currentPage == 0) {
+			currentPage = 1;
+		}
+		
+		TourReview tr = new TourReview();
+		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			tr.setMemberId(loginUser.getMemberId());
+		}
+		tr.setTrvId(trvId);
+		
+		//전체 목록 조회(페이징용)
+		HashMap pageMap = new HashMap();
+		pageMap.put("tr", tr);
+		
+		int listCount = tbs.getListCount(pageMap);
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		
+		//일정 리스트 조회
+		ArrayList<TourReview> trList = tbs.tourReviewList(pi, tr);
+		
+		return new ResponseEntity(trList, HttpStatus.OK);
 	}
 	
 	//여행일정 삭제 - 예랑
@@ -163,7 +198,6 @@ public class TravelBoardController {
 		
 		tbs.travelLikeyInsert(likey);
 		
-		mv.addObject("likey", likey);
 		mv.setViewName("jsonView");
 		
 		return mv;
@@ -217,16 +251,25 @@ public class TravelBoardController {
 	
 	//여행일정 상세 / 리뷰 작성 - 예랑
 	@RequestMapping("insertReview.tb")
-	public String insertReview() {
+	public ResponseEntity insertReview(int trvId, int memberId) {
 		
-		//리뷰 작성 시 포인트 적립 업데이트(수민언니랑 연동)
-		/*
-		 * 일정작성 300, 일정리뷰 50, 여행지리뷰 10 자동으로 포인트 적립되야 하는 경우 PointController 클래스에
-		 * pointReserve() 메소드로 보내주세요 회원코드번호, 코드번호(여행일정번호||여행리뷰코드||리뷰코드), 적용되어야 하는 포인트-를
-		 * 매개변수로 보내주세요
-		 * 
-		 */
-		return "travelBoard/travelDetail";
+		TourReview tr = new TourReview();
+		tr.setTrvId(trvId);
+		tr.setMemberId(memberId);
+		
+		int reviewId = tbs.insertReview(tr);
+		
+		ReservePoint rp = null;
+		
+		if(reviewId > 0) {
+			rp = new ReservePoint();
+			rp.setMemberId(memberId);
+			rp.setReviewId(reviewId);
+			rp.setReserveType(20);
+			rp.setReservePoint(50);
+		}
+		
+		return new ResponseEntity(rp, HttpStatus.OK);
 	}
 	
 	//여행일정 상세 / 리뷰 삭제 - 예랑
@@ -244,7 +287,7 @@ public class TravelBoardController {
 	}
 	
 	//여행일정 상세 / 일정 구매 - 예랑
-	@RequestMapping("")
+	@RequestMapping("insertTravelBuy.tb")
 	public String travelBuy() {
 		
 		//구매한 해당 글 수익금 업데이트(수민언니랑 연동)

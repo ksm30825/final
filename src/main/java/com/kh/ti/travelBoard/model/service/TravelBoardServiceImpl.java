@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelBoard.model.dao.TravelBoardDao;
 import com.kh.ti.travelBoard.model.vo.Likey;
+import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
@@ -18,15 +19,14 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
-	
 	@Autowired
 	private TravelBoardDao tbd;
 	
 	//페이징 처리용 - 예랑
 	@Override
-	public int getListCount(TravelBoard tb) {
+	public int getListCount(HashMap pageMap) {
 		
-		return tbd.getListCount(sqlSession, tb);
+		return tbd.getListCount(sqlSession, pageMap);
 	}
 	
 	//여행일정 리스트 조회 - 예랑
@@ -69,6 +69,20 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	public TrvDaySchedule selectTravelDetailDays(TrvDaySchedule tds) {
 		
 		return tbd.selectTravelDetailDays(sqlSession, tds);
+	}
+	
+	//여행일정 구매리뷰 조회용
+	@Override
+	public ArrayList<TourReview> tourReviewList(PageInfo pi, TourReview tr) {
+		
+		return tbd.tourReviewList(sqlSession, pi, tr);
+	}
+	
+	//여행일정 상세 / 리뷰 작성 - 예랑
+	@Override
+	public int insertReview(TourReview tr) {
+		
+		return tbd.insertReview(sqlSession, tr);
 	}
 
 

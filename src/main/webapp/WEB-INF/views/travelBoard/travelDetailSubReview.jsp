@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,7 +61,12 @@
 	<section class="section" id="detailSub" style="padding-top: 0;">
 		<div id="detailSubContent" align="center">
 			<div id="reviewBtnArea">
-				<a class="button is-info" data-target="#myModal" onclick="reviewForm()">리뷰작성</a>
+				<c:choose>
+					<c:when test="${ !empty loginUser && detailTb.buyStatus eq 'Y' }">
+						<a class="button is-info" data-target="#myModal" onclick="reviewForm()">리뷰작성</a>
+					</c:when>
+				</c:choose>
+				
 			</div>
 			
 			<div id="reviewTableArea">
@@ -69,39 +77,6 @@
 						<th>평점</th>
 						<th>리뷰</th>
 						<th>작성자</th>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>☆★★★★</td>
-						<td>
-							<span>리뷰내용리뷰내용리뷰내용</span>
-							<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a>
-						</td>
-						<td>유저01</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>☆★★★★</td>
-						<td><span>리뷰내용리뷰내용리뷰내용</span></td>
-						<td>유저02</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>☆★★★★</td>
-						<td><span>리뷰내용리뷰내용리뷰내용</span></td>
-						<td>유저03</td>
-					</tr>
-					<tr>
-						<td>4</td>
-						<td>☆★★★★</td>
-						<td><span>리뷰내용리뷰내용리뷰내용</span></td>
-						<td>유저04</td>
-					</tr>
-					<tr>
-						<td>5</td>
-						<td>☆★★★★</td>
-						<td><span>리뷰내용리뷰내용리뷰내용</span></td>
-						<td>유저05</td>
 					</tr>
 				</table>
 			</div>
@@ -204,6 +179,31 @@
 			}
 		})
 	}
+	
+	$(document).ready(function() {
+		var trvId = ${ detailTb.trvId };
+		
+		$.ajax({
+			url : "selectTourReview.tb",
+			data : {trvId : trvId, currentPage : 1},
+			success : function(trList) {
+				alert("리뷰조회하기");
+				
+				var table = $("#reviewTable > tbody");
+				var review;
+				
+				for (var key in trList) {
+					review = "<tr><td>" + key + "</td><td>" + trList[key].grade "</td><td>" + trList[key].reviewContent;
+					if(trList[key].writeStatus = 'Y') {
+						review += '<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a></td>';
+					}else {
+						review += "</td>";
+					}
+				}
+			}
+		});
+	});
+	
 	
 </script>
 

@@ -7,12 +7,13 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelBoard.model.vo.Likey;
+import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 public interface TravelBoardDao {
 
-	int getListCount(SqlSessionTemplate sqlSession, TravelBoard tb);
+	int getListCount(SqlSessionTemplate sqlSession, HashMap pageMap);
 	
 	HashMap travelList(SqlSessionTemplate sqlSession, PageInfo pi, TravelBoard tb);
 
@@ -25,6 +26,10 @@ public interface TravelBoardDao {
 	int travelLikeyDelete(SqlSessionTemplate sqlSession, Likey likey);
 
 	TrvDaySchedule selectTravelDetailDays(SqlSessionTemplate sqlSession, TrvDaySchedule tds);
+
+	ArrayList<TourReview> tourReviewList(SqlSessionTemplate sqlSession, PageInfo pi, TourReview tr);
+
+	int insertReview(SqlSessionTemplate sqlSession, TourReview tr);
 
 
 }

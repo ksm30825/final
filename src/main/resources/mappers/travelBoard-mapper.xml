@@ -112,7 +112,20 @@
 		<collection property="trvSchedule" javaType="java.util.ArrayList" resultMap="trvScheduleResultSet"/>
 	</resultMap>
 	
-	<!-- 페이징용 -->
+	<!-- TourReview -->
+	<resultMap type="TourReview" id="tourReviewResultSet">
+		<id property="reviewId" column="REVIEW_ID"/>
+		<result property="riviewDate" column="REVIEW_DATE"/>
+		<result property="reviewStatus" column="REVIEW_STATUS"/>
+		<result property="grade" column="GRADE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="reviewContent" column="REVIEW_CONTENT"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="writeStatus" column="WRITE_STAUTS"/>
+	</resultMap>
+	
+	<!-- 여행일정 페이징용 -->
 	<select id="getListCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM TRAVEL
@@ -124,10 +137,18 @@
 		</choose>
 	</select>
 	
+	<!-- 일정 구매리뷰 페이징용 -->
+	<select id="getListCountReview" resultType="_int">
+		SELECT COUNT(*)
+		FROM TOUR_REVIEW
+		WHERE TRV_ID = #{ trvId }
+		AND REVIEW_STATUS = 'Y'
+	</select>
+	
 	<!-- 여행일정 전체 조회용 -->
 	<select id="selectTravelBoardList" resultMap="travelBoardResultSet">
 		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
-       		   M.USER_NAME, T.TRV_REF, TA.TAG_NAME, CITY_NAME_KO, COUNTRY_NAME_KO, CITY_ID, LIKEY_COUNT, BUY_COUNT,
+       		   M.USER_NAME, T.TRV_REF, TG.TAG_ID, TA.TAG_NAME, CITY_NAME_KO, COUNTRY_NAME_KO, CITY_ID, LIKEY_COUNT, BUY_COUNT,
                SFI.ORIGIN_NAME, SFI.CHANGE_NAME, SFI.FILE_PATH
 	    FROM TRAVEL T
 	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
@@ -251,5 +272,36 @@
 		WHERE TD.TRV_ID = #{ trvId }
 		AND TD.DAY_NUMBER = #{ dayNumber }
 		AND TSCH.SCH_TRANSP IS NULL
+		AND TSCH.SCH_ID != 0
+	</select>
+	
+	<select id="tourReviewList" resultMap="tourReviewResultSet">
+		SELECT *
+		FROM TOUR_REVIEW TR
+		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
+		WHERE TRV_ID = #{ trvId }
+		AND REVIEW_STATUS = 'Y'
+	</select>
+	
+	<select id="CheckWriteStatus" resultType="string">
+		SELECT DECODE(COUNT(*), 0, 'N', 1, 'Y') WRITE_STATUS
+		FROM TOUR_REVIEW
+		WHERE TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+	</select>
+	
+	<!-- 일정 구매리뷰 추가 -->
+	<insert id="insertReview" parameterType="TourReview">
+		INSERT INTO TOUR_REVIEW (REVIEW_ID, REVIEW_DATE, REVIEW_STATUS, GRADE, MEMBER_ID, REVIEW_CONTENT, TRV_ID)
+		VALUES(TOUR_REVIEW_SEQ.NEXTVAL, SYSDATE, 'Y', #{ grade }, #{ memberId }, #{ reviewContent }, #{ trvId })
+	</insert>
+	
+	<!-- 일정 구매리뷰 추가 성공 후 해당 구매리뷰 아이디 조회 -->
+	<select id="searchReviewId" resultType="_int">
+		SELECT REVIEW_ID
+		FROM TOUR_REVIEW
+		WHERE TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+		AND REVIEW_STATUS = 'Y'
 	</select>
 </mapper>
