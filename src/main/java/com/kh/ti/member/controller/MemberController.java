@@ -1,6 +1,7 @@
 package com.kh.ti.member.controller;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -170,11 +172,10 @@ public class MemberController {
 	}
 	
 	//회원조건조회용메소드--세령
-	@RequestMapping("selectCondition.me")
-	public String selectConditionMemberList(@RequestParam("condition") String condition, 
-											@RequestParam("conditionValue") String conditionValue) {
-		System.out.println("condition : " + condition);
-		System.out.println("conditionValue : " + conditionValue);
+	@RequestMapping(value = "/selectCondition.me")
+	public String selectConditionMemberList(@RequestParam Map<String, String> map) {
+		System.out.println("condition : " + map.get("condition"));
+		System.out.println("conditionValue : " + map.get("condition"));
 		return null;
 	}
 	
