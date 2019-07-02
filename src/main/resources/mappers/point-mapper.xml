@@ -126,10 +126,12 @@
 		</choose> )
 	</insert>	
 	<!-- 포인트 환불신청하기-> 환불 내역에 인서트 -->
-	<!-- <insert id="insertRefund" parameterType="Refund">
+	<insert id="insertRefund" parameterType="Refund">
 		INSERT INTO REFUND
-		VALUES( REFUND_SEQ.NEXTVAL, #{reservePoint}, #{reserveDate}, #{memberId}, #{reserveType})
-	</insert> -->
+		VALUES( 
+			REFUND_SEQ.NEXTVAL, #{refundReason}, SYSDATE, NULL, #{refundStatus}, #{pointId}
+		)
+	</insert>
 	<select id="selectOneTrv" resultType="_int">
 		SELECT TRV_ID
 		FROM TOUR_REVIEW

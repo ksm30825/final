@@ -391,6 +391,7 @@ public class PointController {
 		
 		int result = ps.insertRefund(refund);
 		
+		System.out.println("result : " + result);
 		mv.setViewName("jsonView");
 		
 		return mv;
@@ -403,6 +404,12 @@ public class PointController {
 		//code : 작성글 코드 
 		//useType : 10:일정구매, 20:설계의뢰
 		//uPoint : 사용 포인트
+		
+		//포인트 사용 내역에 insert
+		//성공시 수익금발생내역에 인서트
+		//성공시 member 테이블의 누적 포인트 차감(memberId)
+		//성공시 member 테이블의 누적 수익금 추가(trvId, requestId 통해서 memberId 조회)
+		
 		
 		
 		//선우 - myRequestList.mr

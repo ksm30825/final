@@ -394,6 +394,7 @@
 			
 			$('.modal-background, .modal-close').click(function() {
 				$(this).parent().removeClass('is-active');
+				$("#modalContent").val("");
 				$("#modalHeader2").text('환불을 취소하셨습니다.');
 				$('#myModal2').toggleClass('is-active');
 				$('#back2, #del2').click(function() {
@@ -405,6 +406,7 @@
 			});
 			$("#del").click(function(){
 				$(".myModal").removeClass('is-active');
+				$("#modalContent").val("");
 			});
 			//포인트 충전 월검색 시
 			$("#chargeSelect").change(function(){
@@ -743,13 +745,53 @@
 		$("body").on("click","#toRefund", function(){
 			var usePointId = $(this).parent().parent().children().eq(0).text();
 			var useDate = $(this).parent().parent().children().eq(2).text();
-			useDate = getFormatDate(useDate);
-			console.log(useDate);
-			//console.log(usePointId);
-			$("#refundPointId").val(usePointId);
-			$("#modalHeader").text('환불을 신청하시겠습니까?');
-			$("#modalContent").attr('placeholder','환불사유를 입력해주세요');
-			$('#myModal').toggleClass('is-active');
+			
+			//console.log(useDate);
+			var year = useDate.substring(0,2);
+			var month = useDate.substring(3,5);
+			var day = useDate.substring(6,8);
+			var index1 = useDate.lastIndexOf(" ");
+			var hour = useDate.substring(index1+1,index1+3);
+			var index2 = useDate.lastIndexOf(":");
+			var minute = useDate.substring(index2+1,index2+3);
+			var date = "20"+year+"/"+month+"/"+day+" "+hour+":"+minute;
+			console.log(date);
+			useDate = new Date(date);	
+			//포인트 사용일 밀리세컨단위
+			var milis = useDate.getTime();
+			milisFuture = Number(milis)+86400000;			
+			//var dateFuture = new Date(milisFuture);				
+			//dateFuture = getFormatDate(dateFuture);
+			//console.log(milisFuture);
+			//console.log(useDate);
+			
+			//클릭시 밀리세컨단위
+			var dateNow = new Date();
+			var milisNow = dateNow.getTime();
+			//console.log(milisNow);
+			//var time = getFormatDate(dateNow);
+			//console.log(time);
+			var sub = Number(milisFuture) - Number(milisNow);
+			if(sub<=0){
+				console.log('24시간 지남');
+				$("#modalHeader2").text('24시간이 지나 환불신청이 불가능합니다.');
+				$('#myModal2').toggleClass('is-active');
+				$('#back2, #del2').click(function() {
+					$(this).parent().removeClass('is-active');
+				});
+				$("#okay").click(function(){
+					$("#myModal2").removeClass('is-active');
+				});
+				
+			}else{
+				console.log('24시간 안지남');
+				$("#refundPointId").val(usePointId);
+				$("#modalHeader").text('환불을 신청하시겠습니까?');
+				$("#modalContent").attr('placeholder','환불사유를 입력해주세요');
+				$('#myModal').toggleClass('is-active');
+			}
+			
+			
 		});
 		//생성된 사용 테이블의 이벤트 걸기
 		$("body").on("click","#refundStatus", function(){
@@ -761,29 +803,48 @@
 		$("body").on("click","#refundYes", function(){
 			var refundId = $(this).parent().parent().parent().children().eq(0).children().eq(2).val();
 			var refundReason = $(this).parent().parent().parent().children().eq(1).children().eq(0).val();
-			$.ajax({
-				url:"refundUPoint.po",
-				data:{refundId:refundId, refundReason:refundReason},
-				type:"post",
-				success:function(data){
-					console.log('success');
-					
-					$("#myModal").removeClass('is-active');
-					$("#modalHeader2").text('환불신청한 내역이 관리자에게 전달 되었습니다.').append("<p>빠른 시일 내에 처리하도록 하겠습니다.</p>");
-					$('#myModal2').toggleClass('is-active');
-					$('#back2, #del2').click(function() {
-						$(this).parent().removeClass('is-active');
-						//location.href="환불메소드로";
-					});
-					$("#okay").click(function(){
-						$("#myModal2").removeClass('is-active');
-						//location.href="환불메소드로";
-					});
-				},
-				error:function(data){
-					console.log('error');
-				}
-			});
+			
+			console.log(refundReason);
+			if(refundReason == ""){
+				$("#myModal").removeClass('is-active');
+				$("#modalContent").val("");
+				$("#modalHeader2").text('환불사유를 입력해주세요');
+				$('#myModal2').toggleClass('is-active');
+				$('#back2, #del2').click(function() {
+					$(this).parent().removeClass('is-active');
+					//location.href="환불메소드로";
+				});
+				$("#okay").click(function(){
+					$("#myModal2").removeClass('is-active');
+					//location.href="환불메소드로";
+				});
+			}else{
+				$.ajax({
+					url:"refundUPoint.po",
+					data:{refundId:refundId, refundReason:refundReason},
+					type:"post",
+					success:function(data){
+						console.log('success');
+						
+						$("#myModal").removeClass('is-active');
+						$("#modalContent").val("");
+						$("#modalHeader2").text('환불신청한 내역이 관리자에게 전달 되었습니다.').append("<p>빠른 시일 내에 처리하도록 하겠습니다.</p>");
+						$('#myModal2').toggleClass('is-active');
+						$('#back2, #del2').click(function() {
+							$(this).parent().removeClass('is-active');
+							//location.href="환불메소드로";
+						});
+						$("#okay").click(function(){
+							$("#myModal2").removeClass('is-active');
+							//location.href="환불메소드로";
+						});
+					},
+					error:function(data){
+						console.log('error');
+					}
+				});
+				
+			}
 		});
 		//ajax 천단위마다 콤마찍기
 		function comma(num){
@@ -804,7 +865,8 @@
 		}
 		//long형 날짜를 yy/mm/dd hh:MM으로 변환
 		function getFormatDate(date){ 
-			console.log(date);
+			//console.log(date);
+			//console.log(typeof(date));
 			var year = date.getFullYear()+'';	//yyyy 
 			year = year.substring( 2, 4 );
 			var month = (1 + date.getMonth());	//M 
