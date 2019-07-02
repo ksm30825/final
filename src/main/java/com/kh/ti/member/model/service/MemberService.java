@@ -1,6 +1,7 @@
 package com.kh.ti.member.model.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.exception.LoginException;
@@ -23,5 +24,7 @@ public interface MemberService {
 	int getListCount(String status);
 
 	ArrayList<Member> selectAllMember(PageInfo pi, String status);
+
+	ArrayList<Member> selectConditionMember(Map<String, String> map);
 	
 }

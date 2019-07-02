@@ -1,6 +1,7 @@
 package com.kh.ti.member.model.dao;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -73,6 +74,13 @@ public class MemberDaoImpl implements MemberDao{
 		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
 		mList = (ArrayList) sqlSession.selectList("Member.selectAllMemberList", status, rowBounds);
+		return mList;
+	}
+
+	//회원정보 조건 조회용 메소드 - 세령
+	@Override
+	public ArrayList<Member> selectConditionMember(SqlSessionTemplate sqlSession, Map<String, String> map) {
+		ArrayList<Member> mList = (ArrayList) sqlSession.selectList("Member.selectConditionList", map);
 		return mList;
 	}
 }

@@ -111,4 +111,21 @@
 		</if>
 		ORDER BY MEMBER_ID DESC
 	</select>
+	
+	<!-- 회원정보 조건 조회용 세령 -->
+	<select id="selectConditionList" parameterType="map" resultMap="memberResultSet">
+		SELECT * FROM MEMBER
+		WHERE 
+		<choose>
+			<when test="condition != null and condition.equals('name')">
+				USER_NAME = #{ conditionValue }
+			</when>
+			<when test="condition != null and condition.equals('phone')">
+				PHONE = #{ conditionValue }
+			</when>
+			<when test="condition != null and condition.equals('email')">
+				EMAiL = #{ conditionValue }
+			</when>
+		</choose>
+	</select>
 </mapper>
