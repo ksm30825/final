@@ -317,12 +317,12 @@ public class PointController {
 		int result = ps.insertReservePoint(rp);
 		////System.out.println("result : " + result);
 		
-		int trvId = ps.selectOneTrv(rp);
+		
 		
 		if(result>0) {
 			switch(reserveType) {
 			case 10 : return "redirect:/showMyTravel.trv?"; 
-			case 20 : return "redirect:/travelDetailForm.tb?trvId="+trvId; 
+			case 20 : int trvId = ps.selectOneTrv(rp); return "redirect:/travelDetailForm.tb?trvId="+trvId; 
 			case 30 : return "redirect:/showMyTravel.trv?"; 
 			}
 		}
@@ -403,6 +403,7 @@ public class PointController {
 		//code : 작성글 코드 
 		//useType : 10:일정구매, 20:설계의뢰
 		//uPoint : 사용 포인트
+		
 		
 		//선우 - myRequestList.mr
 		return "??";
