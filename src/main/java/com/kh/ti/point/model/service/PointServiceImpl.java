@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.dao.PointDao;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
 @Service
@@ -59,6 +60,16 @@ public class PointServiceImpl implements PointService{
 	@Override
 	public int insertReservePoint(ReservePoint rp) {
 		return pd.insertReservePoint(sqlSession, rp);
+	}
+	//포인트 환불신청하기-> 환불 내역에 인서트
+	@Override
+	public int insertRefund(Refund refund) {
+		return pd.insertRefund(sqlSession, refund);
+	}
+	@Override
+	public int selectOneTrv(ReservePoint rp) {
+		// TODO Auto-generated method stub
+		return pd.selectOneTrv(sqlSession, rp);
 	}
 
 	

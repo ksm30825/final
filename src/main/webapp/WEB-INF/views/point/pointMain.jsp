@@ -121,14 +121,45 @@
 								    </tbody>
 							  </table>
 					    	</div>
-				    		<div align="center" class="chargePagingArea" id="chargePagingArea" style="margin-top:3%;">
-					    		<button class="pagingBtn"> << </button>
-					    		<button class="pagingBtn"> < </button>
-					    		<button class="pagingBtn"> 1 </button>
-					    		<button class="pagingBtn"> 2 </button>
-					    		<button class="pagingBtn"> > </button>
-					    		<button class="pagingBtn"> >> </button>
-				    		</div>
+				    		<!-- paging -->
+							<div class="field" >
+								<nav class="pagination">
+							  	<ul class="pagination-list chargePagingArea" style="justify-content: center;">
+									<!-- 이전 -->
+									<c:if test="${ chPi.currentPage <= 1 }"> 
+										<li><button class="pagingBtn" style="border-color: gray;"> < </button></li>
+									</c:if>
+									<c:if test="${ chPi.currentPage > 1 }">
+										<c:url var="mListBack" value="paymentMain.po">
+											<c:param name="currentPage" value="${ chPi.currentPage - 1 }"/>
+										</c:url>
+										<li><button class="pagingBtn" onclick="location.href='${ mListBack }'"> < </button></li>
+									</c:if><!-- end 이전 -->
+									<!-- page number -->
+									<c:forEach var="p" begin="${ chPi.startPage }" end="${ chPi.endPage }">
+										<c:if test="${ p eq chPi.currentPage }">
+											<li><button class="pagingBtn" style="border-color: gray;"> ${ p } </button></li>
+										</c:if>
+										<c:if test="${ p ne chPi.currentPage }">
+											<c:url var="mListCheck" value="paymentMain.po">
+												<c:param name="currentPage" value="${ p }"/>
+											</c:url>
+											<li><button class="pagingBtn" onclick="location.href='${ mListCheck }'"> ${ p } </button></li>
+										</c:if>
+									</c:forEach> <!-- end page number -->
+									<!-- 다음 -->
+									<c:if test="${ chPi.currentPage >= chPi.maxPage }">
+										<li><button class="pagingBtn" style="border-color: gray;"> > </button></li>
+									</c:if>
+									<c:if test="${ chPi.currentPage < chPi.maxPage }">
+										<c:url var="mListEnd" value="paymentMain.po">
+											<c:param name="currentPage" value="${ chPi.currentPage + 1 }"/>
+										</c:url>
+										<li><button class="pagingBtn" onclick="location.href='${ mListEnd }'"> > </button></li>
+									</c:if> <!-- end 다음 -->
+							  	</ul>
+							  </nav>
+							</div> <!-- end paging -->	
 					    	<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				    	</div>
 				    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
@@ -177,17 +208,18 @@
 													<fmt:formatDate value="${ re.reserveDate }" pattern="yy/MM/dd HH:mm" />
 												</td>
 												<td>
+												<!-- ----------------------함수로 보낼 수 없나? -->
 													<c:if test="${ re.reserveType eq 10}">
 														<input type="text" value="${ re.trvId }" style="display:none;">
 														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${re.memberId}&bid=${ re.trvId }">일정작성</a>
 													</c:if>
 													<c:if test="${ re.reserveType eq 20}">
 														<input type="text" value="${ re.reviewId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">일정리뷰</a>
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${re.memberId}&bid=${ re.reviewId }">일정리뷰</a>
 													</c:if>
 													<c:if test="${ re.reserveType eq 30}">
 														<input type="text" value="${ re.spotReviewId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">명소리뷰</a>
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${re.memberId}&bid=${ re.spotReviewId }">명소리뷰</a>
 													</c:if>
 												</td>
 											</tr>
@@ -195,14 +227,45 @@
 								    </tbody>
 							  </table>
 							</div>
-							<div align="center" class="receivePagingArea" style="margin-top:3%;">
-					    		<button class="pagingBtn"> << </button>
-					    		<button class="pagingBtn"> < </button>
-					    		<button class="pagingBtn"> 1 </button>
-					    		<button class="pagingBtn"> 2 </button>
-					    		<button class="pagingBtn"> > </button>
-					    		<button class="pagingBtn"> >> </button>
-				    		</div>
+							<!-- paging -->
+							<div class="field" >
+								<nav class="pagination">
+							  	<ul class="pagination-list receivePagingArea" style="justify-content: center;">
+									<!-- 이전 -->
+									<c:if test="${ rePi.currentPage <= 1 }"> 
+										<li><button class="pagingBtn" style="border-color: gray;"> < </button></li>
+									</c:if>
+									<c:if test="${ rePi.currentPage > 1 }">
+										<c:url var="reListBack" value="reserveMain.po">
+											<c:param name="currentPage" value="${ rePi.currentPage - 1 }"/>
+										</c:url>
+										<li><button class="pagingBtn" onclick="location.href='${ reListBack }'"> < </button></li>
+									</c:if><!-- end 이전 -->
+									<!-- page number -->
+									<c:forEach var="p" begin="${ rePi.startPage }" end="${ rePi.endPage }">
+										<c:if test="${ p eq rePi.currentPage }">
+											<li><button class="pagingBtn" style="border-color: gray;"> ${ p } </button></li>
+										</c:if>
+										<c:if test="${ p ne rePi.currentPage }">
+											<c:url var="reListCheck" value="reserveMain.po">
+												<c:param name="currentPage" value="${ p }"/>
+											</c:url>
+											<li><button class="pagingBtn" onclick="location.href='${ reListCheck }'"> ${ p } </button></li>
+										</c:if>
+									</c:forEach> <!-- end page number -->
+									<!-- 다음 -->
+									<c:if test="${ rePi.currentPage >= rePi.maxPage }">
+										<li><button class="pagingBtn" style="border-color: gray;"> > </button></li>
+									</c:if>
+									<c:if test="${ rePi.currentPage < rePi.maxPage }">
+										<c:url var="reListEnd" value="reserveMain.po">
+											<c:param name="currentPage" value="${ rePi.currentPage + 1 }"/>
+										</c:url>
+										<li><button class="pagingBtn" onclick="location.href='${ reListEnd }'"> > </button></li>
+									</c:if> <!-- end 다음 -->
+							  	</ul>
+							  </nav>
+							</div> <!-- end paging -->	
 				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				    	</div>
 				    	<div id="useArea"  style="margin-top:3%; border-top:1px solid lightgray;">
@@ -246,18 +309,16 @@
 												<td>
 													<span><fmt:formatNumber value="${ us.usePoint }" groupingUsed="true"/>P</span>
 												</td>
-												<td>
-													<fmt:formatDate value="${ us.useDate }" pattern="yy/MM/dd HH:mm" />
-												</td>
+												<td><fmt:formatDate value="${ us.useDate }" pattern="yy/MM/dd HH:mm" /></td>
 												<td>
 													<c:if test="${ us.useType eq 10}">
 														<!-- 일정구매 -->
 														<input type="text" value="${ us.trvId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">일정구매</a>
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${us.memberId}&bid=${ us.trvId }">일정구매</a>
 													</c:if>
 													<c:if test="${ us.useType eq 20}">
 														<input type="text" value="${ us.requestId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기">의뢰채택</a>
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${us.memberId}&bid=${ us.requestId }">의뢰채택</a>
 													</c:if>
 												</td>
 												<td>
@@ -295,7 +356,7 @@
 							</section>
 							<footer class="modal-card-foot">
 								<div style="margin-left:auto;margin-right:auto;">
-									<a class="button is-success" id="refundYes" style="border-radius:5px; height:25px;width:60px;" onclick="yes()"> 예 </a>
+									<a class="button is-success" id="refundYes" style="border-radius:5px; height:25px;width:60px;"> 예 </a>
 									<a class="button is-danger" style="border-radius:5px; height:25px;" onclick="no()"> 아니요 </a>
 								</div>
 							</footer>
@@ -350,14 +411,15 @@
 				var month = $(this).children('option:selected').val();
 				if(month!='defaultOption'){
 					//console.log("month : " + month );
+					var currentPage = 1;
 					$.ajax({
 						url:"oneMonthPay.po",
 						type:"post",
-						data:{month:month},
+						data:{month:month, currentPage:currentPage},
 						success:function(data){
 							//console.log(data);
-							makeChargeTable(data.hmap.chPayList, data.hmap.chPi);
-							chargePaging(data.hmap.chPi);
+							makeChargeTable(data.hmap.chPayList, data.hmap.chPi, month);
+							chargePaging(data.hmap.chPi, month);
 						},
 						error:function(data){
 							console.log('error');
@@ -403,7 +465,7 @@
 			});
 		});
 		//포인트 충전 테이블
-		function makeChargeTable(chPayList, chPi){
+		function makeChargeTable(chPayList, chPi, month){
 			//console.log(data);
 			$("#chargeTBody").empty();
 			var len = chPayList.length;
@@ -423,7 +485,7 @@
 				
 				var pay = comma(list.payAmount);
 				var $payAmountTd = $("<td>").text(pay+"P");
-				
+				//console.log(list.paymentDate);
 				var date = new Date(list.paymentDate);
 				date = getFormatDate(date);
 				
@@ -435,9 +497,10 @@
 				
 				$("#chargeTBody").append($listTr);
 			}
+			chargePaging(chPi, month);
 		};
 		//포인트 충전 테이블 페이징
-		function chargePaging(chPi){
+		function chargePaging(chPi, month){
 			var $page = $(".chargePagingArea");
 			
 			var pi = chPi;
@@ -446,44 +509,35 @@
 			var maxPage = pi.maxPage;
 			var startPage = pi.startPage;
 			var endPage = pi.endPage;
-			console.log(pi);
+			//console.log(pi);
 			
 			var startRow = (currentPage - 1) * limit + 1;
 			var endRow = startRow + limit - 1;	
-			
+			var str;
 			$page.empty();
-			
-			$page.append($("<button>").attr("class", "pagingBtn").text("<<"));
-			
+			//console.log(chPayList);
 			if(currentPage <= 1){
-				$page.append($("<button>").attr("class","pagingBtn").text("<").attr("disabled",true));
+				$page.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
 			}else{
-				$page.append($("<button>").attr("class","pagingBtn").text("<").click(function(){
-					makeChargeTable(currentPage - 1);
-				}));
+				var cp = currentPage-1;
+				str = "location.href=oneMonthPayPaging.po?currentPage="+cp+"&month="+month;
+				$page.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
 			}
-			
-			for(var p = startPage ; p<=endPage ; p++){
+			for(var p = startPage ; p<endPage ; p++){
 				if(p == currentPage){
-					$page.append($("<button>").attr("class","pagingBtn").text(p).attr("disabled",true));
+					$page.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
 				}else{
-					$page.append($("<button>").attr("class","pagingBtn").text(p).click(function(){
-						makeChargeTable($(this).text());
-					}));
+					str = "location.href=oneMonthPayPaging.po?currentPage="+p+"&month="+month;
+					$page.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
 				}
-			}
-			
+			} 
 			if(currentPage >= maxPage){
-				$page.append($("<button>").attr("class","pagingBtn").text(">").attr("disabled",true));               
+				$page.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
 			}else{
-				$page.append($("<button>").attr("class","pagingBtn").text(">").click(function(){
-					makeChargeTable(currentPage + 1);
-				}));
+				var cp = currentPage+1;
+				str = "location.href=oneMonthPayPaging.po?currentPage="+cp+"&month="+month;
+				$page.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
 			}
-			
-			$page.append($("<button>").attr("class","pagingBtn").text(">>").click(function(){
-				makeChargeTable(maxPage);
-			}));
 			
 		};
 		//포인트 지급 테이블 만들기
@@ -673,7 +727,7 @@
 			}
 		};
 		//생성된 지급 테이블의 이벤트 걸기
-		$("body").on("click", "#reserveLink",function(){
+		$("body").on("click", "#reserveLink, #useLink",function(){
 			var mid = $(this).children().eq(0).val();
 			var bid = $(this).children().eq(1).val();
 			var url = "oneBoardRPoint.po?mid="+mid+"&bid="+bid;
@@ -688,6 +742,9 @@
 		//기존 사용 테이블의 이벤트 걸기
 		$("body").on("click","#toRefund", function(){
 			var usePointId = $(this).parent().parent().children().eq(0).text();
+			var useDate = $(this).parent().parent().children().eq(2).text();
+			useDate = getFormatDate(useDate);
+			console.log(useDate);
 			//console.log(usePointId);
 			$("#refundPointId").val(usePointId);
 			$("#modalHeader").text('환불을 신청하시겠습니까?');
@@ -699,8 +756,35 @@
 			var usePointId = $(this).parent().parent().children().eq(0).children().eq(0).val();
 			$("#refundPointId").val(usePointId);
 			$('#myModal').toggleClass('is-active');
-		});		
+		});
 		
+		$("body").on("click","#refundYes", function(){
+			var refundId = $(this).parent().parent().parent().children().eq(0).children().eq(2).val();
+			var refundReason = $(this).parent().parent().parent().children().eq(1).children().eq(0).val();
+			$.ajax({
+				url:"refundUPoint.po",
+				data:{refundId:refundId, refundReason:refundReason},
+				type:"post",
+				success:function(data){
+					console.log('success');
+					
+					$("#myModal").removeClass('is-active');
+					$("#modalHeader2").text('환불신청한 내역이 관리자에게 전달 되었습니다.').append("<p>빠른 시일 내에 처리하도록 하겠습니다.</p>");
+					$('#myModal2').toggleClass('is-active');
+					$('#back2, #del2').click(function() {
+						$(this).parent().removeClass('is-active');
+						//location.href="환불메소드로";
+					});
+					$("#okay").click(function(){
+						$("#myModal2").removeClass('is-active');
+						//location.href="환불메소드로";
+					});
+				},
+				error:function(data){
+					console.log('error');
+				}
+			});
+		});
 		//ajax 천단위마다 콤마찍기
 		function comma(num){
 		    var len, point, str; 
@@ -720,6 +804,7 @@
 		}
 		//long형 날짜를 yy/mm/dd hh:MM으로 변환
 		function getFormatDate(date){ 
+			console.log(date);
 			var year = date.getFullYear()+'';	//yyyy 
 			year = year.substring( 2, 4 );
 			var month = (1 + date.getMonth());	//M 
@@ -731,20 +816,6 @@
 			var minu = date.getMinutes();
 			minu = minu >=10 ? minu : '0' + minu;
 			return year + '/' + month + '/' + day + '	' + hour + ':' + minu; 
-		}
-		function yes(){
-			//환불신청확인
-			$("#myModal").removeClass('is-active');
-			$("#modalHeader2").text('환불신청한 내역이 관리자에게 전달 되었습니다.').append("<p>빠른 시일 내에 처리하도록 하겠습니다.</p>");
-			$('#myModal2').toggleClass('is-active');
-			$('#back2, #del2').click(function() {
-				$(this).parent().removeClass('is-active');
-				//location.href="환불메소드로";
-			});
-			$("#okay").click(function(){
-				$("#myModal2").removeClass('is-active');
-				//location.href="환불메소드로";
-			});
 		}
 		function no(){
 			//환불신청취소

@@ -53,7 +53,7 @@
 				<i class="fas fa-3x fa-user-edit"></i>
 			</span>&nbsp;&nbsp;
 			<span class="title is-3">홍길동</span>
-			<a href="pointMainView.po">
+			<a href="pointMainView.po?currentPage=1">
 				<span class="icon has-text-danger">
 					<i class="fab fa-product-hunt"></i>
 				</span>
@@ -114,7 +114,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a href="pointMainView.po" class="myPoint">
+	        <a href="pointMainView.po?currentPage=1" class="myPoint">
 	          <span class="icon"><i class="fas fa-coins"></i></span>
 	          <span>포인트/수익금</span>
 	        </a>

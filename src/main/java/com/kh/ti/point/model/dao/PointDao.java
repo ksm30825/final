@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
 
@@ -27,5 +28,8 @@ public interface PointDao {
 	ArrayList<UsePoint> selectUseList(SqlSessionTemplate sqlSession, PageInfo usPi, UsePoint use);
 	//포인트 자동으로 적립하기
 	int insertReservePoint(SqlSessionTemplate sqlSession, ReservePoint rp);
+	//포인트 환불신청하기-> 환불 내역에 인서트
+	int insertRefund(SqlSessionTemplate sqlSession, Refund refund);
+	int selectOneTrv(SqlSessionTemplate sqlSession, ReservePoint rp);
 
 }
