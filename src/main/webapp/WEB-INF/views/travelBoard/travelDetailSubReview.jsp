@@ -30,6 +30,7 @@
 	}
 	#reviewTable th {
 		background: rgb(198, 151, 217);
+		color: white;
 		padding: 0.5em;
 		text-align: center !important;
 		border: 1px solid rgb(198, 151, 217);
@@ -187,13 +188,12 @@
 			url : "selectTourReview.tb",
 			data : {trvId : trvId, currentPage : 1},
 			success : function(trList) {
-				alert("리뷰조회하기");
 				
 				var table = $("#reviewTable > tbody");
 				var review;
 				
 				for (var key in trList) {
-					review = "<tr><td>" + key + "</td><td>" + trList[key].grade "</td><td>" + trList[key].reviewContent;
+					review = "<tr><td>" + key + "</td><td>" + trList[key].grade + "</td><td>" + trList[key].reviewContent;
 					if(trList[key].writeStatus = 'Y') {
 						review += '<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a></td>';
 					}else {

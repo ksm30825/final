@@ -33,7 +33,6 @@
 <body>
 	<jsp:include page="travelSearchBar.jsp" />
 	
-	
 	<div class="coumns">
 		<div class="column">
 		
@@ -45,8 +44,8 @@
 						<c:choose>
 							<c:when test="${ !empty loginUser }">
 								<c:choose>
-									<c:when test="${ detailTb.buyStatus eq 'N' }">
-										<a class="button is-primary" onclick="travelBuy()">
+									<c:when test="${ detailTb.buyStatus eq 'N' && loginUser.memberId ne detailTb.memberId }">
+										<a class="button is-primary" onclick="travelBuy();">
 											<span class="icon" id="starIcon"><i class="fas fa-shopping-cart"></i></span>
 								          	<span> &nbsp;일정구매 </span>
 					        			</a>
@@ -55,13 +54,13 @@
 								</c:choose>
 								<c:choose>
 									<c:when test="${ detailTb.likeyStatus eq 'N' }">
-										<a class="button is-primary" onclick="travelLikeyInsert()">
+										<a class="button is-primary" onclick="travelLikeyInsert();">
 											<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
 								          	<span> &nbsp;좋아요 </span>
 					        			</a>
 									</c:when>
 									<c:when test="${ detailTb.likeyStatus eq 'Y' }">
-										<a class="button is-primary" onclick="travelLikeyDelete()">
+										<a class="button is-primary" onclick="travelLikeyDelete();">
 											<span class="icon" id="starIcon"><i class="fas fa-star"></i></span>
 								          	<span> &nbsp;좋아요 </span>
 						        		</a>
@@ -70,13 +69,13 @@
 							</c:when>
 							
 							<c:otherwise>
-								<a class="button is-primary" onclick="loginInfo()">
-									<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
+								<a class="button is-dark" onclick="loginInfo();">
+									<span class="icon"><i class="fas fa-shopping-cart"></i></span>
 						          	<span> &nbsp;일정구매 </span>
 				        		</a>
 				        		&nbsp;
-								<a class="button is-dark" onclick="loginInfo()">
-									<span class="icon"><i class="far fa-star"></i></span>
+								<a class="button is-dark" onclick="loginInfo();">
+									<span class="icon" id="starIcon"><i class="far fa-star"></i></span>
 						          	<span> &nbsp;좋아요 </span>
 				        		</a>
 							</c:otherwise>
@@ -84,12 +83,21 @@
 						
 						&nbsp;
 						
-						<a class="button is-primary" onclick="linkCopy()">
+						<a class="button is-primary" onclick="linkCopy();">
 							<span class="icon"><i class="fas fa-share-alt"></i></span>
 				          	<span> &nbsp;링크공유 </span>
 				        </a>
+				        
+				        <script>
+					        function loginInfo() {
+					    		alert("로그인이 필요한 서비스입니다.");
+					    	};
+					    	
+					    	function linkCopy() {
+					    	    alert("현재 주소 복사하기");
+					    	}
+				        </script>
 					</div>
-					
 				</div>
 			</section>
 			
@@ -152,8 +160,6 @@
 								<p>여행태그 없음</p>
 							</c:otherwise>
 						</c:choose>
-						
-   						
 					</li>
 				</ul>
 			</section>
@@ -167,24 +173,39 @@
 						<aside class="menu">
 							<p class="menu-label">일자별 상세글</p>
 							<ul class="menu-list">
-								<li><a class="is-active" href="#day1"><strong>DAY 1</strong></a></li>
-								<li><a><strong>DAY 2</strong></a></li>
-								<li><a><strong>DAY 3</strong></a></li>
-								<li><a><strong>DAY 4</strong></a></li>
-								<li><a><strong>DAY 5</strong></a></li>
-								<li><a><strong>DAY 6</strong></a></li>
+								<c:choose>
+									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
+										<c:forEach var="trvSchedule" items="detailDay.trvSchedule" varStatus="st">
+											<c:choose>
+												<c:when test="${ st == 1 }">
+													<li><a class="is-active" href="#day+'${ trvSchedule.dayNumber }'"><strong>DAY ${ trvSchedule.dayNumber }</strong></a></li>
+												</c:when>
+												<c:otherwise>
+													<li><a href="#day+'${ trvSchedule.dayNumber }'"><strong>DAY ${ trvSchedule.dayNumber }</strong></a></li>
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+									</c:when>
+									<c:otherwise>
+										<li>일자별 상세글 없음</li>
+									</c:otherwise>
+								</c:choose>
 							</ul>
 							<p class="menu-label">사진 갤러리</p>
 							<ul class="menu-list">
 								<li><a>전체보기</a></li>
 								<li><a>일자별 모아보기</a>
 									<ul>
-										<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"상세일정정보"'>DAY 1</a></li>
-										<li><a>DAY 2</a></li>
-										<li><a>DAY 3</a></li>
-										<li><a>DAY 4</a></li>
-										<li><a>DAY 5</a></li>
-										<li><a>DAY 6</a></li>
+										<c:choose>
+											<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
+												<c:forEach var="trvSchedule" items="detailDay.trvSchedule" varStatus="st">
+													<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ trvSchedule.dayNumber }"'>DAY ${ trvSchedule.dayNumber }</a></li>
+												</c:forEach>
+											</c:when>
+											<c:otherwise>
+												<li>일자별 사진 없음</li>
+											</c:otherwise>
+										</c:choose>
 									</ul>
 								</li>
 							</ul>
@@ -381,9 +402,6 @@
 		var trvId = ${ detailTb.trvId };
 		var memberId = ${ loginUser.memberId };
 		
-		console.log("trvId : " + trvId);
-		console.log("memberId : " + memberId);
-		
 		$.ajax({
 			url : "travelLikeyInsert.tb",
 			data : {trvId : trvId, memberId : memberId},
@@ -419,10 +437,6 @@
 		});
 	}
 	
-	function linkCopy() {
-	    alert("현재 주소 복사하기");
-	}
-	
 	$(".photo").click(function() {
 		
 		$.ajax({
@@ -437,10 +451,6 @@
 	$(".place").click(function() {
 		alert("여행지 정보로 연결");
 	});
-	
-	function loginInfo() {
-		alert("로그인이 필요한 서비스입니다.");
-	}
 	
 	function travelDelete() {
 		
@@ -480,14 +490,13 @@
 					location.href='toPayView.po';
 				}
 			}
-			
 		});
 		
 		$(".cancel").click(function(){
 			$('#travelDeleteModal').removeClass('is-active');
 	    });
 	}
-	
+
 </script>
 </body>
 </html>
