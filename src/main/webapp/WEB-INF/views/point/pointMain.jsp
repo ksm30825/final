@@ -11,7 +11,7 @@
 	#chargeTB *, #receiveTB *, #useTB *{
 		text-align:center;
 	}
-	.pageingBtn{
+	.pagingBtn{
 		width:30px;
 		height:22px;
 		background:white;
@@ -19,7 +19,7 @@
 		border:1px solid purple;
 		border-radius:5px;
 	}
-	.pageingBtn:hover{
+	.pagingBtn:hover{
 		background:purple;
 		color:white;
 	}
@@ -121,15 +121,14 @@
 								    </tbody>
 							  </table>
 					    	</div>
-					    	
-					    	<div align="center" class="chargePagingArea" id="chargePagingArea" style="margin-top:3%;">
-					    		<button class="pageingBtn"> << </button>
-					    		<button class="pageingBtn"> < </button>
-					    		<button class="pageingBtn"> 1 </button>
-					    		<button class="pageingBtn"> 2 </button>
-					    		<button class="pageingBtn"> > </button>
-					    		<button class="pageingBtn"> >> </button>
-					    	</div>
+				    		<div align="center" class="chargePagingArea" id="chargePagingArea" style="margin-top:3%;">
+					    		<button class="pagingBtn"> << </button>
+					    		<button class="pagingBtn"> < </button>
+					    		<button class="pagingBtn"> 1 </button>
+					    		<button class="pagingBtn"> 2 </button>
+					    		<button class="pagingBtn"> > </button>
+					    		<button class="pagingBtn"> >> </button>
+				    		</div>
 					    	<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				    	</div>
 				    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
@@ -197,12 +196,12 @@
 							  </table>
 							</div>
 							<div align="center" class="receivePagingArea" style="margin-top:3%;">
-					    		<button class="pageingBtn"> << </button>
-					    		<button class="pageingBtn"> < </button>
-					    		<button class="pageingBtn"> 1 </button>
-					    		<button class="pageingBtn"> 2 </button>
-					    		<button class="pageingBtn"> > </button>
-					    		<button class="pageingBtn"> >> </button>
+					    		<button class="pagingBtn"> << </button>
+					    		<button class="pagingBtn"> < </button>
+					    		<button class="pagingBtn"> 1 </button>
+					    		<button class="pagingBtn"> 2 </button>
+					    		<button class="pagingBtn"> > </button>
+					    		<button class="pagingBtn"> >> </button>
 				    		</div>
 				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				    	</div>
@@ -270,12 +269,12 @@
 							  </table>
 							</div>
 							<div align="center" class="receivePagingArea" style="margin-top:3%;">
-					    		<button class="pageingBtn"> << </button>
-					    		<button class="pageingBtn"> < </button>
-					    		<button class="pageingBtn"> 1 </button>
-					    		<button class="pageingBtn"> 2 </button>
-					    		<button class="pageingBtn"> > </button>
-					    		<button class="pageingBtn"> >> </button>
+					    		<button class="pagingBtn"> << </button>
+					    		<button class="pagingBtn"> < </button>
+					    		<button class="pagingBtn"> 1 </button>
+					    		<button class="pagingBtn"> 2 </button>
+					    		<button class="pagingBtn"> > </button>
+					    		<button class="pagingBtn"> >> </button>
 				    		</div>
 				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				    		<br>
@@ -357,7 +356,8 @@
 						data:{month:month},
 						success:function(data){
 							//console.log(data);
-							makeChargeTable(data);
+							makeChargeTable(data.hmap.chPayList, data.hmap.chPi);
+							chargePaging(data.hmap.chPi);
 						},
 						error:function(data){
 							console.log('error');
@@ -403,14 +403,14 @@
 			});
 		});
 		//포인트 충전 테이블
-		function makeChargeTable(data){
+		function makeChargeTable(chPayList, chPi){
 			//console.log(data);
 			$("#chargeTBody").empty();
-			var len = data.hmap.chPayList.length;
+			var len = chPayList.length;
 			for(var i=0 ; i<len ; i++){
-				var list = data.hmap.chPayList[i];
+				var list = chPayList[i];
 				//console.log(list);
-				var pi = data.hmap.chPi;
+				var pi = chPi;
 				//console.log(pi);
 				
 				var $listTr = $("<tr>");
@@ -435,6 +435,56 @@
 				
 				$("#chargeTBody").append($listTr);
 			}
+		};
+		//포인트 충전 테이블 페이징
+		function chargePaging(chPi){
+			var $page = $(".chargePagingArea");
+			
+			var pi = chPi;
+			var currentPage = pi.currentPage;
+			var limit = pi.limit;
+			var maxPage = pi.maxPage;
+			var startPage = pi.startPage;
+			var endPage = pi.endPage;
+			console.log(pi);
+			
+			var startRow = (currentPage - 1) * limit + 1;
+			var endRow = startRow + limit - 1;	
+			
+			$page.empty();
+			
+			$page.append($("<button>").attr("class", "pagingBtn").text("<<"));
+			
+			if(currentPage <= 1){
+				$page.append($("<button>").attr("class","pagingBtn").text("<").attr("disabled",true));
+			}else{
+				$page.append($("<button>").attr("class","pagingBtn").text("<").click(function(){
+					makeChargeTable(currentPage - 1);
+				}));
+			}
+			
+			for(var p = startPage ; p<=endPage ; p++){
+				if(p == currentPage){
+					$page.append($("<button>").attr("class","pagingBtn").text(p).attr("disabled",true));
+				}else{
+					$page.append($("<button>").attr("class","pagingBtn").text(p).click(function(){
+						makeChargeTable($(this).text());
+					}));
+				}
+			}
+			
+			if(currentPage >= maxPage){
+				$page.append($("<button>").attr("class","pagingBtn").text(">").attr("disabled",true));               
+			}else{
+				$page.append($("<button>").attr("class","pagingBtn").text(">").click(function(){
+					makeChargeTable(currentPage + 1);
+				}));
+			}
+			
+			$page.append($("<button>").attr("class","pagingBtn").text(">>").click(function(){
+				makeChargeTable(maxPage);
+			}));
+			
 		};
 		//포인트 지급 테이블 만들기
 		function makeReserveTable(data){
@@ -541,10 +591,10 @@
 		function makeUseTable(data){
 			$("#useTBody").empty();	
 			//console.log(data);
-			var len = data.hmap.usePayList.length;
+			var len = data.hmap.usPayList.length;
 			for(var i=0 ; i<len ; i++){
-				var list = data.hmap.usePayList[i];
-				var pi = data.hmap.usePi;
+				var list = data.hmap.usPayList[i];
+				var pi = data.hmap.usPi;
 				
 				var $listTr = $("<tr>");
 				

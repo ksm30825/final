@@ -46,6 +46,7 @@ public class PointController {
 		////System.out.println("chPi : " + chPi);
 		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
 		model.addAttribute("chPayList", chPayList);
+		model.addAttribute("chPi",chPi);
 		////System.out.println("chmodel : " + model);
 		
 //		for(int i=0 ; i<chPayList.size() ; i++) {
@@ -63,6 +64,7 @@ public class PointController {
 		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
 		model.addAttribute("rePayList", rePayList);
 		////System.out.println("rePi : " + rePi);
+		model.addAttribute("rePi",rePi);
 		
 		//포인트 사용에 관한 것들 조회
 		UsePoint use = new UsePoint();
@@ -74,6 +76,7 @@ public class PointController {
 		////System.out.println("usPi : " + usPi);
 		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
 		model.addAttribute("usPayList", usPayList);
+		model.addAttribute("usPi",usPi);
 		
 		return "point/pointMain";
 	}
@@ -273,14 +276,14 @@ public class PointController {
 		int useListCount = ps.getUseListCount(use); 
 		//System.out.println("월 검색 reserveListCount : "+useListCount);
 		int useCurrentPage = 1; 
-		PageInfo usePi = Pagination.getPageInfo(useCurrentPage, useListCount);
-		ArrayList usePayList = ps.selectUseList(usePi, use);
+		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
+		ArrayList usPayList = ps.selectUseList(usPi, use);
 		//System.out.println("rePayList : "+ usePayList);
 		
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
-		hmap.put("usePayList", usePayList);
-		hmap.put("usePi", usePi);
+		hmap.put("usPayList", usPayList);
+		hmap.put("usPi", usPi);
 		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
