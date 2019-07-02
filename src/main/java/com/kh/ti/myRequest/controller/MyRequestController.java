@@ -3,13 +3,17 @@ package com.kh.ti.myRequest.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.kh.ti.myRequest.model.service.MyRequestService;
+import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
@@ -78,6 +82,21 @@ public class MyRequestController {
 		System.out.println(result);
 
 		return "travelRequest/myRequestPlan";
+	}
+	
+	//설계 불러오기 - 이선우
+	@RequestMapping("loadRequestPlan.mr")
+	public ResponseEntity<ArrayList> selectLoadRequestPlan(
+			@RequestParam("memberId")int memberId) {
+	
+		System.out.println("회원번호 : " + memberId);
+		TravelRequestPlan trp = new TravelRequestPlan();
+		trp.setMemberId(memberId);
+		
+		//작성된 설계글 조회
+		ArrayList<TravelRequestPlan> planList = mrs.selectRequestPlanList(trp);
+		System.out.println(planList);
+		return new ResponseEntity<ArrayList>(planList, HttpStatus.OK);
 	}
 
 	// 나의 문의 내역 - 이선우

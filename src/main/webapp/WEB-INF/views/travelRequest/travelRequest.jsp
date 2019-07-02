@@ -162,8 +162,9 @@
 			});
 		}).click(function() {
 			var reqId = $(this).parents().children("td").eq(0).text();
+			var userName = $(this).parents().children("td").eq(2).text();
 			console.log(reqId);
-			location = "requestDetail.tr?reqId=" + reqId;
+			location = "requestDetail.tr?reqId=" + reqId + "&userName=" + userName;
 		});
 	});
 </script>

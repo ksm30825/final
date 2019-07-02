@@ -89,6 +89,9 @@ th, td {
 	line-height: 30px;
 	padding-left: 10px;
 }
+#loadTable {
+	width:100% !important;
+}
 </style>
 </head>
 <body>
@@ -198,7 +201,7 @@ th, td {
 												class="card-footer-item" data-target="#okModal"
 												onclick="endSave();">최종 저장</a> <a
 												class="card-footer-item"
-												onclick="$('#loadModal').toggleClass('is-active')">불러오기</a>
+												onclick="load();">불러오기</a>
 										</footer>
 									</div>
 								</div>
@@ -272,53 +275,17 @@ th, td {
 			</header>
 			<section class="modal-card-body">
 				<section class="section" id="table">
-					<table class="table">
+					<table class="table" id="loadTable" align="center">
 						<thead>
 							<tr>
 								<th></th>
 								<th>일정번호</th>
 								<th>제목</th>
-								<th>여행지</th>
-								<th>일정</th>
+								<th>여행 소개</th>
+								<th>작성일</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td><input type="checkbox"></td>
-								<td><b>1</b></td>
-								<td>여행제목</td>
-								<td>일본</td>
-								<td>2012/07/10 ~ 2012/07/20</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"></td>
-								<td><b>2</b></td>
-								<td>여행제목</td>
-								<td>일본</td>
-								<td>2012/07/10 ~ 2012/07/20</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"></td>
-								<td><b>3</b></td>
-								<td>여행제목</td>
-								<td>일본</td>
-								<td>2012/07/10 ~ 2012/07/20</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"></td>
-								<td><b>4</b></td>
-								<td>여행제목</td>
-								<td>일본</td>
-								<td>2012/07/10 ~ 2012/07/20</td>
-							</tr>
-							<!-- <tr class="is-selected"> -->
-							<tr>
-								<td><input type="checkbox"></td>
-								<td><b>5</b></td>
-								<td>여행제목</td>
-								<td>일본</td>
-								<td>2012/07/10 ~ 2012/07/20</td>
-							</tr>
 						</tbody>
 					</table>
 				</section>
@@ -372,18 +339,9 @@ th, td {
 			}
 			$(this).parent().append('<div class="field"><a class="button is-primary"> Day <p class="day">' + count +' </p> </a> &nbsp; <input type="hidden" value="Day' + count + '" name="pDay"><span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan"> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-3x"> <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z" class=""></path> </svg> </span><p class="control"><textarea class="textarea " placeholder="일정 작성" name="pDayMemo"></textarea></p></div>');
 		});
-		/* $(".open").click(function() {
-			alert("dd");
-			if($(this).is(":checked")) {
-				$(this).attr("value", "Y");
-				console.log($(this).val());
-			} else {
-				$(this).attr("value", "N");
-				console.log($(this).val());
-			}
-		}); */
 	});
 	
+	//최종 저장
 	function endSave(){
 		var choose = Math.floor(count/3);
 		console.log(choose);
@@ -405,6 +363,42 @@ th, td {
 			$("#chooseBody").append("</td>");
 			$('#okModal').toggleClass('is-active');
 		}
+	}
+	
+	//불러오기
+	function load() {
+		var memberId = ${ loginUser.memberId }
+		console.log(memberId);
+		$.ajax({
+			url:"loadRequestPlan.mr",
+			data:{memberId:memberId},
+			success:function(data) {
+				console.log(data);
+				$("#loadTable > tbody >tr").remove();
+				
+				for(var key in data) {
+					var $check = $("<td><input type='checkbox'></td>")
+					var $tr = $("<tr>");
+					var $planId = $("<td>").text(data[key].planId);
+					var $planTitle = $("<td>").text(data[key].planTitle);
+					var $planContent = $("<td>").text(data[key].planContent);
+					var $enrollDate = $("<td>").text(data[key].enrollDate);
+					
+					$tr.append($check);
+					$tr.append($planId);
+					$tr.append($planTitle);
+					$tr.append($planContent);
+					$tr.append($enrollDate);
+					
+					$("#loadTable").append($tr);
+				}
+					$('#loadModal').toggleClass('is-active');
+			},
+			error:function() {
+				alert("실패");
+			}
+		});
+		
 	}
 	function choose() {
 		console.log($(".open"));

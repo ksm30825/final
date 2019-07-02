@@ -50,4 +50,9 @@ public class MyRequestDaoImpl implements MyRequestDao{
 		return sqlSession.insert("TravelRequest.insertParticipation", p);
 	}
 
+	//설계글 불러오기 - 이선우
+	@Override
+	public ArrayList<TravelRequestPlan> selectRequestPlanList(SqlSessionTemplate sqlSession, TravelRequestPlan trp) {
+		return (ArrayList) sqlSession.selectList("TravelRequest.selectRequestPlanList", trp);
+	}
 }

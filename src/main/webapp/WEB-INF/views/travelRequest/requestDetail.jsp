@@ -76,7 +76,7 @@
 						<tr>
 							<td id="reqId"><b>${ tr.requestId }</b></td>
 							<td>${ tr.requestTitle }</td>
-							<td>${ tr.userName }</td>
+							<td>${ userName }</td>
 							<td><fmt:formatNumber value="${ tr.requestPrice }"
 									groupingUsed="true"></fmt:formatNumber>원</td>
 							<td><fmt:formatNumber value="${ tr.requestPrice }"
@@ -106,6 +106,7 @@
 				<h1 class="title">설계글</h1>
 				<hr>
 				<c:forEach var="plan" items="${ tr.planList }">
+				<c:if test="${ plan.planTitle != null}">
 					<div class="columns">
 						<div class="column">
 							<div class="card request">
@@ -120,7 +121,7 @@
 										<div class="media-left"></div>
 										<div class="media-content">
 											<p class="title is-4">제목 : ${ plan.planTitle }</p><br>
-											<p class="subtitle is-6">설계 번호 : ${ plan.userName }</p>
+											<p class="subtitle is-6">설계자 : ${ plan.userName }</p>
 											<p class="subtitle is-6">작성일 : ${ plan.enrollDate }</p>
 										</div>
 									</div>
@@ -132,9 +133,9 @@
 							</div>
 						</div>
 					</div>
+				</c:if>
 				</c:forEach>
 			</section>
-
 		</div>
 	</div>
 </body>

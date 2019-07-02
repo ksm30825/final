@@ -79,7 +79,8 @@ public class TravelRequestController {
 	
 	//의뢰글 상세보기 - 이선우
 	@RequestMapping("requestDetail.tr")
-	public String selectRequestDetail(@RequestParam("reqId")String reqId, Model model) {
+	public String selectRequestDetail(@RequestParam("reqId")String reqId, 
+									  @RequestParam("userName")String userName, Model model) {
 		int reqNum = Integer.parseInt(reqId);
 		System.out.println("의뢰글 번호 : " + reqNum);
 		
@@ -88,6 +89,7 @@ public class TravelRequestController {
 		
 		if(tr != null) {
 			model.addAttribute("tr", tr);
+			model.addAttribute("userName", userName);
 			return "travelRequest/requestDetail";
 		} else {
 			model.addAttribute("msg", "의뢰글 상세조회 오류");
