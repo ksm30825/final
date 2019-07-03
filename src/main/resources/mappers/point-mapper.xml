@@ -41,6 +41,16 @@
 		<result property="refundStatus" column="REFUND_STATUS"/>
 		<result property="pointId" column="POINT_ID"/>
 	</resultMap>
+	<resultMap type="Proceeds" id="proceedsResultSet">
+		<id property="proceedsId" column="PROCEEDS_ID"/>
+		
+		<result property="proceeds" column="PROCEEDS"/>
+		<result property="proceedsDate" column="PROCEEDS_DATE"/>
+		<result property="proceedsType" column="PROCEEDS_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+	</resultMap>
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
 		INSERT INTO PAYMENT
@@ -53,7 +63,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null and month != 0">
-				AND EXTRACT(MONTH FROM PAYMENT_DATE)=${month}
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=#{month}
 			</when>
 		</choose>
 	</select>
@@ -64,7 +74,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null and month != 0">
-				AND EXTRACT(MONTH FROM RESERVE_DATE)=${month}
+				AND EXTRACT(MONTH FROM RESERVE_DATE)=#{month}
 			</when>
 		</choose>
 	</select>
@@ -75,7 +85,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null and month != 0">
-				AND EXTRACT(MONTH FROM USE_DATE)=${month}
+				AND EXTRACT(MONTH FROM USE_DATE)=#{month}
 			</when>
 		</choose>
 	</select>
@@ -98,7 +108,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null and month != 0">
-				AND EXTRACT(MONTH FROM RESERVE_DATE)=${month}
+				AND EXTRACT(MONTH FROM RESERVE_DATE)=#{month}
 			</when>
 		</choose>
 		ORDER BY RESERVE_DATE DESC
@@ -110,7 +120,7 @@
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null and month != 0">
-				AND EXTRACT(MONTH FROM USE_DATE)=${month}
+				AND EXTRACT(MONTH FROM USE_DATE)=#{month}
 			</when>
 		</choose>
 		ORDER BY USE_DATE DESC
@@ -132,9 +142,79 @@
 			REFUND_SEQ.NEXTVAL, #{refundReason}, SYSDATE, NULL, #{refundStatus}, #{pointId}
 		)
 	</insert>
+	<!-- 해당 reviewId로 trvId 조회해오기 -->
 	<select id="selectOneTrv" resultType="_int">
 		SELECT TRV_ID
 		FROM TOUR_REVIEW
 		WHERE REVIEW_ID = #{reviewId}
 	</select>
+	<!-- Member 테이블의 userPoint조회해오기 -->
+	<select id="selectUserPoint" parameterType="_int" resultType="_int">
+		SELECT USER_POINT
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- Member 테이블의 userPoint조회해오기 -->
+	<select id="selectUserProceeds" parameterType="_int" resultType="_int">
+		SELECT USER_PROCEEDS
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- 포인트 사용 후 포인트 사용내역에 insert -->
+	<insert id="insertPointUse" parameterType="UsePoint">
+		INSERT INTO USE_POINT
+		VALUES(
+			USE_POINT_SEQ.NEXTVAL, #{usePoint}, SYSDATE, #{useType}, #{memberId}, 
+			<choose>
+				<when test="trvId != 0">#{trvId}, null</when>
+				<when test="requestId != 0">null, #{requestId}</when>
+			</choose>)
+	</insert>
+	<!-- 포인트 충전시 멤버 테이블의 누적포인트 증가 -->
+	<update id="updateUserPoint" parameterType="Payment">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT + #{payAmount}
+		WHERE MEMBER_ID = #{memberId}
+		<!-- <if test="payAmount != null">
+			UPDATE MEMBER
+			SET USER_POINT = USER_POINT + #{payAmount jdbcType=NUMERIC}
+			WHERE MEMBER_ID = #{memberId}
+		</if> -->
+		
+	</update>
+	<!-- 수익금 여행글에 따른 memberId 찾기 -->
+	<select id="selectReceiverTrvMemberId" resultType="_int">
+		SELECT MEMBER_ID
+		FROM TRAVEL
+		WHERE TRV_ID = #{trvId}
+	</select>
+	<!-- 수익금 의뢰글에 따른 memberId 찾기 -->
+	<select id="selectReceiverRequestMemberId" resultType="_int">
+		SELECT MEMBER_ID
+		FROM PARTICIPATION P
+		JOIN TRV_PLAN TP ON(TP.PLAN_ID=P.PLAN_ID)
+		WHERE PTCP_ID=#{ptcpId}
+	</select>
+	<!-- 성공시 수익금발생내역에 인서트 -->
+	<insert id="insertReceiverProceeds" parameterType="Proceeds">
+		INSERT INTO PROCEEDS
+		VALUES(
+			PROCEEDS_SEQ.NEXTVAL, #{proceeds}, SYSDATE, #{proceedsType}, #{memberId},
+			<choose>
+				<when test="trvId != 0">#{trvId}, null</when>
+				<when test="ptcpId != 0">null, #{ptcpId}</when>
+			</choose>)
+	</insert>
+	<!-- 성공시 member 테이블의 누적 포인트 차감(memberId) -->
+	<update id="updateUserDeductionPoint" parameterType="UsePoint">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT - #{usePoint}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 성공시 member 테이블의 누적 수익금 추가 -->
+	<update id="updateUserIncreaseProceeds" parameterType="Proceeds">
+		UPDATE MEMBER
+		SET USER_PROCEEDS = USER_PROCEEDS + #{proceeds}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
 </mapper>

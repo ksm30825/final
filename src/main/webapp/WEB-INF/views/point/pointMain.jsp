@@ -329,14 +329,45 @@
 								    </tbody>
 							  </table>
 							</div>
-							<div align="center" class="receivePagingArea" style="margin-top:3%;">
-					    		<button class="pagingBtn"> << </button>
-					    		<button class="pagingBtn"> < </button>
-					    		<button class="pagingBtn"> 1 </button>
-					    		<button class="pagingBtn"> 2 </button>
-					    		<button class="pagingBtn"> > </button>
-					    		<button class="pagingBtn"> >> </button>
-				    		</div>
+				    		<!-- paging -->
+							<div class="field" >
+								<nav class="pagination">
+							  	<ul class="pagination-list usePagingArea" style="justify-content: center;">
+									<!-- 이전 -->
+									<c:if test="${ usPi.currentPage <= 1 }"> 
+										<li><button class="pagingBtn" style="border-color: gray;"> < </button></li>
+									</c:if>
+									<c:if test="${ usPi.currentPage > 1 }">
+										<c:url var="usListBack" value="useMain.po">
+											<c:param name="currentPage" value="${ usPi.currentPage - 1 }"/>
+										</c:url>
+										<li><button class="pagingBtn" onclick="location.href='${ usListBack }'"> < </button></li>
+									</c:if><!-- end 이전 -->
+									<!-- page number -->
+									<c:forEach var="p" begin="${ usPi.startPage }" end="${ usPi.endPage }">
+										<c:if test="${ p eq usPi.currentPage }">
+											<li><button class="pagingBtn" style="border-color: gray;"> ${ p } </button></li>
+										</c:if>
+										<c:if test="${ p ne usPi.currentPage }">
+											<c:url var="usListCheck" value="useMain.po">
+												<c:param name="currentPage" value="${ p }"/>
+											</c:url>
+											<li><button class="pagingBtn" onclick="location.href='${ usListCheck }'"> ${ p } </button></li>
+										</c:if>
+									</c:forEach> <!-- end page number -->
+									<!-- 다음 -->
+									<c:if test="${ usPi.currentPage >= usPi.maxPage }">
+										<li><button class="pagingBtn" style="border-color: gray;"> > </button></li>
+									</c:if>
+									<c:if test="${ usPi.currentPage < usPi.maxPage }">
+										<c:url var="usListEnd" value="useMain.po">
+											<c:param name="currentPage" value="${ usPi.currentPage + 1 }"/>
+										</c:url>
+										<li><button class="pagingBtn" onclick="location.href='${ usListEnd }'"> > </button></li>
+									</c:if> <!-- end 다음 -->
+							  	</ul>
+							  </nav>
+							</div> <!-- end paging -->
 				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				    		<br>
 				    	</div>

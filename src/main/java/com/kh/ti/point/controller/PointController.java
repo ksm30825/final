@@ -22,15 +22,41 @@ import com.kh.ti.common.Pagination;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.service.PointService;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
-import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 @Controller
 public class PointController {
 	@Autowired
 	private PointService ps;	
+	
+	
+	
+	
+	//누적포인트, 누적수익금 조회
+	@ResponseBody
+	@RequestMapping("/selectAccumulate.po")
+	public ResponseEntity selectAccumulate(ModelAndView mv, HttpServletRequest request, int memberId) {
+		//회원의 누적 포인트, 수익금 조회
+		
+		//System.out.println("memberId : " + memberId);
+		int userPoint = ps.selectUserPoint(memberId);
+		//System.out.println("userPoint : " + userPoint);
+		int userProceeds = ps.selectUserProceeds(memberId);
+		//System.out.println("userProceeds : " + userProceeds);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("userPoint", userPoint);
+		hmap.put("userProceeds", userProceeds);
+		
+		mv.addObject("hmap", hmap);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
+	}
+	
+	
 	
 	//포인트 전체 페이지
 	@RequestMapping("/pointMainView.po")
@@ -203,16 +229,25 @@ public class PointController {
 		pay.setPayAmount(payAmount);
 		pay.setPaymentDate(paymentDate);
 		pay.setMemberId(memberId);
+		pay.setMonth("0");
 		
-		////System.out.println("넘기기전 pay : " + pay);
+		System.out.println("넘기기전 pay : " + pay);
 
 		//포인트충전
 		//->결제 테이블에 insert
 		int result = ps.insertPay(pay);
 		////System.out.println("result : " + result);
+		int updateUserPoint = 0;
+		if(result > 0) {
+			System.out.println("누적 전 : " + pay);
+			updateUserPoint = ps.updateUserPoint(pay);
+			System.out.println("누적 후  : " + pay);
+		} else {
+			return "common/errorPage";
+		}
 		
-		if(result>0) {
-			return "redirect:/pointMainView.po";
+		if(result>0 && updateUserPoint>0) {
+			return "redirect:/pointMainView.po?currentPage=1";
 		}else {
 			return "common/errorPage";
 		}
@@ -321,7 +356,7 @@ public class PointController {
 		
 		if(result>0) {
 			switch(reserveType) {
-			case 10 : return "redirect:/showMyTravel.trv?"; 
+			case 10 : return "redirect:/showMyTravel.trv"; 
 			case 20 : int trvId = ps.selectOneTrv(rp); return "redirect:/travelDetailForm.tb?trvId="+trvId; 
 			case 30 : return "redirect:/showMyTravel.trv?"; 
 			}
@@ -332,7 +367,25 @@ public class PointController {
 	
 	
 	
-
+	//포인트 사용 페이징
+	@RequestMapping("/useMain.po")
+	public String selectUseMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		////System.out.println(loginUser.getMemberId());
+		int memberId = loginUser.getMemberId();
+		
+		//포인트 충전에 관한 것들 조회
+		UsePoint use = new UsePoint();
+		use.setMemberId(memberId);
+		int useListCount = ps.getUseListCount(use);
+		int useCurrentPage = currentPage;
+		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
+		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
+		model.addAttribute("usPayList", usPayList);
+		model.addAttribute("usPi",usPi);
+		
+		return "point/pointMain";		
+	}
 	//포인트 사용 월 검색 내역 테이블--수민
 	@ResponseBody
 	@RequestMapping("/oneMonthUPoint.po")
@@ -400,20 +453,66 @@ public class PointController {
 	//포인트 사용하는 컨트롤러 -> 자동 차감
 	//10:일정구매, 20:설계의뢰
 	@RequestMapping("/usePoint.po")
-	public String insertPointUse(@RequestParam("memberId") int memberId, @RequestParam("code") int code, @RequestParam("useType") int useType, @RequestParam("uPoint") int uPoint) {
+	public String insertPointUse(@RequestParam("memberId") int memberId, 
+			@RequestParam("code") int code, 
+			@RequestParam("useType") int useType, 
+			@RequestParam("uPoint") int uPoint) {
 		//code : 작성글 코드 
 		//useType : 10:일정구매, 20:설계의뢰
 		//uPoint : 사용 포인트
 		
+		
 		//포인트 사용 내역에 insert
+		UsePoint userPoint = new UsePoint(); 
+		userPoint.setUsePoint(uPoint);
+		userPoint.setUseType(useType);
+		userPoint.setMemberId(memberId);//포인트 사용하는 사람 아이디
+		switch(useType) {
+		case 10 : userPoint.setTrvId(code); break;
+		case 20 : userPoint.setRequestId(code); break;
+		}
+		//System.out.println("userPoint : " + userPoint);
+		int userResult = ps.insertPointUse(userPoint); 
+		//System.out.println("userResult : "+userResult);
+		
 		//성공시 수익금발생내역에 인서트
-		//성공시 member 테이블의 누적 포인트 차감(memberId)
-		//성공시 member 테이블의 누적 수익금 추가(trvId, requestId 통해서 memberId 조회)
+		double receiveProceeds = uPoint * 0.8;
+		int proceeds=(int) Math.round(receiveProceeds);//수익금 발생금액 -> 원금*0.8
+		
+		//System.out.println("Math.round(receiveProceeds) " + Math.round(receiveProceeds));;
+		
+		int receiverMemberId;//수익금 받는 사람 아이디
+		
+		Proceeds receiverBoard = new Proceeds();
+		receiverBoard.setProceeds(proceeds);
+		receiverBoard.setProceedsType(useType);
+		switch(useType) {
+		//(trvId, requestId 통해서 memberId 조회)
+		case 10 : receiverBoard.setTrvId(code); 
+		receiverMemberId = ps.selectReceiverTrvMemberId(receiverBoard.getTrvId()); 
+		receiverBoard.setMemberId(receiverMemberId);break;
+		case 20 : receiverBoard.setPtcpId(code); //-------------------------------------선우 확인되면 해볼것
+		receiverMemberId = ps.selectReceiverRequestMemberId(receiverBoard.getPtcpId()); 
+		receiverBoard.setMemberId(receiverMemberId);break;
+		}
+		
+		int receiverResult = ps.insertReceiverProceeds(receiverBoard);
+		
+		//성공시 member 테이블의 누적 포인트 차감
+		int updateUserPoint = ps.updateUserDeductionPoint(userPoint);
+		
+		//성공시 member 테이블의 누적 수익금 추가
+		int updateUserProceeds = ps.updateUserIncreaseProceeds(receiverBoard);
 		
 		
-		
-		//선우 - myRequestList.mr
-		return "??";
+		if(userResult>0 && receiverResult>0 && updateUserPoint>0 && updateUserProceeds>0) {
+			switch(useType) {
+			//(trvId, requestId 통해서 memberId 조회)
+			case 10 : return "redirect:/travelDetailForm.tb?trvId="+userPoint.getTrvId(); 
+			case 20 : return "redirect:/myRequestList.mr";
+			}
+		}
+		return "common/errorPage";
 	}
 	
 	
