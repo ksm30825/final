@@ -106,5 +106,16 @@ public class MemberServiceImpl implements MemberService{
 		return md.selectConditionMember(sqlSession, map);
 	}
 
+	//이메일로 비밀번호 수정용 메소드 - 세령
+	@Override
+	public int updatePasswordFromFind(Member member) {
+		return md.updatePasswordFromFind(sqlSession, member);
+	}
+
+	//이메일로 회원 검색
+	@Override
+	public Member selectMemberEmail(String email) {
+		return md.selectMemberEmail(sqlSession, email);
+	}
 
 }

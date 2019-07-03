@@ -26,5 +26,9 @@ public interface MemberService {
 	ArrayList<Member> selectAllMember(PageInfo pi, String status);
 
 	ArrayList<Member> selectConditionMember(Map<String, String> map);
+
+	int updatePasswordFromFind(Member member);
+
+	Member selectMemberEmail(String email);
 	
 }

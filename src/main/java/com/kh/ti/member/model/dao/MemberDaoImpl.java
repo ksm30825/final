@@ -83,4 +83,17 @@ public class MemberDaoImpl implements MemberDao{
 		ArrayList<Member> mList = (ArrayList) sqlSession.selectList("Member.selectConditionList", map);
 		return mList;
 	}
+
+	//이메일로 회원정보 수정용 메소드 - 세령
+	@Override
+	public int updatePasswordFromFind(SqlSessionTemplate sqlSession, Member member) {
+		return sqlSession.update("Member.updatePasswordFromFind", member);
+	}
+
+	//이메일로 회원 조회용 메소드 - 세령
+	@Override
+	public Member selectMemberEmail(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.selectOne("Member.selectMemberEmail", email);
+	}
+
 }
