@@ -213,7 +213,7 @@
       console.log("trvId : " + trvId);
       console.log("dayNumber : " + dayNumber);
       
-      var lastDay = ${ detailDay.trvSchedule.size() };
+      var lastDay = ${ fn:length(detailDay.trvSchedule) };
       
       if(lastDay == dayNumber) {
          $('#right').css("color", "lightgray");

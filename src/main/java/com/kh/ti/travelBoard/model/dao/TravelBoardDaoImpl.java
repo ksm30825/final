@@ -79,6 +79,8 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		
 		//해당 일정 좋아요여부 확인
 		detailTb.setLikeyStatus(sqlSession.selectOne("TravelBoard.checkLikeyStatus", tb));
+		//해당 일정 리뷰작성여부 확인
+		detailTb.setWriteStatus(sqlSession.selectOne("TravelBoard.CheckWriteStatus", tb));
 		
 		System.out.println("detailTb : " + detailTb);
 		
@@ -146,6 +148,13 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		}
 		
 		return reviewId;
+	}
+	
+	//자신이 작성한 여행일정 리뷰 검색
+	@Override
+	public TourReview myTourReviewSearch(SqlSessionTemplate sqlSession, TourReview tr) {
+		
+		return sqlSession.selectOne("TravelBoard.myTourReviewSearch", tr);
 	}
 	
 

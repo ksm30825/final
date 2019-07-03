@@ -85,5 +85,12 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 		return tbd.insertReview(sqlSession, tr);
 	}
 
+	//자신이 작성한 여행일정 리뷰 검색
+	@Override
+	public TourReview myTourReviewSearch(TourReview tr) {
+		
+		return tbd.myTourReviewSearch(sqlSession, tr);
+	}
+
 
 }

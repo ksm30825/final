@@ -32,6 +32,8 @@
 </head>
 <body>
 	<jsp:include page="travelSearchBar.jsp" />
+	<input type="text" id="loginId" value="${ sessionScope.loginUser.memberId }" hidden="hidden">
+	<input type="text" id="userPoint" value="${ sessionScope.loginUser.userPoint }" hidden="hidden">
 	
 	<div class="coumns">
 		<div class="column">
@@ -87,16 +89,6 @@
 							<span class="icon"><i class="fas fa-share-alt"></i></span>
 				          	<span> &nbsp;링크공유 </span>
 				        </a>
-				        
-				        <script>
-					        function loginInfo() {
-					    		alert("로그인이 필요한 서비스입니다.");
-					    	};
-					    	
-					    	function linkCopy() {
-					    	    alert("현재 주소 복사하기");
-					    	}
-				        </script>
 					</div>
 				</div>
 			</section>
@@ -382,6 +374,13 @@
 	</section>
 
 <script>
+	function loginInfo() {
+		alert("로그인이 필요한 서비스입니다.");
+	};
+	
+	function linkCopy() {
+	    alert("현재 주소 복사하기");
+	}
 	function penalty() {
 		var answer = confirm("이 글을 신고하시겠습니까?");
 		
@@ -400,7 +399,7 @@
 	
 	function travelLikeyInsert() {
 		var trvId = ${ detailTb.trvId };
-		var memberId = ${ loginUser.memberId };
+		var memberId = $("#loginId").val();
 		
 		$.ajax({
 			url : "travelLikeyInsert.tb",
@@ -419,7 +418,7 @@
 	
 	function travelLikeyDelete() {
 		var trvId = ${ detailTb.trvId };
-		var memberId = ${ loginUser.memberId };
+		var memberId = $("#loginId").val();
 		
 		$.ajax({
 			url : "travelLikeyDelete.tb",
@@ -472,9 +471,9 @@
 		
 		$("#travelBuy").click(function() {
 			
-			var memberId = ${ loginUser.memberId };
+			var memberId = $("#loginId").val();
 			var code = ${ detailTb.trvId };
-			var userPoint = ${ loginUser.userPoint };
+			var userPoint = $("#userPoint").val();
 			var payment = ${ (endDay - startDay + 1) * 100 };
 			
 			if((userPoint - payment) > 0) {
