@@ -138,6 +138,7 @@ public class MemberServiceTest {
 		log.info(mList.get(0).toString());
 	}
 	
+	@Ignore
 	@Test
 	public void testTempPasswordMake() {
 		String[] chars = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "M", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
@@ -152,5 +153,19 @@ public class MemberServiceTest {
 		} //end for
 		
 		log.info("임시비밀번호 생성 완료! - " + tempPassword + ", " + chars.length);
+	}
+	
+	@Ignore
+	@Test
+	public void testUpdatePasswordFromFind() {
+		ms.updatePasswordFromFind(m);
+		log.info("이메일로 비밀번호 수정 성공!");
+	}
+	
+	@Test
+	public void testSelectMemberEmail() {
+		Member member = ms.selectMemberEmail(m.getEmail());
+		log.info("이메일로 회원 조회 성공!");
+		log.info(member.toString());
 	}
 }

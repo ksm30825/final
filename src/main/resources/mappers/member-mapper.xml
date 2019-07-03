@@ -128,4 +128,17 @@
 			</when>
 		</choose>
 	</select>
+	
+	<!-- 이메일로 비밀번호 수정용 세령 -->
+	<update id="updatePasswordFromFind" parameterType="Member">
+		UPDATE MEMBER
+		SET PASSWORD = #{ password }
+		WHERE EMAIL = #{ email }
+	</update>
+	
+	<!-- 이메일로 회원 조회용 세ㅕㄹㅇ -->
+	<select id="selectMemberEmail" parameterType="String" resultMap="memberResultSet">
+		SELECT * FROM MEMBER
+		WHERE EMAIL = #{ email }
+	</select>
 </mapper>

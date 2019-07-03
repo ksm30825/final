@@ -32,4 +32,9 @@ public interface MemberDao {
 
 	ArrayList<Member> selectConditionMember(SqlSessionTemplate sqlSession, Map<String, String> map);
 
+	int updatePasswordFromFind(SqlSessionTemplate sqlSession, Member member);
+
+	Member selectMemberEmail(SqlSessionTemplate sqlSession, String email);
+
+
 }

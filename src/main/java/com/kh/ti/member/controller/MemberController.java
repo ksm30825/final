@@ -1,5 +1,6 @@
 package com.kh.ti.member.controller;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,12 +16,14 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -222,68 +225,103 @@ public class MemberController {
 	
 	//이메일발송용 메소드 -- 세령
 	@RequestMapping("mailSend.me")
-	public String mailSend(HttpServletRequest request,
+	public void mailSend(HttpServletResponse response, @RequestParam("email") String email,
 						ModelMap mo) throws AddressException, MessagingException, UnsupportedEncodingException {
-		String host = "smtp.naver.com";
-		final String username = "tpfud0922";
-		final String password = "mashimaro0*22";
-		int port = 465;
-		
-		String recipient = "tpfud092256@gmail.com";
-		String subject = "Travel Interface 에서 발송한 메일입니다.";
-		String body = "";
-		String targetPath = "http://127.0.0.1:8001/ti/loginForm.me";
-		
-		//임시 비밀번호 생성
-		String[] chars = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "M", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "n", "m", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
-				"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-		String tempPassword = "1234";
-		
-		body += "<form action='" + targetPath + "' method='post'>";
-		body += "<div style='border: 1px solid gray; background-color: #e6eeff; padding: 20px;'>";
-		body += "<h1><strong>Travel Interface</strong> 에서 발송된 메일입니다. </h1>";
-		body += "<hr style='border: 1px solid #003399;'>";
-		body += "<div>";
-		body += "<h4> 안녕하세요. Travel Interface 고객님! <br> 요청하신 임시 비밀번호는 다음과 같습니다.</h4>";
-		body += "<br>";
-		body += "<h4><strong>임시 비밀번호 : </strong>" + tempPassword + "</h4>";
-		body += "<button type='submit' target='_blank' style='background-color: #8a00e6; padding: 10px; border: 0px;"
-				+ "color: white; cursor: pointer;'>비밀번호 바로 재설정 </button>";
-		body += "<br>";
-		body += "<p style='color: red;'>임시 비밀번호를 사용해서 로그인 하신 후 바로 비밀번호를 변경하셔야 정삭적으로 로그인이 가능합니다.</p><br>";
-		body += "<p><strong>감사합니다.</strong></p>";
-		body += "</div>";
-		body += "</form>";
-		
-		Properties props = System.getProperties();
-		
-		props.put("mail.smtp.host", host); 
-		props.put("mail.smtp.port", port); 
-		props.put("mail.smtp.auth", "true"); 
-		props.put("mail.smtp.ssl.enable", "true"); 
-		props.put("mail.smtp.ssl.trust", host);
-		
-		
-		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() { 
-			String un = username; 
-			String pw = password; 
-			protected javax.mail.PasswordAuthentication getPasswordAuthentication() { 
-				return new javax.mail.PasswordAuthentication(un, pw); 
-			} 
-		}); 
-		session.setDebug(true); //for debug 
-		Message mimeMessage = new MimeMessage(session); //MimeMessage 생성
-		mimeMessage.setFrom(new InternetAddress("tpfud0922@naver.com")); //발신자 셋팅 , 보내는 사람의 이메일주소를 한번 더 입력합니다. 이때는 이메일 풀 주소를 다 작성해주세요.
-		
-		mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient)); //수신자셋팅 //.TO 외에 .CC(참조) .BCC(숨은참조) 도 있음
-		
-		mimeMessage.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B")); //제목셋팅 
-		mimeMessage.setText(body); //내용셋팅 
-		mimeMessage.setContent(body, "text/html; charset=UTF-8");
-		Transport.send(mimeMessage); //javax.mail.Transport.send() 이용
+		Member member = ms.selectMemberEmail(email);
+		int resultNum = 0;
+		if(member != null) {
 			
-		return null;
+			String host = "smtp.naver.com";
+			final String username = "tpfud0922";
+			final String password = "mashimaro0*22";
+			int port = 465;
+			
+			String recipient = email;
+			String subject = "Travel Interface 비밀번호 찾기";
+			String body = "";
+			String targetPath = "http://127.0.0.1:8001/ti/updatePwdFromFindPwd.me";
+			
+			body += "<form action='" + targetPath + "' method='post'>";
+			body += "<div style='border: 1px solid gray; background-color: #e6eeff; padding: 20px;'>";
+			body += "<h1><strong>Travel Interface</strong> 에서 발송된 메일입니다. </h1>";
+			body += "<hr style='border: 1px solid #003399;'>";
+			body += "<div>";
+			body += "<h4> 안녕하세요. Travel Interface 고객님! <br> 비밀번호 재설정을 위한 버튼을 클릭해 주세요. </h4>";
+			body += "<br>";
+			/* body += "<h4><strong>임시 비밀번호 : </strong>" + tempPassword + "</h4>"; */
+			body += "<input type='text' style='display: none;' value='" + email + "' name='email'>";
+			body += "<button type='submit' target='_blank' style='background-color: #8a00e6; padding: 10px; border: 0px;"
+					+ "color: white; cursor: pointer;'>비밀번호 재설정 </button>";
+			body += "<br>";
+			body += "<p><strong>감사합니다.</strong></p>";
+			body += "</div>";
+			body += "</form>";
+			
+			Properties props = System.getProperties();
+			
+			props.put("mail.smtp.host", host); 
+			props.put("mail.smtp.port", port); 
+			props.put("mail.smtp.auth", "true"); 
+			props.put("mail.smtp.ssl.enable", "true"); 
+			props.put("mail.smtp.ssl.trust", host);
+			
+			
+			Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() { 
+				String un = username; 
+				String pw = password; 
+				protected javax.mail.PasswordAuthentication getPasswordAuthentication() { 
+					return new javax.mail.PasswordAuthentication(un, pw); 
+				} 
+			}); 
+			session.setDebug(true); //for debug 
+			Message mimeMessage = new MimeMessage(session); //MimeMessage 생성
+			mimeMessage.setFrom(new InternetAddress("tpfud0922@naver.com", "Travel Interface")); //발신자 셋팅 , 보내는 사람의 이메일주소를 한번 더 입력합니다. 이때는 이메일 풀 주소를 다 작성해주세요.
+			
+			mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient)); //수신자셋팅 //.TO 외에 .CC(참조) .BCC(숨은참조) 도 있음
+			
+			mimeMessage.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B")); //제목셋팅 
+			mimeMessage.setText(body); //내용셋팅 
+			mimeMessage.setContent(body, "text/html; charset=UTF-8");
+			Transport.send(mimeMessage); //javax.mail.Transport.send() 이용
+			resultNum = 1;
+		} else {
+			resultNum = 0;
+		} //end if
+		
+		try {
+			response.getWriter().print(resultNum);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} //end try
+	}
+	
+	//비밀번호 수정화면 전환용 메소드(비밀번호 찾기로 발송된 이메일로부터 forword) - 세령
+	@RequestMapping("updatePwdFromFindPwd.me")
+	public String updatePasswordFromFindPassword(Model model, @RequestParam("email") String email) {
+		model.addAttribute("email", email);
+		return "member/updatePasswordFromFind";
+	}
+	
+	//이메일로 비밀번호 수정
+	@RequestMapping("changePasswordFromFind.me")
+	public String changePasswordFromFindPassword(@RequestParam("email") String email,
+												 @RequestParam("newPassword") String password,
+												 Model model, SessionStatus status) {
+		//비밀번호 암호화
+		String encPassword = passwordEncoder.encode(password);
+		Member member = new Member();
+		member.setEmail(email);
+		member.setPassword(encPassword);
+		
+		int result = ms.updatePasswordFromFind(member);
+		if(result > 0) {
+			status.setComplete();
+			return "redirect:index.jsp";			
+		} else {
+			return "common/errorPage";
+		}
+		
 	}
 	
 } //end class
