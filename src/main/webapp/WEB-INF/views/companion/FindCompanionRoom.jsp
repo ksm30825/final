@@ -15,6 +15,7 @@
 </head>
 <body>
 	 <jsp:include page = "../companion/CompanionMenu.jsp"/>
+	 <input type = "hidden" value = "${loginUser.userName}" id = "UserName">
 		
 	<div id = "container">	
 		<div id="menu1" style = "padding-left: 5%;padding-right: 5%;height : 700px; overflow-y: auto;"><br></div>
@@ -310,6 +311,7 @@
 	 	 	 		 
 	 	 	 	}); 
 	 		 	
+	        	var username = $("#UserName").val();
 	 		 	//채팅방 들어가기 하는 함수
 	        	$("#enterBtn").click(function(){
 	        		var chatnum =  $("#checkTable").children().children().children().children("#checkRoomNum").val();
@@ -322,7 +324,7 @@
 		 			console.log("Status :" + Status);
 		 			
 		 			socket.emit('EnterChattingRoom', {
-		 				user : user , chatnum :  $("#checkTable").children().children().children().children("#checkRoomNum").val() , status : Status
+		 				user : user , chatnum :  $("#checkTable").children().children().children().children("#checkRoomNum").val() , status : Status , username : username
 		 			});
 		 			
 		 			 socket.on('EnterChattingRoom' , function(data){
