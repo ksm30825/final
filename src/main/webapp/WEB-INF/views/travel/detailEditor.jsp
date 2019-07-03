@@ -116,6 +116,7 @@
 										<i class="fas fa-2x fa-bookmark"></i>
 									</p>
 									<div class="card-header-title" style="display:block">
+										<input type="hidden" value="${ sch.schId }" name="schId">
 										<p><strong>${ sch.schTitle }</strong></p>
 										<p class="help">
 											<c:if test="${ !empty sch.trvCost }">
@@ -139,11 +140,11 @@
 										</small> 
 									</div>
 									<a class="card-header-icon">
-										<span class="icon detailEditBtn" 
+										<!-- <span class="icon detailEditBtn" 
 										style="color:#8e44ad; margin-right:10px; width:100px">
 											작성하기
 											<i class="fas fa-2x fa-pencil-alt"></i>
-										</span>
+										</span> -->
 										<span class="icon detailShowBtn"><i class="fa fa-angle-down"></i></span>
 									</a>
 								</header>
@@ -151,9 +152,9 @@
 									<div class="content editor"></div>
 								</div>
 								<footer class="card-footer" style="display:none">
-									<a class="card-footer-item" style="background:mediumpurple;color:white">Save</a> 
-									<a class="card-footer-item" style="background:skyblue;color:white">Edit</a>
-									<a class="card-footer-item" style="background:lightgray;color:white">Delete</a>
+									<a class="card-footer-item saveBtn" style="background:mediumpurple;color:white">Save</a> 
+									<a class="card-footer-item editBtn" style="background:skyblue;color:white">Edit</a>
+									<a class="card-footer-item removeBtn" style="background:lightgray;color:white">Delete</a>
 								</footer>
 							</div>
 						</section>
@@ -242,6 +243,8 @@
 
 				[ 'clean' ] // remove formatting button
 			];
+			
+			var contents;
 
 			$(".editor").each(function() {
 				var container = $(this).get(0);
@@ -253,19 +256,113 @@
 					theme : 'snow' // or 'bubble'
 				});
 				quills.push(quill);
-				
-				$(this).parent().prev().find(".detailEditBtn").click(function() {
-					quill.enable(true);
-					$(this).parent().parent().next().find(".ql-toolbar").show();
-					$(this).parent().parent().next().toggle();
-					$(this).parent().parent().next().next().toggle();
+				quill.getModule('toolbar').addHandler('image', function() {
+					console.log("handler작동");
+					var input = document.createElement('input');
+					input.setAttribute('type', 'file');
+					input.setAttribute('name', 'photo');
+					input.click();
+					
+					input.onchange = function() {
+						var fd = new FormData();
+						console.log($(this));
+						var file = $(this)[0].files[0];
+						console.log(file);
+						fd.append('image', file);
+						console.log(fd);
+						$.ajax({
+							url:"insertSchFile.trv",
+							type:"post",
+							enctype:"multipart/form-data",
+							data:fd,
+							processData:false,
+							contentType:false,
+							/* beforeSend:function(xhr) {
+								xhr.setRequestHeader($("#_csrf_header").val(), $("#_csrf").val());
+							}, */
+							success:function(data) {
+								alert("success");
+								var range = quill.getSelection();
+								quill.insertEmbed(range.index, 'image', 'http://localhost:8001/resources/uploadFiles/' + data);
+							},
+							error:function(err) {
+								alert("err", err);
+							}
+						});
+					}
+					
+					
 				});
+				var schId = $(this).parent().prev().find("input[name=schId]").val();
+				/* quill.on('text-change', function() {
+					
+					contents = quill.getContents();
+					$.ajax({
+						url:"updateSchContent.trv",
+						type:"post",
+						data:{schId:schId, schContent:JSON.stringify(contents)},
+						success:function() {
+							alert("success!");
+						},
+						error:function() {
+							alert("updateSchContent 서버전송 실패");
+						}
+					});
+					
+					;
+				}); */
+				
 				
 				$(this).parent().prev().find(".detailShowBtn").click(function() {
 					quill.enable(false);
-					$(this).parent().parent().next().find(".ql-toolbar").hide();
-					$(this).parent().parent().next().toggle();
-					$(this).parent().parent().next().next().toggle();
+					//quill.setContents(contents);
+					var toolbar = $(this).parent().parent().next().find(".ql-toolbar");
+					toolbar.hide();
+					var content = $(this).parent().parent().next();
+					content.toggle();
+					var footer = $(this).parent().parent().next().next();
+					footer.toggle();
+					
+					footer.find(".editBtn").click(function() {
+						quill.enable(true);
+						toolbar.show();
+						
+						
+					});
+					
+					footer.find(".saveBtn").click(function() {
+						var contents = quill.getContents();
+						console.log(contents);
+						
+						if(contents.ops.indexOf("image"))
+						
+						
+						var schContent = JSON.stringify(contents);
+						console.log(schContent);
+						//var text = quill.getText();
+						//console.log(text);
+						
+						$.ajax({
+							url:"updateSchContent.trv",
+							type:"post",
+							data:{schId:schId, schContent:schContent},
+							success:function(data) {
+								var delta = JSON.parse(data.sch.schContent);
+								quill.setContents(delta);
+								quill.enable(false);
+								toolbar.hide();
+							},
+							error:function() {
+								alert("updateSchContent 서버전송 실패");
+							}
+						});
+						
+					});
+					
+					footer.find(".removeBtn").click(function() {
+						
+					});
+					
 				});
 				
 			});

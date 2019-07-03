@@ -563,8 +563,19 @@ public class TravelServiceImpl implements TravelService {
 	}	
 	
 	
+//------content-----------------------------------------------------------------
 	
 	
+	@Override
+	public int updateSchContent(TrvSchedule sch) {
+		return td.updateSchContent(sqlSession, sch);
+	}
+
+	@Override
+	public TrvSchedule selectTrvSchedule(int schId) {
+		return td.selectTrvSchedule(sqlSession, schId);
+	}
+
 	
 	
 	
@@ -640,6 +651,8 @@ public class TravelServiceImpl implements TravelService {
 		int result = td.deleteSchFile(sqlSession, file);
 		return 0;
 	}
+
+
 
 
 

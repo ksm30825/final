@@ -62,6 +62,14 @@ public interface TravelService {
 	
 	
 	
+
+	TrvSchedule selectTrvSchedule(int schId);
+	
+	int updateSchContent(TrvSchedule sch);
+
+	
+	
+	
 	
 	
 	
@@ -90,6 +98,7 @@ public interface TravelService {
 	int updateTrvCost(TrvCost cost);
 
 	int deleteTrvCost(TrvCost cost);
+
 
 
 

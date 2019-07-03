@@ -100,6 +100,11 @@ public interface TravelDao {
 	
 	
 	
+
+	int updateSchContent(SqlSessionTemplate sqlSession, TrvSchedule sch);
+
+	
+	
 	
 	
 	

@@ -413,7 +413,7 @@
 			
 		};
 		var markers = [];
-		
+		var bounds;
 		function initMap() {
 			
 			var sydney = new google.maps.LatLng(-33.867, 151.195);
@@ -437,18 +437,24 @@
 			});
 			
 			
-			var places = [];
+			
+			bounds = new google.maps.LatLngBounds();
+			/* var places = [];
 			$("#day1").find("input[name=plcId]").each(function() {
 				places.push($(this).val());
 			});
-			showRoute(places);
-			
-			
+			if(places.length != 0) {
+				showRoute(places);
+			} */
+			/* google.maps.event.addListenerOnce(map, 'idle', function() {
+			    map.fitBounds(bounds, 0);
+			}); */
 			
 			map.addListener('bounds_changed', function() {
 				searchBox.setBounds(map.getBounds());
 			});
-	
+			
+			
 			
 			
 			searchBox.addListener('places_changed', function() {
@@ -492,9 +498,14 @@
 	
 		}
 		
+		
+		
 		var dayPath;
 		function showRoute(places) {
 			
+			if(places.length == 0) {
+				return;
+			}
 			map.setZoom(13);
 			//clear out the old markers
 			markers.forEach(function(m) {
@@ -505,7 +516,7 @@
 			}
 			markers = [];
 			coords = [];
-			var bounds = new google.maps.LatLngBounds();
+			//bounds = new google.maps.LatLngBounds();
 			//bounds = map.getBounds();
 			var coords = new google.maps.MVCArray();
 			
@@ -560,11 +571,11 @@
 				
 			});
 			
-			map.fitBounds(bounds);
+			map.fitBounds(bounds, 0);
 			//console.log(markers);
 			//map.setCenter(markers[0].position);
 			
-			console.log(coords);
+			
 			dayPath = new google.maps.Polyline({
 			    path:coords,
 			    geodesic: true,
@@ -575,6 +586,7 @@
 			
 			dayPath.setMap(map);
 			
+	
 			
 		}
 	
@@ -647,7 +659,9 @@
 			markers.forEach(function(marker) {
 				marker.setMap(null);
 			});
-			dayPath.setMap(null);
+			if(dayPath != undefined) {
+				dayPath.setMap(null);
+			}
 			markers = [];
 			var request = {
 					location: map.getCenter(),

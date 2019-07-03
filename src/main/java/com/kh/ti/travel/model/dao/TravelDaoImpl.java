@@ -206,6 +206,14 @@ public class TravelDaoImpl implements TravelDao {
 	
 	
 	
+
+	@Override
+	public int updateSchContent(SqlSessionTemplate sqlSession, TrvSchedule sch) {
+		return sqlSession.update("Travel.updateSchContent", sch);
+	}
+
+
+	
 	
 	
 	
@@ -257,7 +265,6 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 
 
