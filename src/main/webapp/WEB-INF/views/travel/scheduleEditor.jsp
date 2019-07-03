@@ -551,6 +551,7 @@
 								data:{dayId:changeDayId},
 								success:function(data) {
 									ul.children().each(function(index) {
+										
 										var schList = data.updList;
 										var startTime = schList[index].startTime;
 										var endTime = schList[index].endTime;
@@ -738,6 +739,7 @@
 					location.href="deleteSch.trv?schId=" + schId + "&trvId=${ trv.trvId }";
 				}
 			});
+			
 			
 			
 			//좋아요/추천일정 되돌리기
