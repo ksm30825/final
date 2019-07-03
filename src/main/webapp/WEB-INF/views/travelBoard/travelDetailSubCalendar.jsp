@@ -77,7 +77,7 @@
                         <ul>
                            <li>
                               <c:choose>
-                                 <c:when test="${ detailDay.dayNumber eq 1}">
+                                 <c:when test="${ detailDay.dayNumber eq 1 || fn:length(detailDay.trvSchedule) <= 0 }">
                                     <a>
                                        <span id="left" class="icon" style="color: lightgray; cursor: default;"><i class="fa fa-angle-left"></i></span>
                                     </a>
@@ -94,7 +94,7 @@
                            </li>
                            <li>
                               <c:choose>
-                                 <c:when test="${ detailDay.dayNumber eq fn:length(detailDay.trvSchedule) }">
+                                 <c:when test="${ detailDay.dayNumber eq fn:length(detailDay.trvSchedule) || fn:length(detailDay.trvSchedule) <= 0 }">
                                     <a>
                                        <span id="right" class="icon" style="color: lightgray; cursor: default;"><i class="fa fa-angle-right"></i></span>
                                     </a>
@@ -213,9 +213,7 @@
       console.log("trvId : " + trvId);
       console.log("dayNumber : " + dayNumber);
       
-      var lastDay = ${ detailDay.trvSchedule.size()};
-      
-      console.log("lastDay : " + lastDay);
+      var lastDay = ${ detailDay.trvSchedule.size() };
       
       if(lastDay == dayNumber) {
          $('#right').css("color", "lightgray");

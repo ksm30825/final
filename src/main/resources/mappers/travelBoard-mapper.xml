@@ -128,12 +128,13 @@
 	<!-- 여행일정 페이징용 -->
 	<select id="getListCount" resultType="_int">
 		SELECT COUNT(*)
-		FROM TRAVEL
+		FROM TRAVEL T
+		JOIN MEMBER M ON (T.MEMBER_ID = M.MEMBER_ID)
 		WHERE STATUS = 'Y'
 		AND TRV_REF IS NULL
 		<choose>
-			<when test="trvTitle != null"> AND TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
-			<when test="userName != null"> AND USER_NAME LIKE '%' || #{ userName } || '%' </when>
+			<when test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
+			<when test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </when>
 		</choose>
 	</select>
 	
@@ -177,8 +178,8 @@
 	    WHERE T.STATUS = 'Y'
 	    AND T.TRV_REF IS NULL
 	    <choose>
-			<when test="trvTitle != null"> AND TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
-			<when test="userName != null"> AND USER_NAME LIKE '%' || #{ userName } || '%' </when>
+			<when test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
+			<when test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </when>
 		</choose>
         
         <choose>
