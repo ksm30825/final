@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,6 +115,7 @@ th, td {
 					<div class="column">
 						<br>
 						<c:forEach var="day" items="${ trp }" varStatus="number">
+						<c:set var="placeList" value="${ day.getDayList().get(0).getPlaceList() }"/>
 							<div class="field">
 							<a class="button is-primary">Day${ number.count }</a> &nbsp;
 							<input type="hidden" value="Day1" name="pDay">
@@ -140,7 +142,6 @@ th, td {
 							<br><br>
 							<p class="control">
 								<textarea class="textarea " placeholder="일정 작성" name="pDayMemo">${ day.getDayList().get(0).getpDayMemo() }</textarea>
-								${ day.getDayList().get(0).getPlaceList() }
 							</p>
 						</div>
 						</c:forEach>
@@ -439,6 +440,7 @@ th, td {
 		}
 		console.log(planId);
 		location = "loadRequetPlan.mr?reqId=" + reqId + "&planId=" + planId;
+		console.log(placeList);
 	}
 	
 	//불러오기 취소
@@ -447,9 +449,35 @@ th, td {
 	}
 	
 	//구글 맵
-    var ploy;
-    var map;
-    var markers = new Array();
+    var ploy;	//폴리라인
+    var map;	//맵
+    var markers = new Array();	//마커들
+    var pTitle = new Array();	//일정 장소명들
+    var pAddress = new Array();	//각 장소명의 주소
+    var pLat = new Array();		//각 장소의 위도
+    var pLng = new Array();		//각 장소의 경도
+    
+    <c:forEach var="latList" items="${ trp }" varStatus="st">
+    if("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }" != "") {
+    	if(!${ st.last }) {
+    		 pTitle.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }");
+    		    pAddress.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceAddress() }#");
+    		    pLat.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLat() }");
+    		    pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
+    	} else {
+    		pTitle.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }");
+    	    pAddress.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceAddress() }");
+    	    pLat.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLat() }");
+    	    pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
+    	}
+    }
+    </c:forEach>
+    console.log("일정들 장소 명 : " + pTitle.length);
+    console.log("각 장소 주소 : " + pAddress);
+    console.log("각 장소 위도 : " + pLat);
+    console.log("각 장소 경도 : " + pLng);
+    console.log(pLat[0]);
+    console.log(pLng[0]);
       
     /* lat: -33.8688, lng: 151.2195 */
 	function initMap() {
@@ -458,12 +486,19 @@ th, td {
 		zoom: 13,
     	center: myLatlng
 		} */
+		
+		var first = new google.maps.LatLng(pLat[0], pLng[0]);
     	map = new google.maps.Map(document.getElementById('map'), {
     	  	zoom: 13,
-    	  	center : {lat : -33.93979965825738, lng : 151.1751365661621},
+    	  	center : first
     	});
+    	
+    	marker = new google.maps.Marker({
+    	    position: first,
+    	    map: map
+    	});
+    	
     	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
-     	 	
     	//폴리라인 객체
     	poly = new google.maps.Polyline({
     	  	strokeColor: "#FF0000",
@@ -493,7 +528,7 @@ th, td {
 	        console.log("경도 : " + marker.position.lng());
 	        console.log("마커 순서 : " + marker.title);
 	        console.log("마커 갯수 : " + markers.length);
-	        $("#lat").append(marker.position.lng() + "#");
+	        $("#lat").append(marker.position.lat() + "#");
 	        $("#lng").append(marker.position.lng() + "#");
 
 	        
