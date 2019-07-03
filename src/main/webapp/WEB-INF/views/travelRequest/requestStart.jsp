@@ -492,7 +492,7 @@ th, td {
 	        console.log("경도 : " + marker.position.lng());
 	        console.log("마커 순서 : " + marker.title);
 	        console.log("마커 갯수 : " + markers.length);
-	        $("#lat").append(marker.position.lng() + "#");
+	        $("#lat").append(marker.position.lat() + "#");
 	        $("#lng").append(marker.position.lng() + "#");
 
 	        
