@@ -305,4 +305,14 @@
 		AND MEMBER_ID = #{ memberId }
 		AND REVIEW_STATUS = 'Y'
 	</select>
+	
+	<!-- 자신이 작성한 여행일정 리뷰 조회 -->
+	<select id="myTourReviewSearch" resultMap="tourReviewResultSet">
+	    SELECT *
+	    FROM TOUR_REVIEW TR
+	    JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
+	    WHERE REVIEW_STATUS = 'Y'
+	    AND TR.TRV_ID = #{ trvId }
+	    AND M.MEMBER_ID = #{ memberId }
+	</select>
 </mapper>

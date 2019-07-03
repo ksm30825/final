@@ -174,6 +174,19 @@ public class TravelBoardController {
 		return new ResponseEntity(trList, HttpStatus.OK);
 	}
 	
+	//자신이 작성한 여행일정 리뷰 검색
+	@RequestMapping("myTourReviewSearch.tb")
+	public ResponseEntity myTourReviewSearch(int trvId, int memberId) {
+		
+		TourReview tr = new TourReview();
+		tr.setTrvId(trvId);
+		tr.setMemberId(memberId);
+		
+		TourReview myReview = tbs.myTourReviewSearch(tr);
+		
+		return new ResponseEntity(myReview, HttpStatus.OK);
+	}
+	
 	//여행일정 삭제 - 예랑
 	@RequestMapping("travelDelete.tb")
 	public String travelDelete(Model model, int trvId) {
@@ -251,11 +264,13 @@ public class TravelBoardController {
 	
 	//여행일정 상세 / 리뷰 작성 - 예랑
 	@RequestMapping("insertReview.tb")
-	public ResponseEntity insertReview(int trvId, int memberId) {
+	public ResponseEntity insertReview(int trvId, int memberId, int grade, String reviewContent) {
 		
 		TourReview tr = new TourReview();
 		tr.setTrvId(trvId);
 		tr.setMemberId(memberId);
+		tr.setGrade(grade);
+		tr.setReviewContent(reviewContent);
 		
 		int reviewId = tbs.insertReview(tr);
 		
