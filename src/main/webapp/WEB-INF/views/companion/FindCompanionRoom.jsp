@@ -318,18 +318,19 @@
 	        		var Status = $("#checkTable").children().children().children().children("#checkstatus").val();
 		 			
 		 			console.log(chatnum + "?");
-		 			
-		 			//	location.href = "${contextPath}/enterChatting.ch?num=" + chatnum;
-		 			
+				 			
 		 			console.log("Status :" + Status);
 		 			
 		 			socket.emit('EnterChattingRoom', {
 		 				user : user , chatnum :  $("#checkTable").children().children().children().children("#checkRoomNum").val() , status : Status , username : username
 		 			});
 		 			
-		 			 socket.on('EnterChattingRoom' , function(data){
-		 				 console.log(data);
+		 			
+		 			//채팅방 들어가는 메소드
+		 			socket.on('EnterChattingRoom' , function(data){
+		 				console.log(data);
 		 				 
+		 			 	 
 		 				location.href = "${contextPath}/enterChatting.ch?num=" + data;
 		 			 });
 		 			
