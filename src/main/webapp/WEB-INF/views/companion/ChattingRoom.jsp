@@ -44,6 +44,7 @@
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
 	<input type = "hidden" value = "${chatId}" id = "ReChatID">
+	<input type = "hidden" value = "${loginUser.userName}" id = "UserName">
 
 	
 	<div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;width:80%;" id="rightMenu">
@@ -62,26 +63,7 @@
 	  <div style = "height : 7%; width : 100%; background : #a8c9ff">
 	  	 <label style = "margin: 20px;">대화상대</label>
 	  </div>
-	  <div id = "MemberInfoDiv" style = "height : 50%; width : 100%; overflow-y : auto;">
-	  		<!-- <table id = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">
-				<tr>
-					<td colspan = "2">
-					<input type = "hidden" value = "wldnjs7781" name = "userId" id = "userId">
-					<input type = "hidden" value = "지원" name = "username" id = "username">
-					<label>문지원(wldnjs7781)</label></td>					
-				</tr>
-				<tr>
-					<td>
-						<i id = "goodicon" class="material-icons">thumb_up_alt</i>
-						<p id = "good">10</p>
-					</td>
-					<td>
-						<i id = "badicon" class="material-icons">thumb_down_alt</i>
-						<p id = "bad">5</p>
-					</td>
-				</tr>	  		
-	  		</table> -->
-	  </div>
+	  <div id = "MemberInfoDiv" style = "height : 50%; width : 100%; overflow-y : auto;"></div>
 	  <div style = "height : 5%;">
 	  	<ul class="list-inline" style = "border-top:1px solid lightgray;">
    			 <li> 
@@ -154,17 +136,18 @@
 				console.log(status);
 			});
 			
-			var user = ${ loginUser.memberId };
+			var userId = ${ loginUser.memberId };
+			var userName = $("#UserName").val();
 			var chatId = $("#ReChatID").val();
     	 	
-    		console.log("user :"+user);
+    		console.log("userId :"+userId);
     		console.log("chatId :" + chatId);
     		  		
     	   //서버
 		   var socket = io("http://localhost:8010");
     	  	
 		   //채팅Manager 값 가져오기
-	       socket.emit('preChatManager' , {chatId : chatId});
+	       socket.emit('preChatManager' , {chatId : chatId , div : "처음"});
 	          
 	       socket.on('preChatManager', function(data){
 	        	   console.log(data);
@@ -199,9 +182,18 @@
 	        	       }
 	        	   });
 	        	   
-	        	   if (user == data.user){
+	        	   if (userId == data.user){
+	        		   var enterDate = data.enter_date
+	        		   
+	        		   console.log("들어온 날짜 :"+enterDate);
+	        		   
+	        		   if (data.div == "처음"){
+	        			   //채팅방  대화 가져오기 위해서 소켓 실행
+		    	           socket.emit('preChat', {userId : userId ,  chatId : chatId , enter_date : enterDate});
+	        		   }
 	        		 
 	        	   }
+	        	
 	        	
 	          });
     	  	
@@ -221,7 +213,7 @@
 	                console.log("message :" + $("#message").val());
 	                
 	                socket.emit('message', {
-	                	user :user, message : $("#message").val() , chatId : chatId
+	                	userId :userId , userName : userName , message : $("#message").val() , chatId : chatId
 	                });
 	                //#msg에 벨류값을 비워준다.
 	                $("#message").val("");
@@ -229,15 +221,6 @@
 	           
 	           //메세지 보낸 후
 	           socket.on('message' , function(data){
-	        	   var userName = "";
-	        	   $.ajax({
-  	        		   url : "${contextPath}/memberInfo.ch",
-  	        		   data : {userId : data.user},
-  	        		   success : function(userInfo) {
-  	        			 userName =  userInfo.userName;
-  	        		 }
-                	});
-	        	   
 	                var output = '';
 	                
 	                console.log(data);
@@ -246,15 +229,14 @@
 	                
 	                if (mchatId == chatId){
 	                	
-	                	 if (data.user == user){
+	                	if (data.userId == userId){
 	 		                output += '<div class="alert alert-info" id = "msg" style = "background : #f1ccfc; border-color: #f1ccfc;"><strong>';                	
 	 	                }else {
 	 	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
 	 	                }
-	                	 
 	                	
 	                	
-	 	              	output += userName;
+	 	              	output += data.userName;
 	 	                
 	 	                output += '</strong> ';
 	 	                output += data.message;
@@ -270,21 +252,19 @@
 		         
 	        
 	           
-	           //채팅방  대화 가져오기 위해서 소켓 실행
-	           socket.emit('preChat', { chatId : chatId});
+	        
 	            
 	           socket.on('preChat' , function(data){
 	                var output = '';
 	                
-	                if (data.user == user){
+	                if (data.userId == userId ){
 		                output += '<div class="alert alert-info" id = "msg" style = "background : #f1ccfc; border-color: #f1ccfc;"><strong>';                	
 	                }else {
 	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
 	                }
 	                
-	                
-	                
-	                //output += data.user;
+	               
+	                output += data.userName;
 	                
 	                output += '</strong> ';
 		            output += data.message;
@@ -365,10 +345,16 @@
 	        	  
 	          });
 	          
-	          //새로운 회원이 채팅방에 들어왔을 ㄸ
-	          socket.on('newUser' , function(){
+	          //새로운 회원이 채팅방에 들어왔을 때
+	          socket.on('newUser' , function(data){
+	        	  
+	        	  console.log("newUser :" + data);
+	        	  
+	        	  var newUser = data;
+	        	  
 	        	  socket.emit('preChatInfo' , {chatId : chatId});
 	        	  
+	        	 
 	        	  socket.on('preChatInfo' , function(data){
 	 	        	 // console.log(data);
 	 	        	  
@@ -385,10 +371,28 @@
 	 	        	  
 	 	          });
 	        	  
-	        	
-	        	
-	 			//채팅Manager 값 가져오기
-		        socket.emit('preChatManager' , {chatId : chatId});
+	        
+	 			  //채팅Manager 값 가져오기
+		       	  socket.emit('preChatManager' , {chatId : chatId , div : "처음아님"});
+	 				
+	 				
+	 			  
+		       	 	if (mchatId == chatId){
+	                	
+	                	if (data.userId == userId){
+	 		                output += '<div class="alert alert-info" id = "msg" style = "background : #f1ccfc; border-color: #f1ccfc;"><strong>';                	
+	 	                }else {
+	 	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
+	 	                }
+	                	
+	             
+	 	                output += data;
+	 	                output += '</div>';
+	 	                $(output).appendTo('#chat_box');
+	 	                
+	 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+	                }
+	 				
 	 	        	 
 	          });
 	          
