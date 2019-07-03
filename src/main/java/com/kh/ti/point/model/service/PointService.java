@@ -3,7 +3,9 @@ package com.kh.ti.point.model.service;
 import java.util.ArrayList;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -28,6 +30,25 @@ public interface PointService {
 	int insertReservePoint(ReservePoint rp);
 	//포인트 환불신청하기-> 환불 내역에 인서트
 	int insertRefund(Refund refund);
+	//해당 reviewId로 trvId 조회해오기
 	int selectOneTrv(ReservePoint rp);
+	//Member 테이블의 userPoint조회해오기
+	int selectUserPoint(int memberId);
+	//Member 테이블의 userProceeds조회해오기
+	int selectUserProceeds(int memberId);
+	//포인트 사용 후 포인트 사용내역에 insert
+	int insertPointUse(UsePoint userPoint);
+	//포인트 충전시 멤버 테이블의 누적포인트 증가
+	int updateUserPoint(Payment pay);
+	//수익금 여행글에 따른 memberId 찾기
+	int selectReceiverTrvMemberId(int trvId);
+	//수익금 의뢰글에 따른 memberId 찾기
+	int selectReceiverRequestMemberId(int ptcpId);
+	//성공시 수익금발생내역에 인서트
+	int insertReceiverProceeds(Proceeds receiverBoard);
+	//성공시 member 테이블의 누적 포인트 차감(memberId)
+	int updateUserDeductionPoint(UsePoint userPoint);
+	//성공시 member 테이블의 누적 수익금 추가
+	int updateUserIncreaseProceeds(Proceeds receiverBoard);
 
 }

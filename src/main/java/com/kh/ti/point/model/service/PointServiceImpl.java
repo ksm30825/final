@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.dao.PointDao;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -66,10 +68,56 @@ public class PointServiceImpl implements PointService{
 	public int insertRefund(Refund refund) {
 		return pd.insertRefund(sqlSession, refund);
 	}
+	//해당 reviewId로 trvId 조회해오기
 	@Override
 	public int selectOneTrv(ReservePoint rp) {
 		// TODO Auto-generated method stub
 		return pd.selectOneTrv(sqlSession, rp);
+	}
+	//Member 테이블의 userPoint조회해오기
+	@Override
+	public int selectUserPoint(int memberId) {
+		return pd.selectUserPoint(sqlSession, memberId);
+	}
+	//Member 테이블의 userPoint조회해오기
+	@Override
+	public int selectUserProceeds(int memberId) {
+		return pd.selectUserProceeds(sqlSession, memberId);
+	}
+	//포인트 사용 후 포인트 사용내역에 insert
+	@Override
+	public int insertPointUse(UsePoint userPoint) {
+		return pd.insertPointUse(sqlSession, userPoint);
+	}
+	//포인트 충전시 멤버 테이블의 누적포인트 증가
+	@Override
+	public int updateUserPoint(Payment pay) {
+		return pd.updateUserPoint(sqlSession, pay);
+	}
+	//수익금 여행글에 따른 memberId 찾기
+	@Override
+	public int selectReceiverTrvMemberId(int trvId) {
+		return pd.selectReceiverTrvMemberId(sqlSession, trvId);
+	}
+	//수익금 의뢰글에 따른 memberId 찾기
+	@Override
+	public int selectReceiverRequestMemberId(int ptcpId) {
+		return pd.selectReceiverRequestMemberId(sqlSession, ptcpId);
+	}
+	//성공시 수익금발생내역에 인서트
+	@Override
+	public int insertReceiverProceeds(Proceeds receiverBoard) {
+		return pd.insertReceiverProceeds(sqlSession, receiverBoard);
+	}
+	//성공시 member 테이블의 누적 포인트 차감(memberId)
+	@Override
+	public int updateUserDeductionPoint(UsePoint userPoint) {
+		return pd.updateUserDeductionPoint(sqlSession, userPoint);
+	}
+	//성공시 member 테이블의 누적 수익금 추가
+	@Override
+	public int updateUserIncreaseProceeds(Proceeds receiverBoard) {
+		return pd.updateUserIncreaseProceeds(sqlSession, receiverBoard);
 	}
 
 	

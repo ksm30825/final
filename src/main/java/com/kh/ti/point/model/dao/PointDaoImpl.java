@@ -7,7 +7,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.vo.Payment;
+import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -19,6 +21,7 @@ public class PointDaoImpl implements PointDao{
 	@Override
 	public int insertPay(SqlSessionTemplate sqlSession, Payment pay) {
 		//System.out.println("넘어온 후 pay : " + pay);
+		System.out.println("payAmount : " + pay.getPayAmount());
 		return sqlSession.insert("Payment.insertPay", pay);
 	}
 	//포인트 충전 리스트 전체 카운터
@@ -92,9 +95,56 @@ public class PointDaoImpl implements PointDao{
 	public int insertRefund(SqlSessionTemplate sqlSession, Refund refund) {
 		return sqlSession.insert("Payment.insertRefund", refund);
 	}
+	//해당 reviewId로 trvId 조회해오기
 	@Override
 	public int selectOneTrv(SqlSessionTemplate sqlSession, ReservePoint rp) {
 		return sqlSession.selectOne("Payment.selectOneTrv", rp);
+	}
+	//Member 테이블의 userPoint조회해오기
+	@Override
+	public int selectUserPoint(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.selectUserPoint", memberId);
+	}
+	//Member 테이블의 userPoint조회해오기
+	@Override
+	public int selectUserProceeds(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.selectUserProceeds", memberId);
+	}
+	//포인트 사용 후 포인트 사용내역에 insert
+	@Override
+	public int insertPointUse(SqlSessionTemplate sqlSession, UsePoint userPoint) {
+		return sqlSession.insert("Payment.insertPointUse", userPoint);
+	}
+	//포인트 충전시 멤버 테이블의 누적포인트 증가
+	@Override
+	public int updateUserPoint(SqlSessionTemplate sqlSession, Payment pay) {
+		System.out.println("update PayAmount : " + pay.getPayAmount());
+		return sqlSession.update("Payment.updateUserPoint",pay);
+	}
+	//수익금 여행글에 따른 memberId 찾기
+	@Override
+	public int selectReceiverTrvMemberId(SqlSessionTemplate sqlSession, int trvId) {
+		return sqlSession.selectOne("Payment.selectReceiverTrvMemberId", trvId);
+	}
+	//수익금 의뢰글에 따른 memberId 찾기
+	@Override
+	public int selectReceiverRequestMemberId(SqlSessionTemplate sqlSession, int ptcpId) {
+		return sqlSession.selectOne("Pqyment.selectReceiverRequestMemberId", ptcpId);
+	}
+	//성공시 수익금발생내역에 인서트
+	@Override
+	public int insertReceiverProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
+		return sqlSession.insert("Payment.insertReceiverProceeds", receiverBoard);
+	}
+	//성공시 member 테이블의 누적 포인트 차감(memberId)
+	@Override
+	public int updateUserDeductionPoint(SqlSessionTemplate sqlSession, UsePoint userPoint) {
+		return sqlSession.update("Payment.updateUserDeductionPoint", userPoint);
+	}
+	//성공시 member 테이블의 누적 수익금 추가
+	@Override
+	public int updateUserIncreaseProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
+		return sqlSession.update("Payment.updateUserIncreaseProceeds", receiverBoard);
 	}
 	
 	

@@ -62,19 +62,19 @@
 			    			</div>
 				  			<div class="select" style="display:inline-block;float:right;margin-bottom:4px;">
 					            <select name="rebateSelect">
-					              <option>--월--</option>
-					              <option>1</option>
-					              <option>2</option>
-					              <option>3</option>
-					              <option>4</option>
-					              <option>5</option>
-					              <option>6</option>
-					              <option>7</option>
-					              <option>8</option>
-					              <option>9</option>
-					              <option>10</option>
-					              <option>11</option>
-					              <option>12</option>
+									<option value="defaultOption">--월--</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
 					            </select>
 					        </div>
 					        <div id="rebateTB">
@@ -87,8 +87,7 @@
 							        <th> 환급지급상태 </th>
 							      </tr>
 							    </thead>
-							    <tbody id="ps">
-							    
+							    <tbody id="rebateTBody">
 							      <tr>
 							        <td> 1 </td>
 							        <td> 19.06.03 </td>
@@ -138,19 +137,19 @@
 			    			</div>
 				 			<div class="select" style="display:inline-block;float:right;">
 					            <select name="rebateSelect">
-					              <option>--월--</option>
-					              <option>1</option>
-					              <option>2</option>
-					              <option>3</option>
-					              <option>4</option>
-					              <option>5</option>
-					              <option>6</option>
-					              <option>7</option>
-					              <option>8</option>
-					              <option>9</option>
-					              <option>10</option>
-					              <option>11</option>
-					              <option>12</option>
+					            	<option value="defaultOption">--월--</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
 					            </select>
 					        </div>
 					        <div style="float:right;">
@@ -167,7 +166,7 @@
 							        <th> 달성 게시글 </th>
 							      </tr>
 							    </thead>
-							    <tbody id="pb">
+							    <tbody id="proceedsTBody">
 							      <tr>
 							        <td> 1 </td>
 							        <td> 19.06.03 </td>

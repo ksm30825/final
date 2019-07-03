@@ -12,8 +12,22 @@ public class Proceeds implements Serializable {
 	private int memberId;		//회원코드
 	private int trvId;			//여행일정번호
 	private int ptcpId;			//참여번호
+	private String month;		//검색월
 	
 	public Proceeds() {}
+
+	public Proceeds(int proceedsId, int proceeds, Date proceedsDate, int proceedsType, int memberId, int trvId,
+			int ptcpId, String month) {
+		super();
+		this.proceedsId = proceedsId;
+		this.proceeds = proceeds;
+		this.proceedsDate = proceedsDate;
+		this.proceedsType = proceedsType;
+		this.memberId = memberId;
+		this.trvId = trvId;
+		this.ptcpId = ptcpId;
+		this.month = month;
+	}
 
 	public int getProceedsId() {
 		return proceedsId;
@@ -41,6 +55,10 @@ public class Proceeds implements Serializable {
 
 	public int getPtcpId() {
 		return ptcpId;
+	}
+
+	public String getMonth() {
+		return month;
 	}
 
 	public void setProceedsId(int proceedsId) {
@@ -71,10 +89,15 @@ public class Proceeds implements Serializable {
 		this.ptcpId = ptcpId;
 	}
 
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
 	@Override
 	public String toString() {
 		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", proceedsDate=" + proceedsDate
 				+ ", proceedsType=" + proceedsType + ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId="
-				+ ptcpId + "]";
+				+ ptcpId + ", month=" + month + "]";
 	}
+
 }
