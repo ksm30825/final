@@ -190,7 +190,7 @@
 	</div>
 	
 	<script>
-	
+		var quills = [];
 		$(function() {
 			$("#day1Header").show();
 			$("#day1Area").show();
@@ -253,12 +253,29 @@
 					theme : 'snow' // or 'bubble'
 				});
 				quills.push(quill);
+				
+				$(this).parent().prev().find(".detailEditBtn").click(function() {
+					quill.enable(true);
+					$(this).parent().parent().next().find(".ql-toolbar").show();
+					$(this).parent().parent().next().toggle();
+					$(this).parent().parent().next().next().toggle();
+				});
+				
+				$(this).parent().prev().find(".detailShowBtn").click(function() {
+					quill.enable(false);
+					$(this).parent().parent().next().find(".ql-toolbar").hide();
+					$(this).parent().parent().next().toggle();
+					$(this).parent().parent().next().next().toggle();
+				});
+				
 			});
+			
+			
 			
 			
 		});
 
-		var quills = [];
+		
 		
 		
 		
@@ -266,10 +283,20 @@
 			$(this).removeClass('is-outlined');
 			$(this).parent().siblings().children().addClass('is-outlined')
 		});
-		$(".detailShowBtn, .detailEditBtn").click(function() {
+		
+		
+		
+/* 
+		$(".detailShowBtn").click(function() {
 			$(this).parent().parent().next().toggle();
+			$(this).parent().parent().next().children()
 			$(this).parent().parent().next().next().toggle();
 		});
+		
+		$(".detailEditBtn").click(function() {
+			$(this).parent().parent().next().toggle();
+			$(this).parent().parent().next().next().toggle();
+		}); */
 	</script>
 </body>
 </html>

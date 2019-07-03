@@ -413,7 +413,7 @@
 			
 		};
 		var markers = [];
-		var coords = [];
+		
 		function initMap() {
 			
 			var sydney = new google.maps.LatLng(-33.867, 151.195);
@@ -460,6 +460,7 @@
 				markers.forEach(function(m) {
 					m.setMap(null);
 				});
+				dayPath.setMap(null);
 				markers = [];
 				//for each place, get the icon, name, and location
 				var bounds = new google.maps.LatLngBounds();
@@ -491,21 +492,26 @@
 	
 		}
 		
+		var dayPath;
 		function showRoute(places) {
 			
-			
+			map.setZoom(13);
 			//clear out the old markers
 			markers.forEach(function(m) {
 				m.setMap(null);
 			});
+			if(dayPath != undefined) {
+				dayPath.setMap(null);
+			}
 			markers = [];
 			coords = [];
 			var bounds = new google.maps.LatLngBounds();
-
+			//bounds = map.getBounds();
+			var coords = new google.maps.MVCArray();
 			
-			places.forEach(function(place, index) {
+			places.forEach(function(p, index) {
 				var request = {
-					placeId:place,
+					placeId:p,
 					fiels:['geometry', 'name']
 				}
 					
@@ -535,10 +541,15 @@
 						markers.push(m);
 						coords.push(place.geometry.location);
 						
-						if(place.geometry.viewport) {
+						
+						/* if(place.geometry.viewport) {
 							bounds.union(place.geometry.viewport);
-						}else {
-							bounds.extend(place.geometry.location);
+						}else { */
+							bounds.extend(m.position);
+						//}
+						
+						if(index == 0) {
+							map.setCenter(m.position);
 						}
 						
 						m.addListener('click', function() {
@@ -550,10 +561,11 @@
 			});
 			
 			map.fitBounds(bounds);
-			
+			//console.log(markers);
+			//map.setCenter(markers[0].position);
 			
 			console.log(coords);
-			var dayPath = new google.maps.Polyline({
+			dayPath = new google.maps.Polyline({
 			    path:coords,
 			    geodesic: true,
 			    strokeColor: '#FB0303',
@@ -635,6 +647,7 @@
 			markers.forEach(function(marker) {
 				marker.setMap(null);
 			});
+			dayPath.setMap(null);
 			markers = [];
 			var request = {
 					location: map.getCenter(),
