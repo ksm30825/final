@@ -22,5 +22,7 @@ public interface MyRequestDao {
 	int insertParticipation(SqlSessionTemplate sqlSession, Participation p);
 
 	ArrayList<TravelRequestPlan> selectRequestPlanList(SqlSessionTemplate sqlSession, TravelRequestPlan trp);
+
+	ArrayList<TravelRequestPlan> selectLoadRequestPlan(SqlSessionTemplate sqlSession, int planId);
 	
 }

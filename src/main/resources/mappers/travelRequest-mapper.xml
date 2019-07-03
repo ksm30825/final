@@ -24,6 +24,42 @@
 		<result property="enrollDate" column="ENROLL_DATE"/>
 	</resultMap>
 	
+	<!-- 선택된 설계글 조회 (불러오기1단계(설계글))-->
+	<resultMap type="TravelRequestPlan" id="loadPlanResultSet">
+		<id property="planId" column="PLAN_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="planContent" column="PLAN_CONTENT"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="roomCharge" column="ROOM_CHARGE"/>
+		<result property="trafficCharge" column="TRAFFIC_CHARGE"/>
+		<result property="etcCharge" column="ETC_CHARGE"/>
+		<collection property="dayList" javaType="java.util.ArrayList"
+					resultMap="dayListResultSet"/>
+	</resultMap>
+	
+	<!-- 선택된 설계글 조회(불러오기2단계(각 일정)) -->
+	<resultMap type="PlanDay" id="dayListResultSet">
+		<id property="PdayId" column="PLAN_ID"/>
+		<result property="pDay" column="PDAY"/>
+		<result property="pDayMemo" column="PDAY_MEMO"/>
+		<result property="openStatus" column="OPEN_STATUS"/>
+		<result property="planId" column="PLAN_ID"/>
+		<collection property="placeList" javaType="java.util.ArrayList"
+					resultMap="placeListResultSet"/>
+	</resultMap>
+	
+	<!-- 선택된 설계글 조회(불러오기3단계(각 장소)) -->
+	<resultMap type="PlanPlace" id="placeListResultSet">
+		<id property="PplaceId" column="PPLACE_ID"/>
+		<result property="PplaceTitle" column="PPLACE_TITLE"/>
+		<result property="PplaceAddress" column="PPLACE_ADDRESS"/>
+		<result property="PplaceLat" column="PPLACE_LAT"/>
+		<result property="PplaceLng" column="PPLACE_LNG"/>
+		<result property="PdayId" column="PDAY_ID"/>
+	</resultMap>
+	
 	<!-- 의뢰글 상세 보기 -->
 	<resultMap type="TravelRequest" id="requestDetailResultSet">
 		<id property="requestId" column="REQUEST_ID"/>
@@ -114,5 +150,19 @@
 		SELECT *
 		FROM TRV_PLAN
 		WHERE MEMBER_ID = #{memberId}
+	</select>
+	
+	<!-- 선택한 설계글 불러오기 -->
+	<select id="selectLoadRequestPlan" parameterType="_int" resultMap="loadPlanResultSet">
+		SELECT TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ROOM_CHARGE,
+        TP.TRAFFIC_CHARGE, TP.ETC_CHARGE,
+        PD.PDAY_ID, PD.PDAY, PD.PDAY_MEMO,
+        PP.PPLACE_ID, PP.PPLACE_TITLE, PP.PPLACE_ADDRESS,
+        PP.PPLACE_LAT, PP.PPLACE_LNG
+		FROM TRV_PLAN TP
+		JOIN PLAN_DAY PD ON(TP.PLAN_ID = PD.PLAN_ID)
+		LEFT JOIN PLAN_PLACE PP ON(PD.PDAY_ID = PP.PDAY_ID)
+		WHERE TP.PLAN_ID = #{planId}
+		ORDER BY PD.PDAY_ID
 	</select>
 </mapper>

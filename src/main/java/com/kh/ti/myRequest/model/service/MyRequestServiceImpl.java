@@ -52,4 +52,10 @@ public class MyRequestServiceImpl implements MyRequestService{
 	public ArrayList<TravelRequestPlan> selectRequestPlanList(TravelRequestPlan trp) {
 		return mrd.selectRequestPlanList(sqlSession, trp);
 	}
+
+	//선택한 설계글 불러오기 - 이선우
+	@Override
+	public ArrayList<TravelRequestPlan> selectLoadRequestPlan(int planId) {
+		return mrd.selectLoadRequestPlan(sqlSession, planId);
+	}
 }
