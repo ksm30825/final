@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ti.member.model.vo.Member;
@@ -249,13 +251,10 @@ public class TravelController {
 	@RequestMapping("selectSch.trv")
 	public ModelAndView selectSchedule(int schId, ModelAndView mv) {
 		
+		
 		return mv;
 	}
-	
-	
-	
-	
-	
+
 	
 	
 	//여행테마추가-민지
@@ -280,9 +279,42 @@ public class TravelController {
 	public ModelAndView updateDayMemo(TrvDay trvDay, ModelAndView mv) {
 		
 		int result = ts.updateDayMemo(trvDay);
+		
 		mv.setViewName("jsonView");
 		return mv;
 	}
+	
+	
+	
+	
+	
+	
+	
+	//상세글 작성-민지
+	@RequestMapping("updateSchContent.trv")
+	public ModelAndView updateSchContent(TrvSchedule sch, ModelAndView mv) {
+		System.out.println(sch);
+		int result = ts.updateSchContent(sch);
+		TrvSchedule schedule = ts.selectTrvSchedule(sch.getSchId());
+		mv.addObject("sch", schedule);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	//사진업로드-민지
+	@RequestMapping("insertSchFile.trv")
+	public ModelAndView insertSchFile(ModelAndView mv, @RequestParam(name="photo", required=false) MultipartFile photo) {
+		
+		
+		System.out.println(photo);
+		System.out.println(photo.getOriginalFilename());
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	
 	
 	
 	
