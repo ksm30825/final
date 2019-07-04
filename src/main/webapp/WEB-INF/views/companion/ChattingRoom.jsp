@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<!-- modal   -->
+
 <style>
 	#chatpeopleTable {
 		width : 100%;
@@ -68,7 +70,8 @@
 	  	<ul class="list-inline" style = "border-top:1px solid lightgray;">
    			 <li> 
    			 <button  data-toggle="tooltip" 
-	  	      data-placement="right" title="채팅방 나가기" id = "outbtn">
+	  	      data-placement="right" title="채팅방 나가기" id = "outbtn" 
+	  	      onclick="document.getElementById('id01').style.display='block'">
 	  	 		<i class="material-icons" 
 	  	 			style = "margin :0 ; padding : 3px; 
 	  	 				color: black; font-size : 30px;">input</i>
@@ -90,7 +93,7 @@
 	    		
     		</li>
   		</ul>
-	  </div>
+	 </div>
 	</div>
 	
 	<div class="w3-teal">
@@ -105,6 +108,27 @@
 		<textarea rows="3" cols="30" name = "message" id = "message"></textarea>
 		<button type="button" class="btn btn-primary" id = "sendbtn">전송</button>
 	</div>
+	
+	 <div id="id01" class="w3-modal">
+	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
+	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
+	        <span onclick="document.getElementById('id01').style.display='none'" 
+	        class="w3-button w3-display-topright">&times;</span>
+	        <h4 align="center" >채팅방을 나가겠습니까?</h4>
+	      </header>
+	      <div class="w3-container">
+	      <br>
+	        <p>
+	                  나가기를 하면 대화내용이 모두 삭제되고 채팅목록에서도 삭제됩니다 <br>
+	                  또한, 나가기 버튼 클릭시 참여중인 채팅목록으로 이동됩니다.
+	        </p>
+	        <br>
+	      </div>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
+	       	 <button id = "exitBtn" class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">나가기</button>
+	      </footer>
+	    </div>
+  	</div>
 	
 	
 	<script src="http://localhost:8010/socket.io/socket.io.js"></script>
@@ -125,7 +149,7 @@
 			$("#Recruitingicon").click(function(){
 				
 				if(confirm("모집을 종료하시겠습니까?")) {
-			         var status =   $(this).parent().click();
+			         var status = $(this).parent().click();
 			     } else {
 			            return false;
 			     }
@@ -193,8 +217,9 @@
 	        		   if (data.level == 2){
 	        			   $("#setting").hide();
 	        		   }else {
-	        			   
-	        		   }
+	        			   $("#outbtn").attr("disabled" , "disabled");
+	        			   $("#checkModel").show();
+	 	        	   }
 	        		 
 	        	   }
 	        	
@@ -239,8 +264,10 @@
 	 	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
 	 	                }
 	                	
-	                	
-	 	              	output += data.userName;
+	                	if (data.userName != null){
+	                		output += data.userName;
+	                	}
+	 	              	
 	 	                
 	 	                output += '</strong> ';
 	 	                output += data.message;
@@ -253,7 +280,7 @@
 	            });
 	           
       
-	            
+	            //채팅들어왔을때 채팅 정보가져오기 
 	           socket.on('preChat' , function(data){
 	                var output = '';
 	                
@@ -263,8 +290,9 @@
 	                	output += '<div class="alert alert-info" id = "msg"><strong>'; 
 	                }
 	                
-	               
-	                output += data.userName;
+	                if (data.userName != null){
+                		output += data.userName;
+                	}
 	                
 	                output += '</strong> ';
 		            output += data.message;
@@ -365,7 +393,7 @@
 	        	       success : function(userInfo) {
 	        	    	   
 	        	    	   var output = "";
-	        	    	   output += '<table id = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
+	        	    	   output += '<table id = "chatpeopleTable" class = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
 	    	        	   output += '<tr><td colspan = "2">';
 	    	        	   output += '<input type = "hidden" value = "'+ userInfo.email +'" name = "userId" id = "userId">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
@@ -390,24 +418,74 @@
 	        	 
 	        	  
 	        	  //채팅방 수정될때 다시 채팅방 정보불러오기 
-		          socket.emit('updateChatInfo' , {chatId : mchatId});
+		          socket.emit('updateChatInfo' , {chatId : chatId});
 	 				
 		       	
 	 	       
 	          });
 	          
+	         
 	          
+	          //채팅방에서 나갈때 
+	          $("#exitBtn").click(function(){
+	        	  
+	        	  socket.emit('exitChatting',{userId: userId , chatId : chatId , userName : userName});
+	        	  
+	        	  socket.on('exitChatting', function(data){
+	        		  console.log("나간사람 :" +data);
+	        		  $(".chatpeopleTable").each(function(index ,item) {
+	        			 var checkUserID = $(this).children().children().children("#userId").val();
+	        			 if (checkUserID == data){
+	        				$(this).remove();
+	        			 } 
+	        		  });
+	        		  
+	        		  location.href = "${contextPath}/enterRoom.ch";
+	        		  
+	        	  });
+	        	  
+	        	  
+	          }); 
+	          
+	        //사용자가 채팅방을 나간경우 
+	        socket.on('outUser' , function(data){
+	        	  var newUser = data;
+	        	  
+	        	  console.log("outUser :" + data);
+	        	 
+	        	  var mchatId = data.chat_id;
+	 			  var output = "";
+		       	  if (mchatId == chatId){
+	 	                output += '<div class="alert alert-info" id = "msg">'; 
+			            output += data.message;
+			            output += "<button> 신고 </button>";
+			            output += "<button> 평판관리 </button>";
+			            output += '</div>';
+			            $(output).appendTo('#chat_box');
+			            
+	 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+	               }
+	        	  
+	        	 
+	        	  //채팅방 수정될때 다시 채팅방 정보불러오기 
+		          socket.emit('updateChatInfo' , {chatId : chatId});
+	 			
+	 	       
+	         });
+	          
+	          //채팅방에 누군가 들어왔을때 다시 채팅방 정보 띄워주는 함수
 	          socket.on('updateChatInfo' , function(data){
 				  var title = data.title;
 	        	  
-	        	  if (title.length > 7){
-	        		  //console.log("제목 :" + title.substr(0,7));
-		        	  
-		        	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
-	        	  }else {
+	        	  //if (title.length > 7){
+		        //	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
+	        	  //}else {
 	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
-	        	  } 
+	        	 // } 
 	          });
+	          
+	          
+	          
 	          
 	         
 	           

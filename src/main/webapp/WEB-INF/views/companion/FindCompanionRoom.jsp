@@ -217,23 +217,25 @@
 	        	 socket.on('createChatRoom' , function(data){
         			 console.log("data :" + data);
         			 
-        			 var output = '';
-	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
-	                 output += '<tr>';
-		     		 output += '<td colspan = "2" class = "AllChatTitle">';
-		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.chatnum +'">';
-		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
-		     		 output += '<label>'+ data.title +'</label></td>'
-		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
-	     			 output += '</tr>';
-		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
-		     		 output += '<td colspan = "3">';
-		     		 output += '<i class="material-icons" id = "peopleIcon">group</i>';
-		     		 output +=	'&nbsp;&nbsp;&nbsp;<label id = "pnum">('+ data.activityNum + '/' + data.peoplenum +')</label>';
-		     		 output +=	'</td></tr>'
-	                 output += '</table>';
-	                 $(output).prependTo('#menu1');
-	                 
+        			 if (data.chatnum != null){
+        				 var output = '';
+    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
+    	                 output += '<tr>';
+    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
+    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.chatnum +'">';
+    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+    		     		 output += '<label>'+ data.title +'</label></td>'
+    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
+    	     			 output += '</tr>';
+    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
+    		     		 output += '<td colspan = "3">';
+    		     		 output += '<i class="material-icons" id = "peopleIcon">group</i>';
+    		     		 output +=	'&nbsp;&nbsp;&nbsp;<label id = "pnum">('+ data.activityNum + '/' + data.peoplenum +')</label>';
+    		     		 output +=	'</td></tr>'
+    	                 output += '</table>';
+    	                 $(output).prependTo('#menu1');
+        			 }
+        			 
 	             
         		     
         		 });
