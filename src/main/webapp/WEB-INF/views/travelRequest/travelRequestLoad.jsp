@@ -114,37 +114,59 @@ th, td {
 				<div class="columns">
 					<div class="column">
 						<br>
+						<div class="field">
 						<c:forEach var="day" items="${ trp }" varStatus="number">
 						<c:set var="placeList" value="${ day.getDayList().get(0).getPlaceList() }"/>
-							<div class="field">
-							<a class="button is-primary">Day${ number.count }</a> &nbsp;
-							<input type="hidden" value="Day1" name="pDay">
-							<!-- X버튼 -->
-							<span data-balloon="size: 3x" data-balloon-pos="up"
-								class="db color-inherit link hover-cyan removeBtn" > <svg
-									aria-hidden="true" focusable="false" data-prefix="fas"
-									data-icon="times-circle" role="img"
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-									class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-								<path fill="currentColor"
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-										class=""></path>
-								</svg>
-							</span>
-							<!-- + 버튼 -->
-							<span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-indigo plusBtn">
-								<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-plus-circle fa-w-16 fa-3x">
-									<path fill="currentColor" 
-										d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z" class="">
-									</path>
-								</svg>
-							</span>
-							<br><br>
-							<p class="control">
-								<textarea class="textarea " placeholder="일정 작성" name="pDayMemo">${ day.getDayList().get(0).getpDayMemo() }</textarea>
-							</p>
-						</div>
+							<c:if test="${ number.index == 0 }">			
+								<a class="button is-primary">Day${ number.count }</a> &nbsp;
+								<input type="hidden" value="Day${ number.count }" name="pDay">
+								<!-- X버튼 -->
+								<span data-balloon="size: 3x" data-balloon-pos="up"
+									class="db color-inherit link hover-cyan removeBtn" > <svg
+										aria-hidden="true" focusable="false" data-prefix="fas"
+										data-icon="times-circle" role="img"
+										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+										class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
+									<path fill="currentColor"
+											d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
+											class=""></path>
+									</svg>
+								</span>
+								<!-- + 버튼 -->
+								<span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-indigo plusBtn">
+									<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-plus-circle fa-w-16 fa-3x">
+										<path fill="currentColor" 
+											d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z" class="">
+										</path>
+									</svg>
+								</span>
+								<br><br>
+								<p class="control">
+									<textarea class="textarea " placeholder="일정 작성" name="pDayMemo">${ day.getDayList().get(0).getpDayMemo() }</textarea>
+								</p>
+						</c:if>
+						<c:if test="${ number.index != 0 }">
+								<a class="button is-primary">Day${ number.count }</a> &nbsp;
+								<input type="hidden" value="Day${ number.count }" name="pDay">
+								<!-- X버튼 -->
+								<span data-balloon="size: 3x" data-balloon-pos="up"
+									class="db color-inherit link hover-cyan removeBtn" > <svg
+										aria-hidden="true" focusable="false" data-prefix="fas"
+										data-icon="times-circle" role="img"
+										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+										class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
+									<path fill="currentColor"
+											d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
+											class=""></path>
+									</svg>
+								</span>
+								<br><br>
+								<p class="control">
+									<textarea class="textarea " placeholder="일정 작성" name="pDayMemo">${ day.getDayList().get(0).getpDayMemo() }</textarea>
+								</p>
+						</c:if>
 						</c:forEach>
+						</div>
 						<br>
 						<hr>
 						<br>
@@ -301,7 +323,8 @@ th, td {
 	</div>
 	<script>
 	
-	var count = 1;
+	var count = $("input[name=pDay]").length;
+	console.log("count : " + count);
 	
 	$(function() {
 	  	$('.modal-background, .modal-close').click(function() {
@@ -369,7 +392,7 @@ th, td {
 	
 	//불러오기
 	function load() {
-		var memberId = ${ loginUser.memberId }
+		var memberId = ${ loginUser.memberId }	
 		console.log(memberId);
 		$.ajax({
 			url:"loadRequestPlan.mr",
@@ -459,17 +482,10 @@ th, td {
     
     <c:forEach var="latList" items="${ trp }" varStatus="st">
     if("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }" != "") {
-    	if(!${ st.last }) {
-    		 pTitle.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }");
-    		    pAddress.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceAddress() }#");
-    		    pLat.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLat() }");
-    		    pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
-    	} else {
-    		pTitle.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }");
-    	    pAddress.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceAddress() }");
-    	    pLat.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLat() }");
-    	    pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
-    	}
+    	pTitle.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }");
+    	pAddress.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceAddress() }");
+    	pLat.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLat() }");
+    	pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
     }
     </c:forEach>
     console.log("일정들 장소 명 : " + pTitle.length);
@@ -478,34 +494,59 @@ th, td {
     console.log("각 장소 경도 : " + pLng);
     console.log(pLat[0]);
     console.log(pLng[0]);
+    console.log(pTitle[0]);
       
-    /* lat: -33.8688, lng: 151.2195 */
 	function initMap() {
-	 /* var myLatlng = new google.maps.LatLng(-33.8688, 151.2195);
-    	var myOptions = {
-		zoom: 13,
-    	center: myLatlng
-		} */
-		
 		var first = new google.maps.LatLng(pLat[0], pLng[0]);
+		var destinations = new Array();
+		var contentString = pTitle[0];
+		var content = new Array();
     	map = new google.maps.Map(document.getElementById('map'), {
     	  	zoom: 13,
     	  	center : first
     	});
     	
-    	marker = new google.maps.Marker({
-    	    position: first,
-    	    map: map
+    	for(var i = 0; i < pTitle.length; i++) {
+    		if(i == 0) {
+    			marker = new google.maps.Marker({
+    	    	    position: new google.maps.LatLng(pLat[0], pLng[0]),
+    	    	    map: map
+    	    	});
+    			$("#lat").append(marker.position.lat() + "#");
+    		    $("#lng").append(marker.position.lng() + "#");
+    			destinations.push(new google.maps.LatLng(pLat[0], pLng[0]));
+    		} else {
+	    		var marker = new google.maps.Marker({
+	        	    position: new google.maps.LatLng(pLat[i], pLng[i]),
+	        	    map: map
+	        	});
+	    		$("#lat").append(marker.position.lat() + "#");
+    		    $("#lng").append(marker.position.lng() + "#");
+	    		destinations.push(new google.maps.LatLng(pLat[i], pLng[i]));
+    		}
+    		
+    		markers.push(marker);
+    	}
+    	console.log(markers);
+    	$.each(markers, function(index, item) {
+	    	google.maps.event.addListener(markers[index], 'click', function() {
+	            infowindow.setContent('<div><strong>' + pTitle[index] + '</strong><br>' +
+	            pAddress[index] + '</div>');
+	            infowindow.open(map, this);
+	        });
+	    	$("#placeName").append(pTitle[index] + "#");
+	    	$("#placeAddress").append(pAddress[index] + "#");
     	});
     	
     	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
     	//폴리라인 객체
     	poly = new google.maps.Polyline({
+    		path: destinations,
     	  	strokeColor: "#FF0000",
     	  	strokeWeight : 3
     	});
     	poly.setMap(map);
-    	
+
     	//맵 클릭시 마커,폴리라인 생성
     	map.addListener('click', function(event) {
     		var path = poly.getPath();
@@ -522,6 +563,7 @@ th, td {
 	          map: map
 	        });
 	        markers.push(marker);
+	        console.log(markers);
 	        
 	        console.log(marker);
 	        console.log("위도 : " + marker.position.lat());
@@ -608,7 +650,7 @@ th, td {
             console.log(place.formatted_address);
             
 
-            marker.setVisible(false);
+            marker.setVisible(true);
 
             infowindowContent.children['place-name'].textContent = place.name;
             infowindowContent.children['place-id'].textContent = place.place_id;
@@ -617,6 +659,7 @@ th, td {
             infowindow.open(map, marker);
           });
         }
+	
 	function clearMarkers() {
         setMapOnAll(null);
         console.log(markers);
@@ -628,7 +671,7 @@ th, td {
       }
 
 
-	$(document).on("click",".hover-cyan",function(){
+	$(document).on("click", ".hover-cyan", function(){
 		console.log($(this).parent());
 		console.log($(".day").text());
 		console.log($(this).parent().text().split(" ")[2]);
@@ -637,7 +680,7 @@ th, td {
 		var numArr= $(".day").text().split(" ");
 		console.log(numArr);
 		console.log(count);
-		$(this).parent().remove();
+		//$(this).parent().remove();
 		
 		count = 2;
 		$(".day").each(function() {
