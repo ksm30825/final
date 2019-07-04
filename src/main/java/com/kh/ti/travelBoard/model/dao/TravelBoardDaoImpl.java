@@ -157,5 +157,19 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		return sqlSession.selectOne("TravelBoard.myTourReviewSearch", tr);
 	}
 	
+	//자신이 작성한 여행일정 리뷰 수정
+	@Override
+	public int myTourReviewUpdate(SqlSessionTemplate sqlSession, TourReview tr) {
+		
+		return sqlSession.update("TravelBoard.myTourReviewUpdate", tr);
+	}
+	
+	//여행일정 상세 / 리뷰 삭제 - 예랑
+	@Override
+	public int deliteReview(SqlSessionTemplate sqlSession, TourReview tr) {
+		
+		return sqlSession.update("TravelBoard.deliteReview", tr);
+	}
+	
 
 }
