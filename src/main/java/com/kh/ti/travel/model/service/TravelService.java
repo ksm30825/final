@@ -73,6 +73,24 @@ public interface TravelService {
 	
 	
 	
+
+	int updateBudget(Travel trv);
+	
+	TrvCost selectTrvCost(int schId);
+	
+	int insertTrvCost(TrvDay day, TrvCost cost);
+
+	int insertTrvCost(TrvSchedule sch, TrvCost cost);
+	
+	int updateTrvCost(TrvCost cost);
+
+	int deleteTrvCost(TrvCost cost);
+
+
+	
+	
+	
+	
 	
 	
 	
@@ -89,15 +107,6 @@ public interface TravelService {
 
 	
 	
-	TrvCost selectTrvCost(int schId);
-	
-	int insertTrvCost(TrvDay day, TrvCost cost);
-
-	int insertTrvCost(TrvSchedule sch, TrvCost cost);
-	
-	int updateTrvCost(TrvCost cost);
-
-	int deleteTrvCost(TrvCost cost);
 
 
 

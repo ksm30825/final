@@ -598,23 +598,19 @@ public class TravelServiceImpl implements TravelService {
 
 	
 	
-	
-	
-	
-	
-	
+//-----------cost--------------------------------------------------------------	
+	@Override
+	public int updateBudget(Travel trv) {
+		return td.updateBudget(sqlSession, trv);
+	}
+
+
 	
 	@Override
 	public TrvCost selectTrvCost(int schId) {
 		return td.selectTrvCost(sqlSession, schId);
 	}
 	
-	
-	@Override
-	public int insertTrvCompany(Travel trv, Member m) {
-		return td.insertTrvCompany(sqlSession, trv, m);
-	}
-
 
 
 	@Override
@@ -625,22 +621,6 @@ public class TravelServiceImpl implements TravelService {
 	@Override
 	public int insertTrvCost(TrvSchedule sch, TrvCost cost) {
 		return td.insertTrvCost(sqlSession, cost);
-	}
-
-
-	@Override
-	public HashMap selectSpotList(Travel trv) {
-		HashMap spotMap = null;
-		int cityId = 0;
-		HashMap hmap = td.selectSpotList(sqlSession, trv, cityId);
-		return spotMap;
-	}
-
-
-	@Override
-	public int deleteTrvComp(Travel trv, int memberId) {
-		int result = td.deleteTrvComp(sqlSession, trv, memberId);
-		return 0;
 	}
 
 	
@@ -655,7 +635,48 @@ public class TravelServiceImpl implements TravelService {
 		int result = td.deleteTrvCost(sqlSession, cost);
 		return 0;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
+
+
+//-----------------------------------------------------------------------------------	
+	
+
+	@Override
+	public HashMap selectSpotList(Travel trv) {
+		HashMap spotMap = null;
+		int cityId = 0;
+		HashMap hmap = td.selectSpotList(sqlSession, trv, cityId);
+		return spotMap;
+	}
+
+	
+	
+	
+	@Override
+	public int insertTrvCompany(Travel trv, Member m) {
+		return td.insertTrvCompany(sqlSession, trv, m);
+	}
+
+	
+	@Override
+	public int deleteTrvComp(Travel trv, int memberId) {
+		int result = td.deleteTrvComp(sqlSession, trv, memberId);
+		return 0;
+	}
 
 
 

@@ -164,6 +164,21 @@
 				<div class="gallaryArea" id="gallary${ trvDay.dayNumber }Area" style="display:none">	
 					<section class="section">
 						<div class="columns">
+							<div class="column is-one-third photoCard" style="display:none">
+								<div class="card trvCard">
+									<div class="card-image">
+										<figure class="image" style="margin: 0">
+											<img src="">
+										</figure>
+									</div>
+									<div class="card-content">
+										<div class="content" align="right">${ trvDay.dayDate }</div>
+										<div class="content">
+											<p></p>
+										</div>
+									</div>
+								</div>
+							</div>
 							<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
 								<c:forEach  var="file" items="${ sch.fileList }" varStatus="st2">
 									<div class="column is-one-third photoCard">
@@ -174,12 +189,8 @@
 												</figure>
 											</div>
 											<div class="card-content">
-												<div class="content" align="right">
-													${ trvDay.dayDate }
-												</div>
-												<div class="content">
-													<p>${ file.fileCaption }</p>
-												</div>
+												<div class="content" align="right">${ trvDay.dayDate }</div>
+												<div class="content"><p>${ file.fileCaption }</p></div>
 											</div>
 										</div>
 									</div>
@@ -309,6 +320,7 @@
 								var photoCard = $("#gallary" + dayNumber + "Area").find(".photoCard").eq(0).clone();
 								photoCard.find("img").attr("src", "resources/uploadFiles/" + data.changeName);
 								photoCard.appendTo($("#gallary" + dayNumber + "Area").children().children());
+								photoCard.show();
 								
 							},
 							error:function(err) {

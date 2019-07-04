@@ -232,6 +232,13 @@ public class TravelDaoImpl implements TravelDao {
 	
 	
 	
+
+	@Override
+	public int updateBudget(SqlSessionTemplate sqlSession, Travel trv) {
+		return sqlSession.update("Travel.updateBudget", trv);
+	}
+
+	
 	
 	
 	
