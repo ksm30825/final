@@ -31,5 +31,9 @@ public interface TravelBoardService {
 
 	TourReview myTourReviewSearch(TourReview tr);
 
+	int myTourReviewUpdate(TourReview tr);
+
+	int deliteReview(TourReview tr);
+
 
 }

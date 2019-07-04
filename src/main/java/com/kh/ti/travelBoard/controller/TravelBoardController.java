@@ -174,19 +174,6 @@ public class TravelBoardController {
 		return new ResponseEntity(trList, HttpStatus.OK);
 	}
 	
-	//자신이 작성한 여행일정 리뷰 검색
-	@RequestMapping("myTourReviewSearch.tb")
-	public ResponseEntity myTourReviewSearch(int trvId, int memberId) {
-		
-		TourReview tr = new TourReview();
-		tr.setTrvId(trvId);
-		tr.setMemberId(memberId);
-		
-		TourReview myReview = tbs.myTourReviewSearch(tr);
-		
-		return new ResponseEntity(myReview, HttpStatus.OK);
-	}
-	
 	//여행일정 삭제 - 예랑
 	@RequestMapping("travelDelete.tb")
 	public String travelDelete(Model model, int trvId) {
@@ -287,11 +274,64 @@ public class TravelBoardController {
 		return new ResponseEntity(rp, HttpStatus.OK);
 	}
 	
+	//자신이 작성한 여행일정 리뷰 검색
+	@RequestMapping("myTourReviewSearch.tb")
+	public ResponseEntity myTourReviewSearch(int trvId, int memberId) {
+		
+		TourReview tr = new TourReview();
+		tr.setTrvId(trvId);
+		tr.setMemberId(memberId);
+		
+		TourReview myReview = tbs.myTourReviewSearch(tr);
+		
+		return new ResponseEntity(myReview, HttpStatus.OK);
+	}
+	
+	//자신이 작성한 여행일정 리뷰 수정
+	@RequestMapping("myTourReviewUpdate.tb")
+	public ModelAndView myTourReviewUpdate(int reviewId, int grade, String reviewContent, ModelAndView mv) {
+		
+		TourReview tr = new TourReview();
+		tr.setReviewId(reviewId);
+		tr.setGrade(grade);
+		tr.setReviewContent(reviewContent);
+		
+		int result = tbs.myTourReviewUpdate(tr);
+		
+		String msg = "";
+		if(result > 0) {
+			msg = "리뷰수정 성공";
+		}else {
+			msg = "리뷰수정 실패";
+		}
+		
+		mv.setViewName("jsonView");
+		mv.addObject(msg);
+		
+		return mv;
+	}
+	
 	//여행일정 상세 / 리뷰 삭제 - 예랑
 	@RequestMapping("deliteReview.tb")
-	public String deliteReview() {
+	public ModelAndView deliteReview(int reviewId, int memberId, ModelAndView mv) {
 		
-		return "travelBoard/travelDetail";
+		TourReview tr = new TourReview();
+		tr.setReviewId(reviewId);
+		tr.setMemberId(memberId);
+		
+		int result = tbs.deliteReview(tr);
+		
+		String msg = "";
+		if(result > 0) {
+			msg = "리뷰삭제 성공";
+		}else {
+			msg = "리뷰삭제 실패";
+		}
+		
+		mv.setViewName("jsonView");
+		mv.addObject(msg);
+		
+		return mv;
 	}
 	
 	//여행일정 상세 / 날짜별 갤러리 보기 - 예랑

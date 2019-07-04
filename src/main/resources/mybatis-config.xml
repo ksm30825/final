@@ -36,6 +36,7 @@
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TrvDaySchedule" alias="TrvDaySchedule"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TrvBoardSch" alias="TrvBoardSch"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TourReview" alias="TourReview"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelCost" alias="TravelCost"/>
 	</typeAliases>
 	<mappers>
 		<!-- Member Part 수정(세령) -->

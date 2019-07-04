@@ -75,12 +75,16 @@
 			<div id="reviewTableArea">
 				
 				<table id="reviewTable">
-					<tr>
-						<th>No</th>
-						<th>평점</th>
-						<th>리뷰</th>
-						<th>작성자</th>
-					</tr>
+					<thead>
+						<tr>
+							<th width="10%">No</th>
+							<th width="20%">평점</th>
+							<th width="50%">리뷰</th>
+							<th width="20%">작성자</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
 				</table>
 			</div>
 			
@@ -110,10 +114,10 @@
 	    <div class="modal-card">
 	    
 			<header class="modal-card-head">
-				<p class="modal-card-title"><i class="fas fa-sticky-note"></i>&nbsp;<a id="modalTitle" style="cursor: default; color: black;">구매리뷰 작성하기</a></p>
+				<p class="modal-card-title"><i class="fas fa-sticky-note"></i>&nbsp;<a id="modalTitle">구매리뷰 작성하기</a></p>
 				<button class="cancel delete"></button>
 			</header>
-		
+			<input type="number" id="reviewId" value="" hidden="hidden">
 			<section class="modal-card-body">
 				<div class="starArea" align="center">
 					<span class="title is-5">별점 : </span>
@@ -136,10 +140,49 @@
 		
 	    </div>
 	</div>
-	
-	
 <script>
 
+	//리뷰 조회
+	$(document).ready(function() {
+		var trvId = ${ detailTb.trvId };
+		var loginUserId = $("#loginId").val();
+		
+		$.ajax({
+			url : "selectTourReview.tb",
+			data : {trvId : trvId, currentPage : 1},
+			success : function(trList) {
+				
+				var table = $("#reviewTable > tbody");
+				
+				var count = 1;
+				for (var key in trList) {
+					
+					var num = trList[key].reviewId;
+					
+					var star = "";
+					//별점을 별로 표기
+					for(var i = 1; i < 6; i++) {
+						if(i <= trList[key].grade) {
+							star += '<i class="fas fa-star"></i>';
+						}else {
+							star += '<i class="far fa-star"></i>';
+						}
+					}
+					
+					var review = "<tr><td>" + count++ + "</td><td style='color: #209cee;'>" + star + "</td><td>" + trList[key].reviewContent;
+					if(trList[key].writeStatus = 'Y' && trList[key].memberId == loginUserId) {
+						review += '&nbsp;<a class="tag is-danger" onclick="deleteReview(' + num + ')">리뷰삭제</a></td><td>' + trList[key].userName + '</td></tr>';
+					}else {
+						review += "</td><td>" + trList[key].userName + "</td></tr>";
+					}
+					
+					table.append(review);
+				}
+			}
+		});
+	});
+	
+	//리뷰작성 모달창 띄우기
 	function reviewForm() {
 		$('#myModal').toggleClass('is-active').removeAttr('style');
 		
@@ -147,6 +190,9 @@
 		
 		//리뷰 별점매기기
 		$(".starImg").click(function() {
+			$(this).parent().children('a').removeClass();
+			$(this).parent().children('a').addClass("starImg");
+			
 			$(this).parent().children().children().attr('data-prefix', 'far');
 			
 			$(this).prevAll().children().attr('data-prefix', 'fas');
@@ -168,26 +214,7 @@
 					alert("리뷰작성 처리");
 					$('#myModal').removeClass('is-active');
 					
-					$.ajax({
-						url : "selectTourReview.tb",
-						data : {trvId : trvId, currentPage : 1},
-						success : function(trList) {
-							
-							var table = $("#reviewTable > tbody");
-							table.children().remove();
-							
-							
-							
-							for (var key in trList) {
-								var review = "<tr><td>" + key + "</td><td>" + trList[key].grade + "</td><td>" + trList[key].reviewContent;
-								if(trList[key].writeStatus = 'Y') {
-									review += '<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a></td>';
-								}else {
-									review += "</td>";
-								}
-							}
-						}
-					});
+					location.href="pointReserve.po?memberId=" + data.memberId +"&code=" + data.reviewId + "&reserveType=20&rPoint=50";
 				}
 			});
 		})
@@ -197,43 +224,27 @@
         });
 	}
 	
-	function deleteReview() {
+	//리뷰 삭제
+	function deleteReview(reviewId) {
+		
+		var memberId = $("#loginId").val();
+		
 		$.ajax({
 			url : "deliteReview.tb",
-			data : {},
+			data : {reviewId : reviewId, memberId : memberId},
 			success : function(data) {
-				alert("리뷰삭제");
+				alert(data.string);
+				
+				location.href="travelDetailForm.tb?trvId=" + ${ detailTb.trvId };
 			}
 		})
 	}
 	
-	//리뷰 조회
-	$(document).ready(function() {
-		var trvId = ${ detailTb.trvId };
-		
-		$.ajax({
-			url : "selectTourReview.tb",
-			data : {trvId : trvId, currentPage : 1},
-			success : function(trList) {
-				
-				var table = $("#reviewTable > tbody");
-				
-				for (var key in trList) {
-					var review = "<tr><td>" + key + "</td><td>" + trList[key].grade + "</td><td>" + trList[key].reviewContent;
-					if(trList[key].writeStatus = 'Y') {
-						review += '&nbsp;<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a></td><td>' + trList[key].userName + '</td></tr>';
-					}else {
-						review += "</td><td>" + trList[key].userName + "</td></tr>";
-					}
-					
-					table.append(review);
-				}
-			}
-		});
-	});
 	
-	//리뷰 수정
+	//리뷰 수정 모달창 띄우기
 	function reviewModify() {
+		$("#modalTitle").text("구매리뷰 수정하기");
+		
 		$('#myModal').toggleClass('is-active').removeAttr('style');
 		
 		var trvId = ${ detailTb.trvId };
@@ -244,13 +255,8 @@
 			url : "myTourReviewSearch.tb",
 			data : {trvId : trvId, memberId : memberId},
 			success : function(data) {
-				$("#modalTitle").text("구매리뷰 수정하기");
+				$("#reviewId").val(data.reviewId);
 				$("#reviewContent").val(data.reviewContent);
-				$(".modal-card-foot").children().remove();
-				
-				var button = '<a class="button is-primary" id="updateReview" onclick="updateReview()">리뷰수정</a><a class="button cancel">취소하기</a>';
-				
-				$(".modal-card-foot").append(button);
 				
 				$(".starArea > a").remove();
 				
@@ -260,22 +266,35 @@
 				for(var i = 1; i < 6; i++) {
 					
 					if(i <= grade) {
-						var star = '<a class="starImg" score="key"><i class="fas fa-star"></i></a>';
-						$(".starArea").append(star);
+						if(i == grade) {
+							var star = '<a class="starImg grade" score="'+ i +'"><i class="fas fa-star"></i></a>';
+							$(".starArea").append(star);
+						}else {
+							var star = '<a class="starImg" score="'+ i +'"><i class="fas fa-star"></i></a>';
+							$(".starArea").append(star);
+						}
 					}else {
-						var star = '<a class="starImg" score="key"><i class="far fa-star"></i></a>';
+						var star = '<a class="starImg" score="' + i + '"><i class="far fa-star"></i></a>';
 						$(".starArea").append(star);
 					}
 				}
 				
+				var num = data.reviewId;
+				$(".modal-card-foot").children().remove();
+				var button = '<a class="button is-primary" onclick="updateReview(' + num + ')">리뷰수정</a><a class="button cancel">취소하기</a>';
+				$(".modal-card-foot").append(button);
+				
 				//리뷰 별점매기기
 				$(".starImg").click(function() {
+					$(this).parent().children('a').removeClass();
+					$(this).parent().children('a').addClass("starImg");
+					
 					$(this).parent().children().children().attr('data-prefix', 'far');
 					
 					$(this).prevAll().children().attr('data-prefix', 'fas');
 					$(this).children().attr('data-prefix', 'fas');
+					$(this).addClass("grade")
 					
-					grade = Number($(this).attr("score"));
 				});
 				
 			},
@@ -286,11 +305,28 @@
 		})
 	}
 	
-	function updateReview() {
-		alert("dd");
+	//작성한 리뷰 수정하기
+	function updateReview(num) {
+		var reviewId = num;
+		var grade = $(".grade").attr("score");
+		var reviewContent = $("#reviewContent").val();
+		
+		$.ajax({
+			url : "myTourReviewUpdate.tb",
+			data : {reviewId : reviewId, grade : grade, reviewContent : reviewContent},
+			success : function(msg) {
+				
+				alert(msg.string);
+				
+				$('#myModyModal').removeClass('is-active');
+				
+				location.href="travelDetailForm.tb?trvId=" + ${ detailTb.trvId };
+			},
+			error : function(data) {
+				alert("접속실패");
+			}
+		})
 	}
-	
-	
 </script>
 
 </body>

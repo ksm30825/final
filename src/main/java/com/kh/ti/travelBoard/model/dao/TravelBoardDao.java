@@ -33,5 +33,9 @@ public interface TravelBoardDao {
 
 	TourReview myTourReviewSearch(SqlSessionTemplate sqlSession, TourReview tr);
 
+	int myTourReviewUpdate(SqlSessionTemplate sqlSession, TourReview tr);
+
+	int deliteReview(SqlSessionTemplate sqlSession, TourReview tr);
+
 
 }

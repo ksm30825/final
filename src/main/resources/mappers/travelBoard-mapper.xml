@@ -287,7 +287,8 @@
 	<select id="CheckWriteStatus" resultType="string">
 		SELECT DECODE(COUNT(*), 0, 'N', 1, 'Y') WRITE_STATUS
 		FROM TOUR_REVIEW
-		WHERE TRV_ID = #{ trvId }
+		WHERE REVIEW_STATUS = 'Y'
+		AND TRV_ID = #{ trvId }
 		AND MEMBER_ID = #{ memberId }
 	</select>
 	
@@ -314,5 +315,78 @@
 	    WHERE REVIEW_STATUS = 'Y'
 	    AND TR.TRV_ID = #{ trvId }
 	    AND M.MEMBER_ID = #{ memberId }
+	</select>
+	
+	<!-- 자신이 작성한 여행일정 리뷰 수정 -->
+	<update id="myTourReviewUpdate">
+		UPDATE TOUR_REVIEW
+		SET REVIEW_DATE = SYSDATE, GRADE = #{ grade }, REVIEW_CONTENT = #{ reviewContent }
+		WHERE REVIEW_ID = #{ reviewId }
+	</update>
+	
+	<!-- 자신이 작성한 여행일정 리뷰 삭제 -->
+	<update id="deliteReview">
+		UPDATE TOUR_REVIEW
+		SET REVIEW_DATE = SYSDATE, REVIEW_STATUS = 'N'
+		WHERE REVIEW_ID = #{ reviewId }
+		AND MEMBER_ID = #{ memberId }
+	</update>
+	
+	<!-- 일정의 가계부 조회 -->
+	<select id="">
+		SELECT DISTINCT TT.TOTAL_COST, RC.ROOM_CHARGE, TC.TRAFFIC_CHARGE, FC.FOOD_CHARGE, SHC.SHOPPING_CHARGE, SIC.SIGHTSEEING_CHARGE, EC.ETC_CHARGE
+		FROM TRAVEL T
+		LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID)
+		LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		JOIN (SELECT T.TRV_ID, SUM(COST_AMOUNT) AS TOTAL_COST
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID)
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID) TT ON (T.TRV_ID = TT.TRV_ID)
+		JOIN (SELECT T.TRV_ID, NVL(SUM(COST_AMOUNT), 0) AS ROOM_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '숙박'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            WHERE T.TRV_ID = 1
+		            GROUP BY T.TRV_ID) RC ON (T.TRV_ID = RC.TRV_ID)
+		JOIN (SELECT T.TRV_ID, NVL(SUM(COST_AMOUNT), 0) AS TRAFFIC_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '교통'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            WHERE T.TRV_ID = 1
+		            GROUP BY T.TRV_ID) TC ON (T.TRV_ID = RC.TRV_ID)
+		JOIN (SELECT T.TRV_ID, NVL(SUM(COST_AMOUNT), 0) AS FOOD_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '식비'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            WHERE T.TRV_ID = 1
+		            GROUP BY T.TRV_ID) FC ON (T.TRV_ID = RC.TRV_ID)
+		JOIN (SELECT T.TRV_ID, NVL(SUM(COST_AMOUNT), 0) AS SHOPPING_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '쇼핑'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            WHERE T.TRV_ID = 1
+		            GROUP BY T.TRV_ID) SHC ON (T.TRV_ID = RC.TRV_ID)
+		JOIN (SELECT T.TRV_ID, NVL(SUM(COST_AMOUNT), 0) AS SIGHTSEEING_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '관광'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            WHERE T.TRV_ID = 1
+		            GROUP BY T.TRV_ID) SIC ON (T.TRV_ID = RC.TRV_ID) 
+		JOIN (SELECT T.TRV_ID, NVL(SUM(COST_AMOUNT), 0) AS ETC_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '기타'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            WHERE T.TRV_ID = 1
+		            GROUP BY T.TRV_ID) EC ON (T.TRV_ID = RC.TRV_ID)
+		WHERE T.TRV_ID = #{ trvId }
 	</select>
 </mapper>
