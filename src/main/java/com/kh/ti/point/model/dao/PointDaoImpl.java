@@ -146,6 +146,20 @@ public class PointDaoImpl implements PointDao{
 	public int updateUserIncreaseProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
 		return sqlSession.update("Payment.updateUserIncreaseProceeds", receiverBoard);
 	}
+	//수익금 달성내역 전체 리스트 출력
+	@Override
+	public int getProceedsListCount(SqlSessionTemplate sqlSession, Proceeds proceeds) {
+		return sqlSession.selectOne("Pqyment.getProceedsListCount", proceeds);
+	}
+	//수익금 달성내역 가져오기
+	@Override
+	public ArrayList<ReservePoint> selectAllProceeds(SqlSessionTemplate sqlSession, PageInfo proPi, Proceeds proceeds) {
+		int offset = (proPi.getCurrentPage() - 1) * proPi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, proPi.getLimit());
+		
+		ArrayList<ReservePoint> proceedsList = (ArrayList)sqlSession.selectList("Payment.selectAllProceeds", proceeds, rowBounds);
+		return proceedsList;
+	}
 	
 	
 	

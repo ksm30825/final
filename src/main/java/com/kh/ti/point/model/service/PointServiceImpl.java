@@ -119,6 +119,16 @@ public class PointServiceImpl implements PointService{
 	public int updateUserIncreaseProceeds(Proceeds receiverBoard) {
 		return pd.updateUserIncreaseProceeds(sqlSession, receiverBoard);
 	}
+	//수익금 달성내역 전체 리스트 출력
+	@Override
+	public int getProceedsListCount(Proceeds proceeds) {
+		return pd.getProceedsListCount(sqlSession, proceeds);
+	}
+	//수익금 달성내역 가져오기
+	@Override
+	public ArrayList<ReservePoint> selectAllProceeds(PageInfo proPi, Proceeds proceeds) {
+		return pd.selectAllProceeds(sqlSession, proPi, proceeds);
+	}
 
 	
 

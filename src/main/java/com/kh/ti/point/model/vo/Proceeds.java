@@ -13,11 +13,13 @@ public class Proceeds implements Serializable {
 	private int trvId;			//여행일정번호
 	private int ptcpId;			//참여번호
 	private String month;		//검색월
+	private int sumTrv;
+	private int sumPtcp;
 	
 	public Proceeds() {}
 
 	public Proceeds(int proceedsId, int proceeds, Date proceedsDate, int proceedsType, int memberId, int trvId,
-			int ptcpId, String month) {
+			int ptcpId, String month, int sumTrv, int sumPtcp) {
 		super();
 		this.proceedsId = proceedsId;
 		this.proceeds = proceeds;
@@ -27,6 +29,8 @@ public class Proceeds implements Serializable {
 		this.trvId = trvId;
 		this.ptcpId = ptcpId;
 		this.month = month;
+		this.sumTrv = sumTrv;
+		this.sumPtcp = sumPtcp;
 	}
 
 	public int getProceedsId() {
@@ -61,6 +65,14 @@ public class Proceeds implements Serializable {
 		return month;
 	}
 
+	public int getSumTrv() {
+		return sumTrv;
+	}
+
+	public int getSumPtcp() {
+		return sumPtcp;
+	}
+
 	public void setProceedsId(int proceedsId) {
 		this.proceedsId = proceedsId;
 	}
@@ -93,11 +105,20 @@ public class Proceeds implements Serializable {
 		this.month = month;
 	}
 
+	public void setSumTrv(int sumTrv) {
+		this.sumTrv = sumTrv;
+	}
+
+	public void setSumPtcp(int sumPtcp) {
+		this.sumPtcp = sumPtcp;
+	}
+
 	@Override
 	public String toString() {
 		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", proceedsDate=" + proceedsDate
 				+ ", proceedsType=" + proceedsType + ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId="
-				+ ptcpId + ", month=" + month + "]";
+				+ ptcpId + ", month=" + month + ", sumTrv=" + sumTrv + ", sumPtcp=" + sumPtcp + "]";
 	}
 
+	
 }

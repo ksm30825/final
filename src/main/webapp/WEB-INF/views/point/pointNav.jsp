@@ -26,7 +26,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="allRebate.po" class="rebateNav">
+				<a href="toProceedsView.po" class="rebateNav">
 					<span style="color:green;">&nbsp;<strong style="font-size:25px;">수익금관리</strong><br><p id="userProceeds"></p></span>
 				</a>
 			</li>
@@ -36,13 +36,13 @@
     <script>
     	$(function(){
     		var memberId = $("#member").val();
-    		console.log(memberId);
+    		//console.log(memberId);
     		$.ajax({
     			url:"selectAccumulate.po",
     			data:{memberId:memberId},
     			type:"post",
     			success:function(data){
-    				console.log(data);
+    				//console.log(data);
     				$("#userPoint").empty();
     				var userPoint = comma(data.userPoint);
     				$("#userPoint").text("누적 포인트 : "+userPoint+"P");
@@ -52,7 +52,7 @@
     				$("#userProceeds").text("누적 수익금 : "+userProceeds);
     			},
 				error:function(data){
-    				console.log('error');
+    				console.log('point nav error');
     			}
     	
     		});

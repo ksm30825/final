@@ -505,6 +505,8 @@ public class PointController {
 		int updateUserProceeds = ps.updateUserIncreaseProceeds(receiverBoard);
 		
 		
+		
+		
 		if(userResult>0 && receiverResult>0 && updateUserPoint>0 && updateUserProceeds>0) {
 			switch(useType) {
 			//(trvId, requestId 통해서 memberId 조회)
@@ -517,12 +519,37 @@ public class PointController {
 	
 	
 	
-	
+	//수익금 페이지로 이동
+	@RequestMapping("/toProceedsView.po")//????????????/ModelAndView로 해야 되지 않나?
+	public String toProceedsView() {
+		return "point/proceedsMain";
+	}
 	//수익금 환급신청 + 수익금 달성 전체 조회--수민
 	@RequestMapping("/allRebate.po")//????????????/ModelAndView로 해야 되지 않나?
 	public String selectAllRebate() {
 		
 		return "point/proceedsMain";
+	}
+	//수익금 달성내역 전체 조회
+	@ResponseBody
+	@RequestMapping("/allProceeds.po")
+	public ResponseEntity selectAllProceeds(@RequestParam("memberId") int memberId, @RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
+		System.out.println("memberId : " + memberId);
+		System.out.println("currentPage : " + currentPage);
+		Proceeds proceeds = new Proceeds();
+		proceeds.setMemberId(memberId);
+		proceeds.setMonth(month);
+		int proceedsListCount = ps.getProceedsListCount(proceeds);
+		int proceedsCurrentPage = currentPage;
+		PageInfo proPi = Pagination.getPageInfo(proceedsCurrentPage, proceedsListCount);
+		ArrayList<ReservePoint> proceedsList = ps.selectAllProceeds(proPi, proceeds);
+		
+		for(int i=0 ; i<proceedsList.size() ; i++) {
+			System.out.println("proceedsList.get("+i+") : "+proceedsList.get(i));
+		}
+		
+		
+		return new ResponseEntity(proceedsList, HttpStatus.OK);
 	}
 	//수익금 환급 월 검색 조회--수민
 	@RequestMapping("/oneMonthRebate.po")
