@@ -126,7 +126,7 @@ public class PointServiceImpl implements PointService{
 	}
 	//수익금 달성내역 가져오기
 	@Override
-	public ArrayList<ReservePoint> selectAllProceeds(PageInfo proPi, Proceeds proceeds) {
+	public ArrayList<Proceeds> selectAllProceeds(PageInfo proPi, Proceeds proceeds) {
 		return pd.selectAllProceeds(sqlSession, proPi, proceeds);
 	}
 

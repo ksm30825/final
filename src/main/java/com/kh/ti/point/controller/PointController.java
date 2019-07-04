@@ -542,7 +542,7 @@ public class PointController {
 		int proceedsListCount = ps.getProceedsListCount(proceeds);
 		int proceedsCurrentPage = currentPage;
 		PageInfo proPi = Pagination.getPageInfo(proceedsCurrentPage, proceedsListCount);
-		ArrayList<ReservePoint> proceedsList = ps.selectAllProceeds(proPi, proceeds);
+		ArrayList<Proceeds> proceedsList = ps.selectAllProceeds(proPi, proceeds);
 		
 		for(int i=0 ; i<proceedsList.size() ; i++) {
 			System.out.println("proceedsList.get("+i+") : "+proceedsList.get(i));

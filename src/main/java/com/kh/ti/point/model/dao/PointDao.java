@@ -55,6 +55,6 @@ public interface PointDao {
 	//수익금 달성내역 전체 리스트 출력
 	int getProceedsListCount(SqlSessionTemplate sqlSession, Proceeds proceeds);
 	//수익금 달성내역 가져오기
-	ArrayList<ReservePoint> selectAllProceeds(SqlSessionTemplate sqlSession, PageInfo proPi, Proceeds proceeds);
+	ArrayList<Proceeds> selectAllProceeds(SqlSessionTemplate sqlSession, PageInfo proPi, Proceeds proceeds);
 
 }

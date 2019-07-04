@@ -153,11 +153,11 @@ public class PointDaoImpl implements PointDao{
 	}
 	//수익금 달성내역 가져오기
 	@Override
-	public ArrayList<ReservePoint> selectAllProceeds(SqlSessionTemplate sqlSession, PageInfo proPi, Proceeds proceeds) {
+	public ArrayList<Proceeds> selectAllProceeds(SqlSessionTemplate sqlSession, PageInfo proPi, Proceeds proceeds) {
 		int offset = (proPi.getCurrentPage() - 1) * proPi.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, proPi.getLimit());
 		
-		ArrayList<ReservePoint> proceedsList = (ArrayList)sqlSession.selectList("Payment.selectAllProceeds", proceeds, rowBounds);
+		ArrayList<Proceeds> proceedsList = (ArrayList)sqlSession.selectList("Payment.selectAllProceeds", proceeds, rowBounds);
 		return proceedsList;
 	}
 	
