@@ -30,5 +30,7 @@ public interface MemberService {
 	int updatePasswordFromFind(Member member);
 
 	Member selectMemberEmail(String email);
+
+	int getCurrentMemberId();
 	
 }

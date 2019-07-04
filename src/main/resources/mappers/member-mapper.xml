@@ -31,7 +31,7 @@
 		SELECT PASSWORD
 		FROM MEMBER
 		WHERE EMAIL = #{email}
-		AND ENROLL_STATUS = 'Y'
+		<!-- AND ENROLL_STATUS = 'Y' -->
 	</select>
 	
 	<!-- 로그인용(임시) 세령 -->
@@ -45,8 +45,21 @@
 	<!-- 회원가입용 세령 -->
 	<insert id="insertMember" parameterType="Member">
 		INSERT INTO MEMBER VALUES
-		(MEMBER_SEQ.NEXTVAL, #{email}, #{password}, #{userName}, #{birthday}, #{gender}, 
-		NULL, NULL, SYSDATE, NULL, NULL, 'Y', #{phone}, 3000, 0, '자사가입', 0, 'M')
+		(MEMBER_SEQ.NEXTVAL, #{email}, #{password}, #{userName},
+		<choose>
+			<when test="birthday != null and birthday != ''">#{birthday}</when>
+			<otherwise>''</otherwise>
+		</choose>,
+		<choose>
+			<when test="gender != null and gender != ''">#{gender}</when>
+			<otherwise>''</otherwise>
+		</choose>,
+		NULL, NULL, SYSDATE, NULL, NULL, 'Y', 
+		<choose>
+			<when test="phone != null and phone != ''">#{phone}</when>
+			<otherwise>'000-0000-0000'</otherwise>
+		</choose>, 
+		3000, 0, #{enrollType}, 0, 'M')
 	</insert>
 	
 	<!-- 가입포인트 적립용 세령 -->
@@ -140,5 +153,10 @@
 	<select id="selectMemberEmail" parameterType="String" resultMap="memberResultSet">
 		SELECT * FROM MEMBER
 		WHERE EMAIL = #{ email }
+	</select>
+	
+	<!-- 현재 MEMBER 시퀀스 얻기 세령 -->
+	<select id="currentMemberSeq" resultType="_int">
+		SELECT MEMBER_SEQ.CURRVAL FROM DUAL
 	</select>
 </mapper>
