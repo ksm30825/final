@@ -146,24 +146,24 @@ th, td {
 								</p>
 						</c:if>
 						<c:if test="${ number.index != 0 }">
-								<a class="button is-primary">Day${ number.count }</a> &nbsp;
-								<input type="hidden" value="Day${ number.count }" name="pDay">
-								<!-- X버튼 -->
-								<span data-balloon="size: 3x" data-balloon-pos="up"
-									class="db color-inherit link hover-cyan removeBtn" > <svg
-										aria-hidden="true" focusable="false" data-prefix="fas"
-										data-icon="times-circle" role="img"
-										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-										class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
-									<path fill="currentColor"
-											d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
-											class=""></path>
-									</svg>
-								</span>
-								<br><br>
-								<p class="control">
-									<textarea class="textarea " placeholder="일정 작성" name="pDayMemo">${ day.getDayList().get(0).getpDayMemo() }</textarea>
-								</p>
+						<div class="field">
+							<a class="button is-primary">
+								Day <p class="day">${ number.count }</p> 
+							</a> &nbsp; 
+							<input type="hidden" value="Day${ number.count }" name="pDay">
+							<span data-balloon="size: 3x" data-balloon-pos="up" class="db color-inherit link hover-cyan">
+								<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" 
+									 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" 
+									 class="svg-inline--fa fa-times-circle fa-w-16 fa-3x">
+									<path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"
+										  class="">
+									</path>
+								</svg>
+							</span>
+							<p class="control">
+								<textarea class="textarea " placeholder="일정 작성" name="pDayMemo">${ day.getDayList().get(0).getpDayMemo() }</textarea>
+							</p>
+						</div>
 						</c:if>
 						</c:forEach>
 						</div>
@@ -680,7 +680,7 @@ th, td {
 		var numArr= $(".day").text().split(" ");
 		console.log(numArr);
 		console.log(count);
-		//$(this).parent().remove();
+		$(this).parent().remove();
 		
 		count = 2;
 		$(".day").each(function() {
