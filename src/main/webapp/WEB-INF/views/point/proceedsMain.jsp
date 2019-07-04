@@ -293,6 +293,7 @@
 					$('#myModal2').removeClass('is-active');
 				});
 			});
+			
 		});
 	</script>
 </body>
