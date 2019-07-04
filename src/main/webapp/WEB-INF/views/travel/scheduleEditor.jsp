@@ -510,12 +510,6 @@
 		</div>
 	</div>
 	
-	
-	
-	
-	
-	
-	
 	<jsp:include page="newScheduleModal.jsp" />
 	<jsp:include page="scheduleInfoModal.jsp" />
 

@@ -212,10 +212,21 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.update("Travel.updateSchContent", sch);
 	}
 
+	@Override
+	public int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile) {
+		return sqlSession.insert("Travel.insertSchFile", schFile);
+	}
+	
+	@Override
+	public ArrayList<SchFile> selectSchFileList(SqlSessionTemplate sqlSession, int schId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectSchFileList", schId);
+	}
 
-	
-	
-	
+	@Override
+	public int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 	
@@ -239,11 +250,6 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 
-	@Override
-	public int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 
 	@Override
@@ -260,11 +266,7 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 
-	@Override
-	public int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 
 

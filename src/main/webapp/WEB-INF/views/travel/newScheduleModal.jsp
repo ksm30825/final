@@ -172,11 +172,11 @@
         		$('html').removeClass('is-clipped');
         	    $(this).parents(".modal").removeClass('is-active');
         	   	title1.val('');
-        	   	dayId1.val('');
+        	   	dayId1.children().eq(0).prop("selected", true);
         	   	isTimeset1.prop("checked", false);
         	   	startTime1.val('');
         	   	endTime1.val('');
-        	   	costAmount1.val('');
+        	   	costAmount1.val(0);
         	   	transp1.val('');
         		
         	});

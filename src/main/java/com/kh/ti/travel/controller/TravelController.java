@@ -1,9 +1,12 @@
 package com.kh.ti.travel.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.ti.common.CommonUtils;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.service.TravelService;
 import com.kh.ti.travel.model.vo.City;
@@ -301,13 +305,48 @@ public class TravelController {
 		return mv;
 	}
 	
+	@RequestMapping("selectSchContent.trv")
+	public ModelAndView selectSchContent(int schId, ModelAndView mv) {
+		
+		TrvSchedule sch = ts.selectTrvSchedule(schId);
+		if(sch.getSchContent() != null) {
+			mv.addObject("content", sch.getSchContent());
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	//사진업로드-민지
 	@RequestMapping("insertSchFile.trv")
-	public ModelAndView insertSchFile(ModelAndView mv, @RequestParam(name="photo", required=false) MultipartFile photo) {
+	public ModelAndView insertSchFile(HttpServletRequest request, ModelAndView mv, @RequestParam(name="image", required=false) MultipartFile image,
+			int schId) {
 		
+		String root = request.getSession().getServletContext().getRealPath("resources");
+		String filePath = root + "\\uploadFiles";
+		String originName = image.getOriginalFilename();
+		String ext = originName.substring(originName.lastIndexOf("."));
+		String changeName = CommonUtils.getRandomString();
+		System.out.println("image: " + image.getOriginalFilename());
+		System.out.println("schId : " + schId);
 		
-		System.out.println(photo);
-		System.out.println(photo.getOriginalFilename());
+		try {
+			image.transferTo(new File(filePath + "\\" + changeName + ext));
+			
+			SchFile file = new SchFile();
+			file.setOriginName(originName);
+			file.setChangeName(changeName + ext);
+			file.setFilePath(filePath);
+			file.setSchId(schId);
+			
+			int result = ts.insertSchFile(file);
+			
+			mv.addObject("changeName", changeName + ext);
+			
+		} catch (Exception e) {
+			new File(filePath + "\\" + changeName + ext).delete();
+			e.printStackTrace();
+		}
+		
 		
 		mv.setViewName("jsonView");
 		return mv;

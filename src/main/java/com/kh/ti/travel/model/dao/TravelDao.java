@@ -84,9 +84,6 @@ public interface TravelDao {
 
 	int updateTrvDayMemo(SqlSessionTemplate sqlSession, TrvDay trvDay);
 	
-	
-	
-	
 
 	int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
@@ -103,6 +100,14 @@ public interface TravelDao {
 
 	int updateSchContent(SqlSessionTemplate sqlSession, TrvSchedule sch);
 
+	int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile);
+
+	ArrayList<SchFile> selectSchFileList(SqlSessionTemplate sqlSession, int schId);	
+
+	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
+	
+	
+	
 	
 	
 	
@@ -113,7 +118,6 @@ public interface TravelDao {
 	
 	int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m);
 
-	int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile);
 
 	HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityCode);
 
@@ -124,7 +128,7 @@ public interface TravelDao {
 
 
 
-	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
+
 
 
 
