@@ -270,6 +270,21 @@
 	</div>
 	<script type="text/javascript">
 		$(function() {
+			var memberId = $("#member").val();
+			console.log(memberId);
+			var currentpage = 1;
+			var month = 0;
+			$.ajax({
+				url:"allProceeds.po",
+				type:"post",
+				data:{memberId:memberId, currentpage:currentpage, month:month},
+				success:function(data){
+					console.log('proceeds main success');
+				},
+				error:function(data){
+					console.log('proceeds main error');
+				}
+			});
 			$(".myPoint").parent().addClass('is-active');
 			$('.modal-background, .modal-close').click(function() {
 				$(this).parent().removeClass('is-active');

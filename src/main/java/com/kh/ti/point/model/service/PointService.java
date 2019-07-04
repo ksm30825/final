@@ -50,5 +50,9 @@ public interface PointService {
 	int updateUserDeductionPoint(UsePoint userPoint);
 	//성공시 member 테이블의 누적 수익금 추가
 	int updateUserIncreaseProceeds(Proceeds receiverBoard);
+	//수익금 달성내역 전체 리스트 출력
+	int getProceedsListCount(Proceeds proceeds);
+	//수익금 달성내역 가져오기
+	ArrayList<ReservePoint> selectAllProceeds(PageInfo proPi, Proceeds proceeds);
 
 }

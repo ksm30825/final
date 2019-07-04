@@ -217,4 +217,53 @@
 		SET USER_PROCEEDS = USER_PROCEEDS + #{proceeds}
 		WHERE MEMBER_ID = #{memberId}
 	</update>
+	<!-- 수익금 달성내역 전체 리스트 출력 -->
+	<select id="getProceedsListCount" parameterType="Proceeds" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+		    SELECT 
+		    (
+		        SELECT SUM(PROCEEDS) FROM PROCEEDS P2 
+		        WHERE P1.TRV_ID=P2.TRV_ID
+		    ) AS SUMTRV, 
+		    (
+		        SELECT SUM(PROCEEDS) FROM PROCEEDS P2
+		        WHERE P1.PTCP_ID=P2.PTCP_ID
+		    ) AS SUMPCTP, 
+		    PROCEEDS_DATE, PROCEEDS_TYPE, MEMBER_ID, TRV_ID, PTCP_ID
+		    FROM PROCEEDS P1
+		    WHERE MEMBER_ID = #{memberId} 
+		    <choose>
+				<when test="month != null and month != 0">AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}</when>
+			</choose>
+		    AND PROCEEDS_DATE = (
+		        SELECT MAX(PROCEEDS_DATE) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
+		    ) AND (
+		         (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID) >= 30000  OR (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.PTCP_ID = P2.PTCP_ID) >=30000 
+		        )
+		)
+	</select>
+	<!-- 수익금 달성내역 가져오기 -->
+	<select id="selectAllProceeds" parameterType="Proceeds" resultMap="proceedsResultSet">
+		SELECT 
+		(
+		    SELECT SUM(PROCEEDS) FROM PROCEEDS P2 
+		    WHERE P1.TRV_ID=P2.TRV_ID
+		) AS SUMTRV, 
+		(
+		    SELECT SUM(PROCEEDS) FROM PROCEEDS P2
+		    WHERE P1.PTCP_ID=P2.PTCP_ID
+		) AS SUMPCTP, 
+		PROCEEDS_DATE, PROCEEDS_TYPE, MEMBER_ID, TRV_ID, PTCP_ID
+		FROM PROCEEDS P1
+		WHERE MEMBER_ID = #{memberId} 
+		<choose>
+			<when test="month != null and month != 0">AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}</when>
+		</choose>
+		AND PROCEEDS_DATE = (
+		    SELECT MAX(PROCEEDS_DATE) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
+		) AND (
+		     (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID) >= 30000  OR (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.PTCP_ID = P2.PTCP_ID) >=30000 
+		    )
+	</select>
 </mapper>
