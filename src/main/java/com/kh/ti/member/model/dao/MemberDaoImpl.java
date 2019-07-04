@@ -34,6 +34,7 @@ public class MemberDaoImpl implements MemberDao{
 	//가입 포인트 적립용 메소드 - 세령
 	@Override
 	public int insertReservePoint(SqlSessionTemplate sqlSession, String email) {
+		System.out.println("가입포인트 접근!");
 		return sqlSession.insert("Member.insertReservePoint", email);
 	}
 
@@ -94,6 +95,12 @@ public class MemberDaoImpl implements MemberDao{
 	@Override
 	public Member selectMemberEmail(SqlSessionTemplate sqlSession, String email) {
 		return sqlSession.selectOne("Member.selectMemberEmail", email);
+	}
+
+	//현재 MEMBER 시퀀스 얻기용 메소드 - 세령
+	@Override
+	public int getCurrentMemberId(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Member.currentMemberSeq");
 	}
 
 }

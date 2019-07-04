@@ -82,15 +82,46 @@ public class MemberController {
 	//로그인용메소드--세령--세령
 	@RequestMapping("login.me")
 	public String loginCheck(@ModelAttribute Member m, Model model) {
-		Member loginUser;
+		Member loginUser = null;
+		boolean result = false;
+		String msg = "";
 		try {
+			//m.setEnrollType("자사가입");
 			loginUser = ms.loginMember(m);
+			if(loginUser != null) {
+				result = true;
+			} else {
+				msg = "이미 탈퇴한 회원입니다.";
+			}
+			
+		} catch (LoginException e) {
+			if(m.getEnrollType().equals("카카오")) { //만약 카카오로 최초 로그인이라면
+				String encPassword = passwordEncoder.encode(m.getPassword());
+				m.setPassword(encPassword);
+				m.setEnrollType("카카오가입");
+				int result2 = ms.insertMember(m);
+				if(result2 > 0) {
+					int memberId = ms.getCurrentMemberId();
+					m.setMemberId(memberId);
+					loginUser = m;
+					result = true;
+				} else {
+					msg = "카카오로그인에 실패했습니다.";
+					result = false;
+				}
+			} else { //최초 로그인도 아닌데 회원 조회에 실패 했다면
+				msg = "일치하는 회원이 없습니다.";
+				result = false;
+			} //end if			
+		} //end try
+		
+		if(result) {
 			model.addAttribute("loginUser", loginUser);
 			return "redirect:index.jsp";
-		} catch (LoginException e) {
-			model.addAttribute("msg", e.getMessage());
-			return "common/errorPage";
-		}
+		} else {
+			model.addAttribute("msg", msg);
+			return "member/loginForm";
+		} //end if
 	}
 	
 	//로그아웃용메소드--세령--세령
@@ -303,7 +334,7 @@ public class MemberController {
 		return "member/updatePasswordFromFind";
 	}
 	
-	//이메일로 비밀번호 수정
+	//이메일로 비밀번호 수정 - 세령
 	@RequestMapping("changePasswordFromFind.me")
 	public String changePasswordFromFindPassword(@RequestParam("email") String email,
 												 @RequestParam("newPassword") String password,

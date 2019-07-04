@@ -51,15 +51,16 @@ public class MemberServiceTest {
 	@Before
 	public void setup() {
 		m = new Member();
-		m.setMemberId(7);
-		m.setEmail("user07@gmail.com");
+//		m.setMemberId(100);
+		m.setEmail("tpfud0922@naver.com");
 		m.setPassword("0000");
 		m.setUserName("박세령");
-		m.setBirthday("1997-09-22");
-		m.setGender("F");
-		m.setPhone("010-9226-0374");
-		m.setAccCode("003");
-		m.setAccNumber("01092260374");
+		m.setEnrollType("카카오가입");
+//		m.setBirthday("1997-09-22");
+//		m.setGender("F");
+//		m.setPhone("010-9226-0374");
+//		m.setAccCode("003");
+//		m.setAccNumber("01092260374");
 		
 		int currentPage = 1;
 		int listCount = 20;
@@ -73,7 +74,7 @@ public class MemberServiceTest {
 		System.out.println("셋팅 완료!");
 	}
 	
-	@Ignore
+	
 	@Test
 	public void testInsertMember() {
 		ms.insertMember(m);
@@ -162,6 +163,7 @@ public class MemberServiceTest {
 		log.info("이메일로 비밀번호 수정 성공!");
 	}
 	
+	@Ignore
 	@Test
 	public void testSelectMemberEmail() {
 		Member member = ms.selectMemberEmail(m.getEmail());

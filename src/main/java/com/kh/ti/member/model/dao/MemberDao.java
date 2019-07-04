@@ -36,5 +36,7 @@ public interface MemberDao {
 
 	Member selectMemberEmail(SqlSessionTemplate sqlSession, String email);
 
+	int getCurrentMemberId(SqlSessionTemplate sqlSession);
+
 
 }

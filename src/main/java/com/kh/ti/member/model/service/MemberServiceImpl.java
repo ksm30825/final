@@ -112,10 +112,16 @@ public class MemberServiceImpl implements MemberService{
 		return md.updatePasswordFromFind(sqlSession, member);
 	}
 
-	//이메일로 회원 검색
+	//이메일로 회원 검색 - 세령
 	@Override
 	public Member selectMemberEmail(String email) {
 		return md.selectMemberEmail(sqlSession, email);
+	}
+
+	//현재 MEMBER 시퀀스 얻기용 메소드 - 세령
+	@Override
+	public int getCurrentMemberId() {
+		return md.getCurrentMemberId(sqlSession);
 	}
 
 }

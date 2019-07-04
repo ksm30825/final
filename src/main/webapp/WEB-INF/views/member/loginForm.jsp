@@ -52,6 +52,11 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
+	
+	<c:if test="${ !empty msg }">
+		<script>alert('${ msg }');</script>
+	</c:if>
+	
 	<br><br>
 	<div class="container bg">
 		<section class="section" id="tabs">
@@ -97,17 +102,23 @@
 			      		<a style="color:white;" onclick="$('#modalPassword').toggleClass('is-active')">비밀번호를 잊어버리셨습니까?</a>
 			      	</p>
 			      </div>
-		      
-			      <div class="field">
-			        <p class="control">
-			          <button class="button is-primary" type="submit"><b>SIGN IN</b></button>
-			        </p>
+		      	
+		      	  <input type="hidden" value="자사가입" name="enrollType" id="enrollType">
+		      	  <input type="hidden" name="userName" id="userName">
+			      <div class="field field-horizon">
+			      	<div class="field-body">
+			      		<div class="field">
+				          <button class="button is-primary is-rounded" type="submit" id="signInBtn"><b>SIGN IN</b></button>
+				        </div>
+				        <div class="field">
+				          <a id="kakao-login-btn"></a>
+						  <!-- <a href="http://developers.kakao.com/logout"></a> -->
+				        </div>
+			      	</div>
+			        
 			      </div>
 			      <div class="field">
-			        <p class="control">
-			          <a id="kakao-login-btn"></a>
-					  <!-- <a href="http://developers.kakao.com/logout"></a> -->
-			        </p>
+			        
 			      </div>
 		      </div>
 		  </form>
@@ -195,7 +206,7 @@
 				          </label>
 				        </p>
 				      </div>
-				      
+				       <input type="hidden" value="자사가입" name="enrollType">
 				      <div class="field">
 				        <p class="control">
 				          <button class="button is-primary" type="submit"><b>SIGN UP</b></button>
@@ -210,7 +221,7 @@
 	
 	<jsp:include page="../common/footer.jsp"/>
 	<jsp:include page="findPasswordModal.jsp"/>
-	
+		
 	<!-- script -->
 	<script>
 		$(function(){
@@ -223,6 +234,8 @@
 			$("#signUpArea").css({
 				"display":"none"
 			});
+			
+			//alert('${ msg }');
 		});
 		//로그인 화면 보여주기용 함수
 		function showSignIn(obj){
@@ -248,42 +261,31 @@
 		}
 		// 사용할 앱의 JavaScript 키를 설정해 주세요.
 	    Kakao.init('a78d747cfbe06a103ff9224f83633086');
+		//kakao.cleanup();https://developers.kakao.com/docs/js-reference#kakao_cleanup()
 	    // 카카오 로그인 버튼을 생성합니다.
 	    Kakao.Auth.createLoginButton({
-	      container: '#kakao-login-btn',
-	      success: function(authObj) {
-	        
-	        
-	        Kakao.API.request({
+			container: '#kakao-login-btn',
+			size : 'large',
+			throughTalk : false, //간편 로그인 사용 여부
+			persistAccessToken : false, //세션 종료 후 로컬 스토리지 저장 안함
+		    success: function(authObj) {
+		      Kakao.API.request({
+		        url: '/v1/user/me',
+		        success: function(res) {
+		              $("#email").val(res.kaccount_email);
+		              $("#password").val(res.id);
+		              $("#userName").val(res.properties['nickname']);
+		              $("#enrollType").val("카카오");
+		              $("#signInBtn").click();
+		            } 
+		          });
+		        },
+	        fail: function(error) { //로그인 실패 시 에러를 받을 콜백 함수
+	          alert("카카오 계정을 찾을 수 없습니다.");
+		      console.log(JSON.stringify(error));
+	        }
+		 });
 
-	            url: '/v1/user/me',
-
-	            success: function(res) {
-						
-	                  alert(JSON.stringify(res)); //<---- kakao.api.request 에서 불러온 결과값 json형태로 출력
-	                  alert(JSON.stringify(authObj));
-
-	                 // alert(JSON.stringify(authObj)); //<----Kakao.Auth.createLoginButton에서 불러온 결과값 json형태로 출력
-
-	                 console.log(res.id);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
-
-	                 console.log(res.kaccount_email);//<---- 콘솔 로그에 email 정보 출력 (어딨는지 알겠죠?)
-
-	                console.log(res.properties['nickname']);//<---- 콘솔 로그에 닉네임 출력(properties에 있는 nickname 접근 
-
-	              // res.properties.nickname으로도 접근 가능 )
-
-	                console.log(authObj.access_token);//<---- 콘솔 로그에 토큰값 출력
-	               
-
-	                }
-
-	              });
-	      },
-	      fail: function(err) {
-	         alert(JSON.stringify(err));
-	      }
-	    });
 	</script>
 	<!-- end script -->
 </body>
