@@ -101,6 +101,10 @@ public class TravelServiceImpl implements TravelService {
 				int schId = schList.get(j).getSchId();
 				TrvCost cost = td.selectTrvCost(sqlSession, schId);
 				schList.get(j).setTrvCost(cost);
+				
+				ArrayList<SchFile> fileList = td.selectSchFileList(sqlSession, schId);
+				schList.get(j).setFileList(fileList);
+				
 			}
 			trvDayList.get(i).setSchList(schList);
 		}
@@ -578,8 +582,20 @@ public class TravelServiceImpl implements TravelService {
 
 	
 	
+	@Override
+	public int insertSchFile(SchFile schFile) {
+		int result = td.insertSchFile(sqlSession, schFile);
+		
+		return 0;
+	}
 	
-	
+
+	@Override
+	public int deleteSchFile(SchFile file) {
+		int result = td.deleteSchFile(sqlSession, file);
+		return 0;
+	}
+
 	
 	
 	
@@ -611,12 +627,6 @@ public class TravelServiceImpl implements TravelService {
 		return td.insertTrvCost(sqlSession, cost);
 	}
 
-	
-	@Override
-	public int insertSchFile(SchFile schFile) {
-		int result = td.insertSchFile(sqlSession, schFile);
-		return 0;
-	}
 
 	@Override
 	public HashMap selectSpotList(Travel trv) {
@@ -643,12 +653,6 @@ public class TravelServiceImpl implements TravelService {
 	@Override
 	public int deleteTrvCost(TrvCost cost) {
 		int result = td.deleteTrvCost(sqlSession, cost);
-		return 0;
-	}
-
-	@Override
-	public int deleteSchFile(SchFile file) {
-		int result = td.deleteSchFile(sqlSession, file);
 		return 0;
 	}
 

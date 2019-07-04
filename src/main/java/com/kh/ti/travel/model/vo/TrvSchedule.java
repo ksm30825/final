@@ -18,12 +18,13 @@ public class TrvSchedule implements java.io.Serializable {
 	private int likeyId;
 	private int spotId;
 	private TrvCost trvCost;
+	private ArrayList<SchFile> fileList;
 	
 	public TrvSchedule() {}
 
 	public TrvSchedule(int schId, String schTitle, int schNumber, String startTime, String endTime, String isTimeset,
 			String schContent, String schTransp, String plcId, String plcName, int dayId, int likeyId, int spotId,
-			TrvCost trvCost) {
+			TrvCost trvCost, ArrayList<SchFile> fileList) {
 		super();
 		this.schId = schId;
 		this.schTitle = schTitle;
@@ -39,6 +40,7 @@ public class TrvSchedule implements java.io.Serializable {
 		this.likeyId = likeyId;
 		this.spotId = spotId;
 		this.trvCost = trvCost;
+		this.fileList = fileList;
 	}
 
 	public int getSchId() {
@@ -153,12 +155,21 @@ public class TrvSchedule implements java.io.Serializable {
 		this.trvCost = trvCost;
 	}
 
+	public ArrayList<SchFile> getFileList() {
+		return fileList;
+	}
+
+	public void setFileList(ArrayList<SchFile> fileList) {
+		this.fileList = fileList;
+	}
+
 	@Override
 	public String toString() {
 		return "TrvSchedule [schId=" + schId + ", schTitle=" + schTitle + ", schNumber=" + schNumber + ", startTime="
 				+ startTime + ", endTime=" + endTime + ", isTimeset=" + isTimeset + ", schContent=" + schContent
 				+ ", schTransp=" + schTransp + ", plcId=" + plcId + ", plcName=" + plcName + ", dayId=" + dayId
-				+ ", likeyId=" + likeyId + ", spotId=" + spotId + ", trvCost=" + trvCost + "]";
+				+ ", likeyId=" + likeyId + ", spotId=" + spotId + ", trvCost=" + trvCost + ", fileList=" + fileList
+				+ "]";
 	}
 
 	

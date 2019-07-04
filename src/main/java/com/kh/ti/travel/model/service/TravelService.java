@@ -67,6 +67,9 @@ public interface TravelService {
 	
 	int updateSchContent(TrvSchedule sch);
 
+	int insertSchFile(SchFile schFile);
+
+	int deleteSchFile(SchFile file);
 	
 	
 	
@@ -81,9 +84,6 @@ public interface TravelService {
 
 	int deleteTrvComp(Travel trv, int memberId);
 
-	int insertSchFile(SchFile schFile);
-
-	int deleteSchFile(SchFile file);
 	
 	HashMap selectSpotList(Travel trv);
 

@@ -243,8 +243,10 @@
 		</div>
 	</div>
 
-
+	
 	<jsp:include page="travelInfoModal.jsp" />
+	<jsp:include page="newScheduleModal.jsp" />
+	<jsp:include page="scheduleInfoModal.jsp" />
 	<script>
 		$(function() {
 			$(".editorMenu").tab();

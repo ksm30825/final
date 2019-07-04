@@ -164,25 +164,27 @@
 				<div class="gallaryArea" id="gallary${ trvDay.dayNumber }Area" style="display:none">	
 					<section class="section">
 						<div class="columns">
-							<% for(int i = 1; i <= 3; i++) { %>
-							<div class="column is-one-third">
-								<div class="card trvCard">
-									<div class="card-image">
-										<figure class="image" style="margin:0">
-											<img src="resources/images/sample1.jpg">
-										</figure>
-									</div>
-									<div class="card-content">
-										<div class="content" align="right">
-											${ trvDay.dayDate }
+							<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
+								<c:forEach  var="file" items="${ sch.fileList }" varStatus="st2">
+									<div class="column is-one-third photoCard">
+										<div class="card trvCard">
+											<div class="card-image">
+												<figure class="image" style="margin:0">
+													<img src="resources/uploadFiles/${ file.changeName }">
+												</figure>
+											</div>
+											<div class="card-content">
+												<div class="content" align="right">
+													${ trvDay.dayDate }
+												</div>
+												<div class="content">
+													<p>${ file.fileCaption }</p>
+												</div>
+											</div>
 										</div>
-										<div class="content">
-											<p>사진<%= i %></p>
-										</div>
 									</div>
-								</div>
-							</div>
-							<% } %>
+								</c:forEach>
+							</c:forEach>
 						</div>
 					</section>
 				</div>		
@@ -248,6 +250,8 @@
 
 			$(".editor").each(function() {
 				var container = $(this).get(0);
+				var schId = $(this).parent().prev().find("input[name=schId]").val();
+				var dayNumber = $(this).parent().parent().parent().parent().attr("id").charAt(3);
 				var quill = new Quill(container, {
 					modules : {
 						toolbar : toolbarOptions
@@ -256,34 +260,56 @@
 					theme : 'snow' // or 'bubble'
 				});
 				quills.push(quill);
+				
+				$.ajax({
+					url:"selectSchContent.trv",
+					type:"POST",
+					data:{schId:schId},
+					success:function(data) {
+						if(data.content) {
+							quill.setContents(JSON.parse(data.content));
+						}
+					},
+					error:function(err) {
+						alert("err", err);
+					}
+				});
+				
+				
 				quill.getModule('toolbar').addHandler('image', function() {
 					console.log("handler작동");
-					var input = document.createElement('input');
-					input.setAttribute('type', 'file');
-					input.setAttribute('name', 'photo');
-					input.click();
+					var fileInput = document.createElement('input');
+					fileInput.setAttribute('type', 'file');
+					fileInput.setAttribute('name', 'image');
+					fileInput.click();
+					var schIdInput = document.createElement('input');
+					schIdInput.setAttribute('type', 'text');
+					schIdInput.setAttribute('name', 'schId');
+					schIdInput.setAttribute('value', schId);
 					
-					input.onchange = function() {
+					fileInput.onchange = function() {
 						var fd = new FormData();
 						console.log($(this));
 						var file = $(this)[0].files[0];
 						console.log(file);
 						fd.append('image', file);
+						fd.append('schId', schId);
 						console.log(fd);
 						$.ajax({
 							url:"insertSchFile.trv",
-							type:"post",
-							enctype:"multipart/form-data",
+							type:"POST",
 							data:fd,
+							cache:false,
 							processData:false,
 							contentType:false,
-							/* beforeSend:function(xhr) {
-								xhr.setRequestHeader($("#_csrf_header").val(), $("#_csrf").val());
-							}, */
 							success:function(data) {
-								alert("success");
 								var range = quill.getSelection();
-								quill.insertEmbed(range.index, 'image', 'http://localhost:8001/resources/uploadFiles/' + data);
+								quill.insertEmbed(range.index, 'image', 'http://localhost:8001/ti/resources/uploadFiles/' + data.changeName);
+								
+								var photoCard = $("#gallary" + dayNumber + "Area").find(".photoCard").eq(0).clone();
+								photoCard.find("img").attr("src", "resources/uploadFiles/" + data.changeName);
+								photoCard.appendTo($("#gallary" + dayNumber + "Area").children().children());
+								
 							},
 							error:function(err) {
 								alert("err", err);
@@ -293,7 +319,6 @@
 					
 					
 				});
-				var schId = $(this).parent().prev().find("input[name=schId]").val();
 				/* quill.on('text-change', function() {
 					
 					contents = quill.getContents();
@@ -317,6 +342,7 @@
 					quill.enable(false);
 					//quill.setContents(contents);
 					var toolbar = $(this).parent().parent().next().find(".ql-toolbar");
+					toolbar.appendTo($(this).parent().parent().next());
 					toolbar.hide();
 					var content = $(this).parent().parent().next();
 					content.toggle();
@@ -333,9 +359,6 @@
 					footer.find(".saveBtn").click(function() {
 						var contents = quill.getContents();
 						console.log(contents);
-						
-						if(contents.ops.indexOf("image"))
-						
 						
 						var schContent = JSON.stringify(contents);
 						console.log(schContent);
@@ -381,19 +404,6 @@
 			$(this).parent().siblings().children().addClass('is-outlined')
 		});
 		
-		
-		
-/* 
-		$(".detailShowBtn").click(function() {
-			$(this).parent().parent().next().toggle();
-			$(this).parent().parent().next().children()
-			$(this).parent().parent().next().next().toggle();
-		});
-		
-		$(".detailEditBtn").click(function() {
-			$(this).parent().parent().next().toggle();
-			$(this).parent().parent().next().next().toggle();
-		}); */
 	</script>
 </body>
 </html>
