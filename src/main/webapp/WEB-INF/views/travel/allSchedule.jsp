@@ -45,7 +45,7 @@
 								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
 								<ul class="connectedSortable menu-list dayList" style="background: white">
 									<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
-										<li class="panel-block">
+										<li class="panel-block" style="background: white">
 											<div class="media-left" style="width:20%">
 												<p>${ sch.startTime } - ${ sch.endTime }</p>
 												

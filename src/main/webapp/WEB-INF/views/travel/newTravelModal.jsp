@@ -42,10 +42,6 @@
 									<span class="icon is-small is-left"><i class="fas fa-globe-americas"></i></span>
 									<span class="select"> 
 										<select name="trvCountry">
-											<!-- <option>호주</option>
-											<option>일본</option>
-											<option>중국</option>
-											<option>미국</option> -->
 										</select>
 									</span>
 								</p>
@@ -55,10 +51,6 @@
 									<span class="icon is-small is-left"><i class="fas fa-location-arrow"></i></span> 
 									<span class="select"> 
 										<select name="trvCity">
-											<!-- <option>시드니</option>
-											<option>멜버른</option>
-											<option>브리즈번</option>
-											<option>퍼스</option> -->
 										</select>
 									</span>
 								</p>

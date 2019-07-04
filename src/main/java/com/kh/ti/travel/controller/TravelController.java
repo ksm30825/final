@@ -355,30 +355,17 @@ public class TravelController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//동행추가-민지
-	@RequestMapping("insertCompany.trv")
-	public String insertTrvCompany(Travel trv, Member m) {
-		int result = ts.insertTrvCompany(trv, m);
-		return "";
+	//전체예산수정-민지
+	@RequestMapping("updateBudget.trv")
+	public ModelAndView updateBudget(Travel trv, ModelAndView mv) {
+		int result = ts.updateBudget(trv);
+		
+		mv.setViewName("jsonView");
+		return mv;
 	}
-
-
-	//여행동행삭제-민지
-	@RequestMapping("deleteComp.trv")
-	public String deleteTrvComp(Travel trv, int memberId) {
-		int result = ts.deleteTrvComp(trv, memberId);
-		return "";
-	}	
-
+	
+	
+	
 	
 	//가계부 작성-민지
 	@RequestMapping("insertCost.trv")
@@ -403,6 +390,33 @@ public class TravelController {
 		return "";
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//동행추가-민지
+	@RequestMapping("insertCompany.trv")
+	public String insertTrvCompany(Travel trv, Member m) {
+		int result = ts.insertTrvCompany(trv, m);
+		return "";
+	}
+
+
+	//여행동행삭제-민지
+	@RequestMapping("deleteComp.trv")
+	public String deleteTrvComp(Travel trv, int memberId) {
+		int result = ts.deleteTrvComp(trv, memberId);
+		return "";
+	}	
+
+
 
 	
 	//인기명소 불러오기-민지

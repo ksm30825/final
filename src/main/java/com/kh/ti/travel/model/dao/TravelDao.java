@@ -110,6 +110,12 @@ public interface TravelDao {
 	
 	
 	
+
+	int updateBudget(SqlSessionTemplate sqlSession, Travel trv);
+
+	
+	
+	
 	
 	
 	

@@ -106,6 +106,7 @@
 	<select id="selectCountryList" resultMap="CountryResultSet">
 		SELECT *
 		FROM COUNTRY
+		ORDER BY COUNTRY_NAME_KO
 	</select>
 	<select id="selectCityList" parameterType="_int" resultMap="CityResultSet">
 		SELECT *
@@ -149,6 +150,11 @@
 	<update id="deleteTravel" parameterType="_int">
 		UPDATE TRAVEL
 		SET STATUS = 'N'
+		WHERE TRV_ID = #{trvId}
+	</update>
+	<update id="updateBudget" parameterType="Travel">
+		UPDATE TRAVEL
+		SET BUDGET = #{budget}
 		WHERE TRV_ID = #{trvId}
 	</update>
 	
@@ -293,7 +299,6 @@
 		DELETE FROM TRV_COST
 		WHERE COST_ID = #{costId}
 	</delete>
-	
 
 	
 	

@@ -468,7 +468,9 @@
 				markers.forEach(function(m) {
 					m.setMap(null);
 				});
-				dayPath.setMap(null);
+				if(dayPath != undefined) {
+					dayPath.setMap(null);
+				}
 				markers = [];
 				//for each place, get the icon, name, and location
 				var bounds = new google.maps.LatLngBounds();
