@@ -31,6 +31,6 @@ public interface MemberService {
 
 	Member selectMemberEmail(String email);
 
-	int getCurrentMemberId();
+	int getCurrentMemberId(Member m);
 	
 }

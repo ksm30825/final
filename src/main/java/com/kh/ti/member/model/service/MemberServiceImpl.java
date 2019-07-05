@@ -31,11 +31,13 @@ public class MemberServiceImpl implements MemberService{
 	public Member loginMember(Member m) throws LoginException {
 		Member loginUser = null;
 		String encPassword = md.selectEncPassword(sqlSession, m);
-		if(!passwordEncoder.matches(m.getPassword(), encPassword)) {
+		if(encPassword == null || encPassword == "") {
+			throw new LoginException("일치하는 회원 정보가 없습니다!");
+		} else if(!passwordEncoder.matches(m.getPassword(), encPassword)){
 			throw new LoginException("비밀번호가 일치하지 않습니다!");
-		} else {
+		}else {
 			loginUser = md.selectMember(sqlSession, m);			
-		}
+		}	
 		return loginUser;
 	}
 
@@ -59,7 +61,6 @@ public class MemberServiceImpl implements MemberService{
 		String encPassword = md.selectEncPassword(sqlSession, loginUser);
 		int result = 0;
 		if(!passwordEncoder.matches(oldPassword, encPassword)) {
-			System.out.println("비밀번호 일치 안함");
 			throw new LoginException("비밀번호가 일치하지 않습니다!");
 		} else {
 			String encPassword2 = passwordEncoder.encode(newPassword);
@@ -120,8 +121,8 @@ public class MemberServiceImpl implements MemberService{
 
 	//현재 MEMBER 시퀀스 얻기용 메소드 - 세령
 	@Override
-	public int getCurrentMemberId() {
-		return md.getCurrentMemberId(sqlSession);
+	public int getCurrentMemberId(Member m) {
+		return md.getCurrentMemberId(sqlSession, m);
 	}
 
 }

@@ -108,17 +108,13 @@
 			      <div class="field field-horizon">
 			      	<div class="field-body">
 			      		<div class="field">
-				          <button class="button is-primary is-rounded" type="submit" id="signInBtn"><b>SIGN IN</b></button>
-				        </div>
-				        <div class="field">
-				          <a id="kakao-login-btn"></a>
-						  <!-- <a href="http://developers.kakao.com/logout"></a> -->
+				          <button class="button is-primary" type="submit" id="signInBtn"><b>SIGN IN</b></button>
 				        </div>
 			      	</div>
-			        
 			      </div>
 			      <div class="field">
-			        
+			      	  <button class="button is-primary" id="kakaoLogin" style="background-color: yellow !important; color: #1a0d00;"><b>카카오계정으로 로그인</b></button>
+			          <a id="kakao-login-btn" style="display : none;"></a>
 			      </div>
 		      </div>
 		  </form>
@@ -234,8 +230,10 @@
 			$("#signUpArea").css({
 				"display":"none"
 			});
-			
-			//alert('${ msg }');
+			$("#kakaoLogin").click(function(){
+				$("#kakao-login-btn").click();
+				return false;
+			});
 		});
 		//로그인 화면 보여주기용 함수
 		function showSignIn(obj){
@@ -272,10 +270,14 @@
 		      Kakao.API.request({
 		        url: '/v1/user/me',
 		        success: function(res) {
-		              $("#email").val(res.kaccount_email);
+		        	  //이메일이 존재한다면 넣어라.
+		        	  if(res.kaccount_email != null || res.kaccount_email != ""){
+		        		  $("#email").val(res.kaccount_email);
+		        	  }
 		              $("#password").val(res.id);
 		              $("#userName").val(res.properties['nickname']);
-		              $("#enrollType").val("카카오");
+		              $("#enrollType").val("카카오가입");
+					  $("#signInArea").attr("action", "kakaoLogin.me");
 		              $("#signInBtn").click();
 		            } 
 		          });

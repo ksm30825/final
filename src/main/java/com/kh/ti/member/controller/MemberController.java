@@ -83,45 +83,46 @@ public class MemberController {
 	@RequestMapping("login.me")
 	public String loginCheck(@ModelAttribute Member m, Model model) {
 		Member loginUser = null;
-		boolean result = false;
-		String msg = "";
 		try {
-			//m.setEnrollType("자사가입");
 			loginUser = ms.loginMember(m);
-			if(loginUser != null) {
-				result = true;
-			} else {
-				msg = "이미 탈퇴한 회원입니다.";
-			}
-			
+			model.addAttribute("loginUser", loginUser);
+			return "redirect:index.jsp";			
 		} catch (LoginException e) {
-			if(m.getEnrollType().equals("카카오")) { //만약 카카오로 최초 로그인이라면
-				String encPassword = passwordEncoder.encode(m.getPassword());
-				m.setPassword(encPassword);
-				m.setEnrollType("카카오가입");
-				int result2 = ms.insertMember(m);
-				if(result2 > 0) {
-					int memberId = ms.getCurrentMemberId();
-					m.setMemberId(memberId);
-					loginUser = m;
-					result = true;
-				} else {
-					msg = "카카오로그인에 실패했습니다.";
-					result = false;
-				}
-			} else { //최초 로그인도 아닌데 회원 조회에 실패 했다면
-				msg = "일치하는 회원이 없습니다.";
-				result = false;
-			} //end if			
+			model.addAttribute("msg", e.getMessage());
+			return "member/loginForm";	
+		} //end try
+	}
+	
+	//카카오로 로그인  - 세령
+	@RequestMapping("kakaoLogin.me")
+	public String kakaoLogin(@ModelAttribute Member m, Model model) {
+		if(m.getEmail() == null || m.getEmail() == "") {
+			m.setEmail("KAKAO" + m.getPassword());
+		}
+		
+		Member loginUser = null;
+		String path = "";
+		int memberId;
+		try {
+			loginUser = ms.loginMember(m);
+			model.addAttribute("loginUser", loginUser);
+			path = "redirect:index.jsp";
+		} catch (LoginException e) {
+			String encPassword = passwordEncoder.encode(m.getPassword());
+			m.setPassword(encPassword);
+			int result = ms.insertMember(m);
+			if(result > 0) {
+				memberId = ms.getCurrentMemberId(m);
+				m.setMemberId(memberId);
+				model.addAttribute("loginUser", m);
+				path = "redirect:index.jsp";
+			} else {
+				model.addAttribute("msg", "카카오로그인에 실패했습니다.");
+				path = "member/loginForm";
+			} //end if
 		} //end try
 		
-		if(result) {
-			model.addAttribute("loginUser", loginUser);
-			return "redirect:index.jsp";
-		} else {
-			model.addAttribute("msg", msg);
-			return "member/loginForm";
-		} //end if
+		return path;
 	}
 	
 	//로그아웃용메소드--세령--세령
@@ -176,11 +177,11 @@ public class MemberController {
 		if(result > 0) {
 			model.addAttribute("loginUser", loginUser);
 			model.addAttribute("success", "success");
-			return "member/confirmAccount";
 		} else {
 			model.addAttribute("msg", "계좌정보수정 실패!");
-			return "common/erroPage";
+			//return "common/erroPage";
 		}
+		return "member/confirmAccount";
 	}
 	
 	//회원정보수정용메소드--세령
@@ -352,7 +353,8 @@ public class MemberController {
 		} else {
 			return "common/errorPage";
 		}
-		
 	}
+	
+	
 	
 } //end class

@@ -138,11 +138,17 @@
 			<span><input type="hidden" class="txt" id="account_num" name="account_num"></span>
 		</form>
 	</div> <!-- end hidden area -->
-	
-	<c:if test="${ success eq 'success' }">
+	<c:if test="${ !empty msg }">
+		<script>
+			alert('${ msg }');
+			window.opener.location.reload();
+			window.close(); 
+		</script>
+	</c:if>
+	<c:if test="${ success eq 'success'}">
 		<script type="text/javascript">
-			window.opener.location.reload();    //부모창 reload
-			window.close();    //현재 팝업창 Close
+			window.opener.location.reload();
+			window.close(); 
 		</script>
 	</c:if>
 	<!-- script -->
@@ -252,6 +258,8 @@
 						$("#sbm-flag").attr("checked", false);
 						$("#sbm-ok").hide();
 						$("#sbm-no").show();
+						window.opener.location.reload();
+						window.close(); 
 					}
 				},
 				error : function(data, data2, data3) {
