@@ -10,8 +10,8 @@ public class TrvBoardSch implements java.io.Serializable {
 	private String isTimeset;
 	private String schContent;
 	private String schTransp;
-	private int plcId;
-	private String placeName;
+	private String plcId;
+	private String plcName;
 	private int dayId;
 	private int likeyId;
 	private int spotId;
@@ -19,7 +19,7 @@ public class TrvBoardSch implements java.io.Serializable {
 	public TrvBoardSch() {}
 
 	public TrvBoardSch(int schId, String schTitle, int schNumber, String startTime, String endTime, String isTimeset,
-			String schContent, String schTransp, int plcId, String placeName, int dayId, int likeyId, int spotId) {
+			String schContent, String schTransp, String plcId, String plcName, int dayId, int likeyId, int spotId) {
 		super();
 		this.schId = schId;
 		this.schTitle = schTitle;
@@ -30,7 +30,7 @@ public class TrvBoardSch implements java.io.Serializable {
 		this.schContent = schContent;
 		this.schTransp = schTransp;
 		this.plcId = plcId;
-		this.placeName = placeName;
+		this.plcName = plcName;
 		this.dayId = dayId;
 		this.likeyId = likeyId;
 		this.spotId = spotId;
@@ -100,20 +100,20 @@ public class TrvBoardSch implements java.io.Serializable {
 		this.schTransp = schTransp;
 	}
 
-	public int getPlcId() {
+	public String getPlcId() {
 		return plcId;
 	}
 
-	public void setPlcId(int plcId) {
+	public void setPlcId(String plcId) {
 		this.plcId = plcId;
 	}
 
-	public String getPlaceName() {
-		return placeName;
+	public String getPlcName() {
+		return plcName;
 	}
 
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName;
+	public void setPlcName(String plcName) {
+		this.plcName = plcName;
 	}
 
 	public int getDayId() {
@@ -144,7 +144,7 @@ public class TrvBoardSch implements java.io.Serializable {
 	public String toString() {
 		return "TrvBoardSch [schId=" + schId + ", schTitle=" + schTitle + ", schNumber=" + schNumber + ", startTime="
 				+ startTime + ", endTime=" + endTime + ", isTimeset=" + isTimeset + ", schContent=" + schContent
-				+ ", schTransp=" + schTransp + ", plcId=" + plcId + ", placeName=" + placeName + ", dayId=" + dayId
+				+ ", schTransp=" + schTransp + ", plcId=" + plcId + ", plcName=" + plcName + ", dayId=" + dayId
 				+ ", likeyId=" + likeyId + ", spotId=" + spotId + "]";
 	}
 	

@@ -96,7 +96,7 @@
 		<result property="schContent" column="SCH_CONTENT" />
 		<result property="schTransp" column="SCH_TRANSP" />
 		<result property="plcId" column="PLC_ID" />
-		<result property="placeName" column="PLACE_NAME"/>
+		<result property="plcName" column="PLC_NAME"/>
 		<result property="dayId" column="DAY_ID" />
 		<result property="likeyId" column="LIKEY_ID" />
 		<result property="spotId" column="SPOT_ID" />
@@ -269,7 +269,6 @@
 		SELECT *
 		FROM TRV_DAY TD
 		LEFT JOIN TRV_SCH TSCH ON (TD.DAY_ID = TSCH.DAY_ID)
-		LEFT JOIN PLACE PL ON (TSCH.PLC_ID = PL.PLC_ID)
 		WHERE TD.TRV_ID = #{ trvId }
 		AND TD.DAY_NUMBER = #{ dayNumber }
 		AND TSCH.SCH_TRANSP IS NULL

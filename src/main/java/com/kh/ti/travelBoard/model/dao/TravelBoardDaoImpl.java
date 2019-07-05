@@ -51,8 +51,6 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardList", tb, rowBounds);
 		tbMap.put("tbList", tbList);
 		
-		System.out.println("tbList : " + tbList);
-		
 		//여행테마 태그 리스트
 		ArrayList tagList = (ArrayList) sqlSession.selectList("TravelBoard.selectTagList");
 		tbMap.put("tagList", tagList);
@@ -81,8 +79,6 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		detailTb.setLikeyStatus(sqlSession.selectOne("TravelBoard.checkLikeyStatus", tb));
 		//해당 일정 리뷰작성여부 확인
 		detailTb.setWriteStatus(sqlSession.selectOne("TravelBoard.CheckWriteStatus", tb));
-		
-		System.out.println("detailTb : " + detailTb);
 		
 		tbMap.put("detailTb", detailTb);
 		
@@ -127,8 +123,6 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		for(int i = 0; i < trList.size(); i++) {
 			trList.get(i).setWriteStatus(sqlSession.selectOne("TravelBoard.CheckWriteStatus", tr));
 		}
-		
-		System.out.println("trList : " + trList);
 		
 		return trList;
 	}

@@ -140,8 +140,6 @@ public class TravelBoardController {
 		
 		TrvDaySchedule detailDay = tbs.selectTravelDetailDays(tds);
 		
-		System.out.println("detailDay : " + detailDay.getTrvSchedule());
-		
 		return new ResponseEntity<TrvDaySchedule>(detailDay, HttpStatus.OK);
 	}
 	
