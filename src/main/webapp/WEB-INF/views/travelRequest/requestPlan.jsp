@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,12 +50,20 @@ th, td {
 	width: 400px !important;
 	height: 800px !important;
 }
+.card-image {
+	background: lightgray;
+}
 </style>
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
 	<div class="columns">
 		<div class="column">
+		<input type="hidden" value="${ code }" id="code">
+		<input type="hidden" value="${ uPoint }" id="uPoint">
+		<input type="hidden" value="${ useType }" id="useType">
+		<input type="hidden" value="${ reqId }" id="reqId">
+		<input type="hidden" value="${ userName }" id="userName">
 			<section class="section" id="form">
 				<h1 class="title">일정</h1>
 				<hr>
@@ -61,49 +71,25 @@ th, td {
 					<div class="column">
 						<br>
 						<div class="field">
-							<a class="button is-primary"> Day1 </a>
-							<textarea class="textarea" readonly
-								style="height: 50px; min-height: 50px;">일정 - 일정 - 일정</textarea>
+						<c:forEach var="day" items="${ trp }" varStatus="number">
+							<a class="button is-primary">Day${ number.count }</a>
 							<p class="control">
-								<textarea class="textarea" readonly>이러한 일정들</textarea>
+								<textarea class="textarea" readonly>${ day.getDayList().get(0).getpDayMemo() }</textarea>
 							</p>
-						</div>
-						<br>
-						<hr>
-						<br>
-						<div class="field">
-							<a class="button is-primary"> Day2 </a>
-							<textarea class="textarea" readonly
-								style="height: 50px; min-height: 50px;">일정 - 일정 - 일정</textarea>
-							<p class="control">
-								<textarea class="textarea" readonly>이러한 일정들</textarea>
-							</p>
-						</div>
-						<br>
-						<hr>
-						<br>
-						<div class="field">
-							<a class="button is-primary"> Day3 </a>
-							<textarea class="textarea" readonly
-								style="height: 50px; min-height: 50px;">일정 - 일정 - 일정</textarea>
-							<p class="control">
-								<textarea class="textarea" readonly>이러한 일정들</textarea>
-							</p>
+						</c:forEach>
 						</div>
 						<br>
 						<hr>
 						<br>
 						<div class="buttons">
-							<a class="button is-primary is-rounded more" onclick="more();">일정
-								더 보기</a>
+							<a class="button is-primary is-rounded more" onclick="more();">일정 더 보기</a>
 						</div>
 					</div>
 					<div class="column map" style="width: 50%;">
 						<div class="card">
 							<div class="card-image">
-								<figure class="image is-4by3">
-									<img src="https://source.unsplash.com/random/800x600"
-										alt="Image">
+								<figure id="map" class="image is-4by3">
+									<h1 align="center" id="before">채택하셔야 경로가 보여집니다.</h1>
 								</figure>
 							</div>
 							<div class="card-content">
@@ -123,9 +109,9 @@ th, td {
 										<div class="card-content">
 											<div class="content">
 												<textarea class="textarea" type="text"
-													style="height: 50px; min-height: 50px;" readonly>여행제목</textarea>
+													style="height: 50px; min-height: 50px;" readonly>${ trp.get(0).getPlanTitle() }</textarea>
 												<hr>
-												<textarea class="textarea" readonly>여행 소개</textarea>
+												<textarea class="textarea" readonly>${ trp.get(0).getPlanContent() }</textarea>
 											</div>
 										</div>
 										<footer class="card-footer">
@@ -152,15 +138,13 @@ th, td {
 															<th>숙박</th>
 															<th>경비</th>
 															<th>기타</th>
-															<th>총액</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr>
-															<td><textarea readonly>100,000원</textarea></td>
-															<td><textarea readonly>100,000원</textarea></td>
-															<td><textarea readonly>100,000원</textarea></td>
-															<td><textarea readonly>300,000원</textarea></td>
+															<td><textarea readonly><fmt:formatNumber value="${ trp.get(0).getRoomCharge() }" groupingUsed="true"/>원</textarea></td>
+															<td><textarea readonly><fmt:formatNumber value="${ trp.get(0).getTrafficCharge() }" groupingUsed="true"/>원</textarea></td>
+															<td><textarea readonly><fmt:formatNumber value="${ trp.get(0).getEtcCharge() }" groupingUsed="true"/>원</textarea></td>					
 													</tbody>
 												</table>
 											</section>
@@ -298,9 +282,11 @@ th, td {
 		   });
 		}
 	});
-
+	
 	function back() {
-		location = "requestDetail.tr";
+		var reqId= $("#reqId").val();
+		var userName = $("#userName").val();
+		location = "requestDetail.tr?reqId=" + reqId + "&userName=" + userName;
 	}
 	function more() {
 		alert("채택해야 상세보기가 가능합니다.");
@@ -309,7 +295,18 @@ th, td {
 		var result = confirm("정말로 채택하시겠습니까?");
 		console.log(result);
 		if(result == true) {
-			location = "myRequestList.mr";
+			var code = $("#code").val();
+			var useType = $("#useType").val();
+			var uPoint = $("#uPoint").val();
+			var reqId = $("#reqId").val();
+			var userName = $("#userName").val();
+			
+			console.log(code);
+			console.log(useType);
+			console.log(uPoint);
+			console.log(reqId);
+			console.log(userName);
+			//location = "myRequestList.mr";
 		} else {
 			location = location;
 		}
@@ -320,5 +317,109 @@ th, td {
 	function report() {
 		location = "paneltyList.pe";
 	}
+	
+	//구글 맵
+    var ploy;	//폴리라인
+    var map;	//맵
+    var markers = new Array();	//마커들
+    var pTitle = new Array();	//일정 장소명들
+    var pAddress = new Array();	//각 장소명의 주소
+    var pLat = new Array();		//각 장소의 위도
+    var pLng = new Array();		//각 장소의 경도
+    
+    <c:forEach var="latList" items="${ trp }" varStatus="st">
+    if("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }" != "") {
+    	pTitle.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }");
+    	pAddress.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceAddress() }");
+    	pLat.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLat() }");
+    	pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
+    }
+    </c:forEach>
+    console.log("일정들 장소 명 : " + pTitle.length);
+    console.log("각 장소 주소 : " + pAddress);
+    console.log("각 장소 위도 : " + pLat);
+    console.log("각 장소 경도 : " + pLng);
+    console.log(pLat[0]);
+    console.log(pLng[0]);
+    console.log(pTitle[0]);
+    
+
+    /* function initMap() {
+		var first = new google.maps.LatLng(pLat[0], pLng[0]);
+		var destinations = new Array();
+		var contentString = pTitle[0];
+		var content = new Array();
+    	map = new google.maps.Map(document.getElementById('map'), {
+    	  	zoom: 13,
+    	  	center : first
+    	});
+    	
+    	for(var i = 0; i < pTitle.length; i++) {
+    		if(i == 0) {
+    			marker = new google.maps.Marker({
+    	    	    position: new google.maps.LatLng(pLat[0], pLng[0]),
+    	    	    map: map
+    	    	});
+    			$("#lat").append(marker.position.lat() + "#");
+    		    $("#lng").append(marker.position.lng() + "#");
+    			destinations.push(new google.maps.LatLng(pLat[0], pLng[0]));
+    		} else {
+	    		var marker = new google.maps.Marker({
+	        	    position: new google.maps.LatLng(pLat[i], pLng[i]),
+	        	    map: map
+	        	});
+	    		$("#lat").append(marker.position.lat() + "#");
+    		    $("#lng").append(marker.position.lng() + "#");
+	    		destinations.push(new google.maps.LatLng(pLat[i], pLng[i]));
+    		}
+    		
+    		markers.push(marker);
+    	}
+    	console.log(markers);
+    	$.each(markers, function(index, item) {
+	    	google.maps.event.addListener(markers[index], 'click', function() {
+	            infowindow.setContent('<div><strong>' + pTitle[index] + '</strong><br>' +
+	            pAddress[index] + '</div>');
+	            infowindow.open(map, this);
+	        });
+	    	$("#placeName").append(pTitle[index] + "#");
+	    	$("#placeAddress").append(pAddress[index] + "#");
+    	});
+    	
+    	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
+    	//폴리라인 객체
+    	/* poly = new google.maps.Polyline({
+    		path: destinations,
+    	  	strokeColor: "#FF0000",
+    	  	strokeWeight : 3
+    	});
+    	poly.setMap(map);
+
+    	//지역 검색
+        var input = document.getElementById('pac-input');
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', map);
+
+        // Specify just the place data fields that you need.
+        autocomplete.setFields(['place_id', 'geometry', 'name']);
+
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        var infowindow = new google.maps.InfoWindow();
+        var infowindowContent = document.getElementById('infowindow-content');
+        infowindow.setContent(infowindowContent);
+    } */
+    
+    
+	function cancel() {
+		location = location;
+	}
+	function report() {
+		location = "paneltyList.pe";
+	}
 </script>
+<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&libraries=places&callback=initMap"
+		async defer></script>
 </html>

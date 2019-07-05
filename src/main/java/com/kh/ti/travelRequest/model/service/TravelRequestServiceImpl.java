@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelRequest.model.dao.TravelRequestDao;
 import com.kh.ti.travelRequest.model.vo.TravelRequest;
+import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Service
 public class TravelRequestServiceImpl implements TravelRequestService{
@@ -43,6 +44,12 @@ public class TravelRequestServiceImpl implements TravelRequestService{
 	@Override
 	public TravelRequest selectOneRequest(int reqNum) {
 		return trd.selectOneRequest(sqlSession, reqNum);
+	}
+
+	//선택한 설계글 상세보기
+	@Override
+	public ArrayList<TravelRequestPlan> selectOneRequestPlan(int code) {
+		return trd.selectOneRequestPlan(sqlSession, code);
 	}
 
 }

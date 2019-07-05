@@ -19,6 +19,7 @@ import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
 import com.kh.ti.travelRequest.model.service.TravelRequestService;
 import com.kh.ti.travelRequest.model.vo.TravelRequest;
+import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Controller
 @SessionAttributes("loginUser")
@@ -99,16 +100,34 @@ public class TravelRequestController {
 	
 	//설계해주기 - 이선우
 	@RequestMapping("showrequestStartForm")
-	public String showRequestStartForm(@RequestParam("reqId")String reqId, Model model) {
+	public String showRequestStartForm(@RequestParam("reqId")int reqId,
+									   @RequestParam("userName")String userName, Model model) {
 		System.out.println(reqId);
 		model.addAttribute("reqId", reqId);
+		model.addAttribute("userName", userName);
 		return "travelRequest/requestStart";
 	}
 	
 	//설계글 상세보기(의뢰자가) - 이선우
 	@RequestMapping("requestPlan.tr")
-	public String selectRequestPlan() {
+	public String selectRequestPlan(@RequestParam("code")int code,
+									@RequestParam("useType")int useType,
+									@RequestParam("uPoint")int uPoint, 
+									@RequestParam("reqId")int reqId,
+									@RequestParam("userName")String userName, Model model) {
+		System.out.println("설계글 번호 : " + code);
+		System.out.println("사용 타입 : " + useType);
+		System.out.println("의뢰 가격 : " + uPoint);
 		
+		ArrayList<TravelRequestPlan> trp = trs.selectOneRequestPlan(code);
+		System.out.println("조회 결과 : " + trp);
+		
+		model.addAttribute("trp", trp);
+		model.addAttribute("code", code);
+		model.addAttribute("useType", useType);
+		model.addAttribute("uPoint", uPoint);
+		model.addAttribute("reqId", reqId);
+		model.addAttribute("userName", userName);
 		return "travelRequest/requestPlan";
 	}
 }
