@@ -8,6 +8,7 @@ import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.vo.Payment;
 import com.kh.ti.point.model.vo.Proceeds;
+import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -30,6 +31,8 @@ public interface PointDao {
 	ArrayList<UsePoint> selectUseList(SqlSessionTemplate sqlSession, PageInfo usPi, UsePoint use);
 	//포인트 자동으로 적립하기
 	int insertReservePoint(SqlSessionTemplate sqlSession, ReservePoint rp);
+	//성공시 멤버 누적포인트 증가
+	int updateUserPointAuto(SqlSessionTemplate sqlSession, ReservePoint rp);
 	//포인트 환불신청하기-> 환불 내역에 인서트
 	int insertRefund(SqlSessionTemplate sqlSession, Refund refund);
 	//해당 reviewId로 trvId 조회해오기
@@ -58,6 +61,11 @@ public interface PointDao {
 	ArrayList<Proceeds> selectAllProceeds(SqlSessionTemplate sqlSession, PageInfo proPi, Proceeds proceeds);
 	//누적수익금을 위한 기존 수익금 조회
 	Proceeds selectOneProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard);
-	Proceeds selectOneProceedsPtcpId(SqlSessionTemplate sqlSession, int ptcpId);
+	//환급 신청내역 전체 리스트 카운트
+	int getRebateListCount(SqlSessionTemplate sqlSession, Rebate rebate);
+	//환급 신청내역 전체 리스트 조회
+	ArrayList<Rebate> selectAllRebate(SqlSessionTemplate sqlSession, Rebate rebate, PageInfo rebatePi);
+	//환불 신청시
+	int insertRebate(SqlSessionTemplate sqlSession, Rebate rebate);
 
 }

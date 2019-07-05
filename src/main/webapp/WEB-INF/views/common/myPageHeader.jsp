@@ -57,11 +57,11 @@
 				<span class="icon has-text-danger">
 					<i class="fab fa-product-hunt"></i>
 				</span>
-				<span style="color:red">3000</span>
+				<span style="color:red">${sessionScope.loginUser.userPoint }</span>
 				<span class="icon" style="margin-left:135px;">
 	            	<i class='fab fa-maxcdn' style="color:green;"></i>
 	         	</span>
-	         	<span style="color:green">319,600</span><br>			
+	         	<span style="color:green">${loginUser.userProceeds }</span><br>			
 			</a>
 		</div>
 		<div class="column is-one-third-mobile" >

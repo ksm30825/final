@@ -117,6 +117,17 @@
 		$(function(){
 			$(".apointPay").parent().addClass('is-active');
 			$(".apointPay").children().css({"color":"#209cee"});
+			$.ajax({
+				url:"allAdPay.po",
+				type:"post",
+				data:{},
+				success:function(data){
+					console.log('success');
+				},
+				error:function(data){
+					console.log('error');
+				}
+			});
 		})
 	</script>
 </body>

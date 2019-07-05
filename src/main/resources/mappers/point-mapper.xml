@@ -51,16 +51,13 @@
 		<result property="trvId" column="TRV_ID"/>
 		<result property="ptcpId" column="PTCP_ID"/>
 	</resultMap>
-	<resultMap type="Proceeds" id="proceedsALlResultSet">
-		<id property="proceedsId" column="PROCEEDS_ID"/>
-		<result property="proceeds" column="PROCEEDS"/>
-		<result property="proceedsDate" column="PROCEEDS_DATE"/>
-		<result property="proceedsType" column="PROCEEDS_TYPE"/>
+	<resultMap type="Rebate" id="rebateResultSet">
+		<id property="rebateId" column="REBATE_ID"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
 		<result property="memberId" column="MEMBER_ID"/>
-		<result property="trvId" column="TRV_ID"/>
-		<result property="ptcpId" column="PTCP_ID"/>
-		<result property = "sumTrv" column="SUMTRV" javaType = "_int"/>
-		<result property = "sumPtcp" column="SUMPTCP" javaType = "_int"/>
+		<result property="payDate" column="PAY_DATE"/>
+		<result property="rebateStatus" column="REBATE_STATUS"/>
 	</resultMap>
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
@@ -145,7 +142,13 @@
 			<when test="spotReviewId != 0">null, #{spotReviewId}, null </when>
 			<when test="trvId != 0">null, null, #{trvId}</when>
 		</choose> )
-	</insert>	
+	</insert>
+	<!-- 성공시 멤버 누적포인트 증가 -->
+	<update id="updateUserPointAuto" parameterType="ReservePoint">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT + #{reservePoint}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
 	<!-- 포인트 환불신청하기-> 환불 내역에 인서트 -->
 	<insert id="insertRefund" parameterType="Refund">
 		INSERT INTO REFUND
@@ -165,7 +168,7 @@
 		FROM MEMBER
 		WHERE MEMBER_ID = #{memberId}
 	</select>
-	<!-- Member 테이블의 userPoint조회해오기 -->
+	<!-- Member 테이블의 userProceeds조회해오기 -->
 	<select id="selectUserProceeds" parameterType="_int" resultType="_int">
 		SELECT USER_PROCEEDS
 		FROM MEMBER
@@ -186,12 +189,6 @@
 		UPDATE MEMBER
 		SET USER_POINT = USER_POINT + #{payAmount}
 		WHERE MEMBER_ID = #{memberId}
-		<!-- <if test="payAmount != null">
-			UPDATE MEMBER
-			SET USER_POINT = USER_POINT + #{payAmount jdbcType=NUMERIC}
-			WHERE MEMBER_ID = #{memberId}
-		</if> -->
-		
 	</update>
 	<!-- 수익금 여행글에 따른 memberId 찾기 -->
 	<select id="selectReceiverTrvMemberId" resultType="_int">
@@ -229,7 +226,6 @@
 			</when>
 		</choose>
 	</select>
-	
 	<!-- 성공시 수익금발생내역에 인서트 -->
 	<insert id="insertReceiverProceeds" parameterType="Proceeds">
 		INSERT INTO PROCEEDS
@@ -252,57 +248,67 @@
 		SET USER_PROCEEDS = USER_PROCEEDS + #{proceeds}
 		WHERE MEMBER_ID = #{memberId}
 	</update>
-	
 	<!-- 수익금 달성내역 전체 리스트 카운트 -->
 	<select id="getProceedsListCount" parameterType="Proceeds" resultType="_int">
-	</select>
-	<!-- <select id="getProceedsListCount" parameterType="Proceeds" resultType="java.lang.Integer">
 		SELECT COUNT(*)
 		FROM (
-		    SELECT 
-		    (
-		        SELECT SUM(PROCEEDS) FROM PROCEEDS P2 
-		        WHERE P1.TRV_ID=P2.TRV_ID
-		    ) AS SUMTRV, 
-		    (
-		        SELECT SUM(PROCEEDS) FROM PROCEEDS P2
-		        WHERE P1.PTCP_ID=P2.PTCP_ID
-		    ) AS SUMPTCP, 
-		    PROCEEDS_DATE, PROCEEDS_TYPE, MEMBER_ID, TRV_ID, PTCP_ID
-		    FROM PROCEEDS P1
-		    WHERE MEMBER_ID = #{memberId} 
-		    <choose>
-				<when test="month != null and month != 0">AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}</when>
+			SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.ACCUMULATE_PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
+			FROM PROCEEDS P1
+			WHERE MEMBER_ID=#{memberId}
+			<choose>
+				<when test="month != null and month != 0">
+					AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}
+				</when>
 			</choose>
-		    AND PROCEEDS_DATE = (
-		        SELECT MAX(PROCEEDS_DATE) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
-		    ) AND (
-		         (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID) >= 30000  OR (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.PTCP_ID = P2.PTCP_ID) >=30000 
-		        )
+			AND PROCEEDS_ID = (
+			    SELECT MAX(PROCEEDS_ID) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
+			)
+			ORDER BY PROCEEDS_DATE DESC
 		)
-	</select> -->
+	</select>
 	<!-- 수익금 달성내역 가져오기 -->
-	<!-- <select id="selectAllProceeds" parameterType="Proceeds" resultType="com.kh.ti.point.model.vo.Proceeds">
-		SELECT 
-		(
-		    SELECT SUM(PROCEEDS) FROM PROCEEDS P2 
-		    WHERE P1.TRV_ID=P2.TRV_ID
-		) AS SUMTRV, 
-		(
-		    SELECT SUM(PROCEEDS) FROM PROCEEDS P2
-		    WHERE P1.PTCP_ID=P2.PTCP_ID
-		) AS SUMPTCP, 
-		PROCEEDS_DATE, PROCEEDS_TYPE, MEMBER_ID, TRV_ID, PTCP_ID
+	<select id="selectAllProceeds" parameterType="Proceeds" resultMap="proceedsResultSet">
+		SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.ACCUMULATE_PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
 		FROM PROCEEDS P1
-		WHERE MEMBER_ID = #{memberId} 
+		WHERE MEMBER_ID=#{memberId}
 		<choose>
-			<when test="month != null and month != 0">AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}</when>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}
+			</when>
 		</choose>
-		AND PROCEEDS_DATE = (
-		    SELECT MAX(PROCEEDS_DATE) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
-		) AND (
-		     (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID) >= 30000  OR (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.PTCP_ID = P2.PTCP_ID) >=30000 
-		    )
-	</select> -->
-	
+		AND PROCEEDS_ID = (
+		    SELECT MAX(PROCEEDS_ID) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
+		)
+		ORDER BY PROCEEDS_DATE DESC
+	</select>
+	<!-- 환급 신청내역 전체 리스트 카운트 -->
+	<select id="getRebateListCount" parameterType="Rebate" resultType="_int">
+		SELECT COUNT(*)
+		FROM REBATE
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM APPLY_DATE)=#{month}
+			</when>
+		</choose>
+	</select>
+	<!-- 환급 신청내역 전체 리스트 조회 -->
+	<select id="selectAllRebate" parameterType="Rebate" resultMap="rebateResultSet">
+		SELECT *
+		FROM REBATE
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM APPLY_DATE)=#{month}
+			</when>
+		</choose>
+		ORDER BY APPLY_DATE DESC
+	</select>
+	<!-- 환불 신청시 -->
+	<insert id="insertRebate" parameterType="Rebate">
+		INSERT INTO REBATE
+		VALUES(
+			REBATE_SEQ.NEXTVAL, SYSDATE, #{payAmount}, #{memberId}, NULL, #{rebateStatus}		
+		)
+	</insert>
 </mapper>

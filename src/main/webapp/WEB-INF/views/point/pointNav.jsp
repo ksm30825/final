@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-	<div class="tabs is-boxed"style="width:33%;margin-left:10px;">
+	<div class="tabs is-boxed"style="width:50%;margin-left:10px;">
 		<ul style="border:none !important;">
 			<li>
 				<a href="pointMainView.po?currentPage=1" class="pointNav">
