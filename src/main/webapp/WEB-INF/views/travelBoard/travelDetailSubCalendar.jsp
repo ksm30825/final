@@ -10,6 +10,10 @@
 <title>Insert title here</title>
 </head>
 <style>
+	.tabs.is-fullwidth {
+		margin-bottom: 0.5em;
+	}
+	
    #calendar{
       display: inline-block;
       width: 35%;
@@ -26,13 +30,13 @@
       white-space:nowrap; 
       overflow:auto; 
    }
-   #calendarTable {
+   .calendarTable {
       width: 100%;
    }
-   #calendarTable th {
+   .calendarTable th {
       text-align: center;
    }
-   #calendarTable td {
+   .calendarTable td {
       text-align: center;
    }
    
@@ -49,121 +53,137 @@
    #map {
       width:100%;
       height: 100%;
-      z-index: 2;
-      position: relative;
+      z-index: 1;
+      position: absolute;
    }
    #mapDaySelect {
       width: 100px;
       float: right;
       margin: 1em;
-      z-index: 1;
-      position: relative;
+      z-index: 2;
+      position: absolute;
    }
 </style>
 <body>
-   <!-- 서브메뉴 본문(일정표) -->
-   <section class="section" id="detailSub">
-      <div id="detailSubContent" align="center">
-         
-         <div id="calendar">
-            <div class="calendarArea">
-            
-               <c:choose>
-                  <%-- <c:when test="${ detailTb.buyStatus eq 'Y' }"> --%>
-                  <c:when test="${ !empty loginUser || empty loginUser }">
-                     <!-- 로그인 + 일정 구매했을 때 -->
-                     <!-- DAY1 -->
-                     <div class="tabs is-fullwidth" style="margin-bottom: 0.5em;">
-                        <ul>
-                           <li>
-                              <c:choose>
-                                 <c:when test="${ detailDay.dayNumber eq 1 || fn:length(detailDay.trvSchedule) <= 0 }">
-                                    <a>
-                                       <span id="left" class="icon" style="color: lightgray; cursor: default;"><i class="fa fa-angle-left"></i></span>
-                                    </a>
-                                 </c:when>
-                                 <c:otherwise>
-                                    <a onclick="selectTravelDetailDays('left')">
-                                       <span id="left" class="icon"><i class="fa fa-angle-left"></i></span>
-                                    </a>
-                                 </c:otherwise>
-                              </c:choose>
-                           </li>
-                           <li>
-                              <span style="font-weight: 1px;">DAY</span><span id="day" style="font-weight: 1px;"> ${ detailDay.dayNumber }</span>
-                           </li>
-                           <li>
-                              <c:choose>
-                                 <c:when test="${ detailDay.dayNumber eq fn:length(detailDay.trvSchedule) || fn:length(detailDay.trvSchedule) <= 0 }">
-                                    <a>
-                                       <span id="right" class="icon" style="color: lightgray; cursor: default;"><i class="fa fa-angle-right"></i></span>
-                                    </a>
-                                 </c:when>
-                                 <c:otherwise>
-                                    <a onclick="selectTravelDetailDays('right')">
-                                       <span id="right" class="icon"><i class="fa fa-angle-right"></i></span>
-                                    </a>
-                                 </c:otherwise>
-                              </c:choose>
-                           </li>
-                        </ul>
-                     </div>
-                     <div align="right" style="border-bottom: 1px solid lightgray; padding-bottom: 0.3em;">
-                        <c:choose>
-                           <c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-                           	  <c:choose>
-                           	  	<c:when test="${ trvSchedule.isTimeset eq 'Y' }">
-                           	  		<input type="checkbox" id="timeCheck">
-                              		<label for="timeCheck">시간 표시</label>
-                           	  	</c:when>
-                           	  	<c:otherwise>
-                           	  		<input type="checkbox" id="timeCheck" disabled="disabled">
-                              		<label for="timeCheck" style="color: gray">시간 표시</label>
-                           	  	</c:otherwise>
-                           	  </c:choose>
-                           </c:when>
-                           <c:otherwise>
-                              <input type="checkbox" id="timeCheck" disabled="disabled">
-                              <label for="timeCheck" style="color: gray">시간 표시</label>
-                           </c:otherwise>
-                        </c:choose>
-                        
-                     </div>
-                     <table id="calendarTable">
-                        <c:choose>
-                           <c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-                              
-                              <c:forEach var="trvSchedule" items="${ detailDay.trvSchedule }">
-                                 <tr>
-                                 	<c:if test="${ trvSchedule.isTimeset eq 'Y' }">
-                                    	<th class="times" style="display: none;">${ trvSchedule.startTime } ~ ${ trvSchedule.endTime }</th>
-                                    </c:if>
-                                    <td>
-                                       <span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ${ trvSchedule.plcName }</span>
-                                    </td>
-                                 </tr>
-                              </c:forEach>
-                              
-                           </c:when>
-                           <c:otherwise>
-                              <tr>
-                                 <td><p>상세스케줄 없음</p></td>
-                              </tr>
-                           </c:otherwise>
-                        </c:choose>
-                     </table>
-                     <!-- DAY1 끝 -->
-                  </c:when>
-                  
-               </c:choose>
+	<!-- 결제여부에 따른 출력될 일수 설정하기 -->
+	<c:choose>
+		<c:when test="${ !empty loginUser && detailTb.buyStatus eq 'Y' }">
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) }"/>
+		</c:when>
+		<c:otherwise>
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) / 3 }" />
+		</c:otherwise>
+	</c:choose>
+	<input type="number" hidden="hidden" id="totalDays" value="${ fn:length(detailDay) }">
+	<input type="number" hidden="hidden" id="showDays" value="${ showDays }">
+
+	<!-- 서브메뉴 본문(일정표) -->
+	<section class="section" id="detailSub">
+		<div id="detailSubContent" align="center">
+			<div id="calendar">
+            	<div class="calendarArea">
+            		
+            		<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
+      					<!-- 글 하나 -->
+	        			<div class="tabs is-fullwidth" style="display: none;" id="day${ detailDay.dayNumber }">
+	        			
+	        				<!-- day 넘기는 화살표 -->
+	        				<ul>
+	        					<li>
+	        						<a onclick="nextDays('${ detailDay.dayNumber }', 'left')">
+	               						<span id="left" class="icon"><i class="fa fa-angle-left"></i></span>
+	                              		</a>
+	        					</li>
+	        					<li>
+	        						<span style="font-weight: 1px;"><strong>DAY ${ detailDay.dayNumber }</strong></span>
+	        					</li>
+	        					<li>
+	        						<a onclick="nextDays('${ detailDay.dayNumber }', 'right')">
+	                                   <span id="right" class="icon"><i class="fa fa-angle-right"></i></span>
+	                                </a>
+	        					</li>
+	        				</ul>
+	        			</div>
+            		</c:forEach>
+            		
+           			<!-- 시간표시 여부 -->
+           			<div align="right" style="border-bottom: 1px solid lightgray; padding-bottom: 0.3em;">
+           				<input type="checkbox" id="timeCheck">
+		            	<label for="timeCheck">시간 표시</label>
+		            </div>
+		            
+		            <c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
+		            
+		            <table class="calendarTable" id="calendarTable-day${ detailDay.dayNumber }" style="display: none;">
+		            	<c:choose>
+		            		<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
+		            			
+		            			<c:choose>
+		            				<c:when test="${ totalDays < 3 || showDays >= st.count }">
+		            					<c:forEach var="trvSch" items="${ detailDay.trvSchedule }">
+				            				<tr>
+					            				<c:choose>
+					            					<c:when test="${ trvSch.isTimeset eq 'Y' }">
+					            						<th class="times" style="display: none;">${ trvSch.startTime } ~ ${ trvSch.endTime }</th>
+					            					</c:when>
+					            					<c:otherwise>
+					            						<th class="times" style="display: none;"><span style="color: lightgray;">시간정보 없음</span></th>
+					            					</c:otherwise>
+					            				</c:choose>
+				            					
+				            					<c:choose>
+					            					<c:when test="${ !empty trvSch.plcName }">
+					            						<td>
+					            							<span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ${ trvSch.plcName }</span>
+					            						</td>
+					            					</c:when>
+					            					<c:otherwise>
+					            						<td style="display: none;"><span style="color: lightgray;">장소정보 없음</span></td>
+					            					</c:otherwise>
+					            				</c:choose>
+				            					
+				            				</tr>
+				            			</c:forEach>
+		            				</c:when>
+		            				
+		            				<c:otherwise>
+		            					<tr>
+		            						<td>
+		            							<i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>
+		            							해당 일정을 구매하셔야 볼 수 있습니다.
+		            						</td>
+		            					</tr>
+		            				</c:otherwise>
+		            			</c:choose>
+		            			
+		            		</c:when>
+		            		
+		            		<c:otherwise>
+		            			<tr>
+		            				<td><p>상세스케줄 없음</p></td>
+		            			</tr>
+		            		</c:otherwise>
+		            	</c:choose>
+		            	
+		            </table>
+		            </c:forEach>
+		            
             </div>
          </div>
          
          <div id="mapArea">
-            <select id="mapDaySelect" onchange="dayMapSelect()">
-               <option value="1">DAY 1</option>
-               <option value="2">DAY 2</option>
-               <option value="3">DAY 3</option>
+         	<select id="mapDaySelect" onchange="dayMapSelect()">
+         		<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
+         			<c:choose>
+	         			<c:when test="${ totalDays < 3 || showDays >= st.count }">
+	         				<option value="${ detailDay.dayNumber }">DAY ${ detailDay.dayNumber }</option>
+	         			</c:when>
+	         			
+	         			<c:otherwise>
+	         				<option value="${ detailDay.dayNumber }" disabled="disabled">DAY ${ detailDay.dayNumber }</option>
+	         			</c:otherwise>
+         			</c:choose>
+         		</c:forEach>
             </select>   
             <div id="map"></div>
          </div>
@@ -207,78 +227,33 @@
       }
    });
    
+   $(document).ready(function() {
+	   $("#day1").removeAttr("style");
+	   $("#calendarTable-day1").removeAttr("style");
+   })
+   
    //상세 스케쥴 보기
-   function selectTravelDetailDays(text) {
-      
-      var dayNumber = $("#day").text();
-      
-      if(text == 'left') {
-         dayNumber = Number($("#day").text()) - 1;
-      }else {
-         dayNumber = Number($("#day").text()) + 1;
-      }
-      var trvId = ${ detailTb.trvId };
-      
-      console.log("trvId : " + trvId);
-      console.log("dayNumber : " + dayNumber);
-      
-      var lastDay = ${ fn:length(detailDay.trvSchedule) };
-      
-      if(lastDay == dayNumber) {
-         $('#right').css("color", "lightgray");
-      }else {
-         $('#right').removeAttr("style");
-         $('#right').attr("onclick", "selectTravelDetailDays('right')");
-      }
-      
-      if(1 == dayNumber) {
-         $('#left').css("color", "lightgray");
-      }else {
-         $('#left').removeAttr("style");
-         $('#left').attr("onclick", "selectTravelDetailDays('left')");
-      }
-      
-      $.ajax({
-         url : "travelDetailDays.tb",
-         data : {trvId : trvId, dayNumber : dayNumber},
-         success : function(detailDay) {
-            console.log(detailDay.dayNumber);
-            
-            $("#day").empty();
-            $("#day").append('&nbsp;' + detailDay.dayNumber);
-            
-            $("#calendarTable > tbody").children().remove();
-            
-            for (var key in detailDay.trvSchedule) {
-               var startTime = detailDay.trvSchedule[key].startTime;
-               var endTime = detailDay.trvSchedule[key].endTime;
-               var plcName = detailDay.trvSchedule[key].plcName;
-               var isTimeset = detailDay.trvSchedule[key].isTimeset;
-               
-               console.log("startTime : " + startTime);
-               console.log("endTime : " + endTime);
-               console.log("plcName : " + plcName);
-               
-               var value;
-               
-               if(isTimeset == 'N' || isTimeset == null) {
-                  $("#timeCheck").attr('disabled', true).css("color", 'gray');
-                  
-                  value = '<tr><td><p>상세스케줄 없음</p></td></tr>';
-                  $("#calendarTable > tbody").append(value).css("text");
-               }else {
-                  value = '<tr><th class="times" style="display: none;">' + startTime + ' ~ ' + endTime + "</th>"
-                  + '<td><span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ' + plcName + '</span></td></tr>';
-         
-                  $("#calendarTable > tbody").append(value);
-               }
-            }
-            
-         },
-         error : function(data) {
-            alert("연결 실패");
-         }
-      });
+   function nextDays(day, text) {
+	   
+	   var nextDay = 0;
+	   var totalDay = $("#totalDays").val();
+	   var showDay = $("#showDays").val();
+	   
+	   if(text == 'left') {
+		   nextDay = Number(Number(day) - 1);
+	   }else {
+		   nextDay = Number(Number(day) + 1);
+	   }
+	   
+	   if(nextDay != 0 && nextDay <= totalDay) {
+		   $(".is-fullwidth").css("display","none");
+		   $("#day" + nextDay).removeAttr("style");
+		   
+		   $(".calendarTable").css("display","none");
+		   $("#calendarTable-day" + nextDay).removeAttr("style");
+	   }
+	   
+	   
    }
    
 </script>

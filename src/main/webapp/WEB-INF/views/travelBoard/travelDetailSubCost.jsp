@@ -95,26 +95,22 @@
 							<th style="color: #209cee; width: 15%">TOTAL</th>
 							<th style="color: rgb(142, 68, 173); width: 15%">BALANCE</th>
 						</tr>
-						<tr>
-							<td>원</td>
-							<td>원</td>
-							<td>원</td>
-							<td>원</td>
-							<td>원</td>
-							<td>원</td>
-							<td>원</td>
-							<td>원</td>
-						</tr>
-						<tr>
-							<td>달러</td>
-							<td>달러</td>
-							<td>달러</td>
-							<td>달러</td>
-							<td>달러</td>
-							<td>달러</td>
-							<td>달러</td>
-							<td>달러</td>
-						</tr>
+						<!-- 조건 재설정 필요!!! -->
+						<c:forEach var="detailCost" items="${ detailCost }" varStatus="st">
+							<c:if test="${ st.count == 1 }">
+								<tr>
+									<td>${ detailCost.roomCharge }</td>
+									<td>${ detailCost.trafficCharge }</td>
+									<td>${ detailCost.foodCharge }</td>
+									<td>${ detailCost.shoppingCharge }</td>
+									<td>${ detailCost.sightseeingCharge }</td>
+									<td>${ detailCost.etcCharge }</td>
+									<td>${ detailCost.totalCost }</td>
+									<td>${ detailCost.totalCost }</td>
+								</tr>
+							</c:if>
+							
+						</c:forEach>
 					</table>
 				</div>
 				

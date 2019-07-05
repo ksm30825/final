@@ -23,7 +23,7 @@ public interface TravelBoardService {
 
 	int travelLikeyDelete(Likey likey);
 
-	TrvDaySchedule selectTravelDetailDays(TrvDaySchedule tds);
+	ArrayList selectTravelDetailDays(TravelBoard tb);
 
 	ArrayList<TourReview> tourReviewList(PageInfo pi, TourReview tr);
 
@@ -34,6 +34,8 @@ public interface TravelBoardService {
 	int myTourReviewUpdate(TourReview tr);
 
 	int deliteReview(TourReview tr);
+
+	ArrayList selectTravelCost(int trvId);
 
 
 }

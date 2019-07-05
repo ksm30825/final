@@ -25,7 +25,7 @@ public interface TravelBoardDao {
 
 	int travelLikeyDelete(SqlSessionTemplate sqlSession, Likey likey);
 
-	TrvDaySchedule selectTravelDetailDays(SqlSessionTemplate sqlSession, TrvDaySchedule tds);
+	ArrayList selectTravelDetailDays(SqlSessionTemplate sqlSession, TravelBoard tb);
 
 	ArrayList<TourReview> tourReviewList(SqlSessionTemplate sqlSession, PageInfo pi, TourReview tr);
 
@@ -36,6 +36,8 @@ public interface TravelBoardDao {
 	int myTourReviewUpdate(SqlSessionTemplate sqlSession, TourReview tr);
 
 	int deliteReview(SqlSessionTemplate sqlSession, TourReview tr);
+
+	ArrayList selectTravelCost(SqlSessionTemplate sqlSession, int trvId);
 
 
 }

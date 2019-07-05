@@ -108,9 +108,9 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 
 	//여행일정 일자별 스케쥴 조회용
 	@Override
-	public TrvDaySchedule selectTravelDetailDays(SqlSessionTemplate sqlSession, TrvDaySchedule tds) {
+	public ArrayList selectTravelDetailDays(SqlSessionTemplate sqlSession, TravelBoard tb) {
 		
-		return sqlSession.selectOne("TravelBoard.selectDaySchOne", tds);
+		return (ArrayList) sqlSession.selectList("TravelBoard.selectDaySchList", tb);
 	}
 	
 	//여행일정 구매리뷰 조회용
@@ -163,6 +163,13 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 	public int deliteReview(SqlSessionTemplate sqlSession, TourReview tr) {
 		
 		return sqlSession.update("TravelBoard.deliteReview", tr);
+	}
+	
+	//여행일정 상세 / 가계부 조회 - 예랑
+	@Override
+	public ArrayList selectTravelCost(SqlSessionTemplate sqlSession, int trvId) {
+		
+		return (ArrayList) sqlSession.selectList("TravelBoard.selectTravelCost", trvId);
 	}
 	
 
