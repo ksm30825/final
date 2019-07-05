@@ -12,13 +12,34 @@
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.js"></script> 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<style>
+	#view{
+		 width: 100%;
+	   	 height:500px;
+	     position: absolute;
+	     border:1px solid lightgray;
+	     overflow: hidden !important;  
+	}
+	
+	 ::-webkit-scrollbar { 
+    	display: none !important; 	
+    }
+	
+	#menu1{
+		width: 100%;
+	    height:100%;
+	    overflow-y:scroll;
+	    padding-left: 5%;padding-right: 5%;
+    } 
+</style>
 </head>
 <body>
 	 <jsp:include page = "../companion/CompanionMenu.jsp"/>
 	 <input type = "hidden" value = "${loginUser.userName}" id = "UserName">
 		
 	<div id = "container">	
-		<div id="menu1" style = "padding-left: 5%;padding-right: 5%;height : 700px; overflow-y: auto;"><br></div>
+		<div id="view">
+		<div id="menu1"></div></div>
 	</div>
 	<div id="footer" >
 	    <div style = "float:right;" id = "makeRoomBtn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">

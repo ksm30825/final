@@ -71,7 +71,7 @@ body {overflow-y: hidden; overflow-x: hidden;}
 	    width: 340px !important; 
 	}
 	
-	#datepicker1 , #datepicker2{ width : 150px; display : inline-block; /* margin-right : 10px; */ }
+	#trStartDate , #trEndDate{ width : 150px; display : inline-block; /* margin-right : 10px; */ }
 	
 	#peopleNum {
 	color: #555;
@@ -82,12 +82,12 @@ body {overflow-y: hidden; overflow-x: hidden;}
     line-height: 1.5; margin-left : 38%;
     border-radius: 3px;}
     
-    #txtDetail{
+    #chatDetail{
     	resize : none;
     	width : 340px; height : 100px;
     	border-radius: 3px;
     }
 
-
+	
 
 

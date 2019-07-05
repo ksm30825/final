@@ -8,15 +8,32 @@
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/enterRoom.css">
 <style>
 	body {overflow-y: hidden; overflow-x: hidden;}
+	
+	#home {
+		 width: 100%;
+	   	 height:500px;
+	     position: absolute;
+	     border:1px solid lightgray;
+	     overflow: hidden !important;  
+	}
+	
+	#listWrap{
+		width: 100%;
+	    height:100%;
+	    overflow-y:scroll;
+	    padding-left: 5%;padding-right: 5%;s
+	}
+	
+	::-webkit-scrollbar { 
+    	display: none !important; 	
+    }
 </style>
 </head>
 <body>
 	<jsp:include page = "../companion/CompanionMenu.jsp"/>
 	<div id = "container">
 	    <div id="home" >
-	    	<div id = "listWrap" style = "padding-left: 5%;padding-right: 5%;height : 700px; overflow-y: auto;">
-	 		<br>
-	     	</div>
+	    	 <div id = "listWrap" ></div>
 	    </div>
 	  </div>
 	  <div id="footer" >
