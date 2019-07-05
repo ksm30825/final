@@ -31,7 +31,7 @@
 		SELECT PASSWORD
 		FROM MEMBER
 		WHERE EMAIL = #{email}
-		<!-- AND ENROLL_STATUS = 'Y' -->
+		AND ENROLL_STATUS = 'Y'
 	</select>
 	
 	<!-- 로그인용(임시) 세령 -->
@@ -155,8 +155,10 @@
 		WHERE EMAIL = #{ email }
 	</select>
 	
-	<!-- 현재 MEMBER 시퀀스 얻기 세령 -->
-	<select id="currentMemberSeq" resultType="_int">
-		SELECT MEMBER_SEQ.CURRVAL FROM DUAL
+	<!-- MEMBER 시퀀스 얻기 세령 -->
+	<select id="currentMemberSeq" resultType="_int" parameterType="Member">
+		SELECT MEMBER_ID FROM MEMBER
+		WHERE EMAIL = #{ email }
+		AND ENROLL_STATUS = 'Y'
 	</select>
 </mapper>

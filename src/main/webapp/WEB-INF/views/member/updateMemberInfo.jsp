@@ -89,7 +89,8 @@
 					        </div>
 				          <div class="field is-grouped" style="flex-grow:1;">
 				            <p class="control is-expanded has-icons-left has-icons-right">
-				              <button class="button is-primary is-outlined" style="width:50%;" onclick="$('#modalUpdatePassword').toggleClass('is-active');"> 비밀번호 재설정 </button>
+				              <button class="button is-primary is-outlined" style="width:50%;" id="resetPasswordBtn"
+				              		  onclick="$('#modalUpdatePassword').toggleClass('is-active');"> 비밀번호 재설정 </button>
 				               <span class="icon is-small is-left">
 					              <i class="fas fa-mobile-alt"></i>
 					           </span>
@@ -266,6 +267,11 @@
 	  			case '287': accName = "메리츠증권"; break;
 	  		}
 	  		$("#bankName").val(accName);
+	  		//비밀번호 재설정 카카오 비활성화
+			if('${ loginUser.enrollType }' == '카카오가입') {
+				$("#resetPasswordBtn").attr("disabled", "disabled");
+			}
+	  		console.log('${ loginUser }');
 	  	});
 	</script>
 	
