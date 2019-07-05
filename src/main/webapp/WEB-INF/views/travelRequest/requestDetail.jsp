@@ -76,11 +76,13 @@
 						<tr>
 							<td id="reqId"><b>${ tr.requestId }</b></td>
 							<td>${ tr.requestTitle }</td>
-							<td>${ userName }</td>
-							<td><fmt:formatNumber value="${ tr.requestPrice }"
-									groupingUsed="true"></fmt:formatNumber>원</td>
-							<td><fmt:formatNumber value="${ tr.requestPrice }"
-									groupingUsed="true"></fmt:formatNumber>원</td>
+							<td id="userName">${ userName }</td>
+							<td>
+								<input type="hidden" id="uPoint" value="${ tr.requestPrice }">
+								<fmt:formatNumber value="${ tr.requestPrice }" groupingUsed="true"/>원
+							</td>
+							<td><fmt:formatNumber value="${ tr.trvCost }"
+									groupingUsed="true"/>원</td>
 							<td>${ tr.endDate }</td>
 						</tr>
 					</tbody>
@@ -112,9 +114,9 @@
 						<div class="column">
 							<div class="card request">
 								<div class="card-image">
-									<figure class="image is-4by3">
-										<img src="https://source.unsplash.com/random/800x600"
-											alt="Image">
+									<figure class="image is-4by3" id="map">
+										<!-- <img src="https://source.unsplash.com/random/800x600"
+											alt="Image"> -->
 									</figure>
 								</div>
 								<div class="card-content">
@@ -123,6 +125,7 @@
 										<div class="media-content">
 											<p class="title is-4">제목 : ${ plan.planTitle }</p><br>
 											<p class="subtitle is-6">설계자 : ${ plan.userName }</p>
+											<input type="hidden" value="${ plan.planId }">
 											<p class="subtitle is-6">작성일 : ${ plan.enrollDate }</p>
 										</div>
 									</div>
@@ -151,16 +154,39 @@
 <script>
 	$(function() {
 		$(".request").click(function() {
-			location = "requestPlan.tr";
+			//useType : 10:일정구매, 20:설계의뢰
+			var code;	//설계글 코드
+			var uPoint = $("#uPoint").val(); //의뢰 가격
+			var reqId = $("#reqId").text();
+			var userName = $("#userName").text();
+			$(this).each(function() {
+				code = $(this).find("input").val();
+				console.log(code);
+				console.log(uPoint);
+			});
+			
+			location = "requestPlan.tr?code=" + code +"&useType=" + 20 + "&uPoint=" + uPoint + "&reqId=" + reqId + "&userName=" + userName;
 		});
 	});
 	function start() {
 		var reqId = $("#reqId").text();
+		var userName = $("#userName").text();
 		console.log(reqId);
-		location = "showrequestStartForm.tr?reqId=" + reqId;
+		location = "showrequestStartForm.tr?reqId=" + reqId + "&userName=" + userName;
 	}
 	function reset() {
 		location = "travelRequest.tr";
 	}
+	
+	//지도보기
+    var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -33.93979965825738, lng: 151.171365661621},
+          zoom: 13
+        });
+      }
 </script>
+<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap" async defer></script>
 </html>

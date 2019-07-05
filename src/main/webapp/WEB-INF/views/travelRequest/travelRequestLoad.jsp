@@ -172,14 +172,14 @@ th, td {
 						<br>
 					</div>
 					<div class="column map" style="width: 50%;">
-						<div class="field is-grouped">
+						<!-- <div class="field is-grouped">
 							<p class="control is-expanded">
 								<input class="input" type="text" placeholder="장소 검색">
 							</p>
 							<p class="control">
 								<a class="button is-info"> 검색 </a>
 							</p>
-						</div>
+						</div> -->
 						<div class="card">
 							<!-- <div> -->
 							<div style="display: none">

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelRequest.model.vo.TravelRequest;
+import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Repository
 public class TravelRequestDaoImpl implements TravelRequestDao{
@@ -41,6 +42,12 @@ public class TravelRequestDaoImpl implements TravelRequestDao{
 	@Override
 	public TravelRequest selectOneRequest(SqlSessionTemplate sqlSession, int reqNum) {
 		return sqlSession.selectOne("TravelRequest.selectOneRequest", reqNum);
+	}
+
+	//선택한 설계글 상세보기 - 선우
+	@Override
+	public ArrayList<TravelRequestPlan> selectOneRequestPlan(SqlSessionTemplate sqlSession, int code) {
+		return (ArrayList) sqlSession.selectList("TravelRequest.selectOneRequestPlan", code);
 	}
 
 }

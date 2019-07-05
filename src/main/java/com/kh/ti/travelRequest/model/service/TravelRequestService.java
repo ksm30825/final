@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelRequest.model.vo.TravelRequest;
+import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 public interface TravelRequestService {
 
@@ -14,5 +15,7 @@ public interface TravelRequestService {
 	ArrayList<TravelRequest> selectRequestList(PageInfo pi);
 
 	TravelRequest selectOneRequest(int reqNum);
+
+	ArrayList<TravelRequestPlan> selectOneRequestPlan(int code);
 
 }

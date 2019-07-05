@@ -105,9 +105,10 @@ th, td {
 			<textarea id="lng" name="PplaceLng" class="hidden"></textarea>
 			<textarea id="placeName" name="PplaceTitle" class="hidden"></textarea>
 			<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
-			<input type="hidden" value="${ reqId }" name="requestId">
+			<input type="hidden" value="${ reqId }" name="requestId" id="reqId">
 			<input type="hidden" value="${ loginUser.memberId }" name="memberId">
 			<input type="text" value="${ loginUser.userName }" name="userName">
+			<input type="hidden" value="${ userName }" id="userName">
 				<h1 class="title">일정작성</h1>
 				<hr>
 				<div class="columns">
@@ -414,7 +415,9 @@ th, td {
 	}
 
 	function back() {
-		location = "requestDetail.tr";
+		var reqId = $("#reqId").val();
+		var userName = $("#userName").val();
+		location = "requestDetail.tr?reqId=" + reqId + "&userName=" + userName;
 	}
 	
 	function myRequestPlan() {
