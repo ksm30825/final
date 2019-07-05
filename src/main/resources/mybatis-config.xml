@@ -13,6 +13,7 @@
 			<typeAlias type="com.kh.ti.point.model.vo.ReservePoint" alias="ReservePoint"/>
 			<typeAlias type="com.kh.ti.point.model.vo.Refund" alias="Refund"/>
 			<typeAlias type="com.kh.ti.point.model.vo.Proceeds" alias="Proceeds"/>
+			<typeAlias type="com.kh.ti.point.model.vo.Rebate" alias="Rebate"/>
 	    <!-- 선우 -->
 	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequest" alias="TravelRequest"/>
 	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequestPlan" alias="TravelRequestPlan"/>

@@ -10,6 +10,7 @@ import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.vo.Payment;
 import com.kh.ti.point.model.vo.Proceeds;
+import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -90,6 +91,11 @@ public class PointDaoImpl implements PointDao{
 		//System.out.println("rp.getReservePoint() : " + rp.getReservePoint());
 		return sqlSession.insert("Payment.insertReservePoint",rp);
 	}
+	//성공시 멤버 누적포인트 증가
+	@Override
+	public int updateUserPointAuto(SqlSessionTemplate sqlSession, ReservePoint rp) {
+		return sqlSession.update("Payment.updateUserPointAuto", rp);
+	}
 	//포인트 환불신청하기-> 환불 내역에 인서트
 	@Override
 	public int insertRefund(SqlSessionTemplate sqlSession, Refund refund) {
@@ -166,9 +172,27 @@ public class PointDaoImpl implements PointDao{
 	public Proceeds selectOneProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
 		return sqlSession.selectOne("Payment.selectOneProceeds", receiverBoard);
 	}
+	//환급 신청내역 전체 리스트 카운트
 	@Override
-	public Proceeds selectOneProceedsPtcpId(SqlSessionTemplate sqlSession, int ptcpId) {
-		return sqlSession.selectOne("Payment.selectOneProceedsPtcpId", ptcpId);
+	public int getRebateListCount(SqlSessionTemplate sqlSession, Rebate rebate) {
+		return sqlSession.selectOne("Payment.getRebateListCount", rebate);
+	}
+	//환급 신청내역 전체 리스트 조회
+	@Override
+	public ArrayList<Rebate> selectAllRebate(SqlSessionTemplate sqlSession, Rebate rebate, PageInfo rebatePi) {
+		int offset = (rebatePi.getCurrentPage() - 1) * rebatePi.getLimit();
+		//System.out.println("rePayList offset : " + offset);
+		RowBounds rowBounds = new RowBounds(offset, rebatePi.getLimit());
+		//System.out.println("rePayList rowBounds : " + rowBounds);
+		
+		ArrayList<Rebate> rebateList = (ArrayList)sqlSession.selectList("Payment.selectAllRebate", rebate, rowBounds);
+		//System.out.println("rePayList rePayList : " + rePayList);
+		return rebateList;
+	}
+	//환불 신청시
+	@Override
+	public int insertRebate(SqlSessionTemplate sqlSession, Rebate rebate) {
+		return sqlSession.insert("Payment.insertRebate", rebate);
 	}
 	
 	

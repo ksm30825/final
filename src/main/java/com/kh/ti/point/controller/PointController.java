@@ -23,6 +23,7 @@ import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.service.PointService;
 import com.kh.ti.point.model.vo.Payment;
 import com.kh.ti.point.model.vo.Proceeds;
+import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -112,13 +113,6 @@ public class PointController {
 		return "point/pointMain";
 	}
 	
-	/*
-	 * @RequestMapping("/totalList.po") public ModelAndView
-	 * selectTotalListCount(ModelAndView mv) {
-	 * 
-	 * return mv; }
-	 */
-
 	
 	
 	//포인트 충전 페이징
@@ -152,16 +146,16 @@ public class PointController {
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		charge.setMonth(month);
-		System.out.println("month : " + month);
-		System.out.println("memberID : "+ memberId);
-		System.out.println("charge : " + charge);
+		//System.out.println("month : " + month);
+		//System.out.println("memberID : "+ memberId);
+		//System.out.println("charge : " + charge);
 		
 		int chargeListCount = ps.getChargeListCount(charge); 
-		System.out.println("chargeListCount : "+chargeListCount);
+		//System.out.println("chargeListCount : "+chargeListCount);
 		int chargeCurrentPage = currentPage; 
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		ArrayList chPayList = ps.selectChargeList(chPi, charge);
-		System.out.println("chPayList : "+ chPayList);
+		//System.out.println("chPayList : "+ chPayList);
 		/*
 		 * for(int i=0 ; i<chPayList.size() ; i++) {
 		 * //System.out.println("chPayList.get("+i+").getPaymentDate().getTime()"+
@@ -175,7 +169,7 @@ public class PointController {
 		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
-		System.out.println("mv : " + mv);
+		//System.out.println("mv : " + mv);
 		
 		return mv.getModel();
 	}
@@ -184,7 +178,7 @@ public class PointController {
 	//포인트 충전 월검색 페이징
 	@RequestMapping("/oneMonthPayPaging.po")
 	public String searchOneMonthPayPaging(String month, Model model, HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
-		System.out.println("oneMonthPayPaging");
+		//System.out.println("oneMonthPayPaging");
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		Payment charge = new Payment();
@@ -231,7 +225,7 @@ public class PointController {
 		pay.setMemberId(memberId);
 		pay.setMonth("0");
 		
-		System.out.println("넘기기전 pay : " + pay);
+		//System.out.println("넘기기전 pay : " + pay);
 
 		//포인트충전
 		//->결제 테이블에 insert
@@ -239,9 +233,11 @@ public class PointController {
 		////System.out.println("result : " + result);
 		int updateUserPoint = 0;
 		if(result > 0) {
-			System.out.println("누적 전 : " + pay);
+			//System.out.println("누적 전 : " + pay);
 			updateUserPoint = ps.updateUserPoint(pay);
-			System.out.println("누적 후  : " + pay);
+			
+			
+			//System.out.println("누적 후  : " + pay);
 		} else {
 			return "common/errorPage";
 		}
@@ -352,9 +348,9 @@ public class PointController {
 		int result = ps.insertReservePoint(rp);
 		////System.out.println("result : " + result);
 		
+		int updateUserPoint = ps.updateUserPointAuto(rp);
 		
-		
-		if(result>0) {
+		if(result>0 && updateUserPoint>0) {
 			switch(reserveType) {
 			case 10 : return "redirect:/showMyTravel.trv"; 
 			case 20 : int trvId = ps.selectOneTrv(rp); return "redirect:/travelDetailForm.tb?trvId="+trvId; 
@@ -432,8 +428,8 @@ public class PointController {
 	public ModelAndView insertRefund(String refundId, String refundReason, ModelAndView mv) {
 		
 		int pointId = Integer.parseInt(refundId);
-		System.out.println("refundId:  "+refundId);
-		System.out.println("refundReason:  "+refundReason);
+		//System.out.println("refundId:  "+refundId);
+		//System.out.println("refundReason:  "+refundReason);
 		
 		//대기 상태로 인서트
 		int refundStatus = 10;
@@ -444,7 +440,7 @@ public class PointController {
 		
 		int result = ps.insertRefund(refund);
 		
-		System.out.println("result : " + result);
+		//System.out.println("result : " + result);
 		mv.setViewName("jsonView");
 		
 		return mv;
@@ -545,49 +541,75 @@ public class PointController {
 	
 	
 	//수익금 페이지로 이동
-	@RequestMapping("/toProceedsView.po")//????????????/ModelAndView로 해야 되지 않나?
+	@RequestMapping("/toProceedsView.po")
 	public String toProceedsView() {
 		return "point/proceedsMain";
 	}
-	//수익금 환급신청 + 수익금 달성 전체 조회--수민
-	@RequestMapping("/allRebate.po")//????????????/ModelAndView로 해야 되지 않나?
-	public String selectAllRebate() {
-		
-		return "point/proceedsMain";
-	}
+//	//수익금 환급신청 + 수익금 달성 전체 조회--수민
+//	@RequestMapping("/allRebate.po")//????????????/ModelAndView로 해야 되지 않나?
+//	public String selectAllRebate() {
+//		
+//		return "point/proceedsMain";
+//	}
 	//수익금 달성내역 전체 조회
 	@ResponseBody
 	@RequestMapping("/allProceeds.po")
 	public ResponseEntity selectAllProceeds(@RequestParam("memberId") int memberId, @RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
-		System.out.println("memberId : " + memberId);
-		System.out.println("currentPage : " + currentPage);
-		System.out.println("month : " + month);
+		//System.out.println("memberId : " + memberId);
+		//System.out.println("currentPage : " + currentPage);
+		//System.out.println("month : " + month);
 		
 		Proceeds proceeds = new Proceeds();
 		proceeds.setMemberId(memberId);
 		proceeds.setMonth(month);
 		
 		int proceedsListCount = ps.getProceedsListCount(proceeds);
-		System.out.println("proceedsListCount : " + proceedsListCount);
+		//System.out.println("proceedsListCount : " + proceedsListCount);
 		int proceedsCurrentPage = currentPage;
 		
 		PageInfo proPi = Pagination.getPageInfo(proceedsCurrentPage, proceedsListCount);
 		
 		ArrayList<Proceeds> proceedsList = ps.selectAllProceeds(proPi, proceeds);
 		
-		System.out.println("proceedsList : "+proceedsList);
+		//System.out.println("proceedsList : "+proceedsList);
 		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("proceedsList", proceedsList);
+		hmap.put("proPi", proPi);
 		
-		
-		return new ResponseEntity(proceedsList, HttpStatus.OK);
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
+	
+	//환급 신청내역 전체 조회
+	@ResponseBody
+	@RequestMapping("/allRebate.po")
+	public ResponseEntity selectAllRebate(@RequestParam("memberId") int memberId, @RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
+		Rebate rebate = new Rebate();
+		rebate.setMemberId(memberId);
+		rebate.setMonth(month);
+		
+		int rebateListCount = ps.getRebateListCount(rebate);
+		//System.out.println("rebateListCount : " + rebateListCount);
+		int rebateCurrentPage = currentPage;
+		
+		PageInfo rebatePi = Pagination.getPageInfo(rebateCurrentPage, rebateListCount);
+		
+		ArrayList<Rebate> rebateList = ps.selectAllRebate(rebatePi, rebate);
+		System.out.println("rebateList : " + rebateList);
+		HashMap<String, Object> rebateHmap = new HashMap<String, Object>();
+		rebateHmap.put("rebateList", rebateList);
+		rebateHmap.put("rebatePi", rebatePi);
+		
+		return new ResponseEntity(rebateHmap, HttpStatus.OK);
+	}
+	
 	//수익금 환급 월 검색 조회--수민
-	@RequestMapping("/oneMonthRebate.po")
+	@RequestMapping("/oneMonthRebate.po")//-------------------------------------------------------------------------------------------
 	public ModelAndView searchOneMonthRebate(int memberId, int month, ModelAndView mv) {
 		
 		return mv;
 	}
-	//수익금 환급 상태 검색 조회--수민
+	//수익금 환급 상태 검색 조회--수민//-------------------------------------------------------------------------------------------
 	@RequestMapping("/statusRebate.po")
 	public ModelAndView searchStatusRebate(int memberId, String status, ModelAndView mv) {
 		
@@ -598,34 +620,35 @@ public class PointController {
 	
 	
 	
-	//수익금 달성 월 검색 조회--수민
+	//수익금 달성 월 검색 조회--수민//-------------------------------------------------------------------------------------------
 	@RequestMapping("/oneMonthProceeds.po")
 	public ModelAndView searchOneMonthProceeds(int memberId, int month, ModelAndView mv) {
 		
 		return mv;
 	}
-	//수익금 달성 환급신청 버튼--수민
+	//환급신청 버튼--수민
 		//->환급내역 테이블에 insert
+		//10:승인대기, 20:지급대기 ,30:지급완료
 	@RequestMapping("/rebateProceeds.po")
-	public String insertRebate(int memberId, int proceedsId, String pointId) {
+	public String insertRebate(@RequestParam("memberId") int memberId,@RequestParam("payAmount") int payAmount) {
+		Rebate rebate = new Rebate();
+		rebate.setPayAmount(payAmount);
+		rebate.setMemberId(memberId);
+		rebate.setRebateStatus(10);
 		
-		return "??";
+		int insert = ps.insertRebate(rebate);
+		
+		if(insert>0) {
+			return "redirect:/toProceedsView.po";
+		}else {
+			return "common/errorPage";
+		}
 	}
 
 	
-	
-	
-	//멤버테이블에서 누적포인트, 누적 수익금 조회--수민
-	@RequestMapping("/pointProceeds.po")
-	public ModelAndView selectPointProceeds(int memberId, ModelAndView mv) {
-		
-		return mv;
-	}
-	
-	
 	//-------------------------------------------------------------------------------------------
-	//임시 관리자페이지--수민
-	@RequestMapping("/aPayment.ad")
+	//정산관리 메인페이로 이동 ->결제내역!
+	@RequestMapping("/toAPaymentView.po")
 	public String aPayment() {
 		return "admin/adminPoint/aPayment";
 	}

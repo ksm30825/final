@@ -6,6 +6,7 @@ import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.vo.Payment;
 import com.kh.ti.point.model.vo.Proceeds;
+import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -28,6 +29,8 @@ public interface PointService {
 	ArrayList<UsePoint> selectUseList(PageInfo usPi, UsePoint use);
 	//포인트 자동으로 적립하기
 	int insertReservePoint(ReservePoint rp);
+	//성공시 멤버 누적포인트 증가
+	int updateUserPointAuto(ReservePoint rp);
 	//포인트 환불신청하기-> 환불 내역에 인서트
 	int insertRefund(Refund refund);
 	//해당 reviewId로 trvId 조회해오기
@@ -56,7 +59,11 @@ public interface PointService {
 	ArrayList<Proceeds> selectAllProceeds(PageInfo proPi, Proceeds proceeds);
 	//누적수익금을 위한 기존 수익금 조회
 	Proceeds selectOneProceeds(Proceeds receiverBoard);
-	//누적수익금을 위한 기존 수익금 조회2
-	Proceeds selectOneProceedsPtcpId(int ptcpId);
+	//환급 신청내역 전체 리스트 카운트
+	int getRebateListCount(Rebate rebate);
+	//환급 신청내역 전체 리스트 조회
+	ArrayList<Rebate> selectAllRebate(PageInfo rebatePi, Rebate rebate);
+	//환불 신청시
+	int insertRebate(Rebate rebate);
 
 }

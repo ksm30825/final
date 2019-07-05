@@ -11,6 +11,7 @@ import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.dao.PointDao;
 import com.kh.ti.point.model.vo.Payment;
 import com.kh.ti.point.model.vo.Proceeds;
+import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -62,6 +63,11 @@ public class PointServiceImpl implements PointService{
 	@Override
 	public int insertReservePoint(ReservePoint rp) {
 		return pd.insertReservePoint(sqlSession, rp);
+	}
+	//성공시 멤버 누적포인트 증가
+	@Override
+	public int updateUserPointAuto(ReservePoint rp) {
+		return pd.updateUserPointAuto(sqlSession, rp);
 	}
 	//포인트 환불신청하기-> 환불 내역에 인서트
 	@Override
@@ -134,9 +140,20 @@ public class PointServiceImpl implements PointService{
 	public Proceeds selectOneProceeds(Proceeds receiverBoard) {
 		return pd.selectOneProceeds(sqlSession, receiverBoard);
 	}
+	//환급 신청내역 전체 리스트 카운트
 	@Override
-	public Proceeds selectOneProceedsPtcpId(int ptcpId) {
-		return pd.selectOneProceedsPtcpId(sqlSession, ptcpId);
+	public int getRebateListCount(Rebate rebate) {
+		return pd.getRebateListCount(sqlSession, rebate);
+	}
+	//환급 신청내역 전체 리스트 조회
+	@Override
+	public ArrayList<Rebate> selectAllRebate(PageInfo rebatePi, Rebate rebate) {
+		return pd.selectAllRebate(sqlSession, rebate, rebatePi);
+	}
+	//환불 신청시
+	@Override
+	public int insertRebate(Rebate rebate) {
+		return pd.insertRebate(sqlSession, rebate);
 	}
 
 	
