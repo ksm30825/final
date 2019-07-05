@@ -45,7 +45,7 @@
 					<div class="level-item has-text-centered">
 						<div>
 							<p class="heading">  
-								<span id="exchangeRate" style="color:purple"></span>
+								<span id="exchangeRate" style="color:purple">...</span>
 								KRW = 1 ${ trvCityList[0].currencyUnit }
 							</p>
 							<p class="title is-1">=</p>
@@ -92,11 +92,11 @@
 								<i class="fas fa-3x fa-ellipsis-h"></i>
 								<span>기타</span>
 							</th>
-							<th width="14%">
-								<span>TOTAL</span>
+							<th width="14%" style="background:#C3AFF8">
+								<span style="color:black;">TOTAL</span>
 							</th>
 							<th width="14%">
-								<span>BALANCE</span>
+								<span style="color:black">BALANCE</span>
 							</th>
 						</tr>
 					</thead>
@@ -112,15 +112,14 @@
 							</c:forEach>
 						</c:forEach>
 						<tr>
-							<td id="accommCostWon">
-								<fmt:formatNumber value="" type="currency" />원</td>
+							<td id="accommCostWon"></td>
 							<td id="transpCostWon"></td>
 							<td id="foodCostWon"></td>
 							<td id="shoppingCostWon"></td>
 							<td id="tourCostWon"></td>
 							<td id="etcCostWon"></td>
-							<td id="totalCostWon"></td>
-							<td id="balanceWon"></td>
+							<td id="totalCostWon" style="background:#C3AFF8"></td>
+							<td id="balanceWon" style="background:skyblue"></td>
 						</tr>
 						<tr>
 							<td id="accommCostLocal"></td>
@@ -129,8 +128,8 @@
 							<td id="shoppingCostLocal"></td>
 							<td id="tourCostLocal"></td>
 							<td id="etcCostLocal"></td>
-							<td id="totalCostLocal"></td>
-							<td id="balanceLocal"></td>
+							<td id="totalCostLocal" style="background:#C3AFF8"></td>
+							<td id="balanceLocal" style="background:skyblue"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -139,47 +138,75 @@
 				<div class="columns is-multiline">
 					<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st">
 						<div class="column is-one-fifth" style="padding: 10.5px 0">
-							<nav class="panel">
+							<nav class="panel costPanel" id="day${ trvDay.dayId }Cost">
 								<div class="panel-heading" align="center"
 									style="background: whitesmoke; color: black; height: 30px">
 									<p class="help">${ trvDay.dayDate }</p>
 								</div>
 								<div class="panel-heading" align="center" style="margin: 0">
 									<span>DAY ${ trvDay.dayNumber }</span>&nbsp; 
-									<input type="hidden" value="${ trvDay.dayId }">
+									<input type="hidden" value="${ trvDay.dayId }" name="dayId">
 									<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO"
 										value="${ trvDay.dayMemo }">
 								</div>
 								<ul class="connectedSortable menu-list costList" style="background: white">
+									<li class="panel-block" style="display:none">
+										<div class="media-left" style="width: 20%">
+											<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
+											<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
+											<span class="icon costType food"><i class="fas fa-utensils"></i></span>
+											<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>
+											<span class="icon costType tour"><i class="fab fa-tripadvisor"></i></span>
+											<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>
+										</div>
+										<div class="media-content" style="width: 70%">
+											<div class="content">
+												<p>
+													<strong class="costAmount"></strong>
+													<small class="costCurrency"></small>
+												</p>
+												<small class="costContent"></small>
+											</div>
+										</div>
+										<div class="media-right" style="width: 10%">
+											<input type="hidden" value="0" name="costId">
+											<button class="delete costDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
+											<br><br> 
+											<span class="icon costInfoBtn"data-tooltip="일정 정보 수정"> 
+												<i class="fas fa-edit"></i>
+											</span>
+											<input type="hidden" value="0" name="schId">
+										</div>
+									</li>
 									<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st" >
 										<c:if test="${ sch.trvCost ne null }">
-											<li class="panel-block">
+											<li class="panel-block" id="cost_${ sch.trvCost.costId }">
 												<div class="media-left" style="width:20%">
 													<c:choose >
 														<c:when test="${ sch.trvCost.costType eq '숙박' }" >
-															<span class="icon accomm"><i class="fas fa-bed"></i></span>
+															<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
 														</c:when>
 														<c:when test="${ sch.trvCost.costType eq '교통' }" >
-															<span class="icon transp"><i class="fas fa-taxi"></i></span>
+															<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
 														</c:when>
 														<c:when test="${ sch.trvCost.costType eq '식비' }" >
-															<span class="icon food"><i class="fas fa-utensils"></i></span>
+															<span class="icon costType food"><i class="fas fa-utensils"></i></span>
 														</c:when>
 														<c:when test="${ sch.trvCost.costType eq '쇼핑' }" >
-															<span class="icon shopping"><i class="fas fa-shopping-bag"></i></span>
+															<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>
 														</c:when>
 														<c:when test="${ sch.trvCost.costType eq '관광' }" >
-															<span class="icon tour"><i class="fab fa-tripadvisor"></i></span>
+															<span class="icon costType tour"><i class="fab fa-tripadvisor"></i></span>
 														</c:when>
 														<c:otherwise>
-															<span class="icon etc"><i class="fas fa-ellipsis-h"></i></span>
+															<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>
 														</c:otherwise>
 													</c:choose>
 												</div>
 												<div class="media-content" style="width:70%">
 													<div class="content">
 														<p><strong class="costAmount">${ sch.trvCost.costAmount }</strong> 
-															<small>(${ sch.trvCost.currency }) </small></p>
+															<small class="costCurrency">${ sch.trvCost.currency }</small></p>
 														<small class="costContent">${ sch.trvCost.costContent }</small>
 													</div>
 												</div>
@@ -190,16 +217,62 @@
 													<span class="icon costInfoBtn" data-tooltip="일정 정보 수정">
 														<i class="fas fa-edit"></i>
 													</span>
+													<input type="hidden" value="${ sch.trvCost.schId }" name="schId" />
 												</div>
 											</li>
 											
 										</c:if>
 									</c:forEach>
+									<c:forEach var="cost" items="${ trvDay.costList }" varStatus="st" >
+										<li class="panel-block" id="cost_${ cost.costId }">
+											<div class="media-left" style="width: 20%">
+												<c:choose>
+													<c:when test="${ cost.costType eq '숙박' }">
+														<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
+													</c:when>
+													<c:when test="${ cost.costType eq '교통' }">
+														<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
+													</c:when>
+													<c:when test="${ cost.costType eq '식비' }">
+														<span class="icon costType food"><i class="fas fa-utensils"></i></span>
+													</c:when>
+													<c:when test="${ cost.costType eq '쇼핑' }">
+														<span class="icon costType shopping"><i
+															class="fas fa-shopping-bag"></i></span>
+													</c:when>
+													<c:when test="${ cost.costType eq '관광' }">
+														<span class="icon costType tour"><i
+															class="fab fa-tripadvisor"></i></span>
+													</c:when>
+													<c:otherwise>
+														<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>
+													</c:otherwise>
+												</c:choose>
+											</div>
+											<div class="media-content" style="width: 70%">
+												<div class="content">
+													<p>
+														<strong class="costAmount">${ cost.costAmount }</strong>
+														<small class="costCurrency">${ cost.currency }</small>
+													</p>
+													<small class="costContent">${ cost.costContent }</small>
+												</div>
+											</div>
+											<div class="media-right" style="width: 10%">
+												<input type="hidden" value="${ cost.costId }" name="costId">
+												<button class="delete costDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
+												<br><br> 
+												<span class="icon costInfoBtn"data-tooltip="일정 정보 수정">
+													<i class="fas fa-edit"></i>
+												</span>
+												<input type="hidden" value="0" name="schId">
+											</div>
+										</li>
+									</c:forEach>
 								</ul>
 								<div class="panel-block">
 									<button class="button is-link is-outlined is-fullwidth"
-										onclick="$('#costModal').toggleClass('is-active')">가계부
-										항목 추가</button>
+										onclick="$('#newCostModal').toggleClass('is-active')">가계부 항목 추가</button>
 								</div>
 							</nav>
 						</div>
@@ -208,28 +281,180 @@
 			</section>
 		</div>
 	</div>	
-	<jsp:include page="costModal.jsp" />
-	
+	<jsp:include page="newCostModal.jsp" />
+	<jsp:include page="costInfoModal.jsp" />
 	<script>
 		var rate = 1;
-		var amount = 0;
+		var budgetWon = 0;
+		var budgetLocal = 0;
 		var accommCostLocal = 0.00;
 		var transpCostLocal = 0.00;
 		var foodCostLocal = 0.00;
 		var shoppingCostLocal = 0.00;
 		var tourCostLocal = 0.00;
 		var etcCostLocal = 0.00;
+		
 		$(function() {
-			if("${ trv.budget}" != null) {
+			
+			//1) 처음 로딩시 budget이 존재하면 input에 넣고 formatting,
+			//exchange rate조회해서 localbudget띄워주기
+			//summary table 설정해주기
+			if("${ trv.budget}" != 0) {
 				$("#budgetWon").val(parseFloat("${ trv.budget }"));
-				amount = parseFloat("${ trv.budget }");
+				budgetWon = parseFloat("${ trv.budget }");
+				console.log(budgetWon);
 				formatCurrency($("#budgetWon"), "budgetWon", "blur");
-				getLocalAmount();
 			}
+			//2) 처음 로딩시 budget이 0이면 
+			//summary table만 설정해주기
+			getLocalBudget(budgetWon);
+			
+		
+		
+		
+			$("input[data-type='currency']").on({
+			    keyup: function() {
+			    	console.log("keyup");
+			    	console.log($(this));
+			      	formatCurrency($(this), $(this).attr("id"));
+			    },
+			    blur: function() { 
+			    	console.log("blur");
+			      	formatCurrency($(this), $(this).attr("id"), "blur");
+			      
+			      	//원화 변경시
+			      	if($(this).attr("id") === "budgetWon") {
+			      		var value = $(this).val();
+			      		console.log(value);
+			    	  	var budgetStr = value.substring(0, value.length - 2).replace(/,/g, "");
+			    	  	console.log(budgetStr);
+						budgetWon = parseFloat(budgetStr);
+						console.log(budgetWon);
+			    	  	//값이 입력안됐을때
+						if(budgetStr == "") {
+							console.log("입력값 없음");
+							$(this).val(0);
+							formatCurrency($(this), "budgetWon");
+							return;
+						}
+			    	  	//값이 입력됐을 때
+						$.ajax({
+							url:"updateBudget.trv",
+							type:"POST",
+							data:{budget:budgetWon, trvId:"${ trv.trvId }"},
+							success:function(data) {
+								console.log(data);
+								getLocalBudget(budgetWon);
+							},
+							error:function(err) {
+								alert("err", err);
+							}
+						});
+			      }
+			      
+			    }
+			});
 			
 			
+			//가계부 수정
+			$(".costInfoBtn").click(function() {
+				var li = $(this).parent().parent();
+				var dayId = li.parent().prev().find("input[name=dayId]").val();
+				var costId = li.find("input[name=costId]").val();
+				
+				var schId = $(this).next().val();
+				var costContent = li.find(".costContent").text();
+				var costAmount = li.find(".costAmount").text();
+				var costCurrency = li.find(".costCurrency").text();
+				var costType = "";
+				var span = li.find(".costType");
+				console.log(span);
+				if(span.is(".accomm")) {
+					costType = "숙박";
+				}else if(span.is(".transp")) {
+					costType = "교통";
+				}else if(span.is(".food")) {
+					costType = "식비";
+				}else if(span.is(".shopping")) {
+					costType = "쇼핑";
+				}else if(span.is(".tour")) {
+					costType = "관광";
+				}else if(span.is(".etc")) {
+					costType = "기타";
+				}
+				console.log(costType);
+				$("#costUpdateContent").val(costContent);
+				$("#costUpdateId").val(costId);
+				$("#costUpdateAmount").val(costAmount);
+				$("#costUpdateDayId").children().each(function() {
+					if($(this).val() == dayId) {
+						$(this).prop("selected", true);
+					}
+				});
+				if(schId != 0) {
+					$("#costUpdateDayId").prop("disabled", true);
+				}else {
+					$("#costUpdateDayId").prop("disabled", false);
+				}
+				$("#costUpdateType").children().each(function() {
+					if($(this).text() == costType) {
+						$(this).prop("selected", true);
+					}
+				});
+				$("#costUpdateCurrency").children().each(function() {
+					if($(this).text() == costCurrency) {
+						$(this).prop("selected", true);
+					}
+				});
+				$('#costInfoModal').toggleClass('is-active');
+			});
+			
+		});
+		
+		//환율 조회	, 전체예산 적용
+		function getLocalBudget(amount) {
+			
+			$.ajax({
+				url:'http://data.fixer.io/api/latest?access_key=92d8dd4822a4117acfc28399dc24faff',
+				dataType:'jsonp',
+				success:function(json) {
+					var krw = json.rates.KRW;
+					var local = json.rates.${ trvCityList[0].currencyUnit };
+					
+					rate = Math.round((krw / local) * 1000) / 1000;
+					console.log(rate);
+					$("#exchangeRate").text(rate);
+					budgetLocal = Math.round((amount / rate) * 100) / 100;
+					console.log("budgetLocal", budgetLocal);
+					$("#budgetLocal").val(budgetLocal);
+					formatCurrency($("#budgetLocal"), "budgetLocal", "blur");
+					updateSummary();
+				},
+				error:function(err) {
+					alert("err", err);
+				}
+			});
+		}
+		
+		
+		//summary테이블 update (rate, budgetLocal, budgetWon)
+		function updateSummary() {
+			console.log(rate);
+			console.log(budgetLocal);
+			console.log(budgetWon);
+			accommCostLocal = 0;
+			transpCostLocal = 0;
+			foodCostLocal = 0;
+			shoppingCostLocal = 0;
+			tourCostLocal = 0;
+			etcCostLocal = 0;
 			$(".costAmount").each(function() {
-				var cost = parseFloat($(this).text());
+				var cost;
+				if($(this).text() != "") {
+					cost = parseFloat($(this).text());
+				}else {
+					cost = 0;
+				}
 				var icon = $(this).parent().parent().parent().prev().children();
 				if(icon.is(".accomm")) {
 					accommCostLocal += cost;
@@ -246,85 +471,52 @@
 				}
 			});
 			
+			var totalCostLocal = accommCostLocal + transpCostLocal + foodCostLocal + tourCostLocal 
+					+ shoppingCostLocal + etcCostLocal;
+			var balanceLocal = Math.round((budgetLocal - totalCostLocal) * 100) / 100;
+			
 			$("#accommCostLocal").text(accommCostLocal + ' AUD');
 			$("#transpCostLocal").text(transpCostLocal + ' AUD');
 			$("#foodCostLocal").text(foodCostLocal + ' AUD');
 			$("#tourCostLocal").text(tourCostLocal + ' AUD');
 			$("#shoppingCostLocal").text(shoppingCostLocal + ' AUD');
 			$("#etcCostLocal").text(etcCostLocal + ' AUD');
-			$("#totalCostLocal").text((acommCostLocal + transpCostLocal + foodCostLocal + tourCostLocal 
-					+ shoppingCostLocal + etcCostLocal) + ' AUD');
-		
+			$("#totalCostLocal").text(totalCostLocal + ' AUD');
+			$("#balanceLocal").text(balanceLocal + ' AUD');
 			
 			
-		});
-	
-		$("input[data-type='currency']").on({
+			var accommCostWon = Math.floor(accommCostLocal * rate);
+			var transpCostWon = Math.floor(transpCostLocal * rate);
+			var foodCostWon = Math.floor(foodCostLocal * rate);
+			var tourCostWon = Math.floor(tourCostLocal * rate);
+			var shoppingCostWon = Math.floor(shoppingCostLocal * rate);
+			var etcCostWon = Math.floor(etcCostLocal * rate)
+			var totalCostWon = accommCostWon + transpCostWon + foodCostWon + tourCostWon
+					+ shoppingCostWon + etcCostWon;
+			var balanceWon = budgetWon - totalCostWon;
 			
-		    keyup: function() {
-		      formatCurrency($(this), $(this).attr("id"));
-		    },
-		    blur: function() { 
-		      	formatCurrency($(this), $(this).attr("id"), "blur");
-		      
-		      	if($(this).attr("id") == "budgetWon") {
-		    	  
-		    		var budgetWon = $(this).val();
-		    	  	var amountStr = budgetWon.substring(0, budgetWon.length - 2).replace(/,/g, "");
-					amount = parseFloat(amountStr);
-		    	  	if(amountStr == "") {
-						$(this).val(0);
-						formatCurrency($(this), "budgetWon");
-						return;
-					}
-					
-					getLocalAmount();
-					
-					$.ajax({
-						url:"updateBudget.trv",
-						type:"POST",
-						data:{budget:amount, trvId:"${ trv.trvId }"},
-						success:function(data) {
-							console.log(data);
-						},
-						error:function(err) {
-							alert("err", err);
-						}
-					});
-		      }
-		      
-		    }
-		});
-	
-		
-		function getLocalAmount() {
-			
-			
-			$.ajax({
-				url:'http://data.fixer.io/api/latest?access_key=92d8dd4822a4117acfc28399dc24faff',
-				dataType:'jsonp',
-				success:function(json) {
-					
-					var krw = json.rates.KRW;
-					var local = json.rates.${ trvCityList[0].currencyUnit };
-					
-					rate = Math.round((krw/local) * 1000) / 1000;
-					$("#exchangeRate").text(rate);
-					$("#budgetLocal").val(amount / rate);
-					formatCurrency($("#budgetLocal"), "budgetLocal", "blur");
-				},
-				error:function(err) {
-					alert("err", err);
-				}
-				
-			});
-			
-			
+			$("#accommCostWon").text(accommCostWon + ' 원');
+			$("#transpCostWon").text(transpCostWon + ' 원');
+			$("#foodCostWon").text(foodCostWon + ' 원');
+			$("#tourCostWon").text(tourCostWon + ' 원');
+			$("#shoppingCostWon").text(shoppingCostWon + ' 원');
+			$("#etcCostWon").text(etcCostWon + ' 원');
+			$("#totalCostWon").text(totalCostWon + ' 원');
+			$("#balanceWon").text(balanceWon + ' 원' );
 		}
 		
+		
 	
+		
+		
+		
+		
+		
+		
+		
+		
+		//formatting
 		function formatNumber(n) {
-		  // format number 1000000 to 1,234,567
 		  return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 		}
 	
@@ -346,8 +538,7 @@
 		    	var right_side = input_val.substring(decimal_pos);
 	
 		    	left_side = formatNumber(left_side);
-	
-		   		right_side = formatNumber(right_side);
+		   		//right_side = formatNumber(right_side);
 		    
 			    // On blur make sure 2 numbers after decimal
 			    if (blur === "blur") {
@@ -355,13 +546,12 @@
 		    	}
 		    
 		    	// Limit decimal to only 2 digits
-		    	right_side = right_side.substring(0, 2);
+		    	right_side = right_side.substring(0, 3);
 	
-		    	// join number by .
 		    	if(id == 'budgetWon') {
-			    	input_val = left_side + "." + right_side + " 원";
+			    	input_val = left_side + right_side + " 원";
 		    	}else {
-		    		input_val = left_side + "." + right_side + " ${ trvCityList[0].currencyUnit }";
+		    		input_val = left_side + right_side + " ${ trvCityList[0].currencyUnit }";
 		    	}
 	
 		  	} else {
@@ -394,43 +584,7 @@
 	
 	
 	
-		/* $("#budgetWon").change(function() {
-			
-			var budgetWon = $(this).val();
-			if(budgetWon <= 0) {
-				return;
-			}
-			$.ajax({
-				url:'http://data.fixer.io/api/latest?access_key=92d8dd4822a4117acfc28399dc24faff',
-				dataType:'jsonp',
-				success:function(json) {
-					
-					var krw = json.rates.KRW;
-					var local = json.rates.${ trvCityList[0].currencyUnit };
-					
-					var rate = Math.round((krw/local) * 1000) / 1000;
-					$("#exchangeRate").text(rate);
-					$("#budgetLocal").val(budgetWon * rate);
-				},
-				error:function(err) {
-					alert("err", err);
-				}
-				
-			});
-			
-			
-			$.ajax({
-				url:"updateBudget.trv",
-				type:"POST",
-				data:{budget:budgetWon, trvId:"${ trv.trvId }"},
-				success:function(data) {
-					console.log(data);
-				},
-				error:function(err) {
-					alert("err", err);
-				}
-			});
-		}); */
+		
 	</script>
 	
 </body>

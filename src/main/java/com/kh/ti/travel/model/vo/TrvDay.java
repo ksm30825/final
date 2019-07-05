@@ -12,11 +12,12 @@ public class TrvDay implements java.io.Serializable {
 	private String dayWeather;
 	private int trvId;
 	private ArrayList<TrvSchedule> schList;
+	private ArrayList<TrvCost> costList;
 	
 	public TrvDay() {}
 
 	public TrvDay(int dayId, int dayNumber, Date dayDate, String dayMemo, String dayWeather, int trvId,
-			ArrayList<TrvSchedule> schList) {
+			ArrayList<TrvSchedule> schList, ArrayList<TrvCost> costList) {
 		super();
 		this.dayId = dayId;
 		this.dayNumber = dayNumber;
@@ -25,6 +26,7 @@ public class TrvDay implements java.io.Serializable {
 		this.dayWeather = dayWeather;
 		this.trvId = trvId;
 		this.schList = schList;
+		this.costList = costList;
 	}
 
 	public int getDayId() {
@@ -83,14 +85,21 @@ public class TrvDay implements java.io.Serializable {
 		this.schList = schList;
 	}
 
+	public ArrayList<TrvCost> getCostList() {
+		return costList;
+	}
+
+	public void setCostList(ArrayList<TrvCost> costList) {
+		this.costList = costList;
+	}
+
 	@Override
 	public String toString() {
 		return "TrvDay [dayId=" + dayId + ", dayNumber=" + dayNumber + ", dayDate=" + dayDate + ", dayMemo=" + dayMemo
-				+ ", dayWeather=" + dayWeather + ", trvId=" + trvId + ", schList=" + schList + "]";
+				+ ", dayWeather=" + dayWeather + ", trvId=" + trvId + ", schList=" + schList + ", costList=" + costList
+				+ "]";
 	}
 
-	
-	
 	
 	
 	

@@ -96,6 +96,8 @@ public class TravelServiceImpl implements TravelService {
 		
 		for(int i = 0; i < trvDayList.size(); i++) {
 			int dayId = trvDayList.get(i).getDayId();
+			ArrayList<TrvCost> costList = td.selectCostList(sqlSession, dayId);
+			trvDayList.get(i).setCostList(costList);
 			ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, dayId);
 			for(int j = 0; j < schList.size(); j++) {
 				int schId = schList.get(j).getSchId();
@@ -607,27 +609,30 @@ public class TravelServiceImpl implements TravelService {
 
 	
 	@Override
-	public TrvCost selectTrvCost(int schId) {
-		return td.selectTrvCost(sqlSession, schId);
+	public TrvCost selectSchCost(int schId) {
+		return td.selectSchCost(sqlSession, schId);
 	}
 	
-
-
 	@Override
-	public int insertTrvCost(TrvDay day, TrvCost cost) {
-		return td.insertTrvCost(sqlSession, cost);
+	public TrvCost selectTrvCost(int costId) {
+		return td.selectTrvCost(sqlSession, costId);
 	}
 
+
 	@Override
-	public int insertTrvCost(TrvSchedule sch, TrvCost cost) {
-		return td.insertTrvCost(sqlSession, cost);
+	public int insertTrvCost(TrvCost cost) {
+		int costId = 0;
+		int result = td.insertTrvCost(sqlSession, cost);
+		if(result > 0) {
+			costId = td.selectCostId(sqlSession);
+		}
+		return costId;
 	}
 
 	
 	@Override
 	public int updateTrvCost(TrvCost cost) {
-		int result = td.updateTrvCost(sqlSession, cost);
-		return 0;
+		return td.updateTrvCost(sqlSession, cost);
 	}
 
 	@Override

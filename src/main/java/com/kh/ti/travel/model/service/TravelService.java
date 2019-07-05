@@ -76,11 +76,11 @@ public interface TravelService {
 
 	int updateBudget(Travel trv);
 	
-	TrvCost selectTrvCost(int schId);
+	TrvCost selectSchCost(int schId);
 	
-	int insertTrvCost(TrvDay day, TrvCost cost);
+	int insertTrvCost(TrvCost cost);
 
-	int insertTrvCost(TrvSchedule sch, TrvCost cost);
+	TrvCost selectTrvCost(int costId);
 	
 	int updateTrvCost(TrvCost cost);
 
@@ -104,6 +104,7 @@ public interface TravelService {
 
 	
 	HashMap selectSpotList(Travel trv);
+
 
 	
 	

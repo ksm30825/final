@@ -99,7 +99,7 @@
 				</form>
 			</section>
 			<footer class="modal-card-foot" >
-				<a class="button is-primary okBtn">완료</a> 
+				<a class="button is-primary okBtn" id="trvSubmitBtn">완료</a> 
 				<a class="button cancelBtn">취소</a>
 			</footer>
 		</div>
@@ -148,7 +148,7 @@
         	});
         	
         	//submit Form
-        	$(".okBtn").click(function() {
+        	$("#trvSubmitBtn").click(function() {
         		var title = $("input[name=trvTitle]").val();
         		var start = $("#startPicker").val();
         		var end = $("#endPicker").val();
