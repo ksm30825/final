@@ -116,31 +116,17 @@ public class TravelBoardController {
 		
 		HashMap tbMap = tbs.travelDetailForm(tb);
 		
-		//상세 스케쥴 1일차 조회
-		TrvDaySchedule tds = new TrvDaySchedule(); tds.setTrvId(trvId);
-		tds.setDayNumber(1); 
-		TrvDaySchedule detailDay = tbs.selectTravelDetailDays(tds);
+		//상세 스케쥴 조회
+		ArrayList detailDay = tbs.selectTravelDetailDays(tb);
+		
+		//가계부 정보 조회
+		ArrayList detailCost = tbs.selectTravelCost(trvId);
 		
 		model.addAttribute("detailTb", tbMap.get("detailTb"));
 		model.addAttribute("detailDay", detailDay);
+		model.addAttribute("detailCost", detailCost);
 		
 		return "travelBoard/travelDetail";
-	}
-	
-	//여행일정 일자별 스케쥴 조회용
-	@RequestMapping("travelDetailDays.tb")
-	public ResponseEntity<TrvDaySchedule> selectTravelDetailDays(int trvId, int dayNumber) {
-		
-		System.out.println("trvId : " + trvId);
-		System.out.println("dayNumber : " + dayNumber);
-		
-		TrvDaySchedule tds = new TrvDaySchedule();
-		tds.setTrvId(trvId);
-		tds.setDayNumber(dayNumber);
-		
-		TrvDaySchedule detailDay = tbs.selectTravelDetailDays(tds);
-		
-		return new ResponseEntity<TrvDaySchedule>(detailDay, HttpStatus.OK);
 	}
 	
 	//여행일정 구매리뷰 조회용

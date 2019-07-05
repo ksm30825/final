@@ -34,6 +34,17 @@
 	<jsp:include page="travelSearchBar.jsp" />
 	<input type="text" id="loginId" value="${ sessionScope.loginUser.memberId }" hidden="hidden">
 	<input type="text" id="userPoint" value="${ sessionScope.loginUser.userPoint }" hidden="hidden">
+	<!-- 결제여부에 따른 출력될 일수 설정하기 -->
+	<c:choose>
+		<c:when test="${ !empty loginUser && detailTb.buyStatus eq 'Y' }">
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) }"/>
+		</c:when>
+		<c:otherwise>
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) / 3 }" />
+		</c:otherwise>
+	</c:choose>
+	<input type="number" hidden="hidden" id="totalDays" value="${ fn:length(detailDay) }">
+	<input type="number" hidden="hidden" id="showDays" value="${ showDays }">
 	
 	<div class="coumns">
 		<div class="column">
@@ -166,14 +177,14 @@
 							<p class="menu-label">일자별 상세글</p>
 							<ul class="menu-list">
 								<c:choose>
-									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-										<c:forEach var="trvSchedule" items="detailDay.trvSchedule" varStatus="st">
+									<c:when test="${ fn:length(detailDay) > 0 }">
+										<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
 											<c:choose>
-												<c:when test="${ st.count == 1}">
-													<li><a class="is-active" href="#day+'${ detailDay.dayNumber }'"><strong>DAY ${ detailDay.dayNumber }</strong></a></li>
+												<c:when test="${ totalDays < 3 || showDays >= st.count }">
+													<li><a href="#day${ detailDay.dayNumber }"><strong>DAY ${ detailDay.dayNumber }</strong></a></li>
 												</c:when>
 												<c:otherwise>
-													<li><a href="#day+'${ detailDay.dayNumber }'"><strong>DAY ${ detailDay.dayNumber }</strong></a></li>
+													<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ detailDay.dayNumber }</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:forEach>
@@ -182,6 +193,7 @@
 										<li>일자별 상세글 없음</li>
 									</c:otherwise>
 								</c:choose>
+								
 							</ul>
 							<p class="menu-label">사진 갤러리</p>
 							<ul class="menu-list">
@@ -189,9 +201,16 @@
 								<li><a>일자별 모아보기</a>
 									<ul>
 										<c:choose>
-											<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-												<c:forEach var="trvSchedule" items="detailDay.trvSchedule">
-													<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ detailDay.dayNumber }"'>DAY ${ detailDay.dayNumber }</a></li>
+											<c:when test="${ fn:length(detailDay) > 0 }">
+												<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
+													<c:choose>
+														<c:when test="${ totalDays < 3 || showDays >= st.count }">
+															<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ detailDay.dayNumber }"'>DAY ${ detailDay.dayNumber }</a></li>
+														</c:when>
+														<c:otherwise>
+															<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ detailDay.dayNumber }</a></li>
+														</c:otherwise>
+													</c:choose>
 												</c:forEach>
 											</c:when>
 											<c:otherwise>
@@ -377,6 +396,17 @@
 	function loginInfo() {
 		alert("로그인이 필요한 서비스입니다.");
 	};
+	
+	function buyInfo() {
+		var answer = confirm("결제가 필요한 서비스입니다. 결제하시겠습니까?");
+		var memberId = $("#loginId").val();
+		
+		if(answer && memberId != "") {
+			travelBuy();
+		}else {
+			loginInfo();
+		}
+	}
 	
 	function linkCopy() {
 	    alert("현재 주소 복사하기");

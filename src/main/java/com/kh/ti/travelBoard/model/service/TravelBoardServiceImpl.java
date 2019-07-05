@@ -66,9 +66,9 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	
 	//여행일정 일자별 스케쥴 조회용
 	@Override
-	public TrvDaySchedule selectTravelDetailDays(TrvDaySchedule tds) {
+	public ArrayList selectTravelDetailDays(TravelBoard tb) {
 		
-		return tbd.selectTravelDetailDays(sqlSession, tds);
+		return tbd.selectTravelDetailDays(sqlSession, tb);
 	}
 	
 	//여행일정 구매리뷰 조회용
@@ -104,6 +104,13 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	public int deliteReview(TourReview tr) {
 		
 		return tbd.deliteReview(sqlSession, tr);
+	}
+	
+	//여행일정 상세 / 가계부 조회 - 예랑
+	@Override
+	public ArrayList selectTravelCost(int trvId) {
+		
+		return tbd.selectTravelCost(sqlSession, trvId);
 	}
 
 

@@ -86,7 +86,7 @@ public class TrvDaySchedule implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "TrvDaySchedule [dayId=" + dayId + ", dayNumber=" + dayNumber + ", dayDate=" + dayDate + ", dayMemo="
-				+ dayMemo + ", dayWeather=" + dayWeather + ", trvId=" + trvId + ", trvSchedule=" + trvSchedule + "]";
+				+ dayMemo + ", dayWeather=" + dayWeather + ", trvId=" + trvId + ", trvSchedule=" + trvSchedule + "]\n";
 	}
 	
 }

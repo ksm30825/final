@@ -15,12 +15,13 @@ public class TravelCost implements java.io.Serializable {
 	private String shoppingCharge;
 	private String sightseeingCharge;
 	private String etcCharge;
+	private String totalCost;
 	
 	public TravelCost() {}
 
 	public TravelCost(int costId, String costContent, int costAmount, int schId, int dayId, String costType,
 			String currency, String roomCharge, String trafficCharge, String foodCharge, String shoppingCharge,
-			String sightseeingCharge, String etcCharge) {
+			String sightseeingCharge, String etcCharge, String totalCost) {
 		super();
 		this.costId = costId;
 		this.costContent = costContent;
@@ -35,6 +36,7 @@ public class TravelCost implements java.io.Serializable {
 		this.shoppingCharge = shoppingCharge;
 		this.sightseeingCharge = sightseeingCharge;
 		this.etcCharge = etcCharge;
+		this.totalCost = totalCost;
 	}
 
 	public int getCostId() {
@@ -141,13 +143,21 @@ public class TravelCost implements java.io.Serializable {
 		this.etcCharge = etcCharge;
 	}
 
+	public String getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(String totalCost) {
+		this.totalCost = totalCost;
+	}
+
 	@Override
 	public String toString() {
 		return "TravelCost [costId=" + costId + ", costContent=" + costContent + ", costAmount=" + costAmount
 				+ ", schId=" + schId + ", dayId=" + dayId + ", costType=" + costType + ", currency=" + currency
 				+ ", roomCharge=" + roomCharge + ", trafficCharge=" + trafficCharge + ", foodCharge=" + foodCharge
 				+ ", shoppingCharge=" + shoppingCharge + ", sightseeingCharge=" + sightseeingCharge + ", etcCharge="
-				+ etcCharge + "]";
+				+ etcCharge + ", totalCost=" + totalCost + "]";
 	}
 	
 }
