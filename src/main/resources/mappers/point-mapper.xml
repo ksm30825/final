@@ -43,13 +43,24 @@
 	</resultMap>
 	<resultMap type="Proceeds" id="proceedsResultSet">
 		<id property="proceedsId" column="PROCEEDS_ID"/>
-		
+		<result property="proceeds" column="PROCEEDS"/>
+		<result property="accumulateProceeds" column="ACCUMULATE_PROCEEDS"/>
+		<result property="proceedsDate" column="PROCEEDS_DATE"/>
+		<result property="proceedsType" column="PROCEEDS_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+	</resultMap>
+	<resultMap type="Proceeds" id="proceedsALlResultSet">
+		<id property="proceedsId" column="PROCEEDS_ID"/>
 		<result property="proceeds" column="PROCEEDS"/>
 		<result property="proceedsDate" column="PROCEEDS_DATE"/>
 		<result property="proceedsType" column="PROCEEDS_TYPE"/>
 		<result property="memberId" column="MEMBER_ID"/>
 		<result property="trvId" column="TRV_ID"/>
 		<result property="ptcpId" column="PTCP_ID"/>
+		<result property = "sumTrv" column="SUMTRV" javaType = "_int"/>
+		<result property = "sumPtcp" column="SUMPTCP" javaType = "_int"/>
 	</resultMap>
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
@@ -195,11 +206,35 @@
 		JOIN TRV_PLAN TP ON(TP.PLAN_ID=P.PLAN_ID)
 		WHERE PTCP_ID=#{ptcpId}
 	</select>
+	<!-- 누적수익금을 위한 기존 수익금 조회 -->
+	<select id="selectOneProceeds" parameterType="Proceeds" resultMap="proceedsResultSet">
+		SELECT *
+		FROM PROCEEDS
+		<choose>
+			<when test="trvId != 0">
+				WHERE TRV_ID=#{trvId} 
+				AND PROCEEDS_ID = (
+					    SELECT MAX(PROCEEDS_ID)
+					    FROM PROCEEDS
+					    WHERE TRV_ID=#{trvId}	    
+					)
+			</when>
+			<when test="ptcpId != 0">
+				WHERE PTCP_ID=#{ptcpId}
+				AND PROCEEDS_ID = (
+					    SELECT MAX(PROCEEDS_ID)
+					    FROM PROCEEDS
+					    WHERE PTCP_ID=#{ptcpId}    
+					)
+			</when>
+		</choose>
+	</select>
+	
 	<!-- 성공시 수익금발생내역에 인서트 -->
 	<insert id="insertReceiverProceeds" parameterType="Proceeds">
 		INSERT INTO PROCEEDS
 		VALUES(
-			PROCEEDS_SEQ.NEXTVAL, #{proceeds}, SYSDATE, #{proceedsType}, #{memberId},
+			PROCEEDS_SEQ.NEXTVAL, #{proceeds}, #{accumulateProceeds}, SYSDATE, #{proceedsType}, #{memberId},
 			<choose>
 				<when test="trvId != 0">#{trvId}, null</when>
 				<when test="ptcpId != 0">null, #{ptcpId}</when>
@@ -217,8 +252,11 @@
 		SET USER_PROCEEDS = USER_PROCEEDS + #{proceeds}
 		WHERE MEMBER_ID = #{memberId}
 	</update>
-	<!-- 수익금 달성내역 전체 리스트 출력 -->
+	
+	<!-- 수익금 달성내역 전체 리스트 카운트 -->
 	<select id="getProceedsListCount" parameterType="Proceeds" resultType="_int">
+	</select>
+	<!-- <select id="getProceedsListCount" parameterType="Proceeds" resultType="java.lang.Integer">
 		SELECT COUNT(*)
 		FROM (
 		    SELECT 
@@ -229,7 +267,7 @@
 		    (
 		        SELECT SUM(PROCEEDS) FROM PROCEEDS P2
 		        WHERE P1.PTCP_ID=P2.PTCP_ID
-		    ) AS SUMPCTP, 
+		    ) AS SUMPTCP, 
 		    PROCEEDS_DATE, PROCEEDS_TYPE, MEMBER_ID, TRV_ID, PTCP_ID
 		    FROM PROCEEDS P1
 		    WHERE MEMBER_ID = #{memberId} 
@@ -242,9 +280,9 @@
 		         (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID) >= 30000  OR (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.PTCP_ID = P2.PTCP_ID) >=30000 
 		        )
 		)
-	</select>
+	</select> -->
 	<!-- 수익금 달성내역 가져오기 -->
-	<select id="selectAllProceeds" parameterType="Proceeds" resultMap="proceedsResultSet">
+	<!-- <select id="selectAllProceeds" parameterType="Proceeds" resultType="com.kh.ti.point.model.vo.Proceeds">
 		SELECT 
 		(
 		    SELECT SUM(PROCEEDS) FROM PROCEEDS P2 
@@ -253,7 +291,7 @@
 		(
 		    SELECT SUM(PROCEEDS) FROM PROCEEDS P2
 		    WHERE P1.PTCP_ID=P2.PTCP_ID
-		) AS SUMPCTP, 
+		) AS SUMPTCP, 
 		PROCEEDS_DATE, PROCEEDS_TYPE, MEMBER_ID, TRV_ID, PTCP_ID
 		FROM PROCEEDS P1
 		WHERE MEMBER_ID = #{memberId} 
@@ -265,5 +303,6 @@
 		) AND (
 		     (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID) >= 30000  OR (SELECT SUM(PROCEEDS) FROM PROCEEDS P2 WHERE P1.PTCP_ID = P2.PTCP_ID) >=30000 
 		    )
-	</select>
+	</select> -->
+	
 </mapper>

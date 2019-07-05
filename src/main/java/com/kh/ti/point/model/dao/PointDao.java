@@ -52,9 +52,12 @@ public interface PointDao {
 	int updateUserDeductionPoint(SqlSessionTemplate sqlSession, UsePoint userPoint);
 	//성공시 member 테이블의 누적 수익금 추가
 	int updateUserIncreaseProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard);
-	//수익금 달성내역 전체 리스트 출력
+	//수익금 달성내역 전체 리스트 카운트
 	int getProceedsListCount(SqlSessionTemplate sqlSession, Proceeds proceeds);
 	//수익금 달성내역 가져오기
 	ArrayList<Proceeds> selectAllProceeds(SqlSessionTemplate sqlSession, PageInfo proPi, Proceeds proceeds);
+	//누적수익금을 위한 기존 수익금 조회
+	Proceeds selectOneProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard);
+	Proceeds selectOneProceedsPtcpId(SqlSessionTemplate sqlSession, int ptcpId);
 
 }

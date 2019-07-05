@@ -119,7 +119,7 @@ public class PointServiceImpl implements PointService{
 	public int updateUserIncreaseProceeds(Proceeds receiverBoard) {
 		return pd.updateUserIncreaseProceeds(sqlSession, receiverBoard);
 	}
-	//수익금 달성내역 전체 리스트 출력
+	//수익금 달성내역 전체 리스트 카운트
 	@Override
 	public int getProceedsListCount(Proceeds proceeds) {
 		return pd.getProceedsListCount(sqlSession, proceeds);
@@ -128,6 +128,15 @@ public class PointServiceImpl implements PointService{
 	@Override
 	public ArrayList<Proceeds> selectAllProceeds(PageInfo proPi, Proceeds proceeds) {
 		return pd.selectAllProceeds(sqlSession, proPi, proceeds);
+	}
+	//누적수익금을 위한 기존 수익금 조회
+	@Override
+	public Proceeds selectOneProceeds(Proceeds receiverBoard) {
+		return pd.selectOneProceeds(sqlSession, receiverBoard);
+	}
+	@Override
+	public Proceeds selectOneProceedsPtcpId(int ptcpId) {
+		return pd.selectOneProceedsPtcpId(sqlSession, ptcpId);
 	}
 
 	

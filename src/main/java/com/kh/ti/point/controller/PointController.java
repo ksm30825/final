@@ -479,23 +479,48 @@ public class PointController {
 		double receiveProceeds = uPoint * 0.8;
 		int proceeds=(int) Math.round(receiveProceeds);//수익금 발생금액 -> 원금*0.8
 		
-		//System.out.println("Math.round(receiveProceeds) " + Math.round(receiveProceeds));;
-		
 		int receiverMemberId;//수익금 받는 사람 아이디
-		
+		int accumulateProceeds;
+		Proceeds findProceeds;
 		Proceeds receiverBoard = new Proceeds();
 		receiverBoard.setProceeds(proceeds);
 		receiverBoard.setProceedsType(useType);
 		switch(useType) {
 		//(trvId, requestId 통해서 memberId 조회)
 		case 10 : receiverBoard.setTrvId(code); 
-		receiverMemberId = ps.selectReceiverTrvMemberId(receiverBoard.getTrvId()); 
-		receiverBoard.setMemberId(receiverMemberId);break;
+				receiverMemberId = ps.selectReceiverTrvMemberId(receiverBoard.getTrvId()); 
+				receiverBoard.setMemberId(receiverMemberId);
+				//System.out.println("receiverBoard : " + receiverBoard);
+				findProceeds = ps.selectOneProceeds(receiverBoard);
+				//System.out.println("findProceeds : " + findProceeds);
+				if(findProceeds == null) {
+					accumulateProceeds = receiverBoard.getProceeds();
+					receiverBoard.setAccumulateProceeds(accumulateProceeds);
+					//System.out.println("0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+				}else {					
+					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();
+					receiverBoard.setAccumulateProceeds(accumulateProceeds);		
+					//System.out.println("!0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+				}
+				break;
 		case 20 : receiverBoard.setPtcpId(code); //-------------------------------------선우 확인되면 해볼것
-		receiverMemberId = ps.selectReceiverRequestMemberId(receiverBoard.getPtcpId()); 
-		receiverBoard.setMemberId(receiverMemberId);break;
+				receiverMemberId = ps.selectReceiverRequestMemberId(receiverBoard.getPtcpId()); 
+				receiverBoard.setMemberId(receiverMemberId);
+				findProceeds = ps.selectOneProceeds(receiverBoard);
+				//System.out.println("findProceeds : " + findProceeds);
+				if(findProceeds == null) {
+					accumulateProceeds = receiverBoard.getProceeds();
+					receiverBoard.setAccumulateProceeds(accumulateProceeds);
+					//System.out.println("0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+				}else {					
+					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();
+					receiverBoard.setAccumulateProceeds(accumulateProceeds);		
+					//System.out.println("!0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+				}
+				break;
 		}
 		
+		//성공시 수익금발생내역에 인서트
 		int receiverResult = ps.insertReceiverProceeds(receiverBoard);
 		
 		//성공시 member 테이블의 누적 포인트 차감
@@ -536,17 +561,22 @@ public class PointController {
 	public ResponseEntity selectAllProceeds(@RequestParam("memberId") int memberId, @RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
 		System.out.println("memberId : " + memberId);
 		System.out.println("currentPage : " + currentPage);
+		System.out.println("month : " + month);
+		
 		Proceeds proceeds = new Proceeds();
 		proceeds.setMemberId(memberId);
 		proceeds.setMonth(month);
+		
 		int proceedsListCount = ps.getProceedsListCount(proceeds);
+		System.out.println("proceedsListCount : " + proceedsListCount);
 		int proceedsCurrentPage = currentPage;
+		
 		PageInfo proPi = Pagination.getPageInfo(proceedsCurrentPage, proceedsListCount);
+		
 		ArrayList<Proceeds> proceedsList = ps.selectAllProceeds(proPi, proceeds);
 		
-		for(int i=0 ; i<proceedsList.size() ; i++) {
-			System.out.println("proceedsList.get("+i+") : "+proceedsList.get(i));
-		}
+		System.out.println("proceedsList : "+proceedsList);
+		
 		
 		
 		return new ResponseEntity(proceedsList, HttpStatus.OK);
@@ -728,7 +758,9 @@ public class PointController {
 		return mv;
 	}
 	//포인트 환불 승인여부 update 
-		//-> 승인일 경우 멤버테이블의 누적포인트 update--수민
+		//-> 거절 ->변화없음
+		//-> 승인 ->환불한 사람 포인트 해당포인트만큼 증가
+		//->	->환불한 게시글의 수익금(해당포인트만큼) 차감
 	@RequestMapping("/updateAdRefund.po")
 	public String adUpdateRefund(String pointId) {
 		
