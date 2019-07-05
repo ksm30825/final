@@ -55,6 +55,8 @@ public interface TravelDao {
 	int deleteTravel(SqlSessionTemplate sqlSession, int trvId);
 
 	int selectSchCount(SqlSessionTemplate sqlSession, int dayId);
+
+	ArrayList<TrvCost> selectCostList(SqlSessionTemplate sqlSession, int dayId);
 	
 	ArrayList<TrvSchedule> selectSchList(SqlSessionTemplate sqlSession, int dayId);
 
@@ -64,9 +66,9 @@ public interface TravelDao {
 
 	int updateSchNumber(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
-	int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
+	int insertSchCost(SqlSessionTemplate sqlSession, TrvCost cost);
 	
-	TrvCost selectTrvCost(SqlSessionTemplate sqlSession, int schId);
+	TrvCost selectSchCost(SqlSessionTemplate sqlSession, int schId);
 
 	int updateTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
 
@@ -113,9 +115,12 @@ public interface TravelDao {
 
 	int updateBudget(SqlSessionTemplate sqlSession, Travel trv);
 
+	int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
+
+	int selectCostId(SqlSessionTemplate sqlSession);	
 	
-	
-	
+	TrvCost selectTrvCost(SqlSessionTemplate sqlSession, int costId);
+
 	
 	
 	
@@ -131,6 +136,9 @@ public interface TravelDao {
 
 
 	int deleteTrvComp(SqlSessionTemplate sqlSession, Travel trv, int memberId);
+
+
+
 
 
 

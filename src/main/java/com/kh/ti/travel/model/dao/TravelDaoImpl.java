@@ -107,6 +107,11 @@ public class TravelDaoImpl implements TravelDao {
 	}
 	
 	@Override
+	public ArrayList<TrvCost> selectCostList(SqlSessionTemplate sqlSession, int dayId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectCostList", dayId);
+	}
+	
+	@Override
 	public ArrayList<TrvSchedule> selectSchList(SqlSessionTemplate sqlSession, int dayId) {
 		return (ArrayList)sqlSession.selectList("Travel.selectSchList", dayId);
 	}
@@ -127,13 +132,13 @@ public class TravelDaoImpl implements TravelDao {
 	}
 	
 	@Override
-	public int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost) {
-		return sqlSession.insert("Travel.insertTrvCost", cost);
+	public int insertSchCost(SqlSessionTemplate sqlSession, TrvCost cost) {
+		return sqlSession.insert("Travel.insertSchCost", cost);
 	}
 	
 	@Override
-	public TrvCost selectTrvCost(SqlSessionTemplate sqlSession, int schId) {
-		return sqlSession.selectOne("Travel.selectTrvCost", schId);
+	public TrvCost selectSchCost(SqlSessionTemplate sqlSession, int schId) {
+		return sqlSession.selectOne("Travel.selectSchCost", schId);
 	}
 	@Override
 	public int updateTrvCost(SqlSessionTemplate sqlSession, TrvCost cost) {
@@ -237,6 +242,24 @@ public class TravelDaoImpl implements TravelDao {
 	public int updateBudget(SqlSessionTemplate sqlSession, Travel trv) {
 		return sqlSession.update("Travel.updateBudget", trv);
 	}
+	
+	@Override
+	public int insertTrvCost(SqlSessionTemplate sqlSession, TrvCost cost) {
+		return sqlSession.insert("Travel.insertTrvCost", cost);
+	}
+
+	@Override
+	public int selectCostId(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Travel.selectCostId");
+	}
+
+	@Override
+	public TrvCost selectTrvCost(SqlSessionTemplate sqlSession, int costId) {
+		return sqlSession.selectOne("Travel.selectTrvCost", costId);
+	}
+
+
+
 
 	
 	
@@ -271,7 +294,6 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 
 

@@ -369,18 +369,28 @@ public class TravelController {
 	
 	//가계부 작성-민지
 	@RequestMapping("insertCost.trv")
-	public String insertTrvCost(TrvDay day, TrvSchedule sch, TrvCost cost) {
-		int result1 = ts.insertTrvCost(day, cost);
-		int result2 = ts.insertTrvCost(sch, cost);
-		return "";
+	public ModelAndView insertTrvCost(TrvCost cost, ModelAndView mv) {
+		System.out.println(cost);
+		int costId = ts.insertTrvCost(cost);
+		if(costId > 0) {
+			TrvCost trvCost = ts.selectTrvCost(costId);
+			mv.addObject("trvCost", trvCost);
+		}
+		mv.setViewName("jsonView");
+		return mv;
 	}
 	
-	
+
 	//가계부수정-민지
 	@RequestMapping("updateCost.trv")
-	public String updateTrvCost(TrvCost cost) {
+	public ModelAndView updateTrvCost(TrvCost cost, ModelAndView mv) {
+		
+		System.out.println(cost);
 		int result = ts.updateTrvCost(cost);
-		return "";
+		TrvCost trvCost = ts.selectTrvCost(cost.getCostId());
+		mv.addObject("trvCost", trvCost);
+		mv.setViewName("jsonView");
+		return mv;
 	}
 	
 	//가계부삭제-민지

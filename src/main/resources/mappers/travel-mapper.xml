@@ -106,7 +106,7 @@
 	<select id="selectCountryList" resultMap="CountryResultSet">
 		SELECT *
 		FROM COUNTRY
-		ORDER BY COUNTRY_NAME_KO
+		ORDER BY COUNTRY_NAME_KO DESC
 	</select>
 	<select id="selectCityList" parameterType="_int" resultMap="CityResultSet">
 		SELECT *
@@ -280,11 +280,11 @@
 	
 	
 	<!-- TrvCost -->
-	<insert id="insertTrvCost" parameterType="TrvCost">
+	<insert id="insertSchCost" parameterType="TrvCost">
 		INSERT INTO TRV_COST
 		VALUES(TRV_COST_SEQ.NEXTVAL, #{costContent}, #{costAmount}, #{schId}, #{dayId}, #{costType}, #{currency})
 	</insert>
-	<select id="selectTrvCost" parameterType="_int" resultMap="TrvCostResultSet">
+	<select id="selectSchCost" parameterType="_int" resultMap="TrvCostResultSet">
 		SELECT *
 		FROM TRV_COST
 		WHERE SCH_ID = #{schId}
@@ -299,8 +299,25 @@
 		DELETE FROM TRV_COST
 		WHERE COST_ID = #{costId}
 	</delete>
-
-	
+	<insert id="insertTrvCost" parameterType="TrvCost">
+		INSERT INTO TRV_COST
+		VALUES(TRV_COST_SEQ.NEXTVAL, #{costContent}, #{costAmount}, NULL, #{dayId}, #{costType}, #{currency})
+	</insert>
+	<select id="selectCostId" resultType="_int">
+		SELECT TRV_COST_SEQ.CURRVAL FROM DUAL
+	</select>
+	<select id="selectTrvCost" parameterType="_int" resultMap="TrvCostResultSet">
+		SELECT *
+		FROM TRV_COST
+		WHERE COST_ID = #{costId}
+	</select>
+	<select id="selectCostList" parameterType="_int" resultMap="TrvCostResultSet">
+		SELECT *
+		FROM TRV_COST
+		WHERE DAY_ID = #{dayId}
+		AND SCH_ID IS NULL
+		ORDER BY COST_TYPE, COST_ID
+	</select>
 	
 	
 	<!-- TrvTag -->
