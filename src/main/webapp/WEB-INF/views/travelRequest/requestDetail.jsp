@@ -105,6 +105,7 @@
 			<section class="section" id="card">
 				<h1 class="title">설계글</h1>
 				<hr>
+				<c:if test="${ loginUser.userName eq userName }">
 				<c:forEach var="plan" items="${ tr.planList }">
 				<c:if test="${ plan.planTitle != null}">
 					<div class="columns">
@@ -135,6 +136,14 @@
 					</div>
 				</c:if>
 				</c:forEach>
+				</c:if>
+				<c:if test="${ loginUser.userName ne userName }">
+					<div class="columns">
+						<div class="column">
+							<h3>의뢰자만 설계글 목록 확인이 가능합니다.</h3>
+						</div>
+					</div>
+				</c:if>
 			</section>
 		</div>
 	</div>
