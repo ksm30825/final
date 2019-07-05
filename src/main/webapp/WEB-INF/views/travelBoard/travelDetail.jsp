@@ -142,7 +142,7 @@
 					<li>
 						<c:choose>
 							<c:when test="${ fn:length(detailTb.trvTags) > 0 }">
-								<c:forEach var="trvTags" items="${ detailTb.trvTags }" varStatus="st">
+								<c:forEach var="trvTags" items="${ detailTb.trvTags }">
 									<div class="buttons themaBtn">
 			     						<a class="button is-info is-rounded">#${ trvTags.tagName }</a>
 			   						</div>
@@ -169,11 +169,11 @@
 									<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
 										<c:forEach var="trvSchedule" items="detailDay.trvSchedule" varStatus="st">
 											<c:choose>
-												<c:when test="${ st == 1 }">
-													<li><a class="is-active" href="#day+'${ trvSchedule.dayNumber }'"><strong>DAY ${ trvSchedule.dayNumber }</strong></a></li>
+												<c:when test="${ st.count == 1}">
+													<li><a class="is-active" href="#day+'${ detailDay.dayNumber }'"><strong>DAY ${ detailDay.dayNumber }</strong></a></li>
 												</c:when>
 												<c:otherwise>
-													<li><a href="#day+'${ trvSchedule.dayNumber }'"><strong>DAY ${ trvSchedule.dayNumber }</strong></a></li>
+													<li><a href="#day+'${ detailDay.dayNumber }'"><strong>DAY ${ detailDay.dayNumber }</strong></a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:forEach>
@@ -190,8 +190,8 @@
 									<ul>
 										<c:choose>
 											<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-												<c:forEach var="trvSchedule" items="detailDay.trvSchedule" varStatus="st">
-													<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ trvSchedule.dayNumber }"'>DAY ${ trvSchedule.dayNumber }</a></li>
+												<c:forEach var="trvSchedule" items="detailDay.trvSchedule">
+													<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ detailDay.dayNumber }"'>DAY ${ detailDay.dayNumber }</a></li>
 												</c:forEach>
 											</c:when>
 											<c:otherwise>

@@ -111,8 +111,16 @@
                      <div align="right" style="border-bottom: 1px solid lightgray; padding-bottom: 0.3em;">
                         <c:choose>
                            <c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-                              <input type="checkbox" id="timeCheck">
-                              <label for="timeCheck">시간 표시</label>
+                           	  <c:choose>
+                           	  	<c:when test="${ trvSchedule.isTimeset eq 'Y' }">
+                           	  		<input type="checkbox" id="timeCheck">
+                              		<label for="timeCheck">시간 표시</label>
+                           	  	</c:when>
+                           	  	<c:otherwise>
+                           	  		<input type="checkbox" id="timeCheck" disabled="disabled">
+                              		<label for="timeCheck" style="color: gray">시간 표시</label>
+                           	  	</c:otherwise>
+                           	  </c:choose>
                            </c:when>
                            <c:otherwise>
                               <input type="checkbox" id="timeCheck" disabled="disabled">
@@ -125,11 +133,13 @@
                         <c:choose>
                            <c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
                               
-                              <c:forEach var="trvSchedule" items="${ detailDay.trvSchedule }" varStatus="st">
+                              <c:forEach var="trvSchedule" items="${ detailDay.trvSchedule }">
                                  <tr>
-                                    <th class="times" style="display: none;">${ trvSchedule.startTime } ~ ${ trvSchedule.endTime }</th>
+                                 	<c:if test="${ trvSchedule.isTimeset eq 'Y' }">
+                                    	<th class="times" style="display: none;">${ trvSchedule.startTime } ~ ${ trvSchedule.endTime }</th>
+                                    </c:if>
                                     <td>
-                                       <span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ${ trvSchedule.placeName }</span>
+                                       <span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ${ trvSchedule.plcName }</span>
                                     </td>
                                  </tr>
                               </c:forEach>
@@ -190,7 +200,6 @@
    
    $("#timeCheck").change(function() {
       if($(this).prop("checked")) {
-         console.log("시간표시");
          $(".times").removeAttr("style");
       }else {
          console.log("시간해제");
@@ -243,12 +252,12 @@
             for (var key in detailDay.trvSchedule) {
                var startTime = detailDay.trvSchedule[key].startTime;
                var endTime = detailDay.trvSchedule[key].endTime;
-               var placeName = detailDay.trvSchedule[key].placeName;
+               var plcName = detailDay.trvSchedule[key].plcName;
                var isTimeset = detailDay.trvSchedule[key].isTimeset;
                
                console.log("startTime : " + startTime);
                console.log("endTime : " + endTime);
-               console.log("placeName : " + placeName);
+               console.log("plcName : " + plcName);
                
                var value;
                
@@ -259,7 +268,7 @@
                   $("#calendarTable > tbody").append(value).css("text");
                }else {
                   value = '<tr><th class="times" style="display: none;">' + startTime + ' ~ ' + endTime + "</th>"
-                  + '<td><span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ' + placeName + '</span></td></tr>';
+                  + '<td><span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ' + plcName + '</span></td></tr>';
          
                   $("#calendarTable > tbody").append(value);
                }
