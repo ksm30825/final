@@ -22,6 +22,10 @@ public class Member implements Serializable{
 	private String enrollType;
 	private int penalty;
 	private String memberType;
+
+	//지원 - 수정 나이 필드 생성	  
+	private int age; 
+	
 	
 	public Member() {
 		// TODO Auto-generated constructor stub
@@ -211,7 +215,20 @@ public class Member implements Serializable{
 	public void setMemberType(String memberType) {
 		this.memberType = memberType;
 	}
-
+	
+	
+	//지원 - 수정 나이 필드 생성	
+	public int getAge() {
+		return age;
+	}
+	
+	
+	//지원 - 수정 나이 필드 생성	 
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	//지원 - 수정 나이 필드 생성	 
 	@Override
 	public String toString() {
 		return "Member [memberId=" + memberId + ", email=" + email + ", password=" + password + ", userName=" + userName
@@ -219,7 +236,13 @@ public class Member implements Serializable{
 				+ ", enrollDate=" + enrollDate + ", secessionDate=" + secessionDate + ", modifyDate=" + modifyDate
 				+ ", enrollStatus=" + enrollStatus + ", phone=" + phone + ", userPoint=" + userPoint + ", userProceeds="
 				+ userProceeds + ", enrollType=" + enrollType + ", penalty=" + penalty + ", memberType=" + memberType
-				+ "]";
+				+ ", age=" + age + "]";
 	}
+
+		
 	
+	
+	
+		
+		
 }
