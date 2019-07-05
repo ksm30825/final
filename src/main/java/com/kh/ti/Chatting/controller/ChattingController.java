@@ -1,5 +1,12 @@
 package com.kh.ti.Chatting.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +89,52 @@ public class ChattingController {
 	public ResponseEntity<Member> selectMemberInfo(int userId) {
 	      
 	     System.out.println("userId : " + userId);
-	      
+	     
 	     Member userInfo = cs.selectMemberInfo(userId);
-	      
+	     
+	     String birthStr = userInfo.getBirthday();
+	     
+	     if (birthStr != null) {
+	    	 int century = Integer.parseInt(birthStr.substring(0, 1));
+	    	 
+		     if(century == 0) {
+		      birthStr = "20" + birthStr;
+		     } else {
+		      birthStr = "19" + birthStr;
+		     }
+		     
+		     System.out.println("birthdAy :" + birthStr);
+		     
+		     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.KOREAN);
+		     Date birthDay;
+			try {
+				birthDay = sdf.parse(birthStr);
+				
+				GregorianCalendar today = new GregorianCalendar();
+			    GregorianCalendar birth = new GregorianCalendar();
+			     birth.setTime(birthDay);
+			     
+			     int factor = 0;
+			     if(today.get(Calendar.DAY_OF_YEAR)<birth.get(Calendar.DAY_OF_YEAR)) {
+			      factor = -1;
+			     }
+			     
+			     int age =   today.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + factor;
+			     
+			     userInfo.setAge(age);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		     
+		     
+		     
+		    
+	     }
+	    
+
+
+	     
 	     System.out.println("detailDay : " + userInfo);
 	      
 	     return new ResponseEntity<Member>(userInfo, HttpStatus.OK);

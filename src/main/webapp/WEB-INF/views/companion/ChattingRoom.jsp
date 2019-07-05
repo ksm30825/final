@@ -45,6 +45,34 @@
 	::-webkit-scrollbar { 
     	display: none !important; 	
     }
+    
+    .Firebtn{
+    	background : none ; 
+    	border : none;
+    	color : red;
+    }
+    
+    #reputicon { 
+	 	width: 100%;
+	    height: 100%;
+	    max-width: 30%;
+	    margin-left: 35%;
+	    margin-top : 3%;
+    }
+    
+    #reputid{
+	   	margin: 5%;
+	    margin-left: 20%;
+	    font-size: 15px;
+	    text-align : center;
+    }
+    
+    #reputinfor{
+    	margin-left: 43%;
+    	font-size: 15px;
+    	text-align : center;
+    }
+    
 	
 </style>
 <body>
@@ -137,7 +165,7 @@
   	 <div id="statusModal" class="w3-modal">
 	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
 	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
-	        <span onclick="document.getElementById('id01').style.display='none'" 
+	        <span onclick="document.getElementById('statusModal').style.display='none'" 
 	        class="w3-button w3-display-topright">&times;</span>
 	        <h4 align="center" >모집을 종료하시겠습니까?</h4>
 	      </header>
@@ -150,6 +178,29 @@
 	      </footer>
 	    </div>
   	</div>
+  	
+  	<div id="reputInfo" class="w3-modal">
+	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
+	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
+	        <span onclick="document.getElementById('reputInfo').style.display='none'" 
+	        class="w3-button w3-display-topright">&times;</span>
+	        <h4 align="center" id = "reputuserName">사용자정보</h4>
+	      </header>
+	      <div class="w3-container">
+	   		<div class = "info">
+    			<img alt="user" src="resources/images/usericon.png" id = "reputicon">
+    			<br>
+    			<label id = "reputid"></label>
+    			<br>
+    			<label id = "reputinfor">20대 (여)</label>
+    		</div>
+	      </div>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
+	       	 <button id = "exitBtn" class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">모집종료</button>
+	      </footer>
+	    </div>
+  	</div>
+	
 	
 	
 	<script src="http://localhost:8010/socket.io/socket.io.js"></script>
@@ -195,7 +246,7 @@
 	       socket.on('preChatManager', function(data){
 	        	   console.log(data);
 	      
-	        	   
+	      	  
 	        	   $.ajax({
 	        		   url : "${contextPath}/memberInfo.ch",
 	        		   data : {userId : data.user},
@@ -206,7 +257,10 @@
 	    	        	   output += '<tr><td colspan = "2">';
 	    	        	   output += '<input type = "hidden" value = "'+ userInfo.email +'" name = "userId" id = "userId">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
-	    				   output += '<label>'+ userInfo.userName +'('+userInfo.email+')</label></td>';					
+	    				   output += '<input type = "hidden" value = "'+ userInfo.birthday +'" name = "userbirth" id = "userbirth">';
+	    				   output += '<input type = "hidden" value = "'+ userInfo.gender +'" name = "usergender" id = "usergender">';
+	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label>';
+	    				   output += '<button class = "Firebtn" id = "Firebtn" style = "float : right;">강퇴</button></td>';					
 	    				   output += '</tr><tr><td>';
 	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
 	    				   output += '<p id = "good">0</p>';
@@ -235,11 +289,15 @@
 		    	           socket.emit('preChat', {userId : userId ,  chatId : chatId , enter_date : enterDate});
 	        		   }
 	        		   
+	        		   $("#Firebtn").hide();
 	        		   if (data.level == 2){
 	        			   $("#setting").hide();
+	        			   $("#Firebtn").css("display", "none");
 	        		   }else {
 	        			   $("#outbtn").attr("disabled" , "disabled");
 	        			   $("#checkModel").show();
+	        			   $("#setting").show();
+	        			   $("#Firebtn").css("display", "block");
 	 	        	   }
 	        		 
 	        	   }
@@ -416,7 +474,7 @@
 	    	        	   output += '<tr><td colspan = "2">';
 	    	        	   output += '<input type = "hidden" value = "'+ userInfo.email +'" name = "userId" id = "userId">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
-	    				   output += '<label>'+ userInfo.userName +'('+userInfo.email+')</label></td>';					
+	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label></td>';					
 	    				   output += '</tr><tr><td>';
 	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
 	    				   output += '<p id = "good">0</p>';
@@ -522,12 +580,26 @@
 		$(document).on("click","#chatpeopleTable tr",function(){
  	 		var userid = $(this).parent().children().children().children("#userId").val();
  	 		var user = $(this).parent().children().children().children("#username").val();
+ 	 		var ulabel = $(this).parent().children().children().children("#chUserInfo").html();
+ 	 		var gender = $(this).parent().children().children().children("#usergender").val();
+ 	 		var birth = $(this).parent().children().children().children("#userbirth").val();
+ 	 		//console.log("userid :" + userid);
+ 	 		console.log("user :" + ulabel);
  	 		
- 	 		console.log("userid :" + userid);
- 	 		console.log("user :" + user);
+ 	 		//location.href = "${contextPath}/userInfo.ch?userId=" +userid; 	 			
  	 		
- 	 		location.href = "${contextPath}/userInfo.ch?userId=" +userid; 
- 	 			 
+ 	 		if (gender == "M"){
+ 	 			gender = "남";
+ 	 		}else {
+ 	 			gender = "여";
+ 	 		}
+ 	 		
+ 	 		
+ 	 		
+ 	 		$("#reputid").text(ulabel);
+ 	 		$("#reputinfor").text(birth + "(" + gender + ")");
+ 	 		
+			document.getElementById('reputInfo').style.display='block';
  	 		
  	 	}); 
 		
