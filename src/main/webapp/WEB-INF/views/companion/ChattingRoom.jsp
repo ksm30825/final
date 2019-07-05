@@ -42,6 +42,10 @@
 	    margin: 5%;
 	}
 	
+	::-webkit-scrollbar { 
+    	display: none !important; 	
+    }
+	
 </style>
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
@@ -126,6 +130,23 @@
 	      </div>
 	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
 	       	 <button id = "exitBtn" class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">나가기</button>
+	      </footer>
+	    </div>
+  	</div>
+  	
+  	 <div id="statusModal" class="w3-modal">
+	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
+	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
+	        <span onclick="document.getElementById('id01').style.display='none'" 
+	        class="w3-button w3-display-topright">&times;</span>
+	        <h4 align="center" >모집을 종료하시겠습니까?</h4>
+	      </header>
+	      <div class="w3-container">
+	   		<br>
+	        <br>
+	      </div>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
+	       	 <button id = "exitBtn" class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">모집종료</button>
 	      </footer>
 	    </div>
   	</div>
@@ -309,13 +330,13 @@
 	          socket.on('preChatInfo' , function(data){  
 	        	  var title = data.title;
 	        	  
-	        	  if (title.length > 7){
-	        
-		        	  
-		        	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
-	        	  }else {
-	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
-	        	  }
+	        	  if (title != null){
+					  if (title.length > 7){
+				        	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
+			          }else {
+			        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
+			          } 
+				  }
 	        	  
 	        	  var formattedStartDate = new Date(data.start);
 	        	  var sd = formattedStartDate.getDate();
@@ -377,9 +398,7 @@
 	        	  var mchatId = data.chatId;
 	 			  var output = "";
 		       	  if (mchatId == chatId){
-	 	                output += '<div class="alert alert-info" id = "msg"><strong>'; 
-	 	                output += data.userName;
-		                output += '</strong> ';
+	 	                output += '<div class="alert alert-info" id = "msg">';
 			            output += data.message;
 			            output += '</div>';
 			            $(output).appendTo('#chat_box');
@@ -431,14 +450,10 @@
 	        	  
 	        	  socket.emit('exitChatting',{userId: userId , chatId : chatId , userName : userName});
 	        	  
+	        	  
 	        	  socket.on('exitChatting', function(data){
 	        		  console.log("나간사람 :" +data);
-	        		  $(".chatpeopleTable").each(function(index ,item) {
-	        			 var checkUserID = $(this).children().children().children("#userId").val();
-	        			 if (checkUserID == data){
-	        				$(this).remove();
-	        			 } 
-	        		  });
+	        		
 	        		  
 	        		  location.href = "${contextPath}/enterRoom.ch";
 	        		  
@@ -451,7 +466,7 @@
 	        socket.on('outUser' , function(data){
 	        	  var newUser = data;
 	        	  
-	        	  console.log("outUser :" + data);
+	        	 console.log("outUser :" + data);
 	        	 
 	        	  var mchatId = data.chat_id;
 	 			  var output = "";
@@ -465,6 +480,14 @@
 			            
 	 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
 	               }
+		       	  
+		       	  var muserId = data.userId;
+		       	  $(".chatpeopleTable").each(function(index ,item) {
+	        			 var checkUserID = $(this).children().children().children("#userId").val();
+	        			 if (checkUserID == muserId){
+	        				$(this).remove();
+	        			 } 
+	        	 });
 	        	  
 	        	 
 	        	  //채팅방 수정될때 다시 채팅방 정보불러오기 
@@ -477,11 +500,14 @@
 	          socket.on('updateChatInfo' , function(data){
 				  var title = data.title;
 	        	  
-	        	  //if (title.length > 7){
-		        //	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
-	        	  //}else {
-	        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
-	        	 // } 
+				  if (title != null){
+					  if (title.length > 7){
+				        	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
+			          }else {
+			        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
+			          } 
+				  }
+	        	
 	          });
 	          
 	          
