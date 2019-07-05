@@ -146,10 +146,11 @@ public class PointDaoImpl implements PointDao{
 	public int updateUserIncreaseProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
 		return sqlSession.update("Payment.updateUserIncreaseProceeds", receiverBoard);
 	}
-	//수익금 달성내역 전체 리스트 출력
+	//수익금 달성내역 전체 리스트 카운트
 	@Override
 	public int getProceedsListCount(SqlSessionTemplate sqlSession, Proceeds proceeds) {
-		return sqlSession.selectOne("Pqyment.getProceedsListCount", proceeds);
+		System.out.println("getProceedsListCount proceeds : " + proceeds);
+		return sqlSession.selectOne("Payment.getProceedsListCount", proceeds);
 	}
 	//수익금 달성내역 가져오기
 	@Override
@@ -160,7 +161,15 @@ public class PointDaoImpl implements PointDao{
 		ArrayList<Proceeds> proceedsList = (ArrayList)sqlSession.selectList("Payment.selectAllProceeds", proceeds, rowBounds);
 		return proceedsList;
 	}
-	
+	//누적수익금을 위한 기존 수익금 조회
+	@Override
+	public Proceeds selectOneProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
+		return sqlSession.selectOne("Payment.selectOneProceeds", receiverBoard);
+	}
+	@Override
+	public Proceeds selectOneProceedsPtcpId(SqlSessionTemplate sqlSession, int ptcpId) {
+		return sqlSession.selectOne("Payment.selectOneProceedsPtcpId", ptcpId);
+	}
 	
 	
 

@@ -7,19 +7,18 @@ public class Proceeds implements Serializable {
 	//수익금 발생 내역
 	private int proceedsId;		//수익금발생코드	
 	private int proceeds;		//수익발생액
+	private int accumulateProceeds; //누적수익금
 	private Date proceedsDate;	//수익발생일
 	private int proceedsType;	//발생타입	-10:일정판매, 20:설계판매
 	private int memberId;		//회원코드
 	private int trvId;			//여행일정번호
 	private int ptcpId;			//참여번호
 	private String month;		//검색월
-	private int sumTrv;
-	private int sumPtcp;
 	
 	public Proceeds() {}
 
 	public Proceeds(int proceedsId, int proceeds, Date proceedsDate, int proceedsType, int memberId, int trvId,
-			int ptcpId, String month, int sumTrv, int sumPtcp) {
+			int ptcpId, String month, int accumulateProceeds) {
 		super();
 		this.proceedsId = proceedsId;
 		this.proceeds = proceeds;
@@ -29,8 +28,7 @@ public class Proceeds implements Serializable {
 		this.trvId = trvId;
 		this.ptcpId = ptcpId;
 		this.month = month;
-		this.sumTrv = sumTrv;
-		this.sumPtcp = sumPtcp;
+		this.accumulateProceeds = accumulateProceeds;
 	}
 
 	public int getProceedsId() {
@@ -65,12 +63,8 @@ public class Proceeds implements Serializable {
 		return month;
 	}
 
-	public int getSumTrv() {
-		return sumTrv;
-	}
-
-	public int getSumPtcp() {
-		return sumPtcp;
+	public int getAccumulateProceeds() {
+		return accumulateProceeds;
 	}
 
 	public void setProceedsId(int proceedsId) {
@@ -105,20 +99,17 @@ public class Proceeds implements Serializable {
 		this.month = month;
 	}
 
-	public void setSumTrv(int sumTrv) {
-		this.sumTrv = sumTrv;
-	}
-
-	public void setSumPtcp(int sumPtcp) {
-		this.sumPtcp = sumPtcp;
+	public void setAccumulateProceeds(int accumulateProceeds) {
+		this.accumulateProceeds = accumulateProceeds;
 	}
 
 	@Override
 	public String toString() {
 		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", proceedsDate=" + proceedsDate
 				+ ", proceedsType=" + proceedsType + ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId="
-				+ ptcpId + ", month=" + month + ", sumTrv=" + sumTrv + ", sumPtcp=" + sumPtcp + "]";
+				+ ptcpId + ", month=" + month + ", accumulateProceeds=" + accumulateProceeds + "]";
 	}
 
+	
 	
 }
