@@ -10,17 +10,17 @@
 	<div class="tabs is-boxed">
 	    <ul>
 	      <li>
-	        <a href="aPayment.ad" class="apointPay">
+	        <a href="toAPaymentView.po" class="apointPay">
 	          <span style="color:#ccccff;"><i class='fas fa-won-sign'></i>&nbsp;결제 내역</span>
 	        </a>
 	      </li>
 	      <li>
-	        <a href="allAdPoint.po" class="apointPo">
+	        <a href="toAPointView.po" class="apointPo">
 	          <span style="color:#ccccff;"><i class="fab fa-product-hunt"></i>&nbsp;포인트 내역</span>
 	        </a>
 	      </li>
 	      <li>
-	        <a href="allAdRefund.po" class="apointRef">
+	        <a href="toAdRefundView.po" class="apointRef">
 	          <span style="color:#ccccff;"><i class="fab fa-product-hunt"></i><i class='fas fa-undo'></i>&nbsp;환불 내역</span>
 	        </a>
 	      </li>

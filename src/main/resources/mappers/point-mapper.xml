@@ -59,6 +59,32 @@
 		<result property="payDate" column="PAY_DATE"/>
 		<result property="rebateStatus" column="REBATE_STATUS"/>
 	</resultMap>
+	<resultMap type="Payment" id="paymentMemberResultSet">
+		<id property="paymentId" column="PAYMENT_ID"/>
+		
+		<result property="tid" column="TID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="paymentDate" column="PAYMENT_DATE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="birthday" column="BIRTHDAY"/>
+		<result property="accCode" column="ACC_CODE"/>
+		<result property="accNumber" column="ACC_NUMBER"/>
+		<result property="enrollStatus" column="ENROLL_STATUS"/>
+		<result property="phone" column="PHONE"/>
+		<result property="userPoint" column="USER_POINT"/>
+		<result property="userProceeds" column="USER_PROCEEDS"/>
+	</resultMap>
+	<!-- <resultMap type="SearchPoint" id="spResultSet">
+		<id property="refundId" column="REFUND_ID"/>
+		
+		<result property="refundReason" column="REFUND_REASON"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="processedDate" column="PROCESSED_DATE"/>
+		<result property="refundStatus" column="REFUND_STATUS"/>
+		<result property="pointId" column="POINT_ID"/>
+	</resultMap> -->
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
 		INSERT INTO PAYMENT
@@ -304,11 +330,114 @@
 		</choose>
 		ORDER BY APPLY_DATE DESC
 	</select>
-	<!-- 환불 신청시 -->
+	<!-- 환급 신청시 -->
 	<insert id="insertRebate" parameterType="Rebate">
 		INSERT INTO REBATE
 		VALUES(
 			REBATE_SEQ.NEXTVAL, SYSDATE, #{payAmount}, #{memberId}, NULL, #{rebateStatus}		
 		)
 	</insert>
+	<!-- 신청 성공시 수익금 차감 -->
+	<update id="updateDeductionRebate">
+		UPDATE MEMBER
+		SET USER_PROCEEDS = USER_PROCEEDS-#{payAmount}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 관리자 - 총 결제 내역 리스트 카운트 -->
+	<select id="getAdPaymentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM PAYMENT P 
+		JOIN MEMBER M ON(P.MEMBER_ID = M.MEMBER_ID)
+	</select>
+	<!-- 관리자  총 결제 내역 전체 조회, 검색조회 -->
+	<select id="selectAdPayList" resultMap="paymentMemberResultSet">
+		SELECT * 
+		FROM PAYMENT P 
+		JOIN MEMBER M ON(P.MEMBER_ID = M.MEMBER_ID)
+		<choose>
+			<when test="condition != 99">
+				WHERE 
+				<choose>
+					<when test="condition == 30 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%' AND PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+					</when>
+					<when test="condition == 10 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%' 
+					</when>
+					<when test="condition == 20">
+						PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+					</when>
+				</choose>
+			</when>
+		</choose>
+		
+		ORDER BY PAYMENT_DATE DESC
+	</select>
+	<!-- 세션에 저장하기 위해 구매한 사람의 포인트를 가져온다. -->
+	<select id="getUseMemberPoint" resultType="_int" parameterType="_int">
+		SELECT USER_POINT
+		FROM MEMBER M 
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- 세션에 저장하기 위해 판 사람의 수익금을 가져온다. -->
+	<select id="getRecevieMemberProceeds" resultType="_int" parameterType="_int">
+		SELECT USER_PROCEEDS
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- 관리자 - 결제내역 검색 리스트 카운트 -->
+	<select id="getAdPaySearchListCount" parameterType="SearchPoint" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT *
+			FROM PAYMENT P 
+			JOIN MEMBER M ON(P.MEMBER_ID=M.MEMBER_ID)
+			WHERE 
+			<choose>
+				<when test="condition == 30 and userName != null">
+					USER_NAME LIKE '%'||#{userName}||'%' AND PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+				</when>
+				<when test="condition == 10 and userName != null">
+					USER_NAME LIKE '%'||#{userName}||'%' 
+				</when>
+				<when test="condition == 20">
+					PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+				</when>
+			</choose>
+		)		
+	</select>
+	<!-- 관리자 - 포인트내역 검색 리스트 카운트 -->
+	<select id="getAdPointListCount" parameterType="SearchPoint" resultType="_int">
+		SELECT COUNT(*)
+		FROM(
+		    SELECT EMAIL, USER_NAME, USER_POINT, USER_PROCEEDS
+		    FROM MEMBER
+		    <choose>
+				<when test="condition != 99">
+					WHERE 
+					<choose>
+						<when test="condition == 10 and userName != null">
+							USER_NAME LIKE '%'||#{userName}||'%' 
+						</when>
+					</choose>
+				</when>
+			</choose>
+		)
+	</select>
+	<!-- 관리자 - 포인트 내역 전체 조회, 검색 조회 -->
+	<select id="selectAdPointList" resultMap="paymentMemberResultSet">
+		SELECT EMAIL, USER_NAME, USER_POINT, USER_PROCEEDS
+		FROM MEMBER 
+		<choose>
+			<when test="condition != 99">
+				WHERE 
+				<choose>
+					<when test="condition == 10 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%' 
+					</when>
+				</choose>
+			</when>
+		</choose>
+		ORDER BY USER_NAME
+	</select>
 </mapper>

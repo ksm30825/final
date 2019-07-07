@@ -248,9 +248,9 @@
 					date = getFormatDate(date);
 					var $proceedsDateTd = $("<td>").text(date);
 					
-					var proceeds = list.proceeds;
-					proceeds = comma(proceeds);
-					var $proceedsTd = $("<td>").text(proceeds);
+					var accumulateProceeds = list.accumulateProceeds;
+					accumulateProceeds = comma(accumulateProceeds);
+					var $accumulateProceedsTd = $("<td>").text(accumulateProceeds);
 					
 					var $boardTd =$("<td>");
 					var mid, bid, $proceedsIn, $proceedsBtn, $proceedsMidIn, $proceedsBidIn; 
@@ -288,7 +288,7 @@
 					}
 					$listTr.append($noTd);
 					$listTr.append($proceedsDateTd);
-					$listTr.append($proceedsTd);
+					$listTr.append($accumulateProceedsTd);
 					$listTr.append($boardTd);
 					
 					$("#proceedsTBody").append($listTr);
