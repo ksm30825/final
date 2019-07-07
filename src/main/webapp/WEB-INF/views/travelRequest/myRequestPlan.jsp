@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +45,7 @@
 }
 
 .pagination-list {
-	margin-left: 30%;
+	margin-left: 40%;
 }
 
 textarea {
@@ -57,11 +59,17 @@ textarea {
 	width: 400px !important;
 	height: 800px !important;
 }
+
+#null {
+	width:80%;
+	margin-left:auto !important;
+	margin-right:auto !important;
+	padding-left:30%;
+}
 </style>
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<%-- <jsp:include page="../common/myPageHeader.jsp" /> --%>
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="headerSection">
@@ -102,10 +110,8 @@ textarea {
 			<!-- <section class="section" id="button"> -->
 			<!-- </section> -->
 			<section class="section" id="table">
-
 				<hr>
 				<table class="table">
-
 					<thead>
 						<tr>
 							<th>설계번호</th>
@@ -118,84 +124,79 @@ textarea {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td><b>1</b></td>
-							<td>설계제목</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td>30,000원</td>
-							<td>미채택</td>
-							<td class="report"
-								onclick="$('#reportModal').toggleClass('is-active')"><i
-								class="far fa-bell"></i></td>
-						</tr>
-						<tr>
-							<td><b>2</b></td>
-							<td>설계제목</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td>30,000원</td>
-							<td>미채택</td>
-							<td class="report"
-								onclick="$('#reportModal').toggleClass('is-active')"><i
-								class="far fa-bell"></i></td>
-						</tr>
-						<tr>
-							<td><b>3</b></td>
-							<td>설계제목</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td>30,000원</td>
-							<td>미채택</td>
-							<td class="report"
-								onclick="$('#reportModal').toggleClass('is-active')"><i
-								class="far fa-bell"></i></td>
-						</tr>
-						<tr>
-							<td><b>4</b></td>
-							<td>설계제목</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td>30,000원</td>
-							<td>미채택</td>
-							<td class="report"
-								onclick="$('#reportModal').toggleClass('is-active')"><i
-								class="far fa-bell"></i></td>
-						</tr>
-						<!-- <tr class="is-selected"> -->
-						<tr>
-							<td><b>5</b></td>
-							<td>설계제목</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td>30,000원</td>
-							<td>미채택</td>
-							<td class="report"
-								onclick="$('#reportModal').toggleClass('is-active')"><i
-								class="far fa-bell"></i></td>
-						</tr>
+						<c:if test="${ list.size() > 0 }">
+							<c:forEach var="pList" items="${ list }">
+								<tr>
+									<td><b>${ pList.planId }</b></td>
+									<td>${ pList.planTitle }</td>
+									<td>${ pList.endDate }</td>
+									<td>${ pList.reqName }</td>
+									<td><fmt:formatNumber value="${ pList.reqPrice }" groupingUsed="true"/>원</td>
+									<c:if test="${ pList.chooseStatus eq 'Y' }">
+										<td>채택완료</td>
+									</c:if>
+									<c:if test="${ pList.chooseStatus eq 'N' }">
+										<td>미채택</td>
+									</c:if>
+									<td class="report" onclick="$('#reportModal').toggleClass('is-active')">
+										<i class="far fa-bell"></i>
+									</td>
+								</tr>
+							</c:forEach>
+						</c:if>
 					</tbody>
 				</table>
 			</section>
+			<c:if test="${ list.size() == 0 }">
+				<div id="null" class="column" style="width:80%; margin-left:center; margin-right:center;">
+					<h1>등록한 글이 없습니다.</h1>
+				</div>
+			</c:if>
 			<section class="section" id="pagination">
-				<hr>
-				<nav class="pagination is-rounded" role="navigation"
-					aria-label="pagination">
-					<ul class="pagination-list">
-						<li><a class="pagination-previous">이전</a></li>
-						<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-						<li><span class="pagination-ellipsis">…</span></li>
-						<li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-						<li><a class="pagination-link is-current"
-							aria-label="Page 46" aria-current="page">46</a></li>
-						<li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-						<li><span class="pagination-ellipsis">…</span></li>
-						<li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
-						<li><a class="pagination-next">다음</a></li>
-					</ul>
-				</nav>
-				<br>
-			</section>
+		<hr>
+		<nav class="pagination is-rounded" role="navigation"
+			aria-label="pagination">
+			<ul class="pagination-list">
+			<!-- 이전버튼 -->
+			<c:if test="${pi.currentPage <= 1 }">
+				<li><a class="pagination-previous">이전</a></li>
+			</c:if>
+			<c:if test="${ pi.currentPage > 1 }">
+				<c:url var="previous" value="myPlanList.mr?memberId=${ loginUser.memberId }">
+					<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
+				</c:url>
+				<li><a class="pagination-previous" href="${ previous }">이전</a></li>
+			</c:if>
+			<!--  -->
+			
+			<!-- 숫자버튼 -->
+			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				<c:if test="${ p eq pi.currentPage }">
+					<li><a class="pagination-link" aria-label="Goto page 1">${ p }</a></li>
+				</c:if>
+				<c:if test="${ p ne pi.currentPage }">
+					<c:url var="number" value="myPlanList.mr?memberId=${ loginUser.memberId }">
+						<c:param name="currentPage" value="${ p }"/>
+					</c:url>
+					<li><a class="pagination-link" aria-label="Goto page 1" href="${ number }">${ p }</a></li>
+				</c:if>
+			</c:forEach>
+			<!--  -->
+			
+			<!-- 다음 버튼 -->
+			<c:if test="${ pi.currentPage >= pi.maxPage }">
+				<li><a class="pagination-next">다음</a></li>
+			</c:if>
+			<c:if test="${ pi.currentPage < pi.maxPage }">
+				<c:url var="next" value="myPlanList.mr?memberId=${ loginUser.memberId }">
+					<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
+				</c:url>
+				<li><a class="pagination-next" href="${ next }">다음</a></li>
+			</c:if>
+			</ul>
+		</nav>
+		<br>
+	</section>
 		</div>
 	</div>
 	<!-- 의뢰인 신고하기 -->
@@ -343,10 +344,10 @@ textarea {
 	});
 
 	function myRequest() {
-		location = "myRequestList.mr";
+		location = "myRequestList.mr?memberId=${ loginUser.memberId }";
 	}
 	function myPlan() {
-		location = "myRequestPlan.mr";
+		location = "myPlanList.mr?memberId=${ loginUser.memberId }";
 	}
 	function cancel() {
 		location = location;

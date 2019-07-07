@@ -64,6 +64,7 @@ th, td {
 		<input type="hidden" value="${ useType }" id="useType">
 		<input type="hidden" value="${ reqId }" id="reqId">
 		<input type="hidden" value="${ userName }" id="userName">
+		<input type="hidden" value="${ loginUser.memberId }" id="memberId">
 			<section class="section" id="form">
 				<h1 class="title">일정</h1>
 				<hr>
@@ -81,16 +82,24 @@ th, td {
 						<br>
 						<hr>
 						<br>
-						<div class="buttons">
-							<a class="button is-primary is-rounded more" onclick="more();">일정 더 보기</a>
-						</div>
+						<c:if test="${ trp.get(0).getChooseStatus() == 'N'}">
+							<div class="buttons">
+								<a class="button is-primary is-rounded more" onclick="more();">일정 더 보기</a>
+							</div>
+						</c:if>
 					</div>
 					<div class="column map" style="width: 50%;">
 						<div class="card">
 							<div class="card-image">
-								<figure id="map" class="image is-4by3">
-									<h1 align="center" id="before">채택하셔야 경로가 보여집니다.</h1>
-								</figure>
+								<c:if test="${ trp.get(0).getChooseStatus() == 'N'}">
+									<figure id="map" class="image is-4by3">
+										<h1 align="center" id="before">채택하셔야 경로가 보여집니다.</h1>
+									</figure>
+								</c:if>
+								<c:if test="${ trp.get(0).getChooseStatus() == 'Y' }">
+									<figure id="map" class="image is-4by3">
+									</figure>
+								</c:if>
 							</div>
 							<div class="card-content">
 								<div class="media">
@@ -289,27 +298,36 @@ th, td {
 		location = "requestDetail.tr?reqId=" + reqId + "&userName=" + userName;
 	}
 	function more() {
-		alert("채택해야 상세보기가 가능합니다.");
+		<c:if test="${ trp.get(0).getChooseStatus() == 'N'}">
+			alert("채택해야 상세보기가 가능합니다.");
+		</c:if>
 	}
 	function ok() {
+		<c:if test="${ trp.get(0).getChooseStatus() == 'N' }">
 		var result = confirm("정말로 채택하시겠습니까?");
 		console.log(result);
 		if(result == true) {
-			var code = $("#code").val();
 			var useType = $("#useType").val();
 			var uPoint = $("#uPoint").val();
-			var reqId = $("#reqId").val();
+			var code = $("#reqId").val();
 			var userName = $("#userName").val();
+			var memberId = $("#memberId").val();
 			
 			console.log(code);
 			console.log(useType);
 			console.log(uPoint);
 			console.log(reqId);
 			console.log(userName);
-			//location = "myRequestList.mr";
+			
+			location = "usePoint.po?memberId=" + memberId + "&code=" + code + "&useType=" + useType + "&uPoint=" + uPoint;
+			//location = "selectRequest.mr?code=" + code +"&memberId=" + memberId;
 		} else {
 			location = location;
 		}
+		</c:if>
+		<c:if test="${ trp.get(0).getChooseStatus() == 'Y' }">
+			alert("이미 채택하셨습니다.");
+		</c:if>
 	}
 	function cancel() {
 		location = location;
@@ -343,8 +361,8 @@ th, td {
     console.log(pLng[0]);
     console.log(pTitle[0]);
     
-
-    /* function initMap() {
+	<c:if test="${ trp.get(0).getChooseStatus() == 'Y' }">
+    function initMap() {
 		var first = new google.maps.LatLng(pLat[0], pLng[0]);
 		var destinations = new Array();
 		var contentString = pTitle[0];
@@ -408,8 +426,9 @@ th, td {
 
         var infowindow = new google.maps.InfoWindow();
         var infowindowContent = document.getElementById('infowindow-content');
-        infowindow.setContent(infowindowContent);
-    } */
+        infowindow.setContent(infowindowContent);*/
+    }
+    </c:if>
     
     
 	function cancel() {
