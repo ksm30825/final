@@ -18,6 +18,7 @@ public class TravelBoard implements java.io.Serializable {
 	private int memberId;
 	private String userName;
 	private int trvRef;
+	private int budget;
 	
 	private ArrayList trvCities;
 	private ArrayList trvTags;
@@ -33,7 +34,7 @@ public class TravelBoard implements java.io.Serializable {
 	public TravelBoard() {}
 
 	public TravelBoard(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, Date openDate,
-			Date modifyDate, Date completeDate, String status, int memberId, String userName, int trvRef,
+			Date modifyDate, Date completeDate, String status, int memberId, String userName, int trvRef, int budget,
 			ArrayList trvCities, ArrayList trvTags, ArrayList schFiles, int likeyCount, int buyCount, String buyStatus,
 			String likeyStatus, String writeStatus) {
 		super();
@@ -49,6 +50,7 @@ public class TravelBoard implements java.io.Serializable {
 		this.memberId = memberId;
 		this.userName = userName;
 		this.trvRef = trvRef;
+		this.budget = budget;
 		this.trvCities = trvCities;
 		this.trvTags = trvTags;
 		this.schFiles = schFiles;
@@ -155,6 +157,14 @@ public class TravelBoard implements java.io.Serializable {
 		this.trvRef = trvRef;
 	}
 
+	public int getBudget() {
+		return budget;
+	}
+
+	public void setBudget(int budget) {
+		this.budget = budget;
+	}
+
 	public ArrayList getTrvCities() {
 		return trvCities;
 	}
@@ -224,9 +234,9 @@ public class TravelBoard implements java.io.Serializable {
 		return "TravelBoard [trvId=" + trvId + ", trvTitle=" + trvTitle + ", startDate=" + startDate + ", endDate="
 				+ endDate + ", compNumber=" + compNumber + ", openDate=" + openDate + ", modifyDate=" + modifyDate
 				+ ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId + ", userName="
-				+ userName + ", trvRef=" + trvRef + ", trvCities=" + trvCities + ", trvTags=" + trvTags + ", schFiles="
-				+ schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount + ", buyStatus=" + buyStatus
-				+ ", likeyStatus=" + likeyStatus + ", writeStatus=" + writeStatus + "]";
+				+ userName + ", trvRef=" + trvRef + ", budget=" + budget + ", trvCities=" + trvCities + ", trvTags="
+				+ trvTags + ", schFiles=" + schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount
+				+ ", buyStatus=" + buyStatus + ", likeyStatus=" + likeyStatus + ", writeStatus=" + writeStatus + "]";
 	}
 
 }

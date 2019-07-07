@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.point.model.vo.UsePoint;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
@@ -167,9 +168,43 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 	
 	//여행일정 상세 / 가계부 조회 - 예랑
 	@Override
-	public ArrayList selectTravelCost(SqlSessionTemplate sqlSession, int trvId) {
+	public HashMap selectTravelCost(SqlSessionTemplate sqlSession, int trvId) {
+		HashMap trvCost = new HashMap();
 		
-		return (ArrayList) sqlSession.selectList("TravelBoard.selectTravelCost", trvId);
+		ArrayList allCost = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelCost", trvId);
+		trvCost.put("allCost", allCost);
+		
+		return trvCost;
+	}
+	
+	//마이페이지 / 구매한 일정 보기 - 예랑
+	@Override
+	public HashMap myBuyTravelListView(SqlSessionTemplate sqlSession, int memberId) {
+		
+		HashMap tbMap = new HashMap();
+		
+		//여행일정 리스트
+		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.myBuyTravelListView", memberId);
+		tbMap.put("tbList", tbList);
+		
+		//도시태그 리스트
+		ArrayList cityList = (ArrayList) sqlSession.selectList("TravelBoard.selectCityList");
+		tbMap.put("cityList", cityList);
+		
+		return tbMap;
+	}
+	
+	//마이페이지 / 좋아요 / 여행일정 좋아요 보기 - 예랑
+	@Override
+	public HashMap myLikeyTravelListView(SqlSessionTemplate sqlSession, int memberId) {
+		
+		HashMap tbMap = new HashMap();
+		
+		//여행일정 리스트
+		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.myLikeyTravelListView", memberId);
+		tbMap.put("tbList", tbList);
+		
+		return tbMap;
 	}
 	
 

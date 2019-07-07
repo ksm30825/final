@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -34,16 +35,24 @@
 	<jsp:include page="travelSearchBar.jsp" />
 	<input type="text" id="loginId" value="${ sessionScope.loginUser.memberId }" hidden="hidden">
 	<input type="text" id="userPoint" value="${ sessionScope.loginUser.userPoint }" hidden="hidden">
+	
 	<!-- 결제여부에 따른 출력될 일수 설정하기 -->
+	<fmt:parseDate var="startDate" value="${ detailTb.startDate }" pattern="yyyy-MM-dd" />
+	<fmt:parseNumber value="${ startDate.time / (1000*60*60*24) }" integerOnly="true" var="startDay" />
+	<fmt:parseDate var="endDate" value="${ detailTb.endDate }" pattern="yyyy-MM-dd" />
+	<fmt:parseNumber value="${ endDate.time / (1000*60*60*24) }" integerOnly="true" var="endDay" />
+	
 	<c:choose>
-		<c:when test="${ !empty loginUser && detailTb.buyStatus eq 'Y' }">
-			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) }"/>
+		<c:when test="${ (!empty loginUser && detailTb.buyStatus eq 'Y') || loginUser.memberId eq detailTb.memberId }">
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ endDay - startDay + 1 }"/>
 		</c:when>
 		<c:otherwise>
-			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) / 3 }" />
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ (endDay - startDay + 1) / 3 }" />
 		</c:otherwise>
 	</c:choose>
-	<input type="number" hidden="hidden" id="totalDays" value="${ fn:length(detailDay) }">
+	<fmt:parseNumber var="totalDays" integerOnly="true" value="${ (endDay - startDay + 1) }" />
+	
+	<input type="number" hidden="hidden" id="totalDays" value="${ endDay - startDay + 1 }">
 	<input type="number" hidden="hidden" id="showDays" value="${ showDays }">
 	
 	<div class="coumns">
@@ -116,7 +125,7 @@
 							<span id="bell" data-tooltip="이 글 신고하기"><i class="fas fa-bell" onclick="penalty()"></i></span>
 						</h3>
 						
-						<h6 class="subtitle is-6">
+						<h5 class="subtitle is-5">
 							<i class="fas fa-map-marker-alt"></i>
 							<c:choose>
 								
@@ -127,12 +136,9 @@
 									</c:forEach>
 								</c:when>
 							</c:choose>
-							<fmt:parseDate var="startDate" value="${ detailTb.startDate }" pattern="yyyy-MM-dd" />
-							<fmt:parseNumber value="${ startDate.time / (1000*60*60*24) }" integerOnly="true" var="startDay" />
-							<fmt:parseDate var="endDate" value="${ detailTb.endDate }" pattern="yyyy-MM-dd" />
-							<fmt:parseNumber value="${ endDate.time / (1000*60*60*24) }" integerOnly="true" var="endDay" />
-							&nbsp;&nbsp;<span style="color:gray;"><strong>${ endDay - startDay }박 ${ endDay - startDay + 1 }일</strong></span>
-						</h6>
+							&nbsp;&nbsp;<span style="color:gray;"><strong>${ endDay - startDay }박 ${ endDay - startDay + 1 }일</strong></span><br>
+							<span style="color: black;"><i class="far fa-calendar"></i>&nbsp;${ detailTb.startDate } ~ ${ detailTb.endDate }</span>
+						</h5>
 					</div>
 				</div>
 			</section>	<!-- 상단 타이틀 -->
@@ -176,47 +182,74 @@
 						<aside class="menu">
 							<p class="menu-label">일자별 상세글</p>
 							<ul class="menu-list">
-								<c:choose>
-									<c:when test="${ fn:length(detailDay) > 0 }">
-										<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
-											<c:choose>
-												<c:when test="${ totalDays < 3 || showDays >= st.count }">
-													<li><a href="#day${ detailDay.dayNumber }"><strong>DAY ${ detailDay.dayNumber }</strong></a></li>
-												</c:when>
-												<c:otherwise>
-													<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ detailDay.dayNumber }</a></li>
-												</c:otherwise>
-											</c:choose>
-										</c:forEach>
-									</c:when>
-									<c:otherwise>
-										<li>일자별 상세글 없음</li>
-									</c:otherwise>
-								</c:choose>
-								
+								<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
+									<c:choose>
+									
+										<c:when test="${ st.count <= showDays }">
+											<c:set var="check" value="false" />
+											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+												<c:if test="${ st.count == detailDay[j].dayNumber }">
+													<li><a href="#day${ detailDay[j].dayNumber }"><strong>DAY ${ detailDay[j].dayNumber }</strong></a></li>
+													<c:set var="check" value="true" />
+												</c:if>
+											</c:forEach>
+											<c:if test="${ check == false }">
+												<li><a style="color: lightgray;">DAY ${ st.count }<br>(일정없음)</a></li>
+											</c:if>
+										</c:when>
+										
+										<c:otherwise>
+											<c:set var="check" value="false" />
+											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+												<c:if test="${ st.count == detailDay[j].dayNumber }">
+													<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
+													<c:set var="check" value="true" />
+												</c:if>
+											</c:forEach>
+											<c:if test="${ check == false }">
+												<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>(일정없음)</a></li>
+											</c:if>
+										</c:otherwise>
+										
+									</c:choose>
+								</c:forEach>	
 							</ul>
 							<p class="menu-label">사진 갤러리</p>
 							<ul class="menu-list">
 								<li><a>전체보기</a></li>
 								<li><a>일자별 모아보기</a>
 									<ul>
-										<c:choose>
-											<c:when test="${ fn:length(detailDay) > 0 }">
-												<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
-													<c:choose>
-														<c:when test="${ totalDays < 3 || showDays >= st.count }">
-															<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ detailDay.dayNumber }"'>DAY ${ detailDay.dayNumber }</a></li>
-														</c:when>
-														<c:otherwise>
-															<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ detailDay.dayNumber }</a></li>
-														</c:otherwise>
-													</c:choose>
-												</c:forEach>
-											</c:when>
-											<c:otherwise>
-												<li>일자별 사진 없음</li>
-											</c:otherwise>
-										</c:choose>
+										<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
+									<c:choose>
+									
+										<c:when test="${ st.count <= showDays }">
+											<c:set var="check" value="false" />
+											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+												<c:if test="${ st.count == detailDay[j].dayNumber && fn:length(detailDay[j].trvSchedule[j].schFiles) > 0 }">
+													<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ st.count }"'>DAY ${ detailDay[j].dayNumber }</a></li>
+													<c:set var="check" value="true" />
+												</c:if>
+											</c:forEach>
+											<c:if test="${ check == false }">
+												<li><a style="color: ligntgray;">DAY ${ st.count }<br>(사진없음)</a></li>
+											</c:if>
+										</c:when>
+										
+										<c:otherwise>
+											<c:set var="check" value="false" />
+											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+												<c:if test="${ st.count == detailDay[j].dayNumber && fn:length(detailDay[j].trvSchedule[j].schFiles) > 0 }">
+													<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
+													<c:set var="check" value="true" />
+												</c:if>
+											</c:forEach>
+											<c:if test="${ check == false }">
+												<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>(사진없음)</a></li>
+											</c:if>
+										</c:otherwise>
+										
+									</c:choose>
+								</c:forEach>	
 									</ul>
 								</li>
 							</ul>
@@ -309,11 +342,11 @@
 									<span class="icon"><i class="fas fa-list"></i></span>
 						          	<span> &nbsp;목록으로 </span>
 				        		</a>
-				        		&nbsp;
+				        		<%-- &nbsp;
 				        		<a class="button is-primary" onclick="location.href='selectTravel.trv?trvId=${ detailTb.trvId }'">
 									<span class="icon"><i class="fas fa-pen"></i></span>
 						          	<span> &nbsp;수정하기 </span>
-				        		</a>
+				        		</a> --%>
 				        		&nbsp;
 				        		<a class="button is-primary" onclick="travelDelete()">
 									<span class="icon"><i class="fas fa-times"></i></span>
@@ -522,7 +555,7 @@
 		});
 		
 		$(".cancel").click(function(){
-			$('#travelDeleteModal').removeClass('is-active');
+			$('#travelBuyModal').removeClass('is-active');
 	    });
 	}
 

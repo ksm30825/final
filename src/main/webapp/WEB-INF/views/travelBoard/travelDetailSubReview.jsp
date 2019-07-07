@@ -84,28 +84,67 @@
 						</tr>
 					</thead>
 					<tbody>
+						<c:choose>
+							<c:when test="${ fn:length(trList) > 0 }">
+								<c:forEach var="review" items="${ trList }" varStatus="st">
+									<tr>
+										<td>${ st.count }</td>
+										<td>
+										<c:forEach var="i" begin="1" end="5" step="1">
+											<c:choose>
+												<c:when test="${ i <= review.grade }">
+													<a class="starImg" style="cursor: default;"><i class="fas fa-star"></i></a>
+												</c:when>
+												<c:otherwise>
+													<a class="starImg" style="cursor: default;"><i class="far fa-star"></i></a>
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+										</td>
+										<!--  -->
+										<td>
+											${ review.reviewContent }
+											<c:if test="${ review.memberId eq loginUser.memberId }">
+												&nbsp;<a class="tag is-danger" onclick="deleteReview(${ review.reviewId })">리뷰삭제</a>
+											</c:if>
+										</td>
+										<td>${ review.userName }</td>
+									</tr>
+								</c:forEach>
+								
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td colspan="4">구매 리뷰가 없습니다.</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+						
 					</tbody>
 				</table>
+				
+				<!-- 페이징 -->
+				<div class="paging" align="center">
+					<nav class="pagination is-rounded" role="navigation" aria-label="pagination">
+						<ul class="pagination-list">
+							<li><a class="pagination-previous">이전</a></li>
+							<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+							<li><span class="pagination-ellipsis">…</span></li>
+							<li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+							<li><a class="pagination-link is-current"
+								aria-label="Page 46" aria-current="page">페이징아직안함</a></li>
+							<li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+							<li><span class="pagination-ellipsis">…</span></li>
+							<li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+							<li><a class="pagination-next">다음</a></li>
+						</ul>
+					</nav>
+				</div>
+				
 			</div>
-			
-			<div class="paging" align="center">
-				<nav class="pagination is-rounded" role="navigation" aria-label="pagination">
-					<ul class="pagination-list">
-						<li><a class="pagination-previous">이전</a></li>
-						<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-						<li><span class="pagination-ellipsis">…</span></li>
-						<li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-						<li><a class="pagination-link is-current"
-							aria-label="Page 46" aria-current="page">46</a></li>
-						<li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-						<li><span class="pagination-ellipsis">…</span></li>
-						<li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
-						<li><a class="pagination-next">다음</a></li>
-					</ul>
-				</nav>
-			</div>
-			
 		</div>
+		
+		
 	</section>
 	
 	<!-- 리뷰용 모달 -->
@@ -142,45 +181,6 @@
 	</div>
 <script>
 
-	//리뷰 조회
-	$(document).ready(function() {
-		var trvId = ${ detailTb.trvId };
-		var loginUserId = $("#loginId").val();
-		
-		$.ajax({
-			url : "selectTourReview.tb",
-			data : {trvId : trvId, currentPage : 1},
-			success : function(trList) {
-				
-				var table = $("#reviewTable > tbody");
-				
-				var count = 1;
-				for (var key in trList) {
-					
-					var num = trList[key].reviewId;
-					
-					var star = "";
-					//별점을 별로 표기
-					for(var i = 1; i < 6; i++) {
-						if(i <= trList[key].grade) {
-							star += '<i class="fas fa-star"></i>';
-						}else {
-							star += '<i class="far fa-star"></i>';
-						}
-					}
-					
-					var review = "<tr><td>" + count++ + "</td><td style='color: #209cee;'>" + star + "</td><td>" + trList[key].reviewContent;
-					if(trList[key].writeStatus = 'Y' && trList[key].memberId == loginUserId) {
-						review += '&nbsp;<a class="tag is-danger" onclick="deleteReview(' + num + ')">리뷰삭제</a></td><td>' + trList[key].userName + '</td></tr>';
-					}else {
-						review += "</td><td>" + trList[key].userName + "</td></tr>";
-					}
-					
-					table.append(review);
-				}
-			}
-		});
-	});
 	
 	//리뷰작성 모달창 띄우기
 	function reviewForm() {
@@ -261,7 +261,6 @@
 				$(".starArea > a").remove();
 				
 				var grade = data.grade;
-				console.log(grade);
 				
 				for(var i = 1; i < 6; i++) {
 					
@@ -293,8 +292,11 @@
 					
 					$(this).prevAll().children().attr('data-prefix', 'fas');
 					$(this).children().attr('data-prefix', 'fas');
-					$(this).addClass("grade")
+					$(this).addClass("grade");
 					
+					grade = Number($(this).attr("score"));
+					
+					console.log(grade);
 				});
 				
 			},
@@ -310,6 +312,10 @@
 		var reviewId = num;
 		var grade = $(".grade").attr("score");
 		var reviewContent = $("#reviewContent").val();
+		
+		console.log("reviewId : " + reviewId);
+		console.log("grade : " + grade);
+		console.log("reviewContent : " + reviewContent);
 		
 		$.ajax({
 			url : "myTourReviewUpdate.tb",
