@@ -38,7 +38,7 @@ body {overflow-y: hidden; overflow-x: hidden; margin : 0;}
 	    width: 340px !important; 
 	}
 	
-	#datepicker1 , #datepicker2{ width : 150px; display : inline-block; /* margin-right : 10px; */ }
+	#trStartDate , #trEndDate{ width : 150px; display : inline-block; /* margin-right : 10px; */ }
 	
 	#peopleNum {
 	color: #555;

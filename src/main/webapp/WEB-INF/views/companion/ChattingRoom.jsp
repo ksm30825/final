@@ -14,7 +14,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <!-- modal   -->
-
 <style>
 	#chatpeopleTable {
 		width : 100%;
@@ -73,12 +72,42 @@
     	text-align : center;
     }
     
+    .item{
+    	height : auto;
+    	max-height : 300px;
+    	overflow-y: auto;
+    }
+    
+    .itembtn{
+    	width : 50% !important;
+    	color: white!important;
+    	background-color: #7c91dc!important;
+    	border :1px solid #7c91dc!important;
+	}
+	
+	.itembtn:hover{
+    	width : 50% !important;
+    	background-color: white!important;
+    	color: #7c91dc!important;
+    }
+    
+    #chatStatusTable td{
+		padding : 3%;
+    }
+    
+
+    #chatStatusTable {
+    	width : 100%;	   
+   	}
+
+    
 	
 </style>
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
 	<input type = "hidden" value = "${chatId}" id = "ReChatID">
 	<input type = "hidden" value = "${loginUser.userName}" id = "UserName">
+	<input type = "hidden" value = "${loginUser.memberId}" id = "loginId">
 
 	
 	<div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;width:80%;" id="rightMenu">
@@ -108,21 +137,13 @@
 	  	 			style = "margin :0 ; padding : 3px; 
 	  	 				color: black; font-size : 30px;">input</i>
 	  	 	</button></li>
-    		<li style = "margin-left : 50%;">
+    		<li style = "margin: 3px;float: right;">
 	    		<button id = "setting"  data-toggle="tooltip" 
-	  	     		 data-placement="top" title="채팅방 설정" onclick = "location.href = '${contextPath}/showchange.ch'">
+	  	     		 data-placement="top" title="채팅방 설정"   onclick="document.getElementById('statusModal').style.display='block'">
 	    			<i class="material-icons"
 	    			style = "margin:0; padding: 0; color : gray; font-size : 30px;">
 	    			settings</i>
 	    		</button>
-	    		<button id = "Declaration"  data-toggle="tooltip" 
-	  	     		 data-placement="top" title="신고하기" onclick = "location.href='${contextPath}/declaration.ch'">
-    				<i class="material-icons"
-    				style = "margin:0; padding: 0; color : #f75454; font-size : 30px;">
-							notifications_active
-					</i>
-    			</button>
-	    		
     		</li>
   		</ul>
 	 </div>
@@ -132,7 +153,7 @@
 	  <button id = "returnBtn" onclick = "location.href = '${contextPath}/enterRoom.ch'"><i class="material-icons" >keyboard_arrow_left</i></button>
 	  <button class="w3-button w3-teal w3-xlarge w3-right" id = "menubtn" onclick="openRightMenu()">&#9776;</button>
 	  <div class="w3-container" id = "header">
-	   	 <h4 align = "center" id = "ChatRoomTitle">My Page</h4>
+	   	 <h4 align = "center" id = "ChatRoomTitle">채팅방 불러오기 실패</h4>
 	  </div>
 	</div>
 	<div class="w3-container" id = "chat_box"></div>
@@ -141,6 +162,7 @@
 		<button type="button" class="btn btn-primary" id = "sendbtn">전송</button>
 	</div>
 	
+	<!-- 나가기 모달창 -->
 	 <div id="id01" class="w3-modal">
 	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
 	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
@@ -162,41 +184,69 @@
 	    </div>
   	</div>
   	
+  	<!-- 상태 변화 하는 설정 모달 창   -->
   	 <div id="statusModal" class="w3-modal">
 	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
 	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
 	        <span onclick="document.getElementById('statusModal').style.display='none'" 
 	        class="w3-button w3-display-topright">&times;</span>
-	        <h4 align="center" >모집을 종료하시겠습니까?</h4>
+	        <h4 align="center">설정</h4>
 	      </header>
-	      <div class="w3-container">
-	   		<br>
-	        <br>
+	      <div class="w3-container" id = "statusContent" align = "center">
+	      	<br>
+	   		<table id = "chatStatusTable">
+	   			<tr>
+	   				<td><b>채팅방 상태 </b></td>
+	   				<td id = "chatStatusLabel" style = "text-align : right;">
+	   				</td>
+	   			</tr>
+	   			<tr>
+	   				<td colspan = "2" id = "chatSatusDetail"></td>
+	   			</tr>
+	   		</table>
 	      </div>
+	      <br>
 	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
-	       	 <button id = "exitBtn" class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">모집종료</button>
+	       	 <button id = "AddchangeBtn" class="w3-button w3-black" 
+	       	 style = "float : left; background-color: #f09eda !important;height : 50px;">설정 더보기</button>
+	       	 <button id = "changeBtn" class="w3-button w3-black" style = "float : right;height : 50px; background-color: #f09eda !important;"></button>
 	      </footer>
 	    </div>
   	</div>
   	
+  	<!-- 사용자 정보 모달창  -->
   	<div id="reputInfo" class="w3-modal">
 	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
 	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
-	        <span onclick="document.getElementById('reputInfo').style.display='none'" 
+	        <span id = "reputClose" onclick="document.getElementById('reputInfo').style.display='none'" 
 	        class="w3-button w3-display-topright">&times;</span>
 	        <h4 align="center" id = "reputuserName">사용자정보</h4>
 	      </header>
 	      <div class="w3-container">
 	   		<div class = "info">
+	   			<input type = "hidden" id = "selectUserId">
+	   			<input type = "hidden" id = "selectUserName">
     			<img alt="user" src="resources/images/usericon.png" id = "reputicon">
     			<br>
     			<label id = "reputid"></label>
     			<br>
     			<label id = "reputinfor">20대 (여)</label>
+    			<div class="w3-bar w3-black">
+				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Like')">좋아요</button>
+				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Bad')">싫어요</button>
+				</div>
+				<div id="Like" class="w3-container item">
+				 	<h4 align = "center">아직 정보가 없습니다.</h4>
+				</div>
+				<div id="Bad" class="w3-container item" style="display:none">
+				  	<h4 align = "center">아직 정보가 없습니다.</h4>
+				</div>			
     		</div>
 	      </div>
-	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
-	       	 <button id = "exitBtn" class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">모집종료</button>
+	      <br><br>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important; height: 50px;">
+	       	 <button id = "Firebtn" class="w3-button w3-black" style = "height: 50px;  float : left; background-color: #f09eda !important;">강퇴하기</button>
+	       	 <button id = "declarBtn" class="w3-button w3-black" style = "height: 50px; float : right; background-color: #f09eda !important;">신고하기</button>
 	      </footer>
 	    </div>
   	</div>
@@ -217,19 +267,6 @@
 		
 		$(document).ready(function() { //start
 			
-	
-			$("#Recruitingicon").click(function(){
-				
-				if(confirm("모집을 종료하시겠습니까?")) {
-			         var status = $(this).parent().click();
-			     } else {
-			            return false;
-			     }
-
-				
-				console.log(status);
-			});
-			
 			var userId = ${ loginUser.memberId };
 			var userName = $("#UserName").val();
 			var chatId = $("#ReChatID").val();
@@ -242,11 +279,12 @@
     	  	
 		   //채팅Manager 값 가져오기
 	       socket.emit('preChatManager' , {chatId : chatId , div : "처음"});
-	          
+	       
+		   
+	       //채팅Manager 값 가져오기
 	       socket.on('preChatManager', function(data){
 	        	   console.log(data);
 	      
-	      	  
 	        	   $.ajax({
 	        		   url : "${contextPath}/memberInfo.ch",
 	        		   data : {userId : data.user},
@@ -255,12 +293,11 @@
 	        	    	   var output = "";
 	        	    	   output += '<table id = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
 	    	        	   output += '<tr><td colspan = "2">';
-	    	        	   output += '<input type = "hidden" value = "'+ userInfo.email +'" name = "userId" id = "userId">';
+	    	        	   output += '<input type = "hidden" value = "'+ userInfo.memberId +'" name = "userId" id = "userId">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
-	    				   output += '<input type = "hidden" value = "'+ userInfo.birthday +'" name = "userbirth" id = "userbirth">';
+	    				   output += '<input type = "hidden" value = "'+ userInfo.age +'" name = "userAge" id = "userAge">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.gender +'" name = "usergender" id = "usergender">';
-	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label>';
-	    				   output += '<button class = "Firebtn" id = "Firebtn" style = "float : right;">강퇴</button></td>';					
+	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label>';				
 	    				   output += '</tr><tr><td>';
 	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
 	    				   output += '<p id = "good">0</p>';
@@ -272,7 +309,6 @@
 	    				   output += '</tr>';	  		
 	    		  		   output += '</table>';
 	    		  		   $(output).appendTo("#MemberInfoDiv");
-	    		  	
 	        	       },
 	        	       error : function(){
 	        	    	   console.log("에러발생");
@@ -292,13 +328,14 @@
 	        		   $("#Firebtn").hide();
 	        		   if (data.level == 2){
 	        			   $("#setting").hide();
-	        			   $("#Firebtn").css("display", "none");
+	        			   $("#Firebtn").hide();
 	        		   }else {
 	        			   $("#outbtn").attr("disabled" , "disabled");
 	        			   $("#checkModel").show();
 	        			   $("#setting").show();
-	        			   $("#Firebtn").css("display", "block");
+	        			   $("#Firebtn").show();
 	 	        	   }
+	        		 
 	        		 
 	        	   }
 	        	
@@ -382,9 +419,10 @@
 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
 	            });
 	           
-	           //채팅방 정보  가져오기
+	          //채팅방 정보  가져오기
 	          socket.emit('preChatInfo' , {chatId : chatId});
-	           
+	          
+	          //채팅방 정보  가져오기
 	          socket.on('preChatInfo' , function(data){  
 	        	  var title = data.title;
 	        	  
@@ -432,16 +470,27 @@
 	        	  
 	  	  		 $(output).appendTo('#RoomInfoDIV');
 	  	  		 
+	  	  		 var chatStatus = data.status;
 	  	  		 $("#Recruitingicon").text(data.status); 
+	  	  		 $("#chatStatusLabel").text(chatStatus);
 	  	  		 if (data.status == "여행중"){
 	  	  		 	$("#Recruitingicon").style("color" , "yellow");
 	  	  		 }else if (data.status == "모집완료"){
 	  	  			$("#Recruitingicon").style("color" , "green");
+	  	  			var temp = "다시 모집을 하시겠습니까?";
+	  	  			$("#chatSatusDetail").text(temp);
+	  	  			$("#changeBtn").text("모집하기");
 	  	  		 }else if (data.status == "여행준비중"){
 	  	  			$("#Recruitingicon").style("color" , "pink");
 	  	  		 }else if (data.status == "여행종료"){
 	  	  			$("#Recruitingicon").style("color" , "blue");
+	  	  		 }else {
+	  	  			var temp = "모집종료를 하시겠습니까?";
+	  	  			$("#chatSatusDetail").text(temp);
+	  	  			$("#changeBtn").text("모집종료");
 	  	  		 }
+	  	  		 
+	  	  		 
 	        	 
 
 	        	  
@@ -472,7 +521,7 @@
 	        	    	   var output = "";
 	        	    	   output += '<table id = "chatpeopleTable" class = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
 	    	        	   output += '<tr><td colspan = "2">';
-	    	        	   output += '<input type = "hidden" value = "'+ userInfo.email +'" name = "userId" id = "userId">';
+	    	        	   output += '<input type = "hidden" value = "'+ userInfo.memberId +'" name = "userId" id = "userId">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
 	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label></td>';					
 	    				   output += '</tr><tr><td>';
@@ -528,24 +577,42 @@
 	        	 
 	        	  var mchatId = data.chat_id;
 	 			  var output = "";
-		       	  if (mchatId == chatId){
-	 	                output += '<div class="alert alert-info" id = "msg">'; 
-			            output += data.message;
-			            output += "<button> 신고 </button>";
-			            output += "<button> 평판관리 </button>";
-			            output += '</div>';
-			            $(output).appendTo('#chat_box');
-			            
-	 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
-	               }
+	 			  
+	 			  if (data.div == "나감"){
+	 				  if (mchatId == chatId){
+		 	                output += '<div class="alert alert-info" id = "msg">'; 
+				            output += data.message;
+				            output += "<button> 신고 </button>";
+				            output += "<button> 평판관리 </button>";
+				            output += '</div>';
+				            $(output).appendTo('#chat_box');
+				            
+		 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+		               } 
+	 			  }else {
+	 				  if (mchatId == chatId){
+		 	                output += '<div class="alert alert-info" id = "msg">'; 
+				            output += data.message;
+				            output += '</div>';
+				            $(output).appendTo('#chat_box');
+				            
+		 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+		               }  
+	 			  }
+		       	
 		       	  
 		       	  var muserId = data.userId;
 		       	  $(".chatpeopleTable").each(function(index ,item) {
-	        			 var checkUserID = $(this).children().children().children("#userId").val();
+	        			 var checkUserID = $(this).children().children().children().children("#userId").val();
+	        			 console.log("muserId : " + muserId + "- checkUserId :" + checkUserID);
 	        			 if (checkUserID == muserId){
 	        				$(this).remove();
 	        			 } 
 	        	 });
+		       	  
+		       	  if (userId == data.userId){
+		       		  location.href = "${contextPath}/joinRoom.ch";
+		       	  }
 	        	  
 	        	 
 	        	  //채팅방 수정될때 다시 채팅방 정보불러오기 
@@ -553,6 +620,24 @@
 	 			
 	 	       
 	         });
+	        
+	          //강퇴하기 
+	          $("#Firebtn").click(function(){
+	        	  console.log("fireUser:" + $("#selectUserId").val() );
+	        	  
+	        	  var fireuser = $("#selectUserId").val();
+	        	  var fireusername = $("#selectUserName").val();
+	        	  
+				  socket.emit('FireChattingUser',{user: fireuser , chatId : chatId , username : fireusername});
+	        	  
+	        	  
+	        	  socket.on('FireChattingUser', function(data){
+	        		  $("#reputClose").click();
+	    
+	        	  });
+	        	  
+	        	  
+	          });
 	          
 	          //채팅방에 누군가 들어왔을때 다시 채팅방 정보 띄워주는 함수
 	          socket.on('updateChatInfo' , function(data){
@@ -568,25 +653,41 @@
 	        	
 	          });
 	          
+	          //설정 더보기 버튼 클릭시 
+	          $("#AddchangeBtn").click(function(){
+	        	  location.href = "${contextPath}/showchange.ch?num=" + chatId;
+	          });
 	          
 	          
+	          //신고하기 버튼 클릭시 
+	          $("#declarBtn").click(function(){
+	        	 location.href = "${contextPath}/declaration.ch?num=" + chatId;  
+	          });
 	          
+	          
+	         
 	         
 	           
 	           
 	           
 		}); //end
 		
+		//참여중인 사용자 리스트 클릭시 
 		$(document).on("click","#chatpeopleTable tr",function(){
+			var loginUser = $("#loginId").val();
+			
  	 		var userid = $(this).parent().children().children().children("#userId").val();
  	 		var user = $(this).parent().children().children().children("#username").val();
  	 		var ulabel = $(this).parent().children().children().children("#chUserInfo").html();
  	 		var gender = $(this).parent().children().children().children("#usergender").val();
- 	 		var birth = $(this).parent().children().children().children("#userbirth").val();
- 	 		//console.log("userid :" + userid);
+ 	 		var userAge = $(this).parent().children().children().children("#userAge").val();
+ 	 		
+ 	 		
+ 	 		$("#selectUserId").val(userid);
+ 	 		$("#selectUserName").val(user);
+ 	 		
  	 		console.log("user :" + ulabel);
  	 		
- 	 		//location.href = "${contextPath}/userInfo.ch?userId=" +userid; 	 			
  	 		
  	 		if (gender == "M"){
  	 			gender = "남";
@@ -594,15 +695,44 @@
  	 			gender = "여";
  	 		}
  	 		
+ 	 		var age;
+ 	 		if (userAge != 0){
+ 	 			var temp = userAge / 10;
+ 	 			
+ 	 			temp = Math.floor(temp);
+ 	 			
+ 	 			age = temp + "0 대";
+ 	 			
+ 	 		}else {
+ 	 			age = "미정";
+ 	 		}
  	 		
+ 	 		console.log("userId :" + userid + "- login" + loginUser );
+ 	 		
+ 	 		if (loginUser == userid ){
+ 	 		   document.getElementById('declarBtn').disabled = true;
+ 	 		   document.getElementById('Firebtn').disabled = true;
+ 	 		}else {
+ 	 			document.getElementById('declarBtn').disabled = false;
+  	 		   document.getElementById('Firebtn').disabled = false;
+ 	 		}
  	 		
  	 		$("#reputid").text(ulabel);
- 	 		$("#reputinfor").text(birth + "(" + gender + ")");
+ 	 		$("#reputinfor").text(age + " (" + gender + ") ");
  	 		
 			document.getElementById('reputInfo').style.display='block';
  	 		
  	 	}); 
 		
+		//Tab탭 좋아요 싫어요 
+		function openItem(ItemName) {
+			  var i;
+			  var x = document.getElementsByClassName("item");
+			  for (i = 0; i < x.length; i++) {
+			    x[i].style.display = "none";  
+			  }
+			  document.getElementById(ItemName).style.display = "block";  
+		}
 	
 	
 		
