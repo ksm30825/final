@@ -2,9 +2,11 @@ package com.kh.ti.myRequest.model.service;
 
 import java.util.ArrayList;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
+import com.kh.ti.travelRequest.model.vo.TravelRequest;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 public interface MyRequestService {
@@ -14,5 +16,18 @@ public interface MyRequestService {
 	ArrayList<TravelRequestPlan> selectRequestPlanList(TravelRequestPlan trp);
 
 	ArrayList<TravelRequestPlan> selectLoadRequestPlan(int planId);
+
+	//int selectPlan(int code);
+
+	int updateRequest(int code);
+
+	int getRequestCount(int memberId);
+	
+	ArrayList<TravelRequest> selectMyRequestList(PageInfo pi, int memberId);
+
+	int getPlanCount(int memberId);
+
+	ArrayList<TravelRequestPlan> selectMyPlanList(PageInfo pi, int memberId);
+
 
 }

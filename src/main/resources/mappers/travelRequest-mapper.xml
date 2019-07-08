@@ -35,6 +35,7 @@
 		<result property="roomCharge" column="ROOM_CHARGE"/>
 		<result property="trafficCharge" column="TRAFFIC_CHARGE"/>
 		<result property="etcCharge" column="ETC_CHARGE"/>
+		<result property="chooseStatus" column="CHOOSE_STATUS"/>
 		<collection property="dayList" javaType="java.util.ArrayList"
 					resultMap="dayListResultSet"/>
 	</resultMap>
@@ -72,6 +73,30 @@
 		<collection property="planList" javaType="java.util.ArrayList"
 					resultMap="planListResultSet"/>
 	</resultMap>
+	
+	<!-- 나의 의뢰 목록 -->
+	<resultMap type="TravelRequest" id="myRequestResultSet">
+		<id property="requestId" column="REQUEST_ID"/>
+		<result property="requestTitle" column="REQUEST_TITLE"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="requestPrice" column="REQUEST_PRICE"/>
+		<result property="trvCost" column="TRV_COST"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="chooseStatus" column="CHOOSE_STATUS"/>
+		<result property="chooseDate" column="CHOOSE_DATE"/>
+	</resultMap>
+	
+	<!-- 마이페이지 나의 설계 목록 -->
+	<resultMap type="MyPlan" id="myPlanListResultSet">
+		<id property="planId" column="PLAN_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="reqName" column="USER_NAME"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="reqPrice" column="REQUEST_PRICE"/>
+		<result property="chooseStatus" column="CHOOSE_STATUS"/>
+	</resultMap>
+	
 	<!-- 의뢰하기 -->
 	<insert id="insertRequest" parameterType="TravelRequest">
 		INSERT INTO TRV_REQUEST
@@ -172,12 +197,78 @@
         TP.TRAFFIC_CHARGE, TP.ETC_CHARGE,
         PD.PDAY_ID, PD.PDAY, PD.PDAY_MEMO, PD.OPEN_STATUS,
         PP.PPLACE_ID, PP.PPLACE_TITLE, PP.PPLACE_ADDRESS,
-        PP.PPLACE_LAT, PP.PPLACE_LNG    
+        PP.PPLACE_LAT, PP.PPLACE_LNG, P.CHOOSE_STATUS    
 		FROM TRV_PLAN TP
+		JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
 		JOIN PLAN_DAY PD ON(TP.PLAN_ID = PD.PLAN_ID)
 		LEFT JOIN PLAN_PLACE PP ON(PD.PDAY_ID = PP.PDAY_ID)
 		WHERE TP.PLAN_ID = #{code}
 		AND PD.OPEN_STATUS = 'Y'
 		ORDER BY PD.PDAY_ID
+	</select>
+	
+	<!-- 해당 의뢰글의 설계글 조회-->
+	<!-- <select id="selectPlan" parameterType="_int" resultType="_int">
+		SELECT TP.PLAN_ID
+		FROM TRV_PLAN TP
+		JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
+		JOIN TRV_REQUEST TR ON(P.REQUEST_ID = TR.REQUEST_ID)
+		WHERE TR.REQUEST_ID = #{code}
+	</select> -->
+	
+	<!-- 의뢰참여 채택상태 업데이트 -->
+	<update id="updateParticipation" parameterType="_int">
+		UPDATE PARTICIPATION
+		SET CHOOSE_STATUS = 'Y',
+		CHOOSE_DATE = SYSDATE
+		WHERE REQUEST_ID = #{code}
+	</update>
+	
+	<!-- 의뢰글 채택상태 업데이트 -->
+	<update id="updateRequest" parameterType="_int">
+		UPDATE TRV_REQUEST
+		SET CHOOSE_STATUS = 'Y',
+		CHOOSE_DATE = SYSDATE
+		WHERE REQUEST_ID = #{code}
+	</update>
+	
+	
+	<!-- 채택후 나의 의뢰 목록 조회 -->
+	<select id="selectMyRequestList" resultMap="myRequestResultSet">
+		SELECT TR.REQUEST_ID, TR.REQUEST_TITLE, M.USER_NAME, TR.REQUEST_PRICE, TR.TRV_COST, TR.END_DATE, TR.CHOOSE_STATUS, TR.CHOOSE_DATE
+		FROM TRV_REQUEST TR
+		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
+		WHERE M.MEMBER_ID = #{memberId}
+		ORDER BY TR.CHOOSE_STATUS DESC
+	</select>
+	
+	<!-- 채택 후 나의의뢰 목록 수 -->
+	<select id="selectRequestCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRV_REQUEST TR
+		JOIN MEMBER M ON(TR.MEMBER_ID = M.MEMBER_ID)
+		WHERE M.MEMBER_ID = #{memberId}
+	</select>
+	
+	<!-- 마이페이지 나의 설계글 수 -->
+	<select id="selectPlanCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRV_PLAN TR
+		JOIN MEMBER M ON(TR.MEMBER_ID = M.MEMBER_ID)
+		WHERE M.MEMBER_ID = #{memberId}
+	</select>
+	
+	<select id="selectMyPlanList" resultMap="myPlanListResultSet">
+		SELECT SUB.USER_NAME, SUB.PLAN_ID, SUB.PLAN_TITLE, SUB.END_DATE, M.MEMBER_ID,
+		SUB.REQUEST_PRICE, SUB.CHOOSE_STATUS
+		FROM (SELECT TP.PLAN_ID, TP.PLAN_TITLE, TR.END_DATE, M.USER_NAME, TP.MEMBER_ID,
+		TR.REQUEST_PRICE, P.CHOOSE_STATUS
+		FROM TRV_PLAN TP
+		LEFT JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
+		JOIN TRV_REQUEST TR ON(P.REQUEST_ID = TR.REQUEST_ID)
+		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)) SUB
+		JOIN MEMBER M ON(SUB.MEMBER_ID = M.MEMBER_ID)
+		WHERE SUB.MEMBER_ID = #{memberId}
+		ORDER BY SUB.CHOOSE_STATUS, SUB.PLAN_ID DESC
 	</select>
 </mapper>

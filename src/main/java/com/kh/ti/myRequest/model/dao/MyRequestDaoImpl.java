@@ -3,12 +3,15 @@ package com.kh.ti.myRequest.model.dao;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
+import com.kh.ti.travelRequest.model.vo.TravelRequest;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Repository
@@ -60,5 +63,58 @@ public class MyRequestDaoImpl implements MyRequestDao{
 	@Override
 	public ArrayList<TravelRequestPlan> selectLoadRequestPlan(SqlSessionTemplate sqlSession, int planId) {
 		return (ArrayList) sqlSession.selectList("TravelRequest.selectLoadRequestPlan", planId);
+	}
+
+	//해당 의뢰글의 채택(설계)글 조회 - 이선우
+//	@Override
+//	public int selectPlan(SqlSessionTemplate sqlSession, int code) {
+//		return sqlSession.selectOne("TravelRequest.selectPlan", code);
+//	}
+
+	//의뢰참여 업데이트
+	@Override
+	public int updateParticipation(SqlSessionTemplate sqlSession, int code) {
+		return sqlSession.update("TravelRequest.updateParticipation", code);
+	}
+	
+	//의뢰글 채택상태 업데이트
+	@Override
+	public int updateRequest(SqlSessionTemplate sqlSession, int code) {
+		return sqlSession.update("TravelRequest.updateRequest", code);
+	}
+
+
+	//채택후 나의 의뢰목록 조회
+	@Override
+	public ArrayList<TravelRequest> selectMyRequestList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId) {
+		//시작값과 종료값의 차이 구하기
+		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
+				
+		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
+				
+		return (ArrayList)sqlSession.selectList("TravelRequest.selectMyRequestList", memberId, rowBounds);
+	}
+
+	//채택후 나의 의뢰목록 수
+	@Override
+	public int getRequestCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("TravelRequest.selectRequestCount", memberId);
+	}
+
+	//마이페이지 나의 설계글 수
+	@Override
+	public int getPlanCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("TravelRequest.selectPlanCount", memberId);
+	}
+
+	//마이페이지 나의 설계글 목록 조회
+	@Override
+	public ArrayList<TravelRequestPlan> selectMyPlanList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId) {
+		//시작값과 종료값의 차이 구하기
+		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
+						
+		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
+						
+		return (ArrayList)sqlSession.selectList("TravelRequest.selectMyPlanList", memberId, rowBounds);
 	}
 }
