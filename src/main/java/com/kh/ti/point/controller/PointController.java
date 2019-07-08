@@ -906,25 +906,25 @@ public class PointController {
 		return "admin/adminPoint/aRefund";
 	}
 	//환불 내역 전체 조회
-	@RequestMapping("/toAdRefundView.po")
-	public ResponseEntity adSelectAllRefund(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
-		SearchPoint sp = new SearchPoint();
-		sp.setCondition(condition);
-		
-		int adRefundListCount = ps.getAdRefundListCount(sp);
-		
-		int adRefundCurrentPage = currentPage;
-		
-		PageInfo adRefundPi = Pagination.getPageInfo(adRefundCurrentPage, adRefundListCount);
-		
-		ArrayList<Payment> adRefundList = ps.selectAdRefundList(adRefundPi, sp);
-		
-		HashMap<String, Object> hmap = new HashMap<String, Object>();
-		hmap.put("adRefundList", adRefundList);
-		hmap.put("adRefundPi", adRefundPi);
-		
-		return new ResponseEntity(hmap, HttpStatus.OK);
-	}
+//	@RequestMapping("/toAdRefundView.po")
+//	public ResponseEntity adSelectAllRefund(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
+//		SearchPoint sp = new SearchPoint();
+//		sp.setCondition(condition);
+//		
+//		int adRefundListCount = ps.getAdRefundListCount(sp);
+//		
+//		int adRefundCurrentPage = currentPage;
+//		
+//		PageInfo adRefundPi = Pagination.getPageInfo(adRefundCurrentPage, adRefundListCount);
+//		
+//		ArrayList<Payment> adRefundList = ps.selectAdRefundList(adRefundPi, sp);
+//		
+//		HashMap<String, Object> hmap = new HashMap<String, Object>();
+//		hmap.put("adRefundList", adRefundList);
+//		hmap.put("adRefundPi", adRefundPi);
+//		
+//		return new ResponseEntity(hmap, HttpStatus.OK);
+//	}
 	//포인트 환불 회원 검색 내역--수민
 	@RequestMapping("/oneMemberAdRefund.po")
 	public ModelAndView adSelectOneMemberRefund(String userName, ModelAndView mv) {
