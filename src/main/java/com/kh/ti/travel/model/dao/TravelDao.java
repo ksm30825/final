@@ -72,7 +72,7 @@ public interface TravelDao {
 
 	int updateTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
 
-	int deleteTrvCost(SqlSessionTemplate sqlSession, TrvCost cost);
+	int deleteTrvCost(SqlSessionTemplate sqlSession, int costId);
 
 	TrvSchedule selectTrvSchedule(SqlSessionTemplate sqlSession, int schId);
 
@@ -85,7 +85,8 @@ public interface TravelDao {
 	int deleteTrvSchedule(SqlSessionTemplate sqlSession, int schId);
 
 	int updateTrvDayMemo(SqlSessionTemplate sqlSession, TrvDay trvDay);
-	
+
+	int updateTrvDayWeather(SqlSessionTemplate sqlSession, TrvDay trvDay);
 
 	int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
@@ -102,13 +103,26 @@ public interface TravelDao {
 
 	int updateSchContent(SqlSessionTemplate sqlSession, TrvSchedule sch);
 
+	int selectSchFileCount(SqlSessionTemplate sqlSession, int schId);
+
 	int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile);
+
+	int selectFileId(SqlSessionTemplate sqlSession);
+
+	SchFile selectSchFile(SqlSessionTemplate sqlSession, int fileId);
 
 	ArrayList<SchFile> selectSchFileList(SqlSessionTemplate sqlSession, int schId);	
 
+	int updateTrvFileLevel(SqlSessionTemplate sqlSession, int schId);
+
+	int updateSchFileLevel(SqlSessionTemplate sqlSession, int fileId);
+
 	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
 	
-	
+	SchFile selectTrvMainImage(SqlSessionTemplate sqlSession, int trvId);
+
+
+
 	
 	
 	

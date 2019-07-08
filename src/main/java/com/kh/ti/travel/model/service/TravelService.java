@@ -52,6 +52,8 @@ public interface TravelService {
 	int deleteTrvSchedule(int schId);
 
 	int updateDayMemo(TrvDay trvDay);
+
+	int updateDayWeather(TrvDay trvDay);
 	
 	
 
@@ -69,6 +71,10 @@ public interface TravelService {
 
 	int insertSchFile(SchFile schFile);
 
+	SchFile selectSchFile(int fileId);
+
+	int updateSchFileId(int fileId);
+
 	int deleteSchFile(SchFile file);
 	
 	
@@ -84,7 +90,7 @@ public interface TravelService {
 	
 	int updateTrvCost(TrvCost cost);
 
-	int deleteTrvCost(TrvCost cost);
+	int deleteTrvCost(int costId);
 
 
 	
@@ -105,9 +111,6 @@ public interface TravelService {
 	
 	HashMap selectSpotList(Travel trv);
 
-
-	
-	
 
 
 

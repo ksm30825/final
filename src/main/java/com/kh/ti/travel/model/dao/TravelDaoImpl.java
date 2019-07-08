@@ -145,8 +145,8 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.update("Travel.updateTrvCost", cost);
 	}
 	@Override
-	public int deleteTrvCost(SqlSessionTemplate sqlSession, TrvCost cost) {
-		return sqlSession.delete("Travel.deleteTrvCost", cost);
+	public int deleteTrvCost(SqlSessionTemplate sqlSession, int costId) {
+		return sqlSession.delete("Travel.deleteTrvCost", costId);
 	}
 	
 	@Override
@@ -180,6 +180,11 @@ public class TravelDaoImpl implements TravelDao {
 	@Override
 	public int updateTrvDayMemo(SqlSessionTemplate sqlSession, TrvDay trvDay) {
 		return sqlSession.update("Travel.updateTrvDayMemo", trvDay);
+	}
+
+	@Override
+	public int updateTrvDayWeather(SqlSessionTemplate sqlSession, TrvDay trvDay) {
+		return sqlSession.update("Travel.updateTrvDayWeather", trvDay);
 	}
 
 
@@ -216,6 +221,11 @@ public class TravelDaoImpl implements TravelDao {
 	public int updateSchContent(SqlSessionTemplate sqlSession, TrvSchedule sch) {
 		return sqlSession.update("Travel.updateSchContent", sch);
 	}
+	
+	@Override
+	public int selectSchFileCount(SqlSessionTemplate sqlSession, int schId) {
+		return sqlSession.selectOne("Travel.selectSchFileCount", schId);
+	}
 
 	@Override
 	public int insertSchFile(SqlSessionTemplate sqlSession, SchFile schFile) {
@@ -223,17 +233,40 @@ public class TravelDaoImpl implements TravelDao {
 	}
 	
 	@Override
+	public int selectFileId(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Travel.selectFileId");
+	}
+
+	@Override
 	public ArrayList<SchFile> selectSchFileList(SqlSessionTemplate sqlSession, int schId) {
 		return (ArrayList)sqlSession.selectList("Travel.selectSchFileList", schId);
 	}
+	
+	@Override
+	public SchFile selectSchFile(SqlSessionTemplate sqlSession, int fileId) {
+		return sqlSession.selectOne("Travel.selectSchFile", fileId);
+	}
 
+	@Override
+	public int updateTrvFileLevel(SqlSessionTemplate sqlSession, int schId) {
+		return sqlSession.update("Travel.updateTrvFileLevel", schId);
+	}
+	
+	@Override
+	public int updateSchFileLevel(SqlSessionTemplate sqlSession, int fileId) {
+		return sqlSession.update("Travel.updateSchFileLevel", fileId);
+	}
+	
 	@Override
 	public int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 	
-	
+	@Override
+	public SchFile selectTrvMainImage(SqlSessionTemplate sqlSession, int trvId) {
+		return sqlSession.selectOne("Travel.selectTrvMainImage", trvId);
+	}
 	
 	
 	
@@ -294,6 +327,11 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
+
+
+
 
 
 

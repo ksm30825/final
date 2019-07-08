@@ -149,7 +149,7 @@
 									<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO"
 										value="${ trvDay.dayMemo }">
 								</div>
-								<ul class="connectedSortable menu-list costList" style="background: white">
+								<ul class="connectedSortable menu-list costList" style="background: white" id="day${ trvDay.dayNumber }CostList">
 									<li class="panel-block" style="display:none">
 										<div class="media-left" style="width: 20%">
 											<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
@@ -302,7 +302,6 @@
 			if("${ trv.budget}" != 0) {
 				$("#budgetWon").val(parseFloat("${ trv.budget }"));
 				budgetWon = parseFloat("${ trv.budget }");
-				console.log(budgetWon);
 				formatCurrency($("#budgetWon"), "budgetWon", "blur");
 			}
 			//2) 처음 로딩시 budget이 0이면 
@@ -314,25 +313,18 @@
 		
 			$("input[data-type='currency']").on({
 			    keyup: function() {
-			    	console.log("keyup");
-			    	console.log($(this));
 			      	formatCurrency($(this), $(this).attr("id"));
 			    },
 			    blur: function() { 
-			    	console.log("blur");
 			      	formatCurrency($(this), $(this).attr("id"), "blur");
 			      
 			      	//원화 변경시
 			      	if($(this).attr("id") === "budgetWon") {
 			      		var value = $(this).val();
-			      		console.log(value);
 			    	  	var budgetStr = value.substring(0, value.length - 2).replace(/,/g, "");
-			    	  	console.log(budgetStr);
 						budgetWon = parseFloat(budgetStr);
-						console.log(budgetWon);
 			    	  	//값이 입력안됐을때
 						if(budgetStr == "") {
-							console.log("입력값 없음");
 							$(this).val(0);
 							formatCurrency($(this), "budgetWon");
 							return;
@@ -343,7 +335,6 @@
 							type:"POST",
 							data:{budget:budgetWon, trvId:"${ trv.trvId }"},
 							success:function(data) {
-								console.log(data);
 								getLocalBudget(budgetWon);
 							},
 							error:function(err) {
@@ -368,7 +359,6 @@
 				var costCurrency = li.find(".costCurrency").text();
 				var costType = "";
 				var span = li.find(".costType");
-				console.log(span);
 				if(span.is(".accomm")) {
 					costType = "숙박";
 				}else if(span.is(".transp")) {
@@ -386,6 +376,7 @@
 				$("#costUpdateContent").val(costContent);
 				$("#costUpdateId").val(costId);
 				$("#costUpdateAmount").val(costAmount);
+				$("#costUpdateSchId").val(schId);
 				$("#costUpdateDayId").children().each(function() {
 					if($(this).val() == dayId) {
 						$(this).prop("selected", true);
@@ -409,6 +400,33 @@
 				$('#costInfoModal').toggleClass('is-active');
 			});
 			
+			$(".costDeleteBtn").click(function() {
+				var li = $(this).parent().parent();
+				var costId = li.find("input[name=costId]").val();
+				var schId = $(this).parent().children().last().val();
+				var answer = window.confirm("해당 경비 항목이 삭제됩니다. 계속하시겠습니까?");
+				if(answer) {
+					$.ajax({
+						url:"deleteCost.trv",
+						type:"POST",
+						data:{costId:costId},
+						success:function(data) {
+							console.log(data);
+							li.remove();
+							if(schId != 0) {
+								$(".sch" + schId + "Block").find(".costType").remove();
+								$(".sch" + schId + "Block").find(".costAmount").remove();
+								$(".sch" + schId + "Block").find(".costCurrency").remove();
+							}
+							
+						},
+						error:function(err) {
+							alert("err");
+						}
+					});
+				}
+			});
+			
 		});
 		
 		//환율 조회	, 전체예산 적용
@@ -422,10 +440,8 @@
 					var local = json.rates.${ trvCityList[0].currencyUnit };
 					
 					rate = Math.round((krw / local) * 1000) / 1000;
-					console.log(rate);
 					$("#exchangeRate").text(rate);
 					budgetLocal = Math.round((amount / rate) * 100) / 100;
-					console.log("budgetLocal", budgetLocal);
 					$("#budgetLocal").val(budgetLocal);
 					formatCurrency($("#budgetLocal"), "budgetLocal", "blur");
 					updateSummary();
@@ -439,9 +455,6 @@
 		
 		//summary테이블 update (rate, budgetLocal, budgetWon)
 		function updateSummary() {
-			console.log(rate);
-			console.log(budgetLocal);
-			console.log(budgetWon);
 			accommCostLocal = 0;
 			transpCostLocal = 0;
 			foodCostLocal = 0;
@@ -475,14 +488,14 @@
 					+ shoppingCostLocal + etcCostLocal;
 			var balanceLocal = Math.round((budgetLocal - totalCostLocal) * 100) / 100;
 			
-			$("#accommCostLocal").text(accommCostLocal + ' AUD');
-			$("#transpCostLocal").text(transpCostLocal + ' AUD');
-			$("#foodCostLocal").text(foodCostLocal + ' AUD');
-			$("#tourCostLocal").text(tourCostLocal + ' AUD');
-			$("#shoppingCostLocal").text(shoppingCostLocal + ' AUD');
-			$("#etcCostLocal").text(etcCostLocal + ' AUD');
-			$("#totalCostLocal").text(totalCostLocal + ' AUD');
-			$("#balanceLocal").text(balanceLocal + ' AUD');
+			$("#accommCostLocal").text(accommCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#transpCostLocal").text(transpCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#foodCostLocal").text(foodCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#tourCostLocal").text(tourCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#shoppingCostLocal").text(shoppingCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#etcCostLocal").text(etcCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#totalCostLocal").text(totalCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#balanceLocal").text(balanceLocal + ' ${ trvCityList[0].currencyUnit }');
 			
 			
 			var accommCostWon = Math.floor(accommCostLocal * rate);

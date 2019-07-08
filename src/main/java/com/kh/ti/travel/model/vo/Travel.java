@@ -24,12 +24,15 @@ public class Travel implements java.io.Serializable {
 	private int[] trvTags;
 	private int trvRef;
 	private ArrayList<TrvCity> trvCityList;
+	private ArrayList<TrvTag> trvTagList;
+	private SchFile mainImage;
 	
 	public Travel() {}
 
 	public Travel(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, int budget, Date openDate,
 			Date modifyDate, Date completeDate, String status, int memberId, int[] trvCities, int[] trvComps,
-			int[] trvTags, int trvRef, ArrayList<TrvCity> trvCityList) {
+			int[] trvTags, int trvRef, ArrayList<TrvCity> trvCityList, ArrayList<TrvTag> trvTagList,
+			SchFile mainImage) {
 		super();
 		this.trvId = trvId;
 		this.trvTitle = trvTitle;
@@ -47,6 +50,8 @@ public class Travel implements java.io.Serializable {
 		this.trvTags = trvTags;
 		this.trvRef = trvRef;
 		this.trvCityList = trvCityList;
+		this.trvTagList = trvTagList;
+		this.mainImage = mainImage;
 	}
 
 	public int getTrvId() {
@@ -177,16 +182,32 @@ public class Travel implements java.io.Serializable {
 		this.trvCityList = trvCityList;
 	}
 
+	public ArrayList<TrvTag> getTrvTagList() {
+		return trvTagList;
+	}
+
+	public void setTrvTagList(ArrayList<TrvTag> trvTagList) {
+		this.trvTagList = trvTagList;
+	}
+
+	public SchFile getMainImage() {
+		return mainImage;
+	}
+
+	public void setMainImage(SchFile mainImage) {
+		this.mainImage = mainImage;
+	}
+
 	@Override
 	public String toString() {
 		return "Travel [trvId=" + trvId + ", trvTitle=" + trvTitle + ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", compNumber=" + compNumber + ", budget=" + budget + ", openDate=" + openDate + ", modifyDate="
 				+ modifyDate + ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId
 				+ ", trvCities=" + Arrays.toString(trvCities) + ", trvComps=" + Arrays.toString(trvComps) + ", trvTags="
-				+ Arrays.toString(trvTags) + ", trvRef=" + trvRef + ", trvCityList=" + trvCityList + "]";
+				+ Arrays.toString(trvTags) + ", trvRef=" + trvRef + ", trvCityList=" + trvCityList + ", trvTagList="
+				+ trvTagList + ", mainImage=" + mainImage + "]";
 	}
-	
-	
+
 	
 	
 

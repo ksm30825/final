@@ -70,7 +70,6 @@
     	opacity: 0.8;
 		width:200px;
 		height:400px;
-		overflow-y:scroll;
 		display:inline-block;
 		position:absolute;
 		z-index:10;
@@ -88,6 +87,7 @@
 		overflow-y:scroll;
 	}
 	#left-panel>ul {
+		height:320px;
 		overflow-y:scroll;
 	}
 	#left-panel li {
@@ -112,7 +112,7 @@
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay-content">
 			<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st" >
-				<nav class="panel dayPanel overlayPanel" style="width:300px">
+				<nav class="panel overlayPanel" style="width:300px">
 					<div class="panel-heading" align="center"
 						style="background: whitesmoke; color: black; height: 30px">
 						<p class="help">${ trvDay.dayDate }</p>
@@ -123,9 +123,9 @@
 						<input class="input dayMemo is-small day${ trvDay.dayId }Memo" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }">
 					</div>
 					<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
-					<ul class="connectedSortable menu-list dayList" style="background:white">
+					<ul class="connectedSortable menu-list dayList" style="background:white" id="day${ trvDay.dayNumber }ListOver">
 						<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
-							<li class=" panel-block" style="background: white" id="sch_${ sch.schId }">
+							<li class="panel-block sch${ sch.schId }Block" style="background: white" id="sch_${ sch.schId }">
 								<div class="media-left" style="width: 20%">
 									<p class="schTime">${ sch.startTime } - ${ sch.endTime }</p>
 									<input type="hidden" value="${ sch.schNumber }" name="schNumber">
@@ -135,7 +135,7 @@
 										<p><strong class="schTitle">${ sch.schTitle }</strong></p>
 										<c:if test="${ !empty sch.trvCost }">
 											<small class="costType">${ sch.trvCost.costType } : </small>
-											<small class="costAmount"><strong>${ sch.trvCost.costAmount }</strong></small>
+											<small ><strong class="costAmount">${ sch.trvCost.costAmount }</strong></small>
 											<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 										</c:if>
 										<small class="schTransp">${ sch.schTransp }</small>
@@ -219,7 +219,7 @@
 								<!-- <label class="panel-block"><input type="checkbox">시간 보이기</label> -->
 								<ul class="connectedSortable menu-list dayList" id="day${ trvDay.dayNumber }List">
 									<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st">
-										<li class=" panel-block" style="background:white" id="sch_${ sch.schId }">
+										<li class="panel-block sch${ sch.schId }Block" style="background:white" id="sch_${ sch.schId }">
 											<div class="media-left" style="width:20%">
 												<p class="schTime">${ sch.startTime } - ${ sch.endTime }</p>
 												<input type="hidden" value="${ sch.schNumber }" name="schNumber">
@@ -231,7 +231,7 @@
 													</p>
 													<c:if test="${ !empty sch.trvCost }">
 														<small class="costType">${ sch.trvCost.costType } : </small>
-														<small class="costAmount"><strong>${ sch.trvCost.costAmount }</strong></small>
+														<small><strong class="costAmount">${ sch.trvCost.costAmount }</strong></small>
 														<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 													</c:if>
 													<small class="schTransp">${ sch.schTransp }</small>
@@ -517,6 +517,7 @@
 		$(function() {
 			$("#day1").show();
 			
+			
 			var start;
 			var startArr;
 			var startDayId;
@@ -529,6 +530,7 @@
 				},
 				update:function(event, ui) {
 					var ul = $(this);
+					var dayNumber = ul.attr("id").charAt(3);
 					var item = ui.item.attr("id");
 					var schId = item.substring(item.indexOf("_") + 1);
 					var changeDayId = $(this).parent().find("input[name=dayId]").val();
@@ -544,13 +546,36 @@
 								type:"post",
 								data:{dayId:changeDayId},
 								success:function(data) {
+									var schList = data.updList;
+									console.log(schList);
 									ul.children().each(function(index) {
-										
-										var schList = data.updList;
 										var startTime = schList[index].startTime;
 										var endTime = schList[index].endTime;
 										$(this).find(".schTime").text(startTime + " - " + endTime);
 									});
+									
+									//상세보기
+									for(var i = 0; i < schList.length; i++) {
+										var schId = schList[i].schId;
+										var dayArea = $("#day" + dayNumber + "Area");
+										dayArea.append($("#sch" + schId + "CardSection"));
+									}
+									
+									//overlay, list
+									var list = ul.children().clone(true);
+									if(ul.attr("id") == "day" + dayNumber + "List") {
+										$("#day" + dayNumber + "ListOver").empty();
+										$("#day" + dayNumber + "ListOver").append(list);
+									}else {
+										$("#day" + dayNumber + "List").empty();
+										$("#day" + dayNumber + "List").append(list);
+									}
+									var list2 = list.clone(true);
+									list2.find(".media-right").empty();
+									$("#day" + dayNumber + "ListAll").empty();
+									$("#day" + dayNumber + "ListAll").append(list2);
+									
+									
 								},
 								error:function(data) {
 									alert('updateSchNumber 서버전송 실패');
@@ -565,6 +590,20 @@
 								data:{originDayId:startDayId},
 								success:function(data) {
 									console.log("schNumber 삭제완료");
+									
+									//overlay, list
+									var list = ul.children().clone(true);
+									if(ul.attr("id") == "day" + dayNumber + "List") {
+										$("#day" + dayNumber + "ListOver").empty();
+										$("#day" + dayNumber + "ListOver").append(list);
+									}else {
+										$("#day" + dayNumber + "List").empty();
+										$("#day" + dayNumber + "List").append(list);
+									}
+									var list2 = list.clone(true);
+									list2.find(".media-right").empty();
+									$("#day" + dayNumber + "ListAll").empty();
+									$("#day" + dayNumber + "ListAll").append(list2);
 								},
 								error:function(data) {
 									alert('deleteSchNumber 서버전송 실패');
@@ -580,13 +619,41 @@
 							type:"post",
 							data:{schId:schId, dayId:changeDayId},
 							success:function(data) {
-								console.log("day수정완료");
+								var schList = data.updList;
 								ul.children().each(function(index) {
-									var schList = data.updList;
 									var startTime = schList[index].startTime;
 									var endTime = schList[index].endTime;
 									$(this).find(".schTime").text(startTime + " - " + endTime);
 								});
+									
+								//상세보기
+								for(var i = 0; i < schList.length; i++) {
+									var schId = schList[i].schId;
+									var dayArea = $("#day" + dayNumber + "Area");
+									dayArea.append($("#sch" + schId + "CardSection"));
+								}
+								
+								//가계부
+								if(data.costId != undefined) {
+									var costList = $("#day" + dayNumber + "CostList"); 
+									costList.append($("#cost_" + data.costId));
+								}
+									
+								//overlay, list
+								var list = ul.children().clone(true);
+								if(ul.attr("id") == "day" + dayNumber + "List") {
+									$("#day" + dayNumber + "ListOver").empty();
+									$("#day" + dayNumber + "ListOver").append(list);
+								}else {
+									$("#day" + dayNumber + "List").empty();
+									$("#day" + dayNumber + "List").append(list);
+								}
+								var list2 = list.clone(true);
+								list2.find(".media-right").empty();
+								$("#day" + dayNumber + "ListAll").empty();
+								$("#day" + dayNumber + "ListAll").append(list2);
+								
+									
 							},
 							error:function(data) {
 								alert('changeSchDay 서버전송 실패');
@@ -632,8 +699,7 @@
 					nav.prev().find("input[name=plcId]").each(function() {
 						places.push($(this).val());
 					});
-					console.log(places);
-					showRoute(places);				
+					showRoute(places, map);				
 				}
 				
 			});
@@ -649,8 +715,8 @@
 					nav.next().find("input[name=plcId]").each(function() {
 						places.push($(this).val());
 					});
-					console.log(places);
-					showRoute(places);	
+					showRoute(places, map);				
+					
 				}
 				
 			});
@@ -676,7 +742,7 @@
 				}
 				var costTypeStr = li.find(".costType").text().substring();
 				var costType = costTypeStr.substring(0, costTypeStr.indexOf(":") - 1);
-				var costAmount = li.find(".costAmount").children().text();
+				var costAmount = li.find(".costAmount").text();
 				var costCurrency = li.find(".costCurrency").text();
 				var currency = costCurrency.substring(1, costCurrency.length - 3);
 				
@@ -712,7 +778,7 @@
 				if(costAmount == "") {
 					modal.find("#costAmount2").val(0);
 				}else {
-					modal.find("#costAmount2").val(parseInt(costAmount));
+					modal.find("#costAmount2").val(parseFloat(costAmount));
 				}
 				modal.find("#currency2").children().each(function() {
 					if($(this).text() == currency) {
@@ -764,7 +830,7 @@
 				case '호텔' : type = 'hotel'; break;
 				case '장소찾기':return;
 				}
-				placeTypeSearch(type);
+				placeTypeSearch(type, map);
 			});
 			
 
@@ -781,7 +847,7 @@
 			//장소select
 			$(".schPlc").click(function() {
 				var plcId = $(this).children("input[name=plcId]").val();
-				placeDetailSearch(plcId);
+				placeDetailSearch(plcId, map);
 				
 			});
 			

@@ -59,7 +59,7 @@
 								<div class="level-item">
 									<div class="field">
 										<p class="control">
-											<input type="hidden" value="${ trvDay.dayId }">
+											<input type="hidden" value="${ trvDay.dayId }" name="dayId">
 											<input class="input dayMemo day${ trvDay.dayId }Memo" type="text" placeholder="MEMO" value="${ trvDay.dayMemo }" 
 											style="width:100%">
 										</p>
@@ -67,41 +67,176 @@
 								</div>
 							</div>
 							<div class="level-right" id="weatherArea">
-								<p class="level-item" style="margin:0 10px 0 0">
-									<a class="button is-danger is-outlined weatherBtn">
-										<span class="icon">
-											<i class="fas fa-sun"></i>
-										</span>
-									</a>
-								</p>
-								<p class="level-item" style="margin:0 10px 0 0">
-									<a class="button is-dark is-outlined weatherBtn">
-										<span class="icon">
-											<i class="fas fa-cloud"></i>
-										</span>
-									</a>
-								</p>
-								<p class="level-item" style="margin:0 10px 0 0">
-									<a class="button is-info is-outlined weatherBtn">
-										<span class="icon">
-											<i class="fas fa-umbrella"></i>
-										</span>
-									</a>
-								</p>
-								<p class="level-item" style="margin:0 10px 0 0">
-									<a class="button is-primary is-outlined weatherBtn">
-										<span class="icon">
-											<i class="far fa-snowflake"></i>
-										</span>
-									</a>
-								</p>
-								<p class="level-item" style="margin:0 10px 0 0">
-									<a class="button is-warning is-outlined weatherBtn">
-										<span class="icon">
-											<i class="fas fa-bolt"></i>
-										</span>
-									</a>
-								</p>
+								<c:choose>
+									<c:when test="${ trvDay.dayWeather eq 'SUN' }">
+										<p class="level-item"><span class="weather">맑음</span></p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-danger weatherBtn" id="SUN">
+												<span class="icon"><i class="fas fa-sun"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-dark is-outlined weatherBtn" id="CLOUD">
+												<span class="icon"><i class="fas fa-cloud"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-info is-outlined weatherBtn" id="RAIN">
+												<span class="icon"><i class="fas fa-umbrella"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-primary is-outlined weatherBtn" id="SNOW">
+												<span class="icon"><i class="far fa-snowflake"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-warning is-outlined weatherBtn" id="LIGHTNING">
+												<span class="icon"><i class="fas fa-bolt"></i></span>
+											</a>
+										</p>
+									</c:when>
+									<c:when test="${ trvDay.dayWeather eq 'CLOUD' }">
+										<p class="level-item"><span class="weather">흐림</span></p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-danger is-outlined weatherBtn" id="SUN">
+												<span class="icon"><i class="fas fa-sun"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-dark  weatherBtn" id="CLOUD">
+												<span class="icon"><i class="fas fa-cloud"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-info is-outlined weatherBtn" id="RAIN">
+												<span class="icon"><i class="fas fa-umbrella"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-primary is-outlined weatherBtn" id="SNOW">
+												<span class="icon"><i class="far fa-snowflake"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-warning is-outlined weatherBtn" id="LIGHTNING">
+												<span class="icon"><i class="fas fa-bolt"></i></span>
+											</a>
+										</p>
+									</c:when>
+									<c:when test="${ trvDay.dayWeather eq 'RAIN' }">
+										<p class="level-item"><span class="weather">비</span></p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-danger is-outlined weatherBtn" id="SUN">
+												<span class="icon"><i class="fas fa-sun"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-dark is-outlined weatherBtn" id="CLOUD">
+												<span class="icon"><i class="fas fa-cloud"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-info weatherBtn" id="RAIN">
+												<span class="icon"><i class="fas fa-umbrella"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-primary is-outlined weatherBtn" id="SNOW">
+												<span class="icon"><i class="far fa-snowflake"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-warning is-outlined weatherBtn" id="LIGHTNING">
+												<span class="icon"><i class="fas fa-bolt"></i></span>
+											</a>
+										</p>
+									</c:when>
+									<c:when test="${ trvDay.dayWeather eq 'SNOW' }">
+										<p class="level-item"><span class="weather">눈</span></p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-danger is-outlined weatherBtn" id="SUN">
+												<span class="icon"><i class="fas fa-sun"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-dark is-outlined weatherBtn" id="CLOUD">
+												<span class="icon"><i class="fas fa-cloud"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-info is-outlined weatherBtn" id="RAIN">
+												<span class="icon"><i class="fas fa-umbrella"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-primary weatherBtn" id="SNOW">
+												<span class="icon"><i class="far fa-snowflake"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-warning is-outlined weatherBtn" id="LIGHTNING">
+												<span class="icon"><i class="fas fa-bolt"></i></span>
+											</a>
+										</p>
+									</c:when>
+									<c:when test="${ trvDay.dayWeather eq 'LIGHTNING' }">
+										<p class="level-item"><span class="weather">번개</span></p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-danger is-outlined weatherBtn" id="SUN">
+												<span class="icon"><i class="fas fa-sun"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-dark is-outlined weatherBtn" id="CLOUD">
+												<span class="icon"><i class="fas fa-cloud"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-info is-outlined weatherBtn" id="RAIN">
+												<span class="icon"><i class="fas fa-umbrella"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-primary is-outlined weatherBtn" id="SNOW">
+												<span class="icon"><i class="far fa-snowflake"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-warning weatherBtn" id="LIGHTNING">
+												<span class="icon"><i class="fas fa-bolt"></i></span>
+											</a>
+										</p>
+									</c:when>
+									<c:otherwise>
+										 <p class="level-item"><span class="weather"></span></p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-danger is-outlined weatherBtn" id="SUN">
+												<span class="icon"><i class="fas fa-sun"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-dark is-outlined weatherBtn" id="CLOUD">
+												<span class="icon"><i class="fas fa-cloud"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-info is-outlined weatherBtn" id="RAIN">
+												<span class="icon"><i class="fas fa-umbrella"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-primary is-outlined weatherBtn" id="SNOW">
+												<span class="icon"><i class="far fa-snowflake"></i></span>
+											</a>
+										</p>
+										<p class="level-item" style="margin:0 10px 0 0">
+											<a class="button is-warning is-outlined weatherBtn" id="LIGHTNING">
+												<span class="icon"><i class="fas fa-bolt"></i></span>
+											</a>
+										</p>
+									</c:otherwise>
+								</c:choose>
 							</div>
 						</nav>
 						<hr style="border:1px solid lightgray">
@@ -109,7 +244,7 @@
 				</div>
 				<div class="dayArea" id="day${ trvDay.dayNumber }Area" style="display:none">
 					<c:forEach var="sch" items="${ trvDay.schList }" varStatus="st" >
-						<section class="section">
+						<section class="section" id="sch${ sch.schId }CardSection">
 							<div class="card">
 								<header class="card-header">
 									<p class="icon is-large" style="color:#8e44ad; margin:5px">
@@ -118,12 +253,13 @@
 									<div class="card-header-title" style="display:block">
 										<input type="hidden" value="${ sch.schId }" name="schId">
 										<p><strong>${ sch.schTitle }</strong></p>
-										<p class="help">
+										<p class="help schCost">
 											<c:if test="${ !empty sch.trvCost }">
-												${ sch.trvCost.costType } :<strong>${ sch.trvCost.costAmount }</strong> 
-												(${ sch.trvCost.currency }) / 
+												<small class="costType">${ sch.trvCost.costType }</small> :
+												<strong class="costAmount">${ sch.trvCost.costAmount }</strong> 
+												(<small class="costCurrency">${ sch.trvCost.currency }</small>) / 
 											</c:if>&nbsp;&nbsp;&nbsp;
-											${ sch.schTransp }
+											<small class="schTransp">${ sch.schTransp }</small>
 										</p> 
 										<small> 
 											<a style="color: purple"> 
@@ -140,11 +276,6 @@
 										</small> 
 									</div>
 									<a class="card-header-icon">
-										<!-- <span class="icon detailEditBtn" 
-										style="color:#8e44ad; margin-right:10px; width:100px">
-											작성하기
-											<i class="fas fa-2x fa-pencil-alt"></i>
-										</span> -->
 										<span class="icon detailShowBtn"><i class="fa fa-angle-down"></i></span>
 									</a>
 								</header>
@@ -163,7 +294,7 @@
 			
 				<div class="gallaryArea" id="gallary${ trvDay.dayNumber }Area" style="display:none">	
 					<section class="section">
-						<div class="columns">
+						<div class="columns is-multiline">
 							<div class="column is-one-third photoCard" style="display:none">
 								<div class="card trvCard">
 									<div class="card-image">
@@ -172,10 +303,14 @@
 										</figure>
 									</div>
 									<div class="card-content">
+										<span class="icon is-medium mainImageIcon" style="color:orange; width:80px" data-tooltip="대표사진">
+											<i class="fas fa-crown"></i>대표사진
+										</span>
+										<a class="button is-small is-link changeMainImageBtn" > 
+											<input type="hidden" value="" name="fileId">
+											<span>대표사진 등록</span>
+										</a>
 										<div class="content" align="right">${ trvDay.dayDate }</div>
-										<div class="content">
-											<p></p>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -189,8 +324,25 @@
 												</figure>
 											</div>
 											<div class="card-content">
+												<c:if test="${ file.fileLevel eq 0 }" >
+													<span class="icon is-medium mainImageIcon" style="color:orange; width:80px" data-tooltip="대표사진">
+														<i class="fas fa-crown"></i>대표사진
+													</span>
+													<a class="button is-small is-link changeMainImageBtn" style="display:none"> 
+														<input type="hidden" value="${ file.fileId }" name="fileId">
+														<span>대표사진 등록</span>
+													</a>
+												</c:if>
+												<c:if test="${ file.fileLevel ne 0 }" >
+													<span class="icon is-medium mainImageIcon" style="color:orange;display:none" data-tooltip="대표사진">
+														<i class="fas fa-crown"></i>
+													</span>
+													<a class="button is-small is-link changeMainImageBtn" > 
+														<input type="hidden" value="${ file.fileId }" name="fileId">
+														<span>대표사진 등록</span>
+													</a>
+												</c:if>
 												<div class="content" align="right">${ trvDay.dayDate }</div>
-												<div class="content"><p>${ file.fileCaption }</p></div>
 											</div>
 										</div>
 									</div>
@@ -236,6 +388,67 @@
 				$(".dayArea, .gallaryArea, .dayHeader").hide();
 				$("#day" + day.charAt(4) + "Header").show();
 				$("#gallary" + day.charAt(4) + "Area").show();
+			});
+			
+			var dayWeather = "${ trvDay.dayWeather }";
+			
+			$(".weatherBtn").click(function() {
+				var dayWeather = $(this).attr("id");
+				var dayId = $(this).parent().parent().prev().find("input[name=dayId]").val();
+				$(this).removeClass('is-outlined');
+				$(this).parent().siblings().children().addClass('is-outlined');
+				var span = $(this).parent().siblings().eq(0);
+				if(dayWeather == "SUN") {
+					span.text('맑음');
+				}else if(dayWeather == "CLOUD") {
+					span.text('흐림');
+				}else if(dayWeather == "RAIN") {
+					span.text('비');
+				}else if(dayWeather == "SNOW") {
+					span.text('눈');
+				}else if(dayWeather == "LIGHTNING") {
+					span.text('번개');
+				}
+				
+				$.ajax({
+					url:"updateDayWeather.trv",
+					type:"POST",
+					data:{dayId:dayId , dayWeather:dayWeather},
+					success:function(data) {
+						console.log(data);
+					}, 
+					error:function(err) {
+						alert("err");
+					}
+				
+				});
+				
+				
+			});
+			
+			
+			
+			$(".changeMainImageBtn").click(function() {
+				alert("대표사진이 변경됩니다.");
+				var fileId = $(this).children().eq(0).val();
+				var mainImageIcon = $(this).parent().find(".mainImageIcon");
+				var changeMainImageBtn = $(this);
+				
+				$.ajax({
+					url:"changeFileLevel.trv",
+					type:"POST",
+					data:{fileId:fileId},
+					success:function(data) {
+						console.log(data);
+						$(".trvCard").find(".mainImageIcon").hide();
+						$(".trvCard").find(".changeMainImageBtn").show();
+						mainImageIcon.show();
+						changeMainImageBtn.hide();
+					},
+					error:function(err) {
+						alert("err");
+					}
+				});
 			});
 			
 			
@@ -293,19 +506,12 @@
 					fileInput.setAttribute('type', 'file');
 					fileInput.setAttribute('name', 'image');
 					fileInput.click();
-					var schIdInput = document.createElement('input');
-					schIdInput.setAttribute('type', 'text');
-					schIdInput.setAttribute('name', 'schId');
-					schIdInput.setAttribute('value', schId);
 					
 					fileInput.onchange = function() {
 						var fd = new FormData();
-						console.log($(this));
 						var file = $(this)[0].files[0];
-						console.log(file);
 						fd.append('image', file);
 						fd.append('schId', schId);
-						console.log(fd);
 						$.ajax({
 							url:"insertSchFile.trv",
 							type:"POST",
@@ -314,13 +520,47 @@
 							processData:false,
 							contentType:false,
 							success:function(data) {
+								//var file = data.schFile;
+								//console.log(file);
+								console.log(data);
 								var range = quill.getSelection();
 								quill.insertEmbed(range.index, 'image', 'http://localhost:8001/ti/resources/uploadFiles/' + data.changeName);
 								
 								var photoCard = $("#gallary" + dayNumber + "Area").find(".photoCard").eq(0).clone();
 								photoCard.find("img").attr("src", "resources/uploadFiles/" + data.changeName);
+								
+								if(data.fileLevel == 0) {
+									photoCard.find(".changeMainImageBtn").hide();
+								}else {
+									photoCard.find(".mainImageIcon").hide();
+									photoCard.find(".changeMainImageBtn").children("input[name=fileId]").val(data.fileId);
+								}
+								
 								photoCard.appendTo($("#gallary" + dayNumber + "Area").children().children());
 								photoCard.show();
+								
+								$(".changeMainImageBtn").click(function() {
+									alert("대표사진이 변경됩니다.");
+									var fileId = $(this).children().eq(0).val();
+									var mainImageIcon = $(this).parent().find(".mainImageIcon");
+									var changeMainImageBtn = $(this);
+									
+									$.ajax({
+										url:"changeFileLevel.trv",
+										type:"POST",
+										data:{fileId:fileId},
+										success:function(data) {
+											console.log(data);
+											$(".trvCard").find(".mainImageIcon").hide();
+											$(".trvCard").find(".changeMainImageBtn").show();
+											mainImageIcon.show();
+											changeMainImageBtn.hide();
+										},
+										error:function(err) {
+											alert("err");
+										}
+									});
+								});
 								
 							},
 							error:function(err) {
@@ -361,6 +601,7 @@
 					var footer = $(this).parent().parent().next().next();
 					footer.toggle();
 					
+					//EDIT
 					footer.find(".editBtn").click(function() {
 						quill.enable(true);
 						toolbar.show();
@@ -368,6 +609,7 @@
 						
 					});
 					
+					//SAVE
 					footer.find(".saveBtn").click(function() {
 						var contents = quill.getContents();
 						console.log(contents);
@@ -394,6 +636,7 @@
 						
 					});
 					
+					//REMOVE
 					footer.find(".removeBtn").click(function() {
 						
 					});
@@ -409,12 +652,6 @@
 
 		
 		
-		
-		
-		$(".weatherBtn").click(function() {
-			$(this).removeClass('is-outlined');
-			$(this).parent().siblings().children().addClass('is-outlined')
-		});
 		
 	</script>
 </body>
