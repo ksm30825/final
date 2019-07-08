@@ -86,12 +86,19 @@
 			<div id="costBtnArea">
 				<a class="button is-primary" onclick="allCost()">전체</a>
 				<a class="button is-primary soft" onclick="dayCost(1, 'none')">일별</a>
+				<c:choose>
+					<c:when test="${ detailTb.buyStatus eq 'N' && loginUser.memberId ne detailTb.memberId }">
+						<a class="button is-dark" onclick="buyInfo()">가계부 엑셀 다운로드</a>
+					</c:when>
+					<c:otherwise>
+						<a class="button is-success" onclick="costDownload()">가계부 엑셀 다운로드</a>
+					</c:otherwise>
+				</c:choose>
 				<c:if test="구매여부가 true면">
-				
+					
 				</c:if>
-				<c:if test="true">
-					<!-- 구매여부가 false면 -->
-					<a class="button is-dark" onclick="costDownload()">가계부 엑셀 다운로드</a>
+				<c:if test="">
+					
 				</c:if>
 			</div>
 			
