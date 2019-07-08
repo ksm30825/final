@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.point.model.vo.UsePoint;
 import com.kh.ti.travelBoard.model.dao.TravelBoardDao;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
@@ -108,9 +109,23 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 	
 	//여행일정 상세 / 가계부 조회 - 예랑
 	@Override
-	public ArrayList selectTravelCost(int trvId) {
+	public HashMap selectTravelCost(int trvId) {
 		
 		return tbd.selectTravelCost(sqlSession, trvId);
+	}
+	
+	//마이페이지 / 구매한 일정 보기 - 예랑
+	@Override
+	public HashMap myBuyTravelListView(int memberId) {
+		
+		return tbd.myBuyTravelListView(sqlSession, memberId);
+	}
+	
+	//마이페이지 / 좋아요 / 여행일정 좋아요 보기 - 예랑
+	@Override
+	public HashMap myLikeyTravelListView(int memberId) {
+		
+		return tbd.myLikeyTravelListView(sqlSession, memberId);
 	}
 
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.point.model.vo.UsePoint;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
@@ -35,7 +36,11 @@ public interface TravelBoardService {
 
 	int deliteReview(TourReview tr);
 
-	ArrayList selectTravelCost(int trvId);
+	HashMap selectTravelCost(int trvId);
+
+	HashMap myBuyTravelListView(int memberId);
+
+	HashMap myLikeyTravelListView(int memberId);
 
 
 }

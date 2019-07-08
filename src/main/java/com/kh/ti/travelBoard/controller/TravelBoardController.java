@@ -20,6 +20,7 @@ import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.UsePoint;
 import com.kh.ti.travelBoard.model.service.TravelBoardService;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
@@ -115,16 +116,37 @@ public class TravelBoardController {
 		tb.setTrvId(trvId);
 		
 		HashMap tbMap = tbs.travelDetailForm(tb);
+		model.addAttribute("detailTb", tbMap.get("detailTb"));
 		
 		//상세 스케쥴 조회
 		ArrayList detailDay = tbs.selectTravelDetailDays(tb);
+		model.addAttribute("detailDay", detailDay);
+		
+		System.out.println("detailDay : " + detailDay);
 		
 		//가계부 정보 조회
-		ArrayList detailCost = tbs.selectTravelCost(trvId);
+		HashMap trvCost = tbs.selectTravelCost(trvId);
+		model.addAttribute("allCost", trvCost.get("allCost"));
 		
-		model.addAttribute("detailTb", tbMap.get("detailTb"));
-		model.addAttribute("detailDay", detailDay);
-		model.addAttribute("detailCost", detailCost);
+		//리뷰 정보 조회
+		
+		TourReview tr = new TourReview();
+		
+		if(loginUser != null) {
+			tr.setMemberId(loginUser.getMemberId());
+		}
+		tr.setTrvId(trvId);
+		
+		//전체 목록 조회(페이징용)
+		HashMap pageMap = new HashMap();
+		pageMap.put("tr", tr);
+		
+		int listCount = tbs.getListCount(pageMap);
+		PageInfo pi = Pagination.getPageInfo(1, listCount);
+		
+		//일정 리스트 조회
+		ArrayList<TourReview> trList = tbs.tourReviewList(pi, tr);
+		model.addAttribute("trList", trList);
 		
 		return "travelBoard/travelDetail";
 	}
@@ -152,7 +174,7 @@ public class TravelBoardController {
 		int listCount = tbs.getListCount(pageMap);
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
 		
-		//일정 리스트 조회
+		//리뷰 리스트 조회
 		ArrayList<TourReview> trList = tbs.tourReviewList(pi, tr);
 		
 		return new ResponseEntity(trList, HttpStatus.OK);
@@ -190,9 +212,6 @@ public class TravelBoardController {
 	//여행일정 좋아요 취소 - 예랑
 	@RequestMapping("travelLikeyDelete.tb")
 	public ModelAndView travelLikeyDelete(ModelAndView mv, int trvId, int memberId) {
-		
-		System.out.println("trvId : " + trvId);
-		System.out.println("memberId : " + memberId);
 		
 		Likey likey = new Likey();
 		likey.setTrvId(trvId);
@@ -325,33 +344,32 @@ public class TravelBoardController {
 		return "travelBoard/travelDetailGallery";
 	}
 	
-	//여행일정 상세 / 일정 구매 - 예랑
-	@RequestMapping("insertTravelBuy.tb")
-	public String travelBuy() {
-		
-		//구매한 해당 글 수익금 업데이트(수민언니랑 연동)
-		
-		return "travelBoard/travelDetail";
-	}
-	
-	
 	//마이페이지 / 구매한 일정 보기 - 예랑
 	@RequestMapping("myBuyTravelListView.tb")
-	public String myBuyTravelListView() {
+	public String myBuyTravelListView(Model model, HttpServletRequest request) {
+		
+		int memberId = ((Member) request.getSession().getAttribute("loginUser")).getMemberId();
+		
+		HashMap tbMap = tbs.myBuyTravelListView(memberId);
+		
+		model.addAttribute("tbList", tbMap.get("tbList"));
+		model.addAttribute("cityList", tbMap.get("cityList"));
 		
 		return "travelBoard/myBuyTravelList";
 	}
 	
-	//마이페이지 / 구매한 일정으로 내 일정 만들기 - 예랑
-	@RequestMapping("travelMake.tb")
-	public String travelMake() {
-		
-		return "travel/travelEditor";
-	}
-	
 	//마이페이지 / 좋아요 / 여행일정 좋아요 보기 - 예랑
 	@RequestMapping("myLikeyTravelListView.tb")
-	public String myLikeyTravelListView() {
+	public String myLikeyTravelListView(Model model, HttpServletRequest request) {
+		
+		int memberId = ((Member) request.getSession().getAttribute("loginUser")).getMemberId();
+		
+		HashMap tbMap = tbs.myLikeyTravelListView(memberId);
+		
+		System.out.println("tbList : " + (ArrayList)  tbMap.get("tbList"));
+		System.out.println("tbList.size : " + ((ArrayList)  tbMap.get("tbList")).size());
+		
+		model.addAttribute("tbList", tbMap.get("tbList"));
 		
 		return "travelBoard/myLikeyTravelList";
 	}

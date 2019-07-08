@@ -101,5 +101,13 @@ public class SchFile implements java.io.Serializable {
 	public void setFileStatus(String fileStatus) {
 		this.fileStatus = fileStatus;
 	}
+
+	@Override
+	public String toString() {
+		return "SchFile [fileId=" + fileId + ", originName=" + originName + ", changeName=" + changeName + ", filePath="
+				+ filePath + ", uploadDate=" + uploadDate + ", fileLevel=" + fileLevel + ", fileCaption=" + fileCaption
+				+ ", schId=" + schId + ", fileStatus=" + fileStatus + "]";
+	}
+	
 	
 }
