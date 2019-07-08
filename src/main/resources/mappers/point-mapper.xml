@@ -76,6 +76,23 @@
 		<result property="userPoint" column="USER_POINT"/>
 		<result property="userProceeds" column="USER_PROCEEDS"/>
 	</resultMap>
+	<resultMap type="Refund" id="refundUseMemberTrvTrvRequestResultSet">
+		<id property="refundId" column="REFUND_ID"/>
+		
+		<result property="refundReason" column="REFUND_REASON"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="processedDate" column="PROCESSED_DATE"/>
+		<result property="refundStatus" column="REFUND_STATUS"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="pointId" column="POINT_ID"/>
+	</resultMap>
 	<!-- <resultMap type="SearchPoint" id="spResultSet">
 		<id property="refundId" column="REFUND_ID"/>
 		
@@ -439,5 +456,60 @@
 			</when>
 		</choose>
 		ORDER BY USER_NAME
+	</select>
+	<!-- 관리자 - 환불 내역 리스트 카운트 -->
+	<select id="" parameterType="Refund" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, 
+			<choose>
+		    	<when test="trvId != 0">USE.TRV_ID, TRV_TITLE, </when>
+		    	<when test="ptcpId != 0">USE.REQUEST_ID, PLAN_TITLE, </when>
+		    </choose>	
+			USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+			FROM REFUND REF
+			JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
+			JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
+			<choose>
+		    	<when test="trvId != 0">JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID) </when>
+		    	<when test="ptcpId != 0">JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)</when>
+		    </choose>
+			JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+			JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+			<choose>
+		    	<when test="condition != 99">
+		    		WHERE
+		    	</when>
+		    	<when test="condition == 10 and userName != null">
+					USER_NAME LIKE '%'||#{userName}||'%' 
+				</when>
+		    </choose>
+		)
+	</select>
+	<!-- 관리자 - 환불 내역 조회 -->
+	<select id="" resultMap="refundUseMemberTrvTrvRequestResultSet">
+		SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, 
+		<choose>
+	    	<when test="trvId != 0">USE.TRV_ID, TRV_TITLE, </when>
+	    	<when test="ptcpId != 0">USE.REQUEST_ID, PLAN_TITLE, </when>
+	    </choose>	
+		USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+		FROM REFUND REF
+		JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
+		JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
+		<choose>
+	    	<when test="trvId != 0">JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID) </when>
+	    	<when test="ptcpId != 0">JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)</when>
+	    </choose>
+		JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+		JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+		<choose>
+	    	<when test="condition != 99">
+	    		WHERE
+	    	</when>
+	    	<when test="condition == 10 and userName != null">
+				USER_NAME LIKE '%'||#{userName}||'%' 
+			</when>
+	    </choose>
 	</select>
 </mapper>
