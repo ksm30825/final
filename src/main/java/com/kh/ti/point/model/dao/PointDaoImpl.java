@@ -244,5 +244,60 @@ public class PointDaoImpl implements PointDao{
 		ArrayList<Payment> adPointList = (ArrayList)sqlSession.selectList("Payment.selectAdPointList", sp, rowBounds);
 		return adPointList;
 	}
-
+	//관리자 - 환불 내역 리스트 카운트
+	@Override
+	public int getAdRefundListCount(SqlSessionTemplate sqlSession, SearchPoint sp) {
+		return sqlSession.selectOne("Payment.getAdRefundListCount",sp);
+	}
+	//관리자 - 환불 내역 전체 조회, 검색 조회 
+	@Override
+	public ArrayList<Payment> selectAdRefundList(SqlSessionTemplate sqlSession, PageInfo adRefundPi, SearchPoint sp) {
+		int offset = (adRefundPi.getCurrentPage() - 1) * adRefundPi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, adRefundPi.getLimit());
+		
+		ArrayList<Payment> adRefundList = (ArrayList)sqlSession.selectList("Payment.selectAdRefundList", sp, rowBounds);
+		return adRefundList;
+	}
+	//관리자 - 환불 상태 바꿔주기
+	@Override
+	public int updateRefund(SqlSessionTemplate sqlSession, Refund refund) {
+		return sqlSession.update("Payment.updateRefund", refund);
+	}
+	//관리자 - 업데이트 된 환불 내역 들고오기
+	@Override
+	public Refund selectOneRefund(SqlSessionTemplate sqlSession, Refund refund) {
+		return sqlSession.selectOne("Payment.selectOneRefund", refund);
+	}
+	//관리자 - 환불 상태 성공시 산 사람의 userPoint 업데이트
+	@Override
+	public int updateUserPointRefund(SqlSessionTemplate sqlSession, Refund updatedRefund) {
+		return sqlSession.update("Payment.updateUserPointRefund", updatedRefund);
+	}
+	//관리자 - 판 사람의 아이디 조회 -trvId 이용
+	@Override
+	public Proceeds selectMemberIdTrv(SqlSessionTemplate sqlSession, Refund updatedRefund) {
+		return sqlSession.selectOne("Payment.selectMemberIdTrv", updatedRefund);
+	}
+	//관리자 - 판 사람의 아이디 조회 -planId 이용
+	@Override
+	public Proceeds selectMemberIdRequest(SqlSessionTemplate sqlSession, Refund updatedRefund) {
+		return sqlSession.selectOne("Payment.selectMemberIdRequest", updatedRefund);
+	}
+	//관리자 - 판 사람의 userProceeds 차감
+	@Override
+	public int updateUserProceedsRefund(SqlSessionTemplate sqlSession, Proceeds proceeds) {
+		return sqlSession.update("Payment.updateUserProceedsRefund", proceeds);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

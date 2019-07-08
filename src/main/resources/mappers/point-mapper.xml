@@ -84,14 +84,17 @@
 		<result property="processedDate" column="PROCESSED_DATE"/>
 		<result property="refundStatus" column="REFUND_STATUS"/>
 		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
-		<result property="pointId" column="POINT_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="email" column="EMAIL"/>
+		<result property="useType" column="USE_TYPE"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="useDate" column="USE_DATE"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="requestId" column="REQUEST_ID"/>
+		<result property="usePoint" column="USE_POINT"/>
+		<result property="trvTitle" column="TRV_TITLE"/>
+		<result property="planId" column="PLAN_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
 	</resultMap>
 	<!-- <resultMap type="SearchPoint" id="spResultSet">
 		<id property="refundId" column="REFUND_ID"/>
@@ -355,7 +358,7 @@
 		)
 	</insert>
 	<!-- 신청 성공시 수익금 차감 -->
-	<update id="updateDeductionRebate">
+	<update id="updateDeductionRebate" parameterType="Rebate">
 		UPDATE MEMBER
 		SET USER_PROCEEDS = USER_PROCEEDS-#{payAmount}
 		WHERE MEMBER_ID = #{memberId}
@@ -457,25 +460,18 @@
 		</choose>
 		ORDER BY USER_NAME
 	</select>
-	<!-- 관리자 - 환불 내역 리스트 카운트 -->
-	<!-- <select id="" parameterType="Refund" resultType="_int">
+	<!--관리자 - 환불 내역 리스트 카운트 -->
+	<select id="getAdRefundListCount" parameterType="Refund" resultType="_int">
 		SELECT COUNT(*)
 		FROM (
-		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, 
-			<choose>
-		    	<when test="trvId != 0">USE.TRV_ID, TRV_TITLE, </when>
-		    	<when test="ptcpId != 0">USE.REQUEST_ID, PLAN_TITLE, </when>
-		    </choose>	
-			USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL,  USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
 			FROM REFUND REF
 			JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
 			JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
-			<choose>
-		    	<when test="trvId != 0">JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID) </when>
-		    	<when test="ptcpId != 0">JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)</when>
-		    </choose>
-			JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
-			JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+			LEFT JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID)
+			LEFT JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)
+			LEFT JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+			LEFT JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
 			<choose>
 		    	<when test="condition != 99">
 		    		WHERE
@@ -485,24 +481,17 @@
 				</when>
 		    </choose>
 		)
-	</select> -->
+	</select>
 	<!-- 관리자 - 환불 내역 조회 -->
-	<!-- <select id="" resultMap="refundUseMemberTrvTrvRequestResultSet">
-		SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, 
-		<choose>
-	    	<when test="trvId != 0">USE.TRV_ID, TRV_TITLE, </when>
-	    	<when test="ptcpId != 0">USE.REQUEST_ID, PLAN_TITLE, </when>
-	    </choose>	
-		USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+	<select id="selectAdRefundList" resultMap="refundUseMemberTrvTrvRequestResultSet">
+	    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
 		FROM REFUND REF
 		JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
 		JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
-		<choose>
-	    	<when test="trvId != 0">JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID) </when>
-	    	<when test="ptcpId != 0">JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)</when>
-	    </choose>
-		JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
-		JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+		LEFT JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID)
+		LEFT JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)
+		LEFT JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+		LEFT JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
 		<choose>
 	    	<when test="condition != 99">
 	    		WHERE
@@ -511,5 +500,51 @@
 				USER_NAME LIKE '%'||#{userName}||'%' 
 			</when>
 	    </choose>
-	</select> -->
+	    ORDER BY USE_DATE DESC
+	</select>
+	<!-- 관리자 - 환불 상태 바꿔주기 -->
+	<update id="updateRefund" parameterType="Refund">
+		UPDATE REFUND
+		SET REFUND_STATUS = #{refundStatus}, PROCESSED_DATE = SYSDATE
+		WHERE REFUND_ID = #{refundId}
+	</update>
+	<!-- 관리자 - 업데이트 된 환불 내역 들고오기 -->
+	<select id="selectOneRefund" resultMap="refundUseMemberTrvTrvRequestResultSet">
+		SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE, TRP.PLAN_ID, USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+		FROM REFUND REF
+		JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
+		JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
+		LEFT JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID)
+		LEFT JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)
+		LEFT JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+		LEFT JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+		WHERE REFUND_ID=#{refundId}
+	</select>
+	<!-- 관리자 - 환불 상태 성공시 산 사람의 userPoint 업데이트 -->
+	<update id="updateUserPointRefund" parameterType="Refund">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT + #{usePoint}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 관리자 - 판 사람의 아이디 조회 -trvId 이용 -->
+	<select id="selectMemberIdTrv" parameterType="Refund" resultMap="proceedsResultSet">
+		SELECT P.MEMBER_ID, PROCEEDS
+		FROM PROCEEDS P
+		JOIN TRAVEL T ON (P.TRV_ID = T.TRV_ID)
+		WHERE P.TRV_ID = #{trvId}
+	</select>
+	<!-- 관리자 - 판 사람의 아이디 조회 -planId 이용 -->
+	<select id="selectMemberIdRequest" parameterType="Refund" resultMap="proceedsResultSet">
+		SELECT TR.MEMBER_ID, PROCEEDS
+		FROM PROCEEDS P
+		LEFT JOIN PARTICIPATION TRP ON(P.PTCP_ID = TRP.PTCP_ID)
+		JOIN TRV_PLAN TR ON(TRP.PLAN_ID=TR.PLAN_ID)
+		WHERE TR.PLAN_ID = #{planId}
+	</select>
+	<!-- 관리자 - 판 사람의 userProceeds 차감 -->
+	<update id="updateUserProceedsRefund" parameterType="Proceeds">
+		UPDATE MEMBER
+		SET USER_PROCEEDS = USER_PROCEEDS - #{proceeds}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
 </mapper>

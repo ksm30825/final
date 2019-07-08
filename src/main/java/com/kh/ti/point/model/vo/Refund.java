@@ -12,9 +12,11 @@ public class Refund implements Serializable {
 	private int refundStatus;	//환불신청여부	-10:대기, 20:승인, 30:거절
 	private int pointId;		//포인트 사용내역코드
 	
+	private int memberId;
 	private String email;
 	private String userName;
 	
+	private int useType;
 	private Date useDate;	//사용일
 	private int trvId;		//여행일정번호
 	private int requestId;	//의뢰번호
@@ -22,13 +24,14 @@ public class Refund implements Serializable {
 	
 	private String trvTitle;
 	
+	private int planId;
 	private String planTitle;	//설계제목
 	
 	public Refund() {}
 
 	public Refund(int refundId, String refundReason, Date applyDate, Date processedDate, int refundStatus, int pointId,
-			String email, String userName, Date useDate, int trvId, int requestId, int usePoint, String trvTitle,
-			String planTitle) {
+			int memberId, String email, String userName, int useType, Date useDate, int trvId, int requestId,
+			int usePoint, String trvTitle, int planId, String planTitle) {
 		super();
 		this.refundId = refundId;
 		this.refundReason = refundReason;
@@ -36,13 +39,16 @@ public class Refund implements Serializable {
 		this.processedDate = processedDate;
 		this.refundStatus = refundStatus;
 		this.pointId = pointId;
+		this.memberId = memberId;
 		this.email = email;
 		this.userName = userName;
+		this.useType = useType;
 		this.useDate = useDate;
 		this.trvId = trvId;
 		this.requestId = requestId;
 		this.usePoint = usePoint;
 		this.trvTitle = trvTitle;
+		this.planId = planId;
 		this.planTitle = planTitle;
 	}
 
@@ -70,12 +76,20 @@ public class Refund implements Serializable {
 		return pointId;
 	}
 
+	public int getMemberId() {
+		return memberId;
+	}
+
 	public String getEmail() {
 		return email;
 	}
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public int getUseType() {
+		return useType;
 	}
 
 	public Date getUseDate() {
@@ -96,6 +110,10 @@ public class Refund implements Serializable {
 
 	public String getTrvTitle() {
 		return trvTitle;
+	}
+
+	public int getPlanId() {
+		return planId;
 	}
 
 	public String getPlanTitle() {
@@ -126,12 +144,20 @@ public class Refund implements Serializable {
 		this.pointId = pointId;
 	}
 
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public void setUseType(int useType) {
+		this.useType = useType;
 	}
 
 	public void setUseDate(Date useDate) {
@@ -154,6 +180,10 @@ public class Refund implements Serializable {
 		this.trvTitle = trvTitle;
 	}
 
+	public void setPlanId(int planId) {
+		this.planId = planId;
+	}
+
 	public void setPlanTitle(String planTitle) {
 		this.planTitle = planTitle;
 	}
@@ -162,8 +192,9 @@ public class Refund implements Serializable {
 	public String toString() {
 		return "Refund [refundId=" + refundId + ", refundReason=" + refundReason + ", applyDate=" + applyDate
 				+ ", processedDate=" + processedDate + ", refundStatus=" + refundStatus + ", pointId=" + pointId
-				+ ", email=" + email + ", userName=" + userName + ", useDate=" + useDate + ", trvId=" + trvId
-				+ ", requestId=" + requestId + ", usePoint=" + usePoint + ", trvTitle=" + trvTitle + ", planTitle="
-				+ planTitle + "]";
+				+ ", memberId=" + memberId + ", email=" + email + ", userName=" + userName + ", useType=" + useType
+				+ ", useDate=" + useDate + ", trvId=" + trvId + ", requestId=" + requestId + ", usePoint=" + usePoint
+				+ ", trvTitle=" + trvTitle + ", planId=" + planId + ", planTitle=" + planTitle + "]";
 	}
+	
 }
