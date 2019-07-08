@@ -458,7 +458,7 @@
 		ORDER BY USER_NAME
 	</select>
 	<!-- 관리자 - 환불 내역 리스트 카운트 -->
-	<select id="" parameterType="Refund" resultType="_int">
+	<!-- <select id="" parameterType="Refund" resultType="_int">
 		SELECT COUNT(*)
 		FROM (
 		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, 
@@ -485,9 +485,9 @@
 				</when>
 		    </choose>
 		)
-	</select>
+	</select> -->
 	<!-- 관리자 - 환불 내역 조회 -->
-	<select id="" resultMap="refundUseMemberTrvTrvRequestResultSet">
+	<!-- <select id="" resultMap="refundUseMemberTrvTrvRequestResultSet">
 		SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, 
 		<choose>
 	    	<when test="trvId != 0">USE.TRV_ID, TRV_TITLE, </when>
@@ -511,5 +511,5 @@
 				USER_NAME LIKE '%'||#{userName}||'%' 
 			</when>
 	    </choose>
-	</select>
+	</select> -->
 </mapper>
