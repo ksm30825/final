@@ -221,6 +221,10 @@
 				        msg += " : "+rsp.error_msg;
 				        $("#modayContent").text(msg);
 					    $('#myModal').toggleClass('is-active');
+					    $('.modal-background, .modal-close, .okay').click(function() {
+							$('#myModal').removeClass('is-active');
+							location.href="toPayView.po";
+						});
 				    }
 				});
 			}else{
@@ -234,13 +238,9 @@
 		function noPay(){
 			$("#modayContent").text("결제를 취소하셨습니다.");
 			$('#myModal').toggleClass('is-active');
-			$('.modal-background, .modal-close').click(function() {
+			$('.modal-background, .modal-close, .okay').click(function() {
 				$('#myModal').removeClass('is-active');
-				location.href="pointMainView.po";
-			});
-			$(".okay").click(function(){
-				$('#myModal').removeClass('is-active');
-				location.href="pointMainView.po";
+				location.href="pointMainView.po?currentPage=1";
 			});
 		}
 	</script>	

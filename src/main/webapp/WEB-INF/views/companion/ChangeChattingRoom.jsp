@@ -20,9 +20,10 @@
 </head>
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
+	<input type = "hidden" value = "${chatId}" id = "ReChatID">
 	<div class = "wrap">
 		 <div class = "header">
-			 <button id = "returnBtn" onclick = "location.href = '${contextPath}/enterChatting.ch'"><i class="material-icons" >keyboard_arrow_left</i></button>
+			 <button id = "returnBtn"><i class="material-icons" >keyboard_arrow_left</i></button>
 			 <div style = "float : left;padding-top : 15px;">
 			 	<label style = "padding: 0; font-size: 16px;">채팅방 정보 설정</label>
 			 </div>
@@ -64,8 +65,8 @@
 				         		</tr>
 				         		<tr>
 				         			<td>
-				         				<input type="text" class="form-control input-sm" id="datepicker1" name = "trStartDate" > &nbsp; ~ &nbsp;&nbsp;
-				         				<input type="text" class="form-control input-sm" id="datepicker2" name = "trEndDate" >
+				         				<input type="text" class="form-control input-sm" id="trStartDate" name = "trStartDate" > &nbsp; ~ &nbsp;&nbsp;
+				         				<input type="text" class="form-control input-sm" id="trEndDate" name = "trEndDate" >
 									</td>
 				         		</tr>
 				         		<tr>
@@ -102,9 +103,6 @@
 			        	<div class="selectbox"> <label for="ex_select">방장선택</label>
 			        	<select id="ex_select">
 				        	 <option selected>방장선택</option> 
-				        	 <option>한국</option> 
-				        	 <option>일본</option> 
-				        	 <option>중국</option> 
 			        	 </select>
 			        	 </div>
 			        	  <button type = "button" class = "modifybtn">변경하기</button>
@@ -116,6 +114,8 @@
 		</div>
 	</div>
 	
+	 <script src="http://localhost:8010/socket.io/socket.io.js"></script>
+     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	 <script>
 			  $.datepicker.setDefaults({
@@ -133,8 +133,88 @@
 		          ,maxDate: "+1Y" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
 		      });
 				 		
-			 $("#datepicker1").datepicker();
-		 	 $("#datepicker2").datepicker();
+			 $("#trStartDate").datepicker();
+		 	 $("#trEndDate").datepicker();
+		 	
+		 	$(document).ready(function() { //start
+				
+				var userId = ${ loginUser.memberId };
+				//var userName = $("#UserName").val();
+				var chatId = $("#ReChatID").val();
+	    	 	
+	    		console.log("userId :"+userId);
+	    		console.log("chatId :" + chatId);
+	    		  		
+	    	   //서버
+			   var socket = io("http://localhost:8010");
+	    	   
+	    	   //뒤로가기
+	    	   $("#returnBtn").click(function(){
+	    		   location.href = "${contextPath}/enterChatting.ch?num="+ chatId;
+	    	   });
+	    	   
+	    	   //채팅 정보 불러오기 
+	           socket.emit('preChatInfo' , {chatId : chatId});
+	           
+	           socket.on('preChatInfo' , function(data){  
+	        	  var title = data.title;
+	        	  var place = data.place;
+	        	  
+	        	  $("#chatTitle").val(title);
+	        	  $("#chatPlace").val(place);
+	        	  
+	        	  var formattedStartDate = new Date(data.start);
+	        	  var sd = formattedStartDate.getDate();
+	        	  var sm =  formattedStartDate.getMonth();
+	        	  sm += 1;  // JavaScript months are 0-11
+	        	 
+	        	  var sy = formattedStartDate.getFullYear();
+
+				 var startDate = sy + "-" + sm  + '-' + sd;
+				 
+				 var formattedEndDate = new Date(data.end);
+	        	  var ed = formattedEndDate.getDate();
+	        	  var em =  formattedEndDate.getMonth();
+	        	  em += 1;  // JavaScript months are 0-11
+	        	  var ey = formattedEndDate.getFullYear();
+
+				 var endDate = ey + "-" + em  + '-' + ed;
+	        	  
+	        	  $("#trStartDate").val(startDate); $("#trEndDate").val(endDate);
+	        	  
+	        	  var pnum = data.peoplenum;
+	        	  
+	        	  $("#peopleNum").val(pnum); $("#txtDetail").val(data.detail);
+	        	 	   
+		 		});
+	           
+	         //채팅Manager 값 가져오기
+		       socket.emit('preChatManager' , {chatId : chatId , div : "처음"});
+		          
+		       socket.on('preChatManager', function(data){
+		        	   console.log(data);
+		      
+		      	  
+		        	   $.ajax({
+		        		   url : "${contextPath}/memberInfo.ch",
+		        		   data : {userId : data.user},
+		        	       success : function(userInfo) {
+		        	    	   var output = '<option value ='+userInfo.memberId+'>'+userInfo.userName +'</option>';
+					     		
+		        	    	   
+		        	    	   $('#ex_select').append(output);
+		    		  	
+		        	       },
+		        	       error : function(){
+		        	    	   console.log("에러발생");
+		        	       }
+		        	   });
+		         });
+	           
+	           
+	    		
+		});    
+		 	 
 	</script>
 	
 </body>

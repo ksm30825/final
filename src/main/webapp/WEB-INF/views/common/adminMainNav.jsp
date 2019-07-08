@@ -55,9 +55,9 @@
             <div class="navbar-item has-dropdown is-hoverable">
            		<a class="navbar-link " href="toAPaymentView.po"> <strong>정산관리</strong> </a>
            		<div class="navbar-dropdown ">
-                  <a class="navbar-item subnav" href="aPayment.po"> 결제 내역 관리 </a> 
-                  <a class="navbar-item subnav" href="allAdPoint.po"> 포인트 내역 관리 </a>
-                  <a class="navbar-item subnav" href="allAdRefund.po" style="font-size:0.8em;margin-left:7%;" > 환불 관리</a>
+                  <a class="navbar-item subnav" href="toAPaymentView.po"> 결제 내역 관리 </a> 
+                  <a class="navbar-item subnav" href="toAPointView.po"> 포인트 내역 관리 </a>
+                  <a class="navbar-item subnav" href="toAdRefundView.po" style="font-size:0.8em;margin-left:7%;" > 환불 관리</a>
                   <a class="navbar-item subnav" href="allAdProceeds.po"> 수익금 내역 관리 </a>
                   <a class="navbar-item subnav" href="allAdRebate.po" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
                 </div>

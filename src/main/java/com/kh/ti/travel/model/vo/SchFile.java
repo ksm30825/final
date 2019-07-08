@@ -108,8 +108,6 @@ public class SchFile implements java.io.Serializable {
 				+ filePath + ", uploadDate=" + uploadDate + ", fileLevel=" + fileLevel + ", fileCaption=" + fileCaption
 				+ ", schId=" + schId + ", fileStatus=" + fileStatus + "]";
 	}
-	
-	
-	
+
 	
 }

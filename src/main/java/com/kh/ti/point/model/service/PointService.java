@@ -9,6 +9,7 @@ import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.SearchPoint;
 import com.kh.ti.point.model.vo.UsePoint;
 
 public interface PointService {
@@ -63,7 +64,24 @@ public interface PointService {
 	int getRebateListCount(Rebate rebate);
 	//환급 신청내역 전체 리스트 조회
 	ArrayList<Rebate> selectAllRebate(PageInfo rebatePi, Rebate rebate);
-	//환불 신청시
+	//환급 신청시
 	int insertRebate(Rebate rebate);
+	//신청 성공시 수익금 차감
+	int updateDeductionRebate(Rebate rebate);
+	//--------------------------------------------------------관리자
+	//관리자  총 결제 내역 전체 조회, 검색조회
+	ArrayList<Payment> selectAdPayList(PageInfo adPayPi, SearchPoint sp);
+	//관리자 - 총 결제 내역 리스트 카운트
+	int getAdPaymentListCount();
+	//세션에 저장하기 위해 구매한 사람의 포인트를 가져온다.
+	int getUseMemberPoint(int memberId);
+	//세션에 저장하기 위해 판 사람의 수익금을 가져온다.
+	int getRecevieMemberProceeds(int memberId);
+	//관리자 - 결제내역 검색 리스트 카운트
+	int getAdPaySearchListCount(SearchPoint sp);
+	//관리자 - 포인트내역 전체 리스트 카운트
+	int getAdPointListCount(SearchPoint sp);
+	//관리자 - 포인트 내역 전체 조회, 검색 조회 
+	ArrayList<Payment> selectAdPointList(PageInfo adPointPi, SearchPoint sp);
 
 }

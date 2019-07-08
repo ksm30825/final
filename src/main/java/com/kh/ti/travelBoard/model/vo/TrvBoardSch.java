@@ -1,5 +1,7 @@
 package com.kh.ti.travelBoard.model.vo;
 
+import java.util.ArrayList;
+
 public class TrvBoardSch implements java.io.Serializable {
 	
 	private int schId;
@@ -16,10 +18,13 @@ public class TrvBoardSch implements java.io.Serializable {
 	private int likeyId;
 	private int spotId;
 	
+	private ArrayList schFiles;
+	
 	public TrvBoardSch() {}
 
 	public TrvBoardSch(int schId, String schTitle, int schNumber, String startTime, String endTime, String isTimeset,
-			String schContent, String schTransp, String plcId, String plcName, int dayId, int likeyId, int spotId) {
+			String schContent, String schTransp, String plcId, String plcName, int dayId, int likeyId, int spotId,
+			ArrayList schFiles) {
 		super();
 		this.schId = schId;
 		this.schTitle = schTitle;
@@ -34,6 +39,7 @@ public class TrvBoardSch implements java.io.Serializable {
 		this.dayId = dayId;
 		this.likeyId = likeyId;
 		this.spotId = spotId;
+		this.schFiles = schFiles;
 	}
 
 	public int getSchId() {
@@ -140,12 +146,20 @@ public class TrvBoardSch implements java.io.Serializable {
 		this.spotId = spotId;
 	}
 
+	public ArrayList getSchFiles() {
+		return schFiles;
+	}
+
+	public void setSchFiles(ArrayList schFiles) {
+		this.schFiles = schFiles;
+	}
+
 	@Override
 	public String toString() {
 		return "TrvBoardSch [schId=" + schId + ", schTitle=" + schTitle + ", schNumber=" + schNumber + ", startTime="
 				+ startTime + ", endTime=" + endTime + ", isTimeset=" + isTimeset + ", schContent=" + schContent
 				+ ", schTransp=" + schTransp + ", plcId=" + plcId + ", plcName=" + plcName + ", dayId=" + dayId
-				+ ", likeyId=" + likeyId + ", spotId=" + spotId + "]";
+				+ ", likeyId=" + likeyId + ", spotId=" + spotId + ", schFiles=" + schFiles + "]";
 	}
-	
+
 }

@@ -14,6 +14,7 @@ import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.SearchPoint;
 import com.kh.ti.point.model.vo.UsePoint;
 @Service
 public class PointServiceImpl implements PointService{
@@ -155,9 +156,49 @@ public class PointServiceImpl implements PointService{
 	public int insertRebate(Rebate rebate) {
 		return pd.insertRebate(sqlSession, rebate);
 	}
+	//신청 성공시 수익금 차감
+	@Override
+	public int updateDeductionRebate(Rebate rebate) {
+		return pd.updateDeductionRebate(sqlSession, rebate);
+	}
+	//--------------------------------------------------------관리자
+	//관리자  총 결제 내역 전체 조회, 검색조회
+	@Override
+	public ArrayList<Payment> selectAdPayList(PageInfo adPayPi, SearchPoint sp) {
+		return pd.selectAdPayList(sqlSession, adPayPi, sp);
+	}
+	//관리자 - 총 결제 내역 리스트 카운트
+	@Override
+	public int getAdPaymentListCount() {
+		return pd.getAdPaymentListCount(sqlSession);
+	}
+	//세션에 저장하기 위해 구매한 사람의 포인트를 가져온다.
+	@Override
+	public int getUseMemberPoint(int memberId) {
+		return pd.getUseMemberPoint(sqlSession, memberId);
+	}
+	//세션에 저장하기 위해 판 사람의 수익금을 가져온다.
+	@Override
+	public int getRecevieMemberProceeds(int memberId) {
+		return pd.getRecevieMemberProceeds(sqlSession, memberId);
+	}
+	//관리자 - 결제내역 검색 리스트 카운트
+	@Override
+	public int getAdPaySearchListCount(SearchPoint sp) {
+		return pd.getAdPaySearchListCount(sqlSession, sp);
+	}
+	//관리자 - 포인트내역 검색 리스트 카운트
+	@Override
+	public int getAdPointListCount(SearchPoint sp) {
+		return pd.getAdPointListCount(sqlSession, sp);
+	}
+	//관리자 - 포인트 내역 전체 조회, 검색 조회 
+	@Override
+	public ArrayList<Payment> selectAdPointList(PageInfo adPointPi, SearchPoint sp) {
+		return pd.selectAdPointList(sqlSession, adPointPi, sp);
+	}
 
 	
-
 	
 
 	

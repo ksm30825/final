@@ -13,6 +13,7 @@ import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.SearchPoint;
 import com.kh.ti.point.model.vo.UsePoint;
 
 @Repository
@@ -135,7 +136,7 @@ public class PointDaoImpl implements PointDao{
 	//수익금 의뢰글에 따른 memberId 찾기
 	@Override
 	public int selectReceiverRequestMemberId(SqlSessionTemplate sqlSession, int ptcpId) {
-		return sqlSession.selectOne("Pqyment.selectReceiverRequestMemberId", ptcpId);
+		return sqlSession.selectOne("Payment.selectReceiverRequestMemberId", ptcpId);
 	}
 	//성공시 수익금발생내역에 인서트
 	@Override
@@ -194,7 +195,54 @@ public class PointDaoImpl implements PointDao{
 	public int insertRebate(SqlSessionTemplate sqlSession, Rebate rebate) {
 		return sqlSession.insert("Payment.insertRebate", rebate);
 	}
-	
-	
+	//신청 성공시 수익금 차감
+	@Override
+	public int updateDeductionRebate(SqlSessionTemplate sqlSession, Rebate rebate) {
+		return sqlSession.update("Payment.updateDeductionRebate", rebate);
+	}
+	//--------------------------------------------------------관리자
+	//관리자  총 결제 내역 전체 조회, 검색조회
+	@Override
+	public ArrayList<Payment> selectAdPayList(SqlSessionTemplate sqlSession, PageInfo adPayPi, SearchPoint sp) {
+		int offset = (adPayPi.getCurrentPage() - 1) * adPayPi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, adPayPi.getLimit());
+		
+		ArrayList<Payment> adPayList = (ArrayList)sqlSession.selectList("Payment.selectAdPayList", sp, rowBounds);
+		return adPayList;
+	}
+	//관리자 - 총 결제 내역 리스트 카운트
+	@Override
+	public int getAdPaymentListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Payment.getAdPaymentListCount");
+	}
+	//세션에 저장하기 위해 구매한 사람의 포인트를 가져온다.
+	@Override
+	public int getUseMemberPoint(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.getUseMemberPoint", memberId);
+	}
+	//세션에 저장하기 위해 판 사람의 수익금을 가져온다.
+	@Override
+	public int getRecevieMemberProceeds(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.getRecevieMemberProceeds", memberId);
+	}
+	//관리자 - 결제내역 검색 리스트 카운트
+	@Override
+	public int getAdPaySearchListCount(SqlSessionTemplate sqlSession, SearchPoint sp) {
+		return sqlSession.selectOne("Payment.getAdPaySearchListCount", sp);
+	}
+	//관리자 - 포인트내역 검색 리스트 카운트
+	@Override
+	public int getAdPointListCount(SqlSessionTemplate sqlSession, SearchPoint sp) {
+		return sqlSession.selectOne("Payment.getAdPointListCount", sp);
+	}
+	//관리자 - 포인트 내역 전체 조회, 검색 조회 
+	@Override
+	public ArrayList<Payment> selectAdPointList(SqlSessionTemplate sqlSession, PageInfo adPointPi, SearchPoint sp) {
+		int offset = (adPointPi.getCurrentPage() - 1) * adPointPi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, adPointPi.getLimit());
+		
+		ArrayList<Payment> adPointList = (ArrayList)sqlSession.selectList("Payment.selectAdPointList", sp, rowBounds);
+		return adPointList;
+	}
 
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.point.model.vo.UsePoint;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
@@ -37,7 +38,11 @@ public interface TravelBoardDao {
 
 	int deliteReview(SqlSessionTemplate sqlSession, TourReview tr);
 
-	ArrayList selectTravelCost(SqlSessionTemplate sqlSession, int trvId);
+	HashMap selectTravelCost(SqlSessionTemplate sqlSession, int trvId);
+
+	HashMap myBuyTravelListView(SqlSessionTemplate sqlSession, int memberId);
+
+	HashMap myLikeyTravelListView(SqlSessionTemplate sqlSession, int memberId);
 
 
 }

@@ -8,10 +8,12 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.myRequest.model.dao.MyRequestDao;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
+import com.kh.ti.travelRequest.model.vo.TravelRequest;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Service
@@ -58,4 +60,53 @@ public class MyRequestServiceImpl implements MyRequestService{
 	public ArrayList<TravelRequestPlan> selectLoadRequestPlan(int planId) {
 		return mrd.selectLoadRequestPlan(sqlSession, planId);
 	}
+
+	//해당 의뢰글의 설계글 조회 - 이선우
+//	@Override
+//	public int selectPlan(int code) {
+//		return mrd.selectPlan(sqlSession, code);
+//	}
+
+	//의뢰글 채택상태 업데이트 - 이선우
+	@Override
+	public int updateRequest(int code) {
+		int result = 0;
+		//참여(설계)글 채택상태 업데이트
+		int result1 = mrd.updateParticipation(sqlSession, code);
+		//의뢰글 채택상태 업데이트
+		int result2 = mrd.updateRequest(sqlSession, code);
+		
+		if(result1 > 0 && result2 > 0) {
+			result = 1;
+		} else {
+			result = 0;
+		}
+
+		return result;
+	}
+
+	//채택후 나의 의뢰 목록수
+	@Override
+	public int getRequestCount(int memberId) {
+		return mrd.getRequestCount(sqlSession, memberId);
+	}
+	
+	//채택후 나의의뢰 리스트 조회
+	@Override
+	public ArrayList<TravelRequest> selectMyRequestList(PageInfo pi, int memberId) {
+		return mrd.selectMyRequestList(sqlSession, pi, memberId);
+	}
+
+	//마이페이지 나의 설계글 수
+	@Override
+	public int getPlanCount(int memberId) {
+		return mrd.getPlanCount(sqlSession, memberId);
+	}
+
+	//마이페이지 나의 설계글 조회
+	@Override
+	public ArrayList<TravelRequestPlan> selectMyPlanList(PageInfo pi, int memberId) {
+		return mrd.selectMyPlanList(sqlSession, pi, memberId);
+	}
+
 }

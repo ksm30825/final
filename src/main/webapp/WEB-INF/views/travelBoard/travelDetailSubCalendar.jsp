@@ -57,7 +57,6 @@
       position: absolute;
    }
    #mapDaySelect {
-      width: 100px;
       float: right;
       margin: 1em;
       z-index: 2;
@@ -66,15 +65,22 @@
 </style>
 <body>
 	<!-- 결제여부에 따른 출력될 일수 설정하기 -->
+	<fmt:parseDate var="startDate" value="${ detailTb.startDate }" pattern="yyyy-MM-dd" />
+	<fmt:parseNumber value="${ startDate.time / (1000*60*60*24) }" integerOnly="true" var="startDay" />
+	<fmt:parseDate var="endDate" value="${ detailTb.endDate }" pattern="yyyy-MM-dd" />
+	<fmt:parseNumber value="${ endDate.time / (1000*60*60*24) }" integerOnly="true" var="endDay" />
+	
 	<c:choose>
-		<c:when test="${ !empty loginUser && detailTb.buyStatus eq 'Y' }">
-			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) }"/>
+		<c:when test="${ (!empty loginUser && detailTb.buyStatus eq 'Y') || loginUser.memberId eq detailTb.memberId }">
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ endDay - startDay + 1 }"/>
 		</c:when>
 		<c:otherwise>
-			<fmt:parseNumber var="showDays" integerOnly="true" value="${ fn:length(detailDay) / 3 }" />
+			<fmt:parseNumber var="showDays" integerOnly="true" value="${ (endDay - startDay + 1) / 3 }" />
 		</c:otherwise>
 	</c:choose>
-	<input type="number" hidden="hidden" id="totalDays" value="${ fn:length(detailDay) }">
+	<fmt:parseNumber var="totalDays" integerOnly="true" value="${ (endDay - startDay + 1) }" />
+	
+	<input type="number" hidden="hidden" id="totalDays" value="${ endDay - startDay + 1 }">
 	<input type="number" hidden="hidden" id="showDays" value="${ showDays }">
 
 	<!-- 서브메뉴 본문(일정표) -->
@@ -83,22 +89,22 @@
 			<div id="calendar">
             	<div class="calendarArea">
             		
-            		<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
+            		<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
       					<!-- 글 하나 -->
-	        			<div class="tabs is-fullwidth" style="display: none;" id="day${ detailDay.dayNumber }">
+	        			<div class="tabs is-fullwidth" style="display: none;" id="day${ st.count }">
 	        			
 	        				<!-- day 넘기는 화살표 -->
 	        				<ul>
 	        					<li>
-	        						<a onclick="nextDays('${ detailDay.dayNumber }', 'left')">
+	        						<a onclick="nextDays('${ st.count }', 'left')">
 	               						<span id="left" class="icon"><i class="fa fa-angle-left"></i></span>
 	                              		</a>
 	        					</li>
 	        					<li>
-	        						<span style="font-weight: 1px;"><strong>DAY ${ detailDay.dayNumber }</strong></span>
+	        						<span style="font-weight: 1px;"><strong>DAY ${ st.count }</strong></span>
 	        					</li>
 	        					<li>
-	        						<a onclick="nextDays('${ detailDay.dayNumber }', 'right')">
+	        						<a onclick="nextDays('${ st.count }', 'right')">
 	                                   <span id="right" class="icon"><i class="fa fa-angle-right"></i></span>
 	                                </a>
 	        					</li>
@@ -112,78 +118,123 @@
 		            	<label for="timeCheck">시간 표시</label>
 		            </div>
 		            
-		            <c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
-		            
-		            <table class="calendarTable" id="calendarTable-day${ detailDay.dayNumber }" style="display: none;">
-		            	<c:choose>
-		            		<c:when test="${ fn:length(detailDay.trvSchedule) > 0 }">
-		            			
-		            			<c:choose>
-		            				<c:when test="${ totalDays < 3 || showDays >= st.count }">
-		            					<c:forEach var="trvSch" items="${ detailDay.trvSchedule }">
-				            				<tr>
-					            				<c:choose>
-					            					<c:when test="${ trvSch.isTimeset eq 'Y' }">
-					            						<th class="times" style="display: none;">${ trvSch.startTime } ~ ${ trvSch.endTime }</th>
-					            					</c:when>
-					            					<c:otherwise>
-					            						<th class="times" style="display: none;"><span style="color: lightgray;">시간정보 없음</span></th>
-					            					</c:otherwise>
-					            				</c:choose>
-				            					
-				            					<c:choose>
-					            					<c:when test="${ !empty trvSch.plcName }">
-					            						<td>
-					            							<span><i class="fas fa-map-marker-alt" style="color: #8e44ad"></i>&nbsp; ${ trvSch.plcName }</span>
-					            						</td>
-					            					</c:when>
-					            					<c:otherwise>
-					            						<td style="display: none;"><span style="color: lightgray;">장소정보 없음</span></td>
-					            					</c:otherwise>
-					            				</c:choose>
-				            					
-				            				</tr>
-				            			</c:forEach>
-		            				</c:when>
-		            				
-		            				<c:otherwise>
-		            					<tr>
+		            <!-- 일자별 장소표기 -->
+		            <c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
+		            	<table class="calendarTable" id="calendarTable-day${ st.count }" style="display: none;">
+						<c:choose>
+						
+							<c:when test="${ st.count <= showDays }">
+								<c:set var="check" value="false" />
+								<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+									<c:if test="${ st.count == detailDay[j].dayNumber }">
+										<c:forEach var="days" items="${ detailDay[j].trvSchedule }">
+											<tr>
+												<!-- 시간정보 -->
+												<c:choose>
+													<c:when test="${ days.isTimeset eq 'Y' }">
+														<th class="times" style="display: none;">${ days.startTime } ~ ${ days.endTime }</th>
+													</c:when>
+													<c:otherwise>
+														<th class="times" style="display: none;"><span style="color: lightgray;">시간정보 없음</span></th>
+													</c:otherwise>
+												</c:choose>
+												<!-- 상세일정 제목 -->
+												<td>${ days.schTitle }</td>
+												<c:choose>
+													<c:when test="${ !empty days.plcName }">
+														<td><span>${ days.plcName }</span></td>
+													</c:when>
+													<c:when test="${ !empty days.schTransp }">
+														<td><span>${ days.schTransp }</span></td>
+													</c:when>
+													<c:otherwise>
+														<td><span style="color: lightgray;">장소정보 없음</span></td>
+													</c:otherwise>
+												</c:choose>
+											</tr>
+										</c:forEach>
+										
+										
+										<c:set var="check" value="true" />
+									</c:if>
+								</c:forEach>
+								<c:if test="${ check == false }">
+									<tr>
+										<td>해당 날짜의 상세일정 정보가 없습니다.</td>
+									</tr>
+								</c:if>
+							</c:when>
+							
+							<c:otherwise>
+								<c:set var="check" value="false" />
+								<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+									<c:if test="${ st.count == detailDay[j].dayNumber }">
+										<tr>
 		            						<td>
-		            							<i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>
+		            							<i class="fas fa-exclamation-circle"></i> 미리보기 종료<br><br>
+		            							해당 날짜의 상세일정 정보는<br>
 		            							해당 일정을 구매하셔야 볼 수 있습니다.
 		            						</td>
-		            					</tr>
-		            				</c:otherwise>
-		            			</c:choose>
-		            			
-		            		</c:when>
-		            		
-		            		<c:otherwise>
-		            			<tr>
-		            				<td><p>상세스케줄 없음</p></td>
-		            			</tr>
-		            		</c:otherwise>
-		            	</c:choose>
+										</tr>
+										<c:set var="check" value="true" />
+									</c:if>
+								</c:forEach>
+								<c:if test="${ check == false }">
+									<tr>
+		            						<td>
+		            							<i class="fas fa-exclamation-circle"></i> 미리보기 종료<br><br>
+		            							해당 날짜의 상세일정 정보가 없습니다.
+		            						</td>
+										</tr>
+										<c:set var="check" value="true" />
+								</c:if>
+							</c:otherwise>
+							
+						</c:choose>
+						</table>
+					</c:forEach>	
+		            
+		            
 		            	
-		            </table>
-		            </c:forEach>
+		            	
+		            
 		            
             </div>
          </div>
          
          <div id="mapArea">
          	<select id="mapDaySelect" onchange="dayMapSelect()">
-         		<c:forEach var="detailDay" items="${ detailDay }" varStatus="st">
-         			<c:choose>
-	         			<c:when test="${ totalDays < 3 || showDays >= st.count }">
-	         				<option value="${ detailDay.dayNumber }">DAY ${ detailDay.dayNumber }</option>
-	         			</c:when>
-	         			
-	         			<c:otherwise>
-	         				<option value="${ detailDay.dayNumber }" disabled="disabled">DAY ${ detailDay.dayNumber }</option>
-	         			</c:otherwise>
-         			</c:choose>
-         		</c:forEach>
+         		<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
+					<c:choose>
+					
+						<c:when test="${ st.count <= showDays }">
+							<c:set var="check" value="false" />
+							<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+								<c:if test="${ st.count == detailDay[j].dayNumber }">
+									<option value="${ st.count }">DAY ${ st.count }</option>
+									<c:set var="check" value="true" />
+								</c:if>
+							</c:forEach>
+							<c:if test="${ check == false }">
+								<option value="${ st.count }" disabled="disabled">DAY ${ st.count } (일정정보없음)</option>
+							</c:if>
+						</c:when>
+						
+						<c:otherwise>
+							<c:set var="check" value="false" />
+							<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+								<c:if test="${ st.count == detailDay[j].dayNumber }">
+									<option value="${ st.count }" disabled="disabled">DAY ${ st.count } 미리보기 종료(일정정보있음)</option>
+									<c:set var="check" value="true" />
+								</c:if>
+							</c:forEach>
+							<c:if test="${ check == false }">
+								<option value="${ st.count }" disabled="disabled">DAY ${ st.count } 미리보기 종료(일정정보없음)</option>
+							</c:if>
+						</c:otherwise>
+						
+					</c:choose>
+				</c:forEach>	
             </select>   
             <div id="map"></div>
          </div>

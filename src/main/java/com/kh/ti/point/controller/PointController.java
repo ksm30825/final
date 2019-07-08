@@ -26,6 +26,7 @@ import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.SearchPoint;
 import com.kh.ti.point.model.vo.UsePoint;
 
 @Controller
@@ -115,7 +116,7 @@ public class PointController {
 	
 	
 	
-	//포인트 충전 페이징
+	//포인트 충전 페이징//-------------------------------------------------------------------------------------------
 	@RequestMapping("/paymentMain.po")
 	public String selectPaymentMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
@@ -175,7 +176,7 @@ public class PointController {
 	}
 	
 	//---------------
-	//포인트 충전 월검색 페이징
+	//포인트 충전 월검색 페이징//-------------------------------------------------------------------------------------------
 	@RequestMapping("/oneMonthPayPaging.po")
 	public String searchOneMonthPayPaging(String month, Model model, HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
 		//System.out.println("oneMonthPayPaging");
@@ -252,7 +253,7 @@ public class PointController {
 	
 	
 	
-	//포인트 지급 페이징
+	//포인트 지급 페이징//-------------------------------------------------------------------------------------------
 	@RequestMapping("/reserveMain.po")
 	public String selectReserveMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
@@ -363,7 +364,7 @@ public class PointController {
 	
 	
 	
-	//포인트 사용 페이징
+	//포인트 사용 페이징//-------------------------------------------------------------------------------------------
 	@RequestMapping("/useMain.po")
 	public String selectUseMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
@@ -452,11 +453,15 @@ public class PointController {
 	public String insertPointUse(@RequestParam("memberId") int memberId, 
 			@RequestParam("code") int code, 
 			@RequestParam("useType") int useType, 
-			@RequestParam("uPoint") int uPoint) {
+			@RequestParam("uPoint") int uPoint, HttpServletRequest request) {
 		//code : 작성글 코드 
 		//useType : 10:일정구매, 20:설계의뢰
 		//uPoint : 사용 포인트
-		
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		//System.out.println("loginUser : " + loginUser);
+		//System.out.println("loginUser userPoint 1: " + loginUser.getUserPoint());
+		//System.out.println("loginUser userProceeds 1: " + loginUser.getUserProceeds());
+		int mid = loginUser.getMemberId();
 		
 		//포인트 사용 내역에 insert
 		UsePoint userPoint = new UsePoint(); 
@@ -475,9 +480,9 @@ public class PointController {
 		double receiveProceeds = uPoint * 0.8;
 		int proceeds=(int) Math.round(receiveProceeds);//수익금 발생금액 -> 원금*0.8
 		
-		int receiverMemberId;//수익금 받는 사람 아이디
-		int accumulateProceeds;
-		Proceeds findProceeds;
+		int receiverMemberId=0;//수익금 받는 사람 아이디
+		int accumulateProceeds=0;
+		Proceeds findProceeds=null;
 		Proceeds receiverBoard = new Proceeds();
 		receiverBoard.setProceeds(proceeds);
 		receiverBoard.setProceedsType(useType);
@@ -525,14 +530,28 @@ public class PointController {
 		//성공시 member 테이블의 누적 수익금 추가
 		int updateUserProceeds = ps.updateUserIncreaseProceeds(receiverBoard);
 		
+		int useMemberPoint=0;
 		
+		//int recevieMemberProceeds=0;
 		
+		if(memberId == mid) {
+			//구매한 사람
+			useMemberPoint = ps.getUseMemberPoint(mid); 
+			loginUser.setUserPoint(useMemberPoint);
+		}
+//		else {
+//			//판 사람
+//			recevieMemberProceeds = ps.getRecevieMemberProceeds(receiverMemberId);
+//			loginUser.setUserProceeds(recevieMemberProceeds);
+//		}
 		
+		System.out.println("loginUser userPoint 2: " + loginUser.getUserPoint());
+		System.out.println("loginUser userProceeds 2: " + loginUser.getUserProceeds());
 		if(userResult>0 && receiverResult>0 && updateUserPoint>0 && updateUserProceeds>0) {
 			switch(useType) {
 			//(trvId, requestId 통해서 memberId 조회)
 			case 10 : return "redirect:/travelDetailForm.tb?trvId="+userPoint.getTrvId(); 
-			case 20 : return "redirect:/myRequestList.mr";
+			case 20 : return "redirect:/selectRequest.mr?memberId="+memberId+"&code=?"+code;
 			}
 		}
 		return "common/errorPage";
@@ -595,7 +614,7 @@ public class PointController {
 		PageInfo rebatePi = Pagination.getPageInfo(rebateCurrentPage, rebateListCount);
 		
 		ArrayList<Rebate> rebateList = ps.selectAllRebate(rebatePi, rebate);
-		System.out.println("rebateList : " + rebateList);
+		//System.out.println("rebateList : " + rebateList);
 		HashMap<String, Object> rebateHmap = new HashMap<String, Object>();
 		rebateHmap.put("rebateList", rebateList);
 		rebateHmap.put("rebatePi", rebatePi);
@@ -638,7 +657,9 @@ public class PointController {
 		
 		int insert = ps.insertRebate(rebate);
 		
-		if(insert>0) {
+		int update = ps.updateDeductionRebate(rebate);
+		
+		if(insert>0 && update>0) {
 			return "redirect:/toProceedsView.po";
 		}else {
 			return "common/errorPage";
@@ -657,39 +678,157 @@ public class PointController {
 	
 	
 	//결제 전체 내역 테이블--수민
+	@ResponseBody
 	@RequestMapping("/allAdPay.po")
-	public String adSelectAllPayment() {
+	public ResponseEntity adSelectAllPayment(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage) {
 		
-		return "admin/adminPoint/aPayment";
-		
+		if(memberId == 1) {
+			int adPayListCount = ps.getAdPaymentListCount();
+			int adPayCurrentPage = currentPage;
+			
+			PageInfo adPayPi = Pagination.getPageInfo(adPayCurrentPage, adPayListCount);
+			
+			int condition = 99;
+			
+			SearchPoint sp = new SearchPoint();
+			sp.setCondition(condition);
+			
+			ArrayList<Payment> adPayList = ps.selectAdPayList(adPayPi, sp);
+			
+			HashMap<String, Object> hmap = new HashMap<String, Object>();
+			
+			hmap.put("adPayList", adPayList);
+			hmap.put("adPayPi", adPayPi);
+			
+			//System.out.println("hmap : " + hmap);
+			
+			return new ResponseEntity(hmap, HttpStatus.OK);
+			
+		}else {
+			String msg = "관리자만 이용가능한 페이지 입니다.";
+			return new ResponseEntity(msg, HttpStatus.OK);
+		}
 	}	
+	
 	//결제 회원 검색 내역 테이블--수민
-	@RequestMapping("/oneMemberAdPay.po")
-	public ModelAndView adSearchOneMemberPayment(String userName, ModelAndView mv) {
+	@RequestMapping("/seacrchAdPay.po")
+	public ResponseEntity adSearchPayment(@RequestParam("userName") String userName, 
+			@RequestParam("startDate") String start, @RequestParam("endDate") String end,
+			@RequestParam("condition") int condition, @RequestParam("currentPage") int currentPage) {
+		//System.out.println("userName : " + userName);
+		//System.out.println("start : " + start);
+		//System.out.println("end : " + end);
+		//System.out.println("condition : " + condition);
 		
-		return mv;
+		Date startDate;
+		Date endDate;
+		if(start == "") {
+			startDate = new Date(new GregorianCalendar().getTimeInMillis());
+		}else {
+			startDate = Date.valueOf(start);
+		}
+		if(end == "") {
+			endDate = new Date(new GregorianCalendar().getTimeInMillis());
+		}else {
+			endDate = Date.valueOf(end);
+		}
+		
+		//System.out.println("startDate : " + startDate);
+		//System.out.println("endDate : " + endDate);
+		
+		SearchPoint sp = new SearchPoint();
+		
+		if(condition == 30) {
+			//이름과 검색 날짜가 검색 조건
+			sp.setUserName(userName);
+			sp.setStartDate(startDate);
+			sp.setEndDate(endDate);
+			sp.setCondition(condition);
+			System.out.println("condition 30 -> sp : " + sp);
+		}else if(condition == 10) {
+			//이름만 검색 조건
+			sp.setUserName(userName);
+			sp.setCondition(condition);
+			System.out.println("condition 10 -> sp : " + sp);
+		}else if(condition == 20) {
+			//날짜만 검색 조건
+			sp.setStartDate(startDate);
+			sp.setEndDate(endDate);
+			sp.setCondition(condition);
+			System.out.println("condition 20 -> sp : " + sp);
+		}
+		
+		System.out.println("sp : " + sp);
+		int adPaySearchListCount = ps.getAdPaySearchListCount(sp);
+		System.out.println("adPaySearchListCount : " + adPaySearchListCount);
+		
+		int adPayCurrentPage = currentPage;
+		
+		PageInfo adPayPi= Pagination.getPageInfo(adPayCurrentPage, adPaySearchListCount);
+		
+		ArrayList<Payment> adPayList = ps.selectAdPayList(adPayPi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adPayList", adPayList);
+		hmap.put("adPayPi", adPayPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}		
-	//결제 날짜 검색 내역 테이블--수민
-	@RequestMapping("/dayAdPay.po")
-	public ModelAndView adSearchDatePayment(String startDate, String endDate, ModelAndView mv) {
-		
-		return mv;
-	}
 	
 	
 	
-	
-	//포인트 전체 내역 테이블--수민
-	@RequestMapping("/allAdPoint.po")
-	public String adSelectAllPoint() {
+	//포인트 전체 내역 메인페이지로 이동 ->--수민
+	@RequestMapping("/toAPointView.po")
+	public String aPoint() {
 		
 		return "admin/adminPoint/aPoint";
 	}	
-	//포인트 회원 검색 내역 테이블--수민
-	@RequestMapping("/oneMemberAdPoint.po")
-	public ModelAndView adSearchOneMemberPoint(String userName, ModelAndView mv) {
+	@ResponseBody
+	@RequestMapping("/allAdPoint.po")
+	public ResponseEntity adSelectAllPoint(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage) {
+		int condition = 99;
+		SearchPoint sp = new SearchPoint();
+		sp.setCondition(condition);
 		
-		return mv;
+		int adPointListCount = ps.getAdPointListCount(sp);
+		
+		int adPointCurrentPage = currentPage;
+		
+		PageInfo adPointPi = Pagination.getPageInfo(adPointCurrentPage, adPointListCount);
+		
+		ArrayList<Payment> adPointList = ps.selectAdPointList(adPointPi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adPointList", adPointList);
+		hmap.put("adPointPi", adPointPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
+	}
+	
+	//포인트 회원 검색 내역 테이블--수민
+	@RequestMapping("/seacrchAdPoint.po")
+	public ResponseEntity adSearchOneMemberPoint(@RequestParam("userName") String userName, 
+			@RequestParam("condition") int condition, @RequestParam("currentPage") int currentPage) {
+		SearchPoint sp = new SearchPoint();
+		sp.setCondition(condition);
+		
+		if(condition == 10) {
+			sp.setUserName(userName);
+		}
+		
+		int adPointListCount = ps.getAdPointListCount(sp);
+		
+		int adPointCurrentPage = currentPage;
+		
+		PageInfo adPointPi = Pagination.getPageInfo(adPointCurrentPage, adPointListCount);
+		
+		ArrayList<Payment> adPointList = ps.selectAdPointList(adPointPi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adPointList", adPointList);
+		hmap.put("adPointPi", adPointPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	
 	
@@ -760,13 +899,31 @@ public class PointController {
 
 	
 	
-	
-	
-	//포인트 환불 전체 내역--수민
-	@RequestMapping("/allAdRefund.po")
-	public String adSelectAllRefund(String pointId) {
+	//포인트 환불 전체 내역으로 이동!--수민
+	@RequestMapping("/toAdRefundView.po")
+	public String aRefund(String pointId) {
 		
 		return "admin/adminPoint/aRefund";
+	}
+	//환불 내역 전체 조회
+	@RequestMapping("/toAdRefundView.po")
+	public ResponseEntity adSelectAllRefund(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
+		SearchPoint sp = new SearchPoint();
+		sp.setCondition(condition);
+		
+		int adRefundListCount = ps.getAdRefundListCount(sp);
+		
+		int adRefundCurrentPage = currentPage;
+		
+		PageInfo adRefundPi = Pagination.getPageInfo(adRefundCurrentPage, adRefundListCount);
+		
+		ArrayList<Payment> adRefundList = ps.selectAdRefundList(adRefundPi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adRefundList", adRefundList);
+		hmap.put("adRefundPi", adRefundPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	//포인트 환불 회원 검색 내역--수민
 	@RequestMapping("/oneMemberAdRefund.po")

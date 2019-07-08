@@ -2,6 +2,8 @@ package com.kh.ti.myRequest.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.common.Pagination;
 import com.kh.ti.myRequest.model.service.MyRequestService;
-import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
+import com.kh.ti.travelRequest.model.vo.TravelRequest;
 import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
 
 @Controller
@@ -25,10 +29,68 @@ public class MyRequestController {
 
 	@Autowired
 	private MyRequestService mrs;
+
+	//설계글의 해당 의뢰글 조회
+	@RequestMapping("selectRequest.mr")
+	public String selectRequest(@RequestParam("code")int code,
+								@RequestParam("memberId")int memberId,
+								HttpServletRequest request,
+								Model model) {
+		System.out.println("의뢰 번호 : " + code);
+		
+		//의뢰글의 채택된 설계글 조회
+		//int planId = mrs.selectPlan(code);
+		//System.out.println("설계번호 : " + planId);
+		updateRequest(code);
+		
+		//나의 의뢰목록 조회(페이징)
+		int currentPage = 1;
+		
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
+		//전체 목록 조회
+		int listCount = mrs.getRequestCount(memberId);
+		System.out.println("나의 의뢰글 수 : " + listCount);
+		
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		System.out.println("pageInfo : " + pi);
+		ArrayList<TravelRequest> list = mrs.selectMyRequestList(pi, memberId);
+		
+		System.out.println("나의 의뢰 목록 : " + list);
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		return "travelRequest/myRequestList";
+	}
+	
+	//의뢰글 채택상태 업데이트
+	@RequestMapping("updateRequest.mr")
+	public void updateRequest(@RequestParam("code")int code) {
+		System.out.println("설계글 번호 : " + code);
+		int result = mrs.updateRequest(code);
+	}
+	
 	// 여행 의뢰 - 이선우
 	@RequestMapping("myRequestList.mr")
-	public String selectRequestList() {
-
+	public String selectRequestList(HttpServletRequest request, 
+									@RequestParam("memberId")int memberId, Model model) {
+		//나의 의뢰목록 조회(페이징)
+		int currentPage = 1;
+				
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
+		//전체 목록 조회
+		int listCount = mrs.getRequestCount(memberId);
+		System.out.println("나의 의뢰글 수 : " + listCount);
+				
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		System.out.println("pageInfo : " + pi);
+		ArrayList<TravelRequest> list = mrs.selectMyRequestList(pi, memberId);
+				
+		System.out.println("나의 의뢰 목록 : " + list);
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
 		return "travelRequest/myRequestList";
 	}
 
@@ -80,8 +142,9 @@ public class MyRequestController {
 		System.out.println(tp);
 		int result = mrs.insertRequestPlan(dayList, placeList, tp, p);
 		System.out.println(result);
+		int memberId = tp.getMemberId();
 
-		return "travelRequest/myRequestPlan";
+		return "redirect:myPlanList.mr?memberId=" + memberId;
 	}
 	
 	//설계 목록 불러오기 - 이선우
@@ -113,6 +176,30 @@ public class MyRequestController {
 		model.addAttribute("reqId", reqId);
 		model.addAttribute("planId", planId);
 		return "travelRequest/travelRequestLoad";
+	}
+	
+	//나의 설계목록들
+	@RequestMapping("myPlanList.mr")
+	public String selectMyPlanList(HttpServletRequest request, 
+								   @RequestParam("memberId")int memberId, Model model) {
+		//나의 의뢰목록 조회(페이징)
+		int currentPage = 1;
+						
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
+		//전체 목록 조회
+		int listCount = mrs.getPlanCount(memberId);
+		System.out.println("나의 설계글 수 : " + listCount);
+						
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		System.out.println("pageInfo : " + pi);
+		ArrayList<TravelRequestPlan> list = mrs.selectMyPlanList(pi, memberId);
+						
+		System.out.println("나의 의뢰 목록 : " + list);
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		return "travelRequest/myRequestPlan";
 	}
 
 	// 나의 문의 내역 - 이선우
