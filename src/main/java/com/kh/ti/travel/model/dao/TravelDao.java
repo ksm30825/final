@@ -151,6 +151,11 @@ public interface TravelDao {
 
 	int deleteTrvComp(SqlSessionTemplate sqlSession, Travel trv, int memberId);
 
+	
+	
+	
+	ArrayList<HashMap> selectDownloadSch(SqlSessionTemplate sqlSession, int trvId);
+
 
 
 

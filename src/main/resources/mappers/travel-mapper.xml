@@ -95,7 +95,16 @@
 		<result property="schId" column="SCH_ID" />
 		<result property="fileStatus" column="FILE_STATUS" />
 	</resultMap>
-
+	<resultMap id="SchDownResultMap" type="java.util.HashMap">
+		<result property="trvTitle" column="TRV_TITLE"/>
+		<result property="dayNumber" column="DAY_NUMBER"/>
+		<result property="dayDate" column="DAY_DATE" />
+		<result property="startTime" column="START_TIME" />
+		<result property="endTime" column="END_TIME" />
+		<result property="schTitle" column="SCH_TITLE" />
+		<result property="placeName" column="PLC_NAME" />
+		<result property="schTransp" column="SCH_TRANSP" />
+	</resultMap>
 
 	<!-- Country & City -->
 	<select id="selectCity" parameterType="_int" resultMap="CityResultSet">
@@ -269,6 +278,18 @@
 		SET SCH_CONTENT = #{schContent}
 		WHERE SCH_ID = #{schId}
 	</update>
+	
+	<select id="selectDownloadSch" parameterType="_int" resultMap="SchDownResultMap">
+		SELECT TRV.TRV_TITLE, DAY.DAY_NUMBER, DAY.DAY_DATE, SCH.START_TIME, SCH.END_TIME, 
+		SCH.SCH_TITLE, SCH.PLC_NAME, SCH.SCH_TRANSP
+		FROM TRV_SCH SCH
+		JOIN TRV_DAY DAY ON (SCH.DAY_ID = DAY.DAY_ID)
+		JOIN TRAVEL TRV ON (TRV.TRV_ID = DAY.TRV_ID)
+		WHERE TRV.TRV_ID = #{trvId}
+		ORDER BY DAY.DAY_NUMBER, SCH.SCH_NUMBER
+	</select>
+	
+	
 
 	
 	<!-- SchFile -->

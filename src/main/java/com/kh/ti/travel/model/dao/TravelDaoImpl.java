@@ -296,6 +296,16 @@ public class TravelDaoImpl implements TravelDao {
 
 	
 	
+
+	@Override
+	public ArrayList<HashMap> selectDownloadSch(SqlSessionTemplate sqlSession, int trvId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectDownloadSch", trvId);
+	}
+
+	
+	
+	
+	
 	
 	
 	
