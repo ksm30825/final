@@ -11,6 +11,7 @@ import com.kh.ti.point.model.vo.Proceeds;
 import com.kh.ti.point.model.vo.Rebate;
 import com.kh.ti.point.model.vo.Refund;
 import com.kh.ti.point.model.vo.ReservePoint;
+import com.kh.ti.point.model.vo.SearchPoint;
 import com.kh.ti.point.model.vo.UsePoint;
 
 public interface PointDao {
@@ -67,5 +68,36 @@ public interface PointDao {
 	ArrayList<Rebate> selectAllRebate(SqlSessionTemplate sqlSession, Rebate rebate, PageInfo rebatePi);
 	//환불 신청시
 	int insertRebate(SqlSessionTemplate sqlSession, Rebate rebate);
-
+	//신청 성공시 수익금 차감
+	int updateDeductionRebate(SqlSessionTemplate sqlSession, Rebate rebate);
+	//--------------------------------------------------------관리자
+	//관리자  총 결제 내역 전체 조회, 검색조회
+	ArrayList<Payment> selectAdPayList(SqlSessionTemplate sqlSession,PageInfo adPayPi, SearchPoint sp);
+	//관리자 - 총 결제 내역 리스트 카운트
+	int getAdPaymentListCount(SqlSessionTemplate sqlSession);
+	//세션에 저장하기 위해 구매한 사람의 포인트를 가져온다.
+	int getUseMemberPoint(SqlSessionTemplate sqlSession, int memberId);
+	//세션에 저장하기 위해 판 사람의 수익금을 가져온다.
+	int getRecevieMemberProceeds(SqlSessionTemplate sqlSession, int memberId);
+	//관리자 - 결제내역 검색 리스트 카운트
+	int getAdPaySearchListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
+	//관리자 - 포인트내역 검색 리스트 카운트
+	int getAdPointListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
+	//관리자 - 포인트 내역 전체 조회, 검색 조회 
+	ArrayList<Payment> selectAdPointList(SqlSessionTemplate sqlSession, PageInfo adPointPi, SearchPoint sp);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -231,7 +231,30 @@
 					}
 				}
 			}
+			var memberId = ${sessionScope.loginUser.memberId};
+			var currentPage = 1;
+			total(currentPage, memberId);
+			
+			$("body").on("click", "#search", function(){
+				var memberId = ${sessionScope.loginUser.memberId};//검색 버튼 눌렀을 때
+				searchFunc(1, memberId);//검색 에이작스 함수 호출
+			});
 		});
+		function total(currentPage, memberId){
+			var condition = 99;
+			$.ajax({
+				url:"allAdPay.po",
+				type:"post",
+				data:{memberId:memberId,currentPage:currentPage, condition:condition},
+				success:function(data){
+					console.log('success');
+					makePayTB(data.adPayList, data.adPayPi, condition);
+				},
+				error:function(data){
+					console.log('error');
+				}
+			});
+		}
 	</script>
 </body>
 </html>

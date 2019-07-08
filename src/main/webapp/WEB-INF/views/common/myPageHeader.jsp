@@ -53,16 +53,16 @@
 				<i class="fas fa-3x fa-user-edit"></i>
 			</span>&nbsp;&nbsp;
 			<span class="title is-3">홍길동</span>
-			<a href="pointMainView.po?currentPage=1">
+			<%-- <a href="pointMainView.po?currentPage=1">&nbsp;&nbsp;
 				<span class="icon has-text-danger">
-					<i class="fab fa-product-hunt"></i>
+					<i class="fab fa-product-hunt"></i>&nbsp;&nbsp;<i class='fab fa-maxcdn' style="color:green;"></i>
 				</span>
 				<span style="color:red">${sessionScope.loginUser.userPoint }</span>
 				<span class="icon" style="margin-left:135px;">
 	            	<i class='fab fa-maxcdn' style="color:green;"></i>
 	         	</span>
 	         	<span style="color:green">${loginUser.userProceeds }</span><br>			
-			</a>
+			</a> --%>
 		</div>
 		<div class="column is-one-third-mobile" >
 			<span class="icon is-medium has-text-primary">
