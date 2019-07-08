@@ -22,6 +22,7 @@
 						<p class="control">
 							<input type="hidden" value="${ trv.trvId }" name="trvId">
 							<input type="hidden" name="costId" id="costUpdateId"/>
+							<input type="hidden" value="0" id="costUpdateSchId" />
 							<input class="input is-primary is-large" type="text" placeholder="내용 입력"
 							name="costContent" id="costUpdateContent">
 						</p>
@@ -133,6 +134,7 @@
         					
         	        	    
         					var cost = data.trvCost;
+        					console.log(cost);
         					var dayId = cost.dayId;
         					var type = cost.costType;
         					
@@ -178,6 +180,17 @@
         					}        					
         					
         					updateSummary();
+        					
+        					if($("#costUpdateSchId").val() != 0) {
+        						var schId = $("#costUpdateSchId").val();
+        						$(".sch" + schId + "Block").find(".costType").text(type + " : ");
+								$(".sch" + schId + "Block").find(".costAmount").text(parseFloat(cost.costAmount));
+								$(".sch" + schId + "Block").find(".costCurrency").text("(" + cost.currency + ") /");
+								$("#sch" + schId + "CardSection").find(".costType").text(type);
+								$("#sch" + schId + "CardSection").find(".costAmount").text(parseFloat(cost.costAmount));
+								$("#sch" + schId + "CardSection").find(".costCurrency").text(cost.currency);
+        					}
+        					
         				},
         				error:function(err) {
         					alert(err);

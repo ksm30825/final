@@ -302,8 +302,9 @@
 		
 		$("#travelMake").click(function() {
 			alert("일정만들기 작성");
-			location.href="travelMake.tb";
-		})
+			var trvId = 1;  //임시. Id받아오기 해야함
+			location.href="overrideTravel.trv?trvId=" + trvId;
+		});
 		
 		$(".cancel").click(function(){
 			$('#myModal').removeClass('is-active');

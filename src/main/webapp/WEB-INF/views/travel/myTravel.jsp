@@ -42,14 +42,19 @@
 				</nav>
 			</section>
 			<section class="section" id="privateSection">
-				<div class="columns">
+				<div class="columns is-multiline">
 					<c:forEach var="trv" items="${ privateTrvList }" varStatus="st">
 						<div class="column is-one-third">
-							<div class="card trvCard">
+							<div class="card privateTrvCard">
 								<input type="hidden" value="${ trv.trvId }" name="trvId" />
 								<div class="card-image">
 									<figure class="image" style="margin:0">
-										<img src="resources/images/sample1.jpg">
+										<c:if test="${ trv.mainImage ne null }">
+											<img src="resources/uploadFiles/${ trv.mainImage.changeName }">
+										</c:if>
+										<c:if test="${ trv.mainImage eq null }">
+											<img src="resources/images/logo1.png">
+										</c:if>
 									</figure>
 								</div>
 								<div class="card-content">
@@ -72,9 +77,9 @@
 										</div>
 									</div>
 									<div class="content">
-										<a>#혼자여행</a>
-										<a>#자유여행</a> 
-										<a>#먹방여행</a>
+										<c:forEach var="trvTag" items="${ trv.trvTagList }" varStatus="st2">
+											<a>#${ trvTag.tagName }</a>
+										</c:forEach>
 									</div>
 								</div>
 							</div>
@@ -83,14 +88,19 @@
 				</div>
 			</section>
 			<section class="section" id="publicSection" style="display:none">
-				<div class="columns">
+				<div class="columns is-multiline">
 					<c:forEach var="trv" items="${ publicTrvList }" varStatus="st">
 						<div class="column is-one-third">
-							<div class="card trvCard">
+							<div class="card publicTrvCard">
 								<input type="hidden" value="${ trv.trvId }" name="trvId" />
 								<div class="card-image">
 									<figure class="image" style="margin:0">
-										<img src="resources/images/sample1.jpg">
+										<c:if test="${ trv.mainImage ne null }">
+											<img src="resources/uploadFiles/${ trv.mainImage.changeName }">
+										</c:if>
+										<c:if test="${ trv.mainImage eq null }">
+											<img src="resources/images/logo2.png">
+										</c:if>
 									</figure>
 								</div>
 								<div class="card-content">
@@ -113,9 +123,9 @@
 										</div>
 									</div>
 									<div class="content">
-										<a>#혼자여행</a>
-										<a>#자유여행</a> 
-										<a>#먹방여행</a>
+										<c:forEach var="trvTag" items="${ trv.trvTagList }" varStatus="st2">
+											<a>#${ trvTag.tagName }</a>
+										</c:forEach>
 									</div>
 								</div>
 							</div>
@@ -127,6 +137,10 @@
 	</div>
 	<script>
 		$(function() {
+ 			var menu = $(".myPageMenu li").eq(0);
+ 			menu.addClass('is-active');
+ 			menu.siblings().removeClass('is-active');
+ 			
 			$(".my-trv-menu").click(function() {
 				$(this).addClass('is-active');
 				$(this).siblings().removeClass('is-active');
@@ -140,9 +154,13 @@
 			});
 		});
 	
-		$(".trvCard").click(function() {
+		$(".privateTrvCard").click(function() {
 			var trvId = $(this).children().eq(0).val();
 			location.href="selectTravel.trv?trvId=" + trvId;
+		});
+		$(".publicTrvCard").click(function() {
+			var trvId = $(this).children().eq(0).val();
+			location.href="travelDetailForm.tb?trvId=" + trvId;
 		});
 	</script>
 

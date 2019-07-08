@@ -89,7 +89,7 @@
 	<br>
 	<div class="tabs is-boxed column myPageMenu" >
 	    <ul>
-	      <li class="is-active">
+	      <li>
 	        <a href="showMyTravel.trv">
 	          <span class="icon"><i class="fas fa-plane"></i></span>
 	          <span>나의 일정</span>
@@ -130,6 +130,7 @@
  	
  	<script>
  		$(function() {
+ 			
 	 		$(".myPageMenu li").click(function() {
 				$(this).addClass('is-active');
 				$(this).siblings().removeClass('is-active');
