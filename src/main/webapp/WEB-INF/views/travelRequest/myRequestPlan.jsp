@@ -80,7 +80,7 @@ textarea {
 						<div class="buttons">
 							<a class="button is-primary is-rounded" onclick="myRequest();">나의
 								의뢰</a> <a class="button is-info is-rounded" onclick="myPlan();">나의
-								설계</a> <a class="button is-link is-rounded">미리작성</a>
+								설계</a> <a class="button is-link is-rounded" onclick="beforePlan();">미리작성</a>
 						</div>
 					</div>
 					<div class="column">
@@ -115,6 +115,7 @@ textarea {
 					<thead>
 						<tr>
 							<th>설계번호</th>
+							<th>의뢰번호</th>
 							<th>제목</th>
 							<th>마감일</th>
 							<th>의뢰인</th>
@@ -128,6 +129,7 @@ textarea {
 							<c:forEach var="pList" items="${ list }">
 								<tr>
 									<td><b>${ pList.planId }</b></td>
+									<td>${ pList.reqId }</td>
 									<td>${ pList.planTitle }</td>
 									<td>${ pList.endDate }</td>
 									<td>${ pList.reqName }</td>
@@ -306,8 +308,11 @@ textarea {
 		});
 
 		$(".far").parent().siblings().click(function() {
-			console.log($(this).parents().children("td").eq(0).text());
-			location = "requestPlan.tr";
+			var planId = $(this).parents().children("td").eq(0).text();
+			var reqId = $(this).parents().children("td").eq(1).text();
+			console.log("설계번호 : " + planId);
+			console.log("의뢰번호 : " + reqId);
+			location = "loadRequetPlan.mr?reqId=" + reqId + "&planId=" + planId;
 		});
 		
 		/* 모달띄우기 */
@@ -354,6 +359,9 @@ textarea {
 	}
 	function report() {
 		location = "paneltyList.pe";
+	}
+	function beforePlan() {
+		location = "beforePlan.mr?memberId=${ loginUser.memberId}";
 	}
 </script>
 </html>

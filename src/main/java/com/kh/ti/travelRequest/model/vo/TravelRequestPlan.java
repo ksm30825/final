@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class TravelRequestPlan implements Serializable{
 	private int planId;		//설계번호
+	private int ptcpId;		//참여번호
 	private String planTitle;	//설계제목
 	private int memberId;	//회원번호
 	private String userName;	//회원명
@@ -25,11 +26,12 @@ public class TravelRequestPlan implements Serializable{
 	
 	public TravelRequestPlan() {}
 
-	public TravelRequestPlan(int planId, String planTitle, int memberId, String userName, String planRef, int trvId,
-			String planContent, Date modifyDate, Date enrollDate, int roomCharge, int trafficCharge, int etcCharge,
-			String chooseStatus, ArrayList<PlanDay> dayList) {
+	public TravelRequestPlan(int planId, int ptcpId, String planTitle, int memberId, String userName, String planRef,
+			int trvId, String planContent, Date modifyDate, Date enrollDate, int roomCharge, int trafficCharge,
+			int etcCharge, String chooseStatus, ArrayList<PlanDay> dayList) {
 		super();
 		this.planId = planId;
+		this.ptcpId = ptcpId;
 		this.planTitle = planTitle;
 		this.memberId = memberId;
 		this.userName = userName;
@@ -51,6 +53,14 @@ public class TravelRequestPlan implements Serializable{
 
 	public void setPlanId(int planId) {
 		this.planId = planId;
+	}
+
+	public int getPtcpId() {
+		return ptcpId;
+	}
+
+	public void setPtcpId(int ptcpId) {
+		this.ptcpId = ptcpId;
 	}
 
 	public String getPlanTitle() {
@@ -159,8 +169,8 @@ public class TravelRequestPlan implements Serializable{
 
 	@Override
 	public String toString() {
-		return "TravelRequestPlan [planId=" + planId + ", planTitle=" + planTitle + ", memberId=" + memberId
-				+ ", userName=" + userName + ", planRef=" + planRef + ", trvId=" + trvId + ", planContent="
+		return "TravelRequestPlan [planId=" + planId + ", ptcpId=" + ptcpId + ", planTitle=" + planTitle + ", memberId="
+				+ memberId + ", userName=" + userName + ", planRef=" + planRef + ", trvId=" + trvId + ", planContent="
 				+ planContent + ", modifyDate=" + modifyDate + ", enrollDate=" + enrollDate + ", roomCharge="
 				+ roomCharge + ", trafficCharge=" + trafficCharge + ", etcCharge=" + etcCharge + ", chooseStatus="
 				+ chooseStatus + ", dayList=" + dayList + "]";

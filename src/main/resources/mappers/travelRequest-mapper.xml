@@ -22,11 +22,13 @@
 		<result property="userName" column="USER_NAME"/>
 		<result property="planContent" column="PLAN_CONTENT"/>
 		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>
 	</resultMap>
 	
 	<!-- 선택된 설계글 조회 (불러오기1단계(설계글))-->
 	<resultMap type="TravelRequestPlan" id="loadPlanResultSet">
 		<id property="planId" column="PLAN_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
 		<result property="planTitle" column="PLAN_TITLE"/>
 		<result property="memberId" column="MEMBER_ID"/>
 		<result property="userName" column="USER_NAME"/>
@@ -89,6 +91,7 @@
 	<!-- 마이페이지 나의 설계 목록 -->
 	<resultMap type="MyPlan" id="myPlanListResultSet">
 		<id property="planId" column="PLAN_ID"/>
+		<result property="reqId" column="REQUEST_ID"/>
 		<result property="planTitle" column="PLAN_TITLE"/>
 		<result property="endDate" column="END_DATE"/>
 		<result property="reqName" column="USER_NAME"/>
@@ -179,7 +182,7 @@
 	
 	<!-- 선택한 설계글 불러오기 -->
 	<select id="selectLoadRequestPlan" parameterType="_int" resultMap="loadPlanResultSet">
-		SELECT TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ROOM_CHARGE,
+		SELECT  P.PTCP_ID, TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ROOM_CHARGE,
         TP.TRAFFIC_CHARGE, TP.ETC_CHARGE,
         PD.PDAY_ID, PD.PDAY, PD.PDAY_MEMO,
         PP.PPLACE_ID, PP.PPLACE_TITLE, PP.PPLACE_ADDRESS,
@@ -187,6 +190,7 @@
 		FROM TRV_PLAN TP
 		JOIN PLAN_DAY PD ON(TP.PLAN_ID = PD.PLAN_ID)
 		LEFT JOIN PLAN_PLACE PP ON(PD.PDAY_ID = PP.PDAY_ID)
+        LEFT JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
 		WHERE TP.PLAN_ID = #{planId}
 		ORDER BY PD.PDAY_ID
 	</select>
@@ -206,15 +210,6 @@
 		AND PD.OPEN_STATUS = 'Y'
 		ORDER BY PD.PDAY_ID
 	</select>
-	
-	<!-- 해당 의뢰글의 설계글 조회-->
-	<!-- <select id="selectPlan" parameterType="_int" resultType="_int">
-		SELECT TP.PLAN_ID
-		FROM TRV_PLAN TP
-		JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
-		JOIN TRV_REQUEST TR ON(P.REQUEST_ID = TR.REQUEST_ID)
-		WHERE TR.REQUEST_ID = #{code}
-	</select> -->
 	
 	<!-- 의뢰참여 채택상태 업데이트 -->
 	<update id="updateParticipation" parameterType="_int">
@@ -259,16 +254,57 @@
 	</select>
 	
 	<select id="selectMyPlanList" resultMap="myPlanListResultSet">
-		SELECT SUB.USER_NAME, SUB.PLAN_ID, SUB.PLAN_TITLE, SUB.END_DATE, M.MEMBER_ID,
+		SELECT SUB.REQUEST_ID, SUB.USER_NAME, SUB.PLAN_ID, SUB.PLAN_TITLE, SUB.END_DATE, M.MEMBER_ID,
 		SUB.REQUEST_PRICE, SUB.CHOOSE_STATUS
-		FROM (SELECT TP.PLAN_ID, TP.PLAN_TITLE, TR.END_DATE, M.USER_NAME, TP.MEMBER_ID,
+		FROM (SELECT TR.REQUEST_ID, TP.PLAN_ID, TP.PLAN_TITLE, TR.END_DATE, M.USER_NAME, TP.MEMBER_ID,
 		TR.REQUEST_PRICE, P.CHOOSE_STATUS
 		FROM TRV_PLAN TP
 		LEFT JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
 		JOIN TRV_REQUEST TR ON(P.REQUEST_ID = TR.REQUEST_ID)
 		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)) SUB
 		JOIN MEMBER M ON(SUB.MEMBER_ID = M.MEMBER_ID)
-		WHERE SUB.MEMBER_ID = #{memberId}
+		WHERE SUB.MEMBER_ID = #{memerId}
 		ORDER BY SUB.CHOOSE_STATUS, SUB.PLAN_ID DESC
 	</select>
+	
+	<!-- 마이페이지 미리작성 글 수 -->
+	<select id="selectBeforePlanCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRV_PLAN TP
+		JOIN MEMBER M ON(TP.MEMBER_ID = M.MEMBER_ID)
+		LEFT JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
+		WHERE M.MEMBER_ID = #{memberId}
+		AND P.PTCP_ID IS NULL
+	</select>
+	
+	<!-- 마이페이지 미리작성 글 목록 -->
+	<select id="selectBeforePlanList" parameterType="_int" resultMap="planListResultSet">
+		SELECT TP.PLAN_ID, TP.PLAN_TITLE, TP.ENROLL_DATE, TP.MODIFY_DATE
+		FROM TRV_PLAN TP
+		JOIN MEMBER M ON(TP.MEMBER_ID = M.MEMBER_ID)
+		LEFT JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
+		WHERE M.MEMBER_ID = #{memberId}
+		AND P.PTCP_ID IS NULL
+	</select>
+	
+	<!-- 미리작성 설계글 업데이트(1단계) -->
+	<update id="updateBeforePlan" parameterType="TravelRequestPlan">
+		UPDATE TRV_PLAN
+		SET PLAN_TITLE = #{planTitle}
+		PLAN_CONTENT = #{planContent},
+		MODIFY_DATE = SYSDATE,
+		ROOM_CHARGE = #{roomCharge},
+		TRAFFIC_CHARGE = #{trafficCharge},
+		ETC_CHARGE = #{etcCharge}
+		WHERE PLAN_ID = #{planId}
+	</update>
+	
+	<!-- 미리작성 일자 업데이트(2단계) -->
+	<update id="updateBeforeDay" parameterType="PlanDay">
+		<selectKey keyProperty="planId" resultType="_int" order="BEFORE">
+			SELECT TRV_PLAN_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PLAN_DAY
+		VALUES (PLAN_DAY_SEQ.NEXTVAL, #{pDay}, #{pDayMemo}, #{openStatus}, #{planId})
+	</update>
 </mapper>

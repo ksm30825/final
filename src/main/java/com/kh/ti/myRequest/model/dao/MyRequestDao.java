@@ -40,5 +40,15 @@ public interface MyRequestDao {
 	int getPlanCount(SqlSessionTemplate sqlSession, int memberId);
 
 	ArrayList<TravelRequestPlan> selectMyPlanList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId);
+
+	int getBeforePlanCount(SqlSessionTemplate sqlSession, int memberId);
+
+	ArrayList<TravelRequestPlan> selectBeforePlanList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId);
+
+	int updateBeforePlan(SqlSessionTemplate sqlSession, TravelRequestPlan tp);
+
+	int updateBeforeDay(SqlSessionTemplate sqlSession, ArrayList<PlanDay> dayList);
+
+	int updateBeforePlace(SqlSessionTemplate sqlSession, ArrayList<PlanPlace> placeList);
 	
 }
