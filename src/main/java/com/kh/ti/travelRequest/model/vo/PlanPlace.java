@@ -11,11 +11,13 @@ public class PlanPlace implements Serializable {
 	private String PplaceLat;	//위도
 	private String PplaceLng;	//경도
 	private int PdayId;		//설계일자 코드
+	private int PplanId;
+	private int count = 1;
 	
 	public PlanPlace() {}
 
 	public PlanPlace(int pplaceId, String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng,
-			int pdayId) {
+			int pdayId, int pplanId, int count) {
 		super();
 		this.PplaceId = pplaceId;
 		this.PplaceTitle = pplaceTitle;
@@ -23,9 +25,9 @@ public class PlanPlace implements Serializable {
 		this.PplaceLat = pplaceLat;
 		this.PplaceLng = pplaceLng;
 		this.PdayId = pdayId;
+		this.PplanId = pplanId;
+		this.count = count;
 	}
-	
-	
 
 	public PlanPlace(String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng) {
 		super();
@@ -33,6 +35,17 @@ public class PlanPlace implements Serializable {
 		this.PplaceAddress = pplaceAddress;
 		this.PplaceLat = pplaceLat;
 		this.PplaceLng = pplaceLng;
+	}
+
+
+	public PlanPlace(String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng,
+			int pdayId) {
+		super();
+		PplaceTitle = pplaceTitle;
+		PplaceAddress = pplaceAddress;
+		PplaceLat = pplaceLat;
+		PplaceLng = pplaceLng;
+		PdayId = pdayId;
 	}
 
 	public int getPplaceId() {
@@ -83,9 +96,26 @@ public class PlanPlace implements Serializable {
 		PdayId = pdayId;
 	}
 
+	public int getPplanId() {
+		return PplanId;
+	}
+
+	public void setPplanId(int pplanId) {
+		PplanId = pplanId;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	@Override
 	public String toString() {
 		return "PlanPlace [PplaceId=" + PplaceId + ", PplaceTitle=" + PplaceTitle + ", PplaceAddress=" + PplaceAddress
-				+ ", PplaceLat=" + PplaceLat + ", PplaceLng=" + PplaceLng + ", PdayId=" + PdayId + "]";
+				+ ", PplaceLat=" + PplaceLat + ", PplaceLng=" + PplaceLng + ", PdayId=" + PdayId + ", PplanId="
+				+ PplanId + ", count=" + count + "]";
 	}
 }

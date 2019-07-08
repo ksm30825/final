@@ -125,7 +125,7 @@ public class MyRequestServiceImpl implements MyRequestService{
 	@Override
 	public int updateBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, 
 							TravelRequestPlan tp) {
-int result = 0;
+		int result = 0;
 		
 		//설계글 업데이트(1단계) - 이선우
 		int result1 = mrd.updateBeforePlan(sqlSession, tp);
@@ -134,7 +134,7 @@ int result = 0;
 		//설계글 각 장소 업데이트(3단계) - 이선우
 		int result3 = mrd.updateBeforePlace(sqlSession, placeList);
 		
-		if(result1 > 0 && result2 == dayList.size() && result3 == placeList.size()) {
+		if (/* result1 > 0 && */ result2 == dayList.size()/* && result3 == placeList.size() */) {
 			result = 1;
 		} else {
 			result = 0;

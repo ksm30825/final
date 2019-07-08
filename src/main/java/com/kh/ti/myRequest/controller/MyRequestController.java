@@ -247,25 +247,27 @@ public class MyRequestController {
 		return "travelRequest/beforePlanList";
 	}
 	
-	// 여행 설계 - 이선우
+	//미리작성 - 이선우
 	@RequestMapping("updateBeforePlan.mr")
-	public String updateBeforePlan(@ModelAttribute PlanDay pd, 
+	public String updateBeforePlan(@ModelAttribute PlanDay pd,
 			@ModelAttribute PlanPlace pp,
-			@ModelAttribute TravelRequestPlan tp, Model modle) {
+			@ModelAttribute TravelRequestPlan tp, Model model) {
 			//각 일정및 메모, 공개여부
 			//설계여행일자(PlanDay) 
 			System.out.println("설계 번호 : " + tp.getPlanId());
-			System.out.println(pd);
+			int pDayId = pd.getPlanId();
 			String[] pDay = pd.getpDay().split(",");
 			String[] pDayMemo = pd.getpDayMemo().split(",");
 			String[] openStatus = pd.getOpenStatus().split(",");
 			
 			ArrayList<PlanDay> dayList = new ArrayList<PlanDay>();
 			for(int i = 0; i < pDay.length; i++) {
+				System.out.println((i+1) + "일자 번호 : " + pDayId);
 				System.out.println("일자 : " + pDay[i]);
 				System.out.println((i+1) + "일자 메모 : " + pDayMemo[i]);
 				System.out.println((i+1) + "일자 공개여부 : " + openStatus[i]);
-				PlanDay day = new PlanDay(pDay[i], pDayMemo[i], openStatus[i]);
+				System.out.println((i+1) + "일자 설계번호 : " + pDayId);
+				PlanDay day = new PlanDay(pDayId, pDay[i], pDayMemo[i], openStatus[i], pDayId);
 				dayList.add(day);
 				System.out.println(dayList);
 			}
@@ -277,6 +279,7 @@ public class MyRequestController {
 			String[] placeAddress = pp.getPplaceAddress().split("#");	//주소
 			String[] placeLat = pp.getPplaceLat().split("#");	//위도
 			String[] placeLng = pp.getPplaceLng().split("#");	//경도
+			int placeId = pp.getPplaceId();
 			
 			ArrayList<PlanPlace> placeList = new ArrayList<PlanPlace>();
 			
@@ -286,18 +289,18 @@ public class MyRequestController {
 				System.out.println("위도 : " + placeLat[i]);
 				System.out.println("경도 : " + placeLng[i]);
 				System.out.println("========================");
-				PlanPlace place = new PlanPlace(placeTitle[i], placeAddress[i], placeLat[i], placeLng[i]);
+				PlanPlace place = new PlanPlace(placeTitle[i], placeAddress[i],
+						placeLat[i], placeLng[i], pDayId);
 				placeList.add(place);
 				System.out.println(placeList);
 			}
 			
 			System.out.println(tp);
-			//int result = mrs.updateBeforePlan(dayList, placeList, tp);
-			//System.out.println(result);
+			int result = mrs.updateBeforePlan(dayList, placeList, tp);
+			System.out.println("최종결과" + result);
 			int memberId = tp.getMemberId();
-
-			//return "redirect:myPlanList.mr?memberId=" + memberId;
-			return "";
+			model.addAttribute(tp);
+			return "redirect:beforePlan.mr?memberId=" + memberId;
 		}
 
 	// 나의 문의 내역 - 이선우
