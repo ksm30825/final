@@ -97,7 +97,7 @@ th, td {
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<form action="myRequestPlan.mr">
+	<form action="updateBeforePlan.mr">
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="form">
@@ -106,7 +106,7 @@ th, td {
 			<textarea id="lng" name="PplaceLng" class="hidden"></textarea>
 			<textarea id="placeName" name="PplaceTitle" class="hidden"></textarea>
 			<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
-			<input type="hidden" value="${ reqId }" name="requestId">
+			<input type="hidden" value="${ planId }" name="planId" id="planId">
 			<input type="hidden" value="${ loginUser.memberId }" name="memberId">
 			<input type="text" value="${ loginUser.userName }" name="userName">
 				<h1 class="title">일정작성</h1>
@@ -463,8 +463,6 @@ th, td {
 	
 	//불러올 일정 선택
 	function ok() {
-		var reqId = ${ reqId };
-		console.log(reqId);
 		var planId = new Array();
 		$(".load").each(function() {
 			if($(this).find(".ok").is(":checked")) {	

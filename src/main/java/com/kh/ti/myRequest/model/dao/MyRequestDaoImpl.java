@@ -117,4 +117,50 @@ public class MyRequestDaoImpl implements MyRequestDao{
 						
 		return (ArrayList)sqlSession.selectList("TravelRequest.selectMyPlanList", memberId, rowBounds);
 	}
+
+	//마이페이지 미리작성 글 수
+	@Override
+	public int getBeforePlanCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("TravelRequest.selectBeforePlanCount", memberId);
+	}
+
+	//마이페이지 미리작성 글 목록
+	@Override
+	public ArrayList<TravelRequestPlan> selectBeforePlanList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId) {
+		//시작값과 종료값의 차이 구하기
+		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
+								
+		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
+		return (ArrayList)sqlSession.selectList("TravelRequest.selectBeforePlanList", memberId, rowBounds);
+	}
+
+	//미리작성 설계글 업데이트(1단계)
+	@Override
+	public int updateBeforePlan(SqlSessionTemplate sqlSession, TravelRequestPlan tp) {
+		return sqlSession.update("TravelRequest.updateBeforePlan", tp);
+	}
+
+	//미리작성 각 일자 업데이트(2단계) - 이선우
+	@Override
+	public int updateBeforeDay(SqlSessionTemplate sqlSession, ArrayList<PlanDay> dayList) {
+		int result2 = 0;
+		for(int i = 0; i < dayList.size(); i++) {
+			sqlSession.update("TravelRequest.updateBeforeDay", dayList.get(i));
+			result2++;
+		}
+		System.out.println(result2);
+		return result2;
+	}
+
+	//미리작성 각 장소 업데이트(3단계) - 이선우
+	@Override
+	public int updateBeforePlace(SqlSessionTemplate sqlSession, ArrayList<PlanPlace> placeList) {
+		int result3 = 0;
+		for(int i = 0; i < placeList.size(); i++) {
+			sqlSession.update("TravelRequest.updateBeforePlace", placeList.get(i));
+			result3++;
+		}
+		System.out.println(result3);
+		return result3;
+	}
 }

@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class MyPlan {
 	private int planId;			//설계번호
+	private int reqId;			//의뢰번호
 	private String planTitle;	//설계제목
 	private Date endDate;		//마감일
 	private String reqName;		//의뢰자
@@ -13,10 +14,11 @@ public class MyPlan {
 	
 	public MyPlan() {}
 
-	public MyPlan(int planId, String planTitle, Date endDate, String reqName, String memberId, int reqPrice,
+	public MyPlan(int planId, int reqId, String planTitle, Date endDate, String reqName, String memberId, int reqPrice,
 			String chooseStatus) {
 		super();
 		this.planId = planId;
+		this.reqId = reqId;
 		this.planTitle = planTitle;
 		this.endDate = endDate;
 		this.reqName = reqName;
@@ -31,6 +33,14 @@ public class MyPlan {
 
 	public void setPlanId(int planId) {
 		this.planId = planId;
+	}
+
+	public int getReqId() {
+		return reqId;
+	}
+
+	public void setReqId(int reqId) {
+		this.reqId = reqId;
 	}
 
 	public String getPlanTitle() {
@@ -83,7 +93,8 @@ public class MyPlan {
 
 	@Override
 	public String toString() {
-		return "MyPlan [planId=" + planId + ", planTitle=" + planTitle + ", endDate=" + endDate + ", reqName=" + reqName
-				+ ", memberId=" + memberId + ", reqPrice=" + reqPrice + ", chooseStatus=" + chooseStatus + "]";
+		return "MyPlan [planId=" + planId + ", reqId=" + reqId + ", planTitle=" + planTitle + ", endDate=" + endDate
+				+ ", reqName=" + reqName + ", memberId=" + memberId + ", reqPrice=" + reqPrice + ", chooseStatus="
+				+ chooseStatus + "]";
 	}
 }

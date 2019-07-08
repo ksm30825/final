@@ -109,4 +109,38 @@ public class MyRequestServiceImpl implements MyRequestService{
 		return mrd.selectMyPlanList(sqlSession, pi, memberId);
 	}
 
+	//마이페이지 미리작성 글 수
+	@Override
+	public int getBeforPlanCount(int memberId) {
+		return mrd.getBeforePlanCount(sqlSession, memberId);
+	}
+
+	//마이페이지 미리작성 글 조회
+	@Override
+	public ArrayList<TravelRequestPlan> selectBeforePlanList(PageInfo pi, int memberId) {
+		return mrd.selectBeforePlanList(sqlSession, pi, memberId);
+	}
+
+	//미리작성 불러온글 업데이트
+	@Override
+	public int updateBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, 
+							TravelRequestPlan tp) {
+int result = 0;
+		
+		//설계글 업데이트(1단계) - 이선우
+		int result1 = mrd.updateBeforePlan(sqlSession, tp);
+		//설계글 각 일자 업데이트(2단계) - 이선우
+		int result2 = mrd.updateBeforeDay(sqlSession, dayList);
+		//설계글 각 장소 업데이트(3단계) - 이선우
+		int result3 = mrd.updateBeforePlace(sqlSession, placeList);
+		
+		if(result1 > 0 && result2 == dayList.size() && result3 == placeList.size()) {
+			result = 1;
+		} else {
+			result = 0;
+		}
+		
+		return result;
+	}
+
 }

@@ -29,5 +29,11 @@ public interface MyRequestService {
 
 	ArrayList<TravelRequestPlan> selectMyPlanList(PageInfo pi, int memberId);
 
+	int getBeforPlanCount(int memberId);
+
+	ArrayList<TravelRequestPlan> selectBeforePlanList(PageInfo pi, int memberId);
+
+	int updateBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp);
+
 
 }

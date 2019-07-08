@@ -72,26 +72,24 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th>의뢰번호</th>
+							<th>설계번호</th>
 							<th>제목</th>
-							<th>마감일</th>
-							<th>의뢰가격</th>
-							<th>채택상태</th>
+							<th>작성일</th>
+							<th>수정일</th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:if test="${ list.size() > 0 }">
-							<c:forEach var="req" items="${ list }">
+							<c:forEach var="pList" items="${ list }">
 								<tr>
-									<td><b>${ req.requestId }</b></td>
-									<td>${ req.requestTitle }</td>
-									<td>${ req.endDate }</td>
-									<td><fmt:formatNumber value="${ req.requestPrice }" groupingUsed="true"/>원</td>
-									<c:if test="${ req.chooseStatus eq 'N' }">
-										<td>미채택</td>
+									<td><b>${ pList.planId }</b></td>
+									<td>${ pList.planTitle }</td>
+									<td>${ pList.enrollDate }</td>
+									<c:if test="${ pList.modifyDate eq null }">
+										<td>수정 안함</td>
 									</c:if>
-									<c:if test="${ req.chooseStatus eq 'Y' }">
-										<td>채택</td>
+									<c:if test="${ pList.modifyDate ne null }">
+										<td>${ pList.modifyDate }</td>
 									</c:if>
 								</tr>
 							</c:forEach>
@@ -166,9 +164,9 @@
 				"color" : "black"
 			});
 		}).click(function() {
-			var reqId = $(this).parents().children("td").eq(0).text();
-			console.log(reqId);
-			location = "requestDetail.tr?reqId=" + reqId + "&userName=${ loginUser.userName }";
+			var planId = $(this).parents().children("td").eq(0).text();
+			console.log(planId);
+			location = "beforePlanDetail.mr?planId=" + planId + "&memberId=${ loginUser.memberId }";
 		});
 	});
 
