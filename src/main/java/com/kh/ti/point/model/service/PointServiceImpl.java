@@ -197,9 +197,44 @@ public class PointServiceImpl implements PointService{
 	public ArrayList<Payment> selectAdPointList(PageInfo adPointPi, SearchPoint sp) {
 		return pd.selectAdPointList(sqlSession, adPointPi, sp);
 	}
-
-	
-	
+	//관리자 - 환불 내역 리스트 카운트
+	@Override
+	public int getAdRefundListCount(SearchPoint sp) {
+		return pd.getAdRefundListCount(sqlSession, sp);
+	}
+	//관리자 - 환불 내역 전체 조회, 검색 조회 
+	@Override
+	public ArrayList<Payment> selectAdRefundList(PageInfo adRefundPi, SearchPoint sp) {
+		return pd.selectAdRefundList(sqlSession, adRefundPi, sp);
+	}
+	//관리자 - 환불 상태 바꿔주기
+	@Override
+	public int updateRefund(Refund refund) {
+		return pd.updateRefund(sqlSession, refund);
+	}
+	@Override
+	public Refund selectOneRefund(Refund refund) {
+		return pd.selectOneRefund(sqlSession, refund);
+	}
+	//관리자 - 환불 상태 성공시 산 사람의 userPoint 업데이트
+	@Override
+	public int updateUserPointRefund(Refund updatedRefund) {
+		return pd.updateUserPointRefund(sqlSession, updatedRefund);
+	}
+	@Override
+	public Proceeds selectMemberIdTrv(Refund updatedRefund) {
+		return pd.selectMemberIdTrv(sqlSession, updatedRefund);
+	}
+	//관리자 - 판 사람의 아이디 조회 -planId 이용
+	@Override
+	public Proceeds selectMemberIdRequest(Refund updatedRefund) {
+		return pd.selectMemberIdRequest(sqlSession, updatedRefund);
+	}
+	//관리자 - 판 사람의 userProceeds 차감
+	@Override
+	public int updateUserProceedsRefund(Proceeds proceeds) {
+		return pd.updateUserProceedsRefund(sqlSession, proceeds);
+	}
 
 	
 

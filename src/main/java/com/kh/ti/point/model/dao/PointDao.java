@@ -85,13 +85,22 @@ public interface PointDao {
 	int getAdPointListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
 	//관리자 - 포인트 내역 전체 조회, 검색 조회 
 	ArrayList<Payment> selectAdPointList(SqlSessionTemplate sqlSession, PageInfo adPointPi, SearchPoint sp);
-	
-	
-	
-	
-	
-	
-	
+	//관리자 - 환불 내역 리스트 카운트
+	int getAdRefundListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
+	//관리자 - 환불 내역 전체 조회, 검색 조회 
+	ArrayList<Payment> selectAdRefundList(SqlSessionTemplate sqlSession, PageInfo adRefundPi, SearchPoint sp);
+	//관리자 - 환불 상태 바꿔주기
+	int updateRefund(SqlSessionTemplate sqlSession, Refund refund);
+	//관리자 - 업데이트 된 환불 내역 들고오기
+	Refund selectOneRefund(SqlSessionTemplate sqlSession, Refund refund);
+	//관리자 - 환불 상태 성공시 산 사람의 userPoint 업데이트
+	int updateUserPointRefund(SqlSessionTemplate sqlSession, Refund updatedRefund);
+	//관리자 - 판 사람의 아이디 조회 -trvId 이용
+	Proceeds selectMemberIdTrv(SqlSessionTemplate sqlSession, Refund updatedRefund);
+	//관리자 - 판 사람의 아이디 조회 -planId 이용
+	Proceeds selectMemberIdRequest(SqlSessionTemplate sqlSession, Refund updatedRefund);
+	//관리자 - 판 사람의 userProceeds 차감
+	int updateUserProceedsRefund(SqlSessionTemplate sqlSession, Proceeds proceeds);
 	
 	
 	

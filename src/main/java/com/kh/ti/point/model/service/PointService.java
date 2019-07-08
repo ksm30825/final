@@ -83,5 +83,21 @@ public interface PointService {
 	int getAdPointListCount(SearchPoint sp);
 	//관리자 - 포인트 내역 전체 조회, 검색 조회 
 	ArrayList<Payment> selectAdPointList(PageInfo adPointPi, SearchPoint sp);
+	//관리자 - 환불 내역 리스트 카운트
+	int getAdRefundListCount(SearchPoint sp);
+	//관리자 - 환불 내역 전체 조회, 검색 조회 
+	ArrayList<Payment> selectAdRefundList(PageInfo adRefundPi, SearchPoint sp);
+	//관리자 - 환불 상태 바꿔주기
+	int updateRefund(Refund refund);
+	//관리자 - 업데이트 된 환불 내역 들고오기
+	Refund selectOneRefund(Refund refund);
+	//관리자 - 환불 상태 성공시 산 사람의 userPoint 업데이트
+	int updateUserPointRefund(Refund updatedRefund);
+	//관리자 - 판 사람의 아이디 조회 -trvId 이용
+	Proceeds selectMemberIdTrv(Refund updatedRefund);
+	//관리자 - 판 사람의 아이디 조회 -planId 이용
+	Proceeds selectMemberIdRequest(Refund updatedRefund);
+	//관리자 - 판 사람의 userProceeds 차감
+	int updateUserProceedsRefund(Proceeds proceeds);
 
 }

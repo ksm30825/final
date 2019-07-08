@@ -551,7 +551,7 @@ public class PointController {
 			switch(useType) {
 			//(trvId, requestId 통해서 memberId 조회)
 			case 10 : return "redirect:/travelDetailForm.tb?trvId="+userPoint.getTrvId(); 
-			case 20 : return "redirect:/selectRequest.mr?memberId="+memberId+"&code=?"+code;
+			case 20 : return "redirect:/selectRequest.mr?memberId="+memberId+"&code="+code;
 			}
 		}
 		return "common/errorPage";
@@ -906,25 +906,25 @@ public class PointController {
 		return "admin/adminPoint/aRefund";
 	}
 	//환불 내역 전체 조회
-//	@RequestMapping("/toAdRefundView.po")
-//	public ResponseEntity adSelectAllRefund(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
-//		SearchPoint sp = new SearchPoint();
-//		sp.setCondition(condition);
-//		
-//		int adRefundListCount = ps.getAdRefundListCount(sp);
-//		
-//		int adRefundCurrentPage = currentPage;
-//		
-//		PageInfo adRefundPi = Pagination.getPageInfo(adRefundCurrentPage, adRefundListCount);
-//		
-//		ArrayList<Payment> adRefundList = ps.selectAdRefundList(adRefundPi, sp);
-//		
-//		HashMap<String, Object> hmap = new HashMap<String, Object>();
-//		hmap.put("adRefundList", adRefundList);
-//		hmap.put("adRefundPi", adRefundPi);
-//		
-//		return new ResponseEntity(hmap, HttpStatus.OK);
-//	}
+	@RequestMapping("/adRefund.po")
+	public ResponseEntity adSelectAllRefund(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
+		SearchPoint sp = new SearchPoint();
+		sp.setCondition(condition);
+		
+		int adRefundListCount = ps.getAdRefundListCount(sp);
+		
+		int adRefundCurrentPage = currentPage;
+		
+		PageInfo adRefundPi = Pagination.getPageInfo(adRefundCurrentPage, adRefundListCount);
+		
+		ArrayList<Payment> adRefundList = ps.selectAdRefundList(adRefundPi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adRefundList", adRefundList);
+		hmap.put("adRefundPi", adRefundPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
+	}
 	//포인트 환불 회원 검색 내역--수민
 	@RequestMapping("/oneMemberAdRefund.po")
 	public ModelAndView adSelectOneMemberRefund(String userName, ModelAndView mv) {
@@ -942,8 +942,53 @@ public class PointController {
 		//-> 승인 ->환불한 사람 포인트 해당포인트만큼 증가
 		//->	->환불한 게시글의 수익금(해당포인트만큼) 차감
 	@RequestMapping("/updateAdRefund.po")
-	public String adUpdateRefund(String pointId) {
+	public String adUpdateRefund(String refId, String bid, String cond) {
+		//System.out.println("refundId : " + refId);
+		//System.out.println("condition : " + cond);
+		int refundId = Integer.parseInt(refId);
+		int boardId = Integer.parseInt(bid);
+		int condition = Integer.parseInt(cond);
 		
-		return "??";
+		
+		Refund refund = new Refund();
+		refund.setRefundId(refundId);
+		
+		if(condition == 10 ) {
+			refund.setRefundStatus(20);
+		}else {
+			refund.setRefundStatus(30);
+		}
+		
+		int update = ps.updateRefund(refund);
+		
+		//환불 내역 들고오기
+		Refund updatedRefund = ps.selectOneRefund(refund);
+		System.out.println("updatedRefund : " + updatedRefund);
+		
+		//산 사람한테 포인트 돌려주기
+		//member테이블의 userPoint 증가
+		int updateUserPoint = ps.updateUserPointRefund(updatedRefund);
+		
+		//판 사람한테 수익금 뺏기 proceeds 감소
+		//member테이블의 userProceeds 차감
+		Proceeds proceeds = new Proceeds();
+		
+		if(updatedRefund.getUseType() == 10) {
+			//여행일정
+			proceeds = ps.selectMemberIdTrv(updatedRefund);
+			System.out.println("TRV Proceeds : " + proceeds);
+		}else if(updatedRefund.getUseType() == 20) {
+			//설계채택
+			proceeds = ps.selectMemberIdRequest(updatedRefund);
+			System.out.println("PLAN Proceeds : " + proceeds);
+			//myChooseCanel.mr?requestId=
+		}
+		System.out.println("Proceeds : " + proceeds);
+		int updateUserProceeds = ps.updateUserProceedsRefund(proceeds);
+		
+		if(update>0 && updateUserPoint>0 &&updateUserProceeds>0) {
+			return "redirect:/toAdRefundView.po";
+		}
+		return "common/errorPage";
 	}
 }
