@@ -112,6 +112,10 @@ public interface TravelService {
 	HashMap selectSpotList(Travel trv);
 
 
+	
+
+	void selectDownloadSch(int trvId);
+
 
 
 

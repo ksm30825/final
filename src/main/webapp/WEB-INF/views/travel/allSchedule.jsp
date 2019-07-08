@@ -99,6 +99,12 @@
 				</div>
 			</section>
 			<section class="section">
+				<div align="right">
+					<button class="button is-link" id="downSchBtn">
+						<span class="icon is-small"><i class="fas fa-file-excel"></i></span>
+						<span>엑셀다운</span>
+					</button>
+				</div>
 				<div class="columns is-multiline">
 					<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st">
 						<div class="column is-one-fifth" style="padding: 10.5px 0">
@@ -186,6 +192,22 @@
 				var plcId = $(this).children("input[name=plcId]").val();
 				placeDetailSearch(plcId, mapWide);
 				
+			});
+			
+			$("#downSchBtn").click(function() {
+				$.ajax({
+					url:"downloadSch.trv",
+					type:"POST",
+					data:{trvId:"${ trv.trvId }"},
+					success:function(data) {
+						alert("파일이 다운로드됩니다.");
+						console.log(data);
+					},
+					error:function(err) {
+						alert("err");
+					}
+						
+				});
 			});
 		});
 	</script>

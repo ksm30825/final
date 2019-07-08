@@ -489,12 +489,21 @@ public class TravelController {
 
 	
 	//사진삭제-민지
-	@RequestMapping("/deleteFile.trv")
+	@RequestMapping("deleteFile.trv")
 	public String deleteSchFile(SchFile file) {
 		int result = ts.deleteSchFile(file);
 		return "";
 	}
 	
+	
+	//일정엑셀다운-민지
+	@RequestMapping("downloadSch.trv")
+	public ModelAndView downloadSch(int trvId, ModelAndView mv) {
+		
+		ts.selectDownloadSch(trvId);
+		mv.setViewName("jsonView");
+		return mv;
+	}
 
 	
 	//구매한 일정으로 새일정 작성

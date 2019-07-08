@@ -1,9 +1,19 @@
 package com.kh.ti.travel.model.service;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -674,7 +684,67 @@ public class TravelServiceImpl implements TravelService {
 	
 	
 	
-	
+//-------------excelDown-------------------------------------------------------------
+	@Override
+	public void selectDownloadSch(int trvId) {
+		
+		SXSSFWorkbook wb = new SXSSFWorkbook();
+		Sheet sheet = wb.createSheet("schedule");
+		
+		ArrayList<HashMap> schList = td.selectDownloadSch(sqlSession, trvId);
+		
+		
+		try (OutputStream fileOut = new FileOutputStream("workbook.xlsx")) {
+			Row title = sheet.createRow(0);
+			title.createCell(0).setCellValue("여행제목 : ");
+			title.createCell(1).setCellValue(schList.get(0).get("trvTitle").toString());
+			Row header = sheet.createRow(2);
+			// Create a cell and put a value in it.
+			header.createCell(1).setCellValue("DAY");
+			header.createCell(2).setCellValue("날짜");
+			header.createCell(3).setCellValue("시작시간");
+			header.createCell(4).setCellValue("종료시간");
+			header.createCell(5).setCellValue("일정제목");
+			header.createCell(6).setCellValue("장소명");
+			header.createCell(7).setCellValue("교통정보");
+			
+			
+			for(int i = 0; i < schList.size(); i++) {
+				HashMap schMap = schList.get(i);
+				Row row = sheet.createRow(i + 3);
+				String start = "";
+				
+				row.createCell(1).setCellValue(schMap.get("dayNumber").toString());
+				row.createCell(2).setCellValue(schMap.get("dayDate").toString());
+				if(schMap.get("startTime") != null) {
+					row.createCell(3).setCellValue(schMap.get("startTime").toString());
+				}
+				if(schMap.get("endTime") != null) {
+					row.createCell(4).setCellValue(schMap.get("endTime").toString());
+				}
+				row.createCell(5).setCellValue(schMap.get("schTitle").toString());
+				if(schMap.get("plcName") != null) {
+					row.createCell(6).setCellValue(schMap.get("plcName").toString());
+				}
+				if(schMap.get("schTransp") != null) {
+					row.createCell(7).setCellValue(schMap.get("schTransp").toString());
+				}
+			}
+
+			wb.write(fileOut);
+			
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    
+		
+	}
+
+
+
 	
 	
 	
@@ -713,7 +783,6 @@ public class TravelServiceImpl implements TravelService {
 		int result = td.deleteTrvComp(sqlSession, trv, memberId);
 		return 0;
 	}
-
 
 
 
