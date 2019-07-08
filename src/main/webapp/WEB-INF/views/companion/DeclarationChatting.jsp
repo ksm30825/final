@@ -11,9 +11,12 @@
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/declarationChatting.css">
 </head>
 <body>
+	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
+	<input type = "hidden" value = "${chatId}" id = "ReChatID">
+	<input type = "hidden" value = "${loginUser.userName}" id = "UserName">
 	<div class = "wrap">
 		<div class = "header">
-			 <button id = "returnBtn" onclick = "location.href = '${contextPath}/enterChatting.ch'"><i class="material-icons" >keyboard_arrow_left</i></button>
+			 <button id = "returnBtn"><i class="material-icons" >keyboard_arrow_left</i></button>
 			 <div style = "float : left; padding-top : 13px;">
 			 	<label style = "padding:0; font-size: 16px;">신고</label>
 			 </div>
@@ -23,7 +26,7 @@
 				<table id = "declarationTable">
 					<tr>
 						<td><label>신고자</label></td>
-						<td><input type = "text" value = "지원(wldnjs7781)" name = "reporter" id = "reporter" readonly> </td>
+						<td><input type = "text" value = "${loginUser.userName}" name = "reporter" id = "reporter" readonly> </td>
 					</tr>
 					<tr>
 						<td><label>신고 대상자</label></td>
@@ -70,8 +73,10 @@
 		     	전송하기
 		     </button>
 	  	</div>
-		
 	</div>
+	
+	 <script src="http://localhost:8010/socket.io/socket.io.js"></script>
+     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	  <script>
 	 	var g_count =1;
 	 	 $(function(){
@@ -147,6 +152,24 @@
             	$(this).parent().children('.upload-name').val(filename); 
             	
 	     	});
+	     	
+			$(document).ready(function() { //start
+				
+				var userId = ${ loginUser.memberId };
+				var userName = $("#UserName").val();
+				var chatId = $("#ReChatID").val();
+	    	 	
+	    		console.log("userId :"+userId);
+	    		console.log("chatId :" + chatId);
+	    		  		
+	    	   //서버
+			   var socket = io("http://localhost:8010");
+	    	   
+	    	   $("#returnBtn").click(function(){
+	    		   location.href = "${contextPath}/enterChatting.ch?num="+ chatId;
+	    	   });
+	    	   
+		 	});
 	        
 
 	

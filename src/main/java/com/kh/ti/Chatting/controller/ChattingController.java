@@ -59,17 +59,14 @@ public class ChattingController {
 		
 	}
 	
-	//사용자 정보 창으로 이동 메소드 - 지원
-	@RequestMapping("/userInfo.ch")
-	public String showUserInfo() {
-		
-		
-		return "companion/UserInfo";
-	}
 	
 	//채팅방 설정  화면으로  - 지원
 	@RequestMapping("/showchange.ch")
-	public String showChangChattingRoom() {
+	public String showChangChattingRoom(HttpServletRequest request) {
+		String chatid = (String)request.getParameter("num");
+		
+		
+		request.setAttribute("chatId", chatid);
 		
 		
 		return "companion/ChangeChattingRoom";
@@ -78,13 +75,17 @@ public class ChattingController {
 	
 	//신고 화면으로 - 지원
 	@RequestMapping("/declaration.ch")
-	public String showDeclarationChatting() {
+	public String showDeclarationChatting(HttpServletRequest request) {
+		String chatid = (String)request.getParameter("num");
+		
+		//System.out.println("chatId :" + chatid);
+		
+		request.setAttribute("chatId", chatid);
 		
 		return "companion/DeclarationChatting";
 	}
 	
 	//사용자 정보 불러오기
-	//여행일정 일자별 스케쥴 조회용
 	@RequestMapping("/memberInfo.ch")
 	public ResponseEntity<Member> selectMemberInfo(int userId) {
 	      
@@ -103,7 +104,7 @@ public class ChattingController {
 		      birthStr = "19" + birthStr;
 		     }
 		     
-		     System.out.println("birthdAy :" + birthStr);
+		     //System.out.println("birthdAy :" + birthStr);
 		     
 		     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.KOREAN);
 		     Date birthDay;
@@ -127,14 +128,9 @@ public class ChattingController {
 				e.printStackTrace();
 			}
 		     
-		     
-		     
 		    
 	     }
-	    
 
-
-	     
 	     System.out.println("detailDay : " + userInfo);
 	      
 	     return new ResponseEntity<Member>(userInfo, HttpStatus.OK);
