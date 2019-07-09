@@ -54,6 +54,7 @@ public class MyRequestServiceImpl implements MyRequestService{
 	public ArrayList<TravelRequestPlan> selectRequestPlanList(TravelRequestPlan trp) {
 		return mrd.selectRequestPlanList(sqlSession, trp);
 	}
+	
 
 	//선택한 설계글 불러오기 - 이선우
 	@Override
@@ -143,4 +144,24 @@ public class MyRequestServiceImpl implements MyRequestService{
 		return result;
 	}
 
+	//미리작성 인서트
+	@Override
+	public int insertBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp) {
+		int result = 0;
+		
+		//설계글 인서트(1단계) - 이선우
+		int result1 = mrd.insertTravelRequestPlan(sqlSession, tp);
+		//설계글 각 일자 인서트(2단계) - 이선우
+		int result2 = mrd.insertRequestDay(sqlSession, dayList);
+		//설계글 각 장소 인서트(3단계) - 이선우
+		int result3 = mrd.insertRequestPlace(sqlSession, placeList);
+		
+		if(result1 > 0 && result2 == dayList.size() && result3 == placeList.size()) {
+			result = 1;
+		} else {
+			result = 0;
+		}
+		
+		return result;
+	}
 }

@@ -148,7 +148,7 @@ public class MyRequestController {
 	}
 	
 	//설계 목록 불러오기 - 이선우
-	@RequestMapping("loadRequestPlan.mr")
+	@RequestMapping("loadRequestPlanList.mr")
 	public ResponseEntity<ArrayList> selectLoadRequestPlan(
 			@RequestParam("memberId")int memberId) {
 	
@@ -178,6 +178,18 @@ public class MyRequestController {
 		return "travelRequest/travelRequestLoad";
 	}
 	
+	//미리작성 선택한 설계글 불러오기
+	@RequestMapping("beforeLoadPlan.mr")
+	public String selectBeforeLoadPlan(@RequestParam("planId")int planId,
+									   @RequestParam("memberId")int memberId,
+									   Model model) {
+		System.out.println("설계번호 : " + planId);
+		
+		ArrayList<TravelRequestPlan> trp = mrs.selectLoadRequestPlan(planId);
+		System.out.println("조회 결과 : " + trp);
+		model.addAttribute("trp", trp);
+		return "travelRequest/beforePlanLoad";
+	}
 	//마이페이지 미리작성 선택글 상세보기
 	@RequestMapping("beforePlanDetail.mr")
 	public String selectBeforePlanDetail(@RequestParam("planId")int planId,
@@ -219,8 +231,10 @@ public class MyRequestController {
 	
 	//채택 취소
 	@RequestMapping("myChooseCancel.mr")
-	public String updateMyChooseCencel() {
-		return "";
+	public String updateMyChooseCencel(@RequestParam("requestId")int requestId) {
+		System.out.println("채택취소 의뢰글 번호 : " + requestId);
+		
+		return "redirect:toAdRefundView.po";
 	}
 	
 	//미리 작성
@@ -302,6 +316,64 @@ public class MyRequestController {
 			model.addAttribute(tp);
 			return "redirect:beforePlan.mr?memberId=" + memberId;
 		}
+	
+	//마이페이지 미리작성 폼
+	@RequestMapping("showBeforePlanForm.mr")
+	public String showBeforePlanForm(@RequestParam("memberId")int memberId) {
+		
+		return "travelRequest/beforePlanStart";
+	}
+	
+	//마이페이지 미리작성 인서트
+	@RequestMapping("insertBeforePlan.mr")
+	public String insertBeforePlan(@ModelAttribute PlanDay pd, 
+			   @ModelAttribute PlanPlace pp,
+			   @ModelAttribute TravelRequestPlan tp, Model model) {
+		
+		//각 일정및 메모, 공개여부
+		//설계여행일자(PlanDay) 
+		System.out.println(pd);
+		String[] pDay = pd.getpDay().split(",");
+		String[] pDayMemo = pd.getpDayMemo().split(",");
+		String[] openStatus = pd.getOpenStatus().split(",");
+				
+		ArrayList<PlanDay> dayList = new ArrayList<PlanDay>();
+		for(int i = 0; i < pDay.length; i++) {
+			System.out.println("일자 : " + pDay[i]);
+			System.out.println((i+1) + "일자 메모 : " + pDayMemo[i]);
+			System.out.println((i+1) + "일자 공개여부 : " + openStatus[i]);
+			PlanDay day = new PlanDay(pDay[i], pDayMemo[i], openStatus[i]);
+			dayList.add(day);
+			System.out.println(dayList);
+		}
+				
+		//각 일정의 장소
+		//일자장소(PlanPlace)
+		System.out.println(pp);
+		String[] placeTitle = pp.getPplaceTitle().split("#");	//장소명
+		String[] placeAddress = pp.getPplaceAddress().split("#");	//주소
+		String[] placeLat = pp.getPplaceLat().split("#");	//위도
+		String[] placeLng = pp.getPplaceLng().split("#");	//경도
+				
+		ArrayList<PlanPlace> placeList = new ArrayList<PlanPlace>();
+				
+		for(int i = 0; i < placeLat.length; i++) {
+			System.out.println("장소 : " + placeTitle[i]);
+			System.out.println("주소 : " + placeAddress[i]);
+			System.out.println("위도 : " + placeLat[i]);
+			System.out.println("경도 : " + placeLng[i]);
+			System.out.println("========================");
+			PlanPlace place = new PlanPlace(placeTitle[i], placeAddress[i], placeLat[i], placeLng[i]);
+			placeList.add(place);
+			System.out.println(placeList);
+		}
+				
+		System.out.println(tp);
+		int result = mrs.insertBeforePlan(dayList, placeList, tp);
+		System.out.println(result);
+		int memberId = tp.getMemberId();
+		return "redirect:beforePlan.mr?memberId=" + memberId;
+	}
 
 	// 나의 문의 내역 - 이선우
 	@RequestMapping("myInquiryList.mr")

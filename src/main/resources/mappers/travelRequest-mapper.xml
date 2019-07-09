@@ -176,8 +176,10 @@
 	<!-- 설계글 불러오기 목록 조회 -->
 	<select id="selectRequestPlanList" parameterType="TravelRequestPlan" resultMap="planListResultSet">
 		SELECT *
-		FROM TRV_PLAN
-		WHERE MEMBER_ID = #{memberId}
+		FROM TRV_PLAN TP
+		LEFT JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
+		WHERE TP.MEMBER_ID = #{memberId}
+		AND P.PTCP_ID IS NULL
 	</select>
 	
 	<!-- 선택한 설계글 불러오기 -->

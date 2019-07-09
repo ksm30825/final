@@ -55,7 +55,6 @@
 				<hr>
 				<div class="columns">
 					<div class="column">
-					
 						<div class="buttons">
 							<a class="button is-primary is-rounded" onclick="myRequest();">나의
 								의뢰</a> <a class="button is-info is-rounded" onclick="myPlan();">나의
@@ -154,6 +153,9 @@
 </body>
 <script>
 	$(function() {
+		var menu = $(".myPageMenu li").eq(3);
+        menu.addClass('is-active');
+        menu.siblings().removeClass('is-active');
 		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",

@@ -60,6 +60,7 @@
 							<a class="button is-primary is-rounded" onclick="myRequest();">나의
 								의뢰</a> <a class="button is-info is-rounded" onclick="myPlan();">나의
 								설계</a> <a class="button is-link is-rounded" onclick="beforePlan();">미리작성</a>
+							<a class="button is-success is-rounded" onclick="beforePlanForm();">작성하기</a>
 						</div>
 					</div>
 				</div>
@@ -152,6 +153,10 @@
 </body>
 <script>
 	$(function() {
+		var menu = $(".myPageMenu li").eq(3);
+        menu.addClass('is-active');
+        menu.siblings().removeClass('is-active');
+        
 		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",
@@ -178,6 +183,9 @@
 	}
 	function beforePlan() {
 		location = "beforePlan.mr?memberId=${ loginUser.memberId}";
+	}
+	function beforePlanForm() {
+		location = "showBeforePlanForm.mr?memberId=${ loginUser.memberId }";
 	}
 </script>
 </html>

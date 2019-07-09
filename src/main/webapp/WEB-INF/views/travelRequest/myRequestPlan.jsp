@@ -294,6 +294,10 @@ textarea {
 </body>
 <script>
 	$(function() {
+		var menu = $(".myPageMenu li").eq(3);
+        menu.addClass('is-active');
+        menu.siblings().removeClass('is-active');
+        
 		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",
