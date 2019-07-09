@@ -2,6 +2,7 @@ package com.kh.ti.Chatting.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.ti.Chatting.model.service.ChattingService;
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.travel.model.vo.Country;
+import com.kh.ti.travel.model.vo.Tag;
 
 @Controller
 public class ChattingController {
@@ -136,6 +139,26 @@ public class ChattingController {
 	     return new ResponseEntity<Member>(userInfo, HttpStatus.OK);
 	   }
 	
+		@RequestMapping("/trBoardList.ch")
+		public ResponseEntity selectTravPlaceList() {
+			
+			ArrayList<Country> conlist = cs.selectContryList();
+			
+			System.out.println("도시 : "  + conlist);
+			
+			return new ResponseEntity(conlist , HttpStatus.OK);
+		}
+		
+		@RequestMapping("/trTagList.ch")
+		public ResponseEntity selectTagList() {
+			
+			ArrayList<Tag> taglist =  cs.selectTagList();
+			
+			System.out.println("태그 :" + taglist);
+			
+			return new ResponseEntity(taglist,HttpStatus.OK);
+		}
+		
 	
 	
 }
