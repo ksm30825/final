@@ -124,4 +124,11 @@
 		</div>
 	</div>
 </body>
+<script>
+	$(function() {
+		var menu = $(".myPageMenu li").eq(5);
+        menu.addClass('is-active');
+        menu.siblings().removeClass('is-active');
+	});
+</script>
 </html>

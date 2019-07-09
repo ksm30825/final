@@ -90,6 +90,10 @@ textarea {
 </body>
 <script>
 	$(function() {
+		var menu = $(".myPageMenu li").eq(5);
+        menu.addClass('is-active');
+        menu.siblings().removeClass('is-active');
+        
 		$(".is-link").click(function() {
 			location = "myInquiryList.mr";
 		});
