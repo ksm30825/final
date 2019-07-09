@@ -41,9 +41,13 @@ public class TravelBoardController {
 	
 	//여행일정 리스트 조회 - 예랑
 	@RequestMapping("travelList.tb")
-	public String travelList(Model model) {
+	public String travelList(HttpServletRequest request, Model model) {
 		
 		int currentPage = 1;
+		
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
 		
 		TravelBoard tb = new TravelBoard();
 		
@@ -60,15 +64,20 @@ public class TravelBoardController {
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		model.addAttribute("tagList", tbMap.get("tagList"));
 		model.addAttribute("cityList", tbMap.get("cityList"));
+		model.addAttribute("pi", pi);
 		
 		return "travelBoard/travelList";
 	}
 	
 	//여행일정 리스트 검색 - 예랑
 	@RequestMapping("searchTravelList.tb")
-	public String searchTravelList(String orderBy, String searchCondition, String searchContent, Model model) {
+	public String searchTravelList(String orderBy, String searchCondition, String searchContent, Model model, HttpServletRequest request) {
 		
 		int currentPage = 1;
+		
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
 		
 		TravelBoard tb = new TravelBoard();
 		
@@ -82,7 +91,7 @@ public class TravelBoardController {
 		
 		//order by 선택
 		switch (orderBy) {
-			case "completeDate" : tb.setCompleteDate(new Date(1)); break;
+			case "completeDate" : tb.setLikeyCount(0); tb.setBuyCount(0); break;
 			case "likeyCount" : tb.setLikeyCount(-1); break;
 			case "buyCount" : tb.setBuyCount(-1); break;
 		}
@@ -100,34 +109,32 @@ public class TravelBoardController {
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		model.addAttribute("tagList", tbMap.get("tagList"));
 		model.addAttribute("cityList", tbMap.get("cityList"));
+		model.addAttribute("pi", pi);
 		
 		return "travelBoard/travelList";
 	}
 	
 	//여행일정 리스트 태그 검색 - 예랑
 	@RequestMapping("searchTagTravelList.tb")
-	public String searchTagTravelList(String trvTags, String cityTags, Model model) {
-		
-		System.out.println("trvTags : " + trvTags);
-		System.out.println("cityTags : " + cityTags);
+	public String searchTagTravelList(String trvTags, String cityTags, Model model, HttpServletRequest request) {
 		
 		TravelBoard tb = new TravelBoard(); 
 		
-		if(trvTags != null) {
+		if(!trvTags.equals("")) {
 			ArrayList<String> trvTag = new ArrayList<String>(Arrays.asList(trvTags.split(",")));
-			System.out.println("trvTag : " + trvTag.size());
-			
 			tb.setTrvTags((ArrayList) trvTag);
 		}
 		
-		if(cityTags != null) {
+		if(!cityTags.equals("")) {
 			ArrayList<String> cityTag = new ArrayList<String>(Arrays.asList(cityTags.split(",")));
-			System.out.println("cityTag : " + cityTag.size());
-			
 			tb.setTrvCities((ArrayList) cityTag);
 		}
 		
 		int currentPage = 1;
+		
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
 		
 		//전체 목록 조회(페이징용)
 		HashMap pageMap = new HashMap();
@@ -139,11 +146,10 @@ public class TravelBoardController {
 		//일정 리스트 조회
 		HashMap tbMap = tbs.travelList(pi, tb);
 		
-		System.out.println("tbList : " + tbMap.get("tbList"));
-		
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		model.addAttribute("tagList", tbMap.get("tagList"));
 		model.addAttribute("cityList", tbMap.get("cityList"));
+		model.addAttribute("pi", pi);
 		
 		return "travelBoard/travelList";
 	}
@@ -168,14 +174,11 @@ public class TravelBoardController {
 		ArrayList detailDay = tbs.selectTravelDetailDays(tb);
 		model.addAttribute("detailDay", detailDay);
 		
-		System.out.println("detailDay : " + detailDay);
-		
 		//가계부 정보 조회
 		HashMap trvCost = tbs.selectTravelCost(trvId);
 		model.addAttribute("allCost", trvCost.get("allCost"));
 		
 		//리뷰 정보 조회
-		
 		TourReview tr = new TourReview();
 		
 		if(loginUser != null) {
@@ -183,7 +186,7 @@ public class TravelBoardController {
 		}
 		tr.setTrvId(trvId);
 		
-		//전체 목록 조회(페이징용)
+		//리뷰 목록 조회(페이징용)
 		HashMap pageMap = new HashMap();
 		pageMap.put("tr", tr);
 		
@@ -193,6 +196,7 @@ public class TravelBoardController {
 		//일정 리스트 조회
 		ArrayList<TourReview> trList = tbs.tourReviewList(pi, tr);
 		model.addAttribute("trList", trList);
+		model.addAttribute("pi", pi);
 		
 		return "travelBoard/travelDetail";
 	}
@@ -218,6 +222,7 @@ public class TravelBoardController {
 		pageMap.put("tr", tr);
 		
 		int listCount = tbs.getListCount(pageMap);
+		
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
 		
 		//리뷰 리스트 조회
@@ -273,20 +278,6 @@ public class TravelBoardController {
 	//여행일정 상세 / 일정표 / 날짜별 지도 보기 - 예랑
 	@RequestMapping("dayMapSelect.tb")
 	public String dayMapSelect() {
-		
-		return "travelBoard/travelDetail";
-	}
-	
-	//여행일정 상세 / 가계부 / 전체 보기 - 예랑
-	@RequestMapping("allCost.tb")
-	public String allCost() {
-		
-		return "travelBoard/travelDetail";
-	}
-	
-	//여행일정 상세 / 가계부 / 일별 보기 - 예랑
-	@RequestMapping("dayCost.tb")
-	public String dayCost() {
 		
 		return "travelBoard/travelDetail";
 	}
@@ -412,18 +403,9 @@ public class TravelBoardController {
 		
 		HashMap tbMap = tbs.myLikeyTravelListView(memberId);
 		
-		System.out.println("tbList : " + (ArrayList)  tbMap.get("tbList"));
-		System.out.println("tbList.size : " + ((ArrayList)  tbMap.get("tbList")).size());
-		
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		
 		return "travelBoard/myLikeyTravelList";
 	}
 	
-	//마이페이지 / 좋아요 여행일정 좋아요 취소 - 예랑
-	@RequestMapping("myLikeyTravelCancel.tb")
-	public String myLikeyTravelCancel() {
-		
-		return "travelBoard/myLikeyTravelList";
-	}
 }

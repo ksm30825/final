@@ -65,20 +65,26 @@
 			      
          <!-- 게시글 영역 -->
          
-         	<c:choose>
-         	<c:when test="${ fn:length(tbList) > 0 }">
-         	<div class="ui special cards">
-            <c:forEach var="tbList" items="${ tbList }" varStatus="status">
-            <div class="card">
-               <div class="blurring dimmable image" onclick="location.href='travelDetailForm.tb?trvId=${ tbList.trvId }'">
-                  <div class="ui dimmer">
-                     <div class="content">
-                        <div class="center">
-                           <p class="title is-4" style="color: white;">${ tbList.trvTitle }</p>
-                        </div>
-                     </div>
-                  </div>
-                  <img src="resources/images/sample1.jpg">
+		<c:choose>
+			<c:when test="${ fn:length(tbList) > 0 }">
+				<div class="ui special cards">
+				  <c:forEach var="tbList" items="${ tbList }" varStatus="status">
+					<div class="card">
+						<div class="blurring dimmable image" onclick="location.href='travelDetailForm.tb?trvId=${ tbList.trvId }'">
+							<div class="ui dimmer">
+								<div class="content">
+									<div class="center">
+									<p class="title is-4" style="color: white;">${ tbList.trvTitle }</p>
+									</div>
+								</div>
+							</div>
+					
+							<c:if test="${ !empty tbList.schFiles[0] }">
+								<img src="resources/uploadFiles/${ tbList.schFiles[0].changeName }">
+							</c:if>
+							<c:if test="${ empty tbList.schFiles[0] }">
+								<img src="resources/images/sample1.jpg">
+							</c:if>
                </div>
                
                <div class="content">

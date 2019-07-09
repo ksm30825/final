@@ -155,13 +155,41 @@
 	<select id="getListCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM TRAVEL T
-		JOIN MEMBER M ON (T.MEMBER_ID = M.MEMBER_ID)
 		WHERE STATUS = 'Y'
 		AND TRV_REF IS NULL
-		<choose>
-			<when test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
-			<when test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </when>
-		</choose>
+		<if test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </if>
+		<if test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </if>
+		
+		<if test="trvTags != null">
+			AND T.TRV_ID IN (
+        
+	        SELECT DISTINCT T.TRV_ID
+	        FROM TRAVEL T
+	        LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	        LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID) 
+	        WHERE T.STATUS = 'Y'
+	        AND (
+			<foreach item="s" collection="trvTags" separator="OR">
+				TA.TAG_NAME = #{ s }
+			</foreach>
+			))
+		</if>
+		
+		<if test="trvCities != null">
+			AND T.TRV_ID IN (
+		
+			SELECT T.TRV_ID
+			FROM TRAVEL T
+			LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+			LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+			LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
+			WHERE T.STATUS = 'Y'
+			AND (
+			<foreach item="c" collection="trvCities" separator="OR">
+				COU.COUNTRY_NAME_KO = #{ c }
+			</foreach>
+			))
+		</if>
 	</select>
 	
 	<!-- 일정 구매리뷰 페이징용 -->
@@ -170,10 +198,72 @@
 		FROM TOUR_REVIEW
 		WHERE TRV_ID = #{ trvId }
 		AND REVIEW_STATUS = 'Y'
+		ORDER BY REVIEW_DATE DESC
+	</select>
+	
+	<!-- 페이징에 따른 여행일정 번호 조회 -->
+	<select id="selectTravelBoardId" resultType="_int">
+		SELECT T.TRV_ID
+		FROM TRAVEL T
+		JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) TRL ON (TRL.TRV_ID = T.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(U.USE_POINT) as BUY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
+		WHERE STATUS = 'Y'
+		AND TRV_REF IS NULL
+		<if test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </if>
+		<if test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </if>
+		
+		<if test="trvTags != null">
+			AND T.TRV_ID IN (
+        
+	        SELECT DISTINCT T.TRV_ID
+	        FROM TRAVEL T
+	        LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	        LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID) 
+	        WHERE T.STATUS = 'Y'
+	        AND (
+			<foreach item="s" collection="trvTags" separator="OR">
+				TA.TAG_NAME = #{ s }
+			</foreach>
+			))
+		</if>
+		
+		<if test="trvCities != null">
+			AND T.TRV_ID IN (
+		
+			SELECT T.TRV_ID
+			FROM TRAVEL T
+			LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+			LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+			LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
+			WHERE T.STATUS = 'Y'
+			AND (
+			<foreach item="c" collection="trvCities" separator="OR">
+				COU.COUNTRY_NAME_KO = #{ c }
+			</foreach>
+			))
+		</if>
+		
+		<choose>
+			<when test="likeyCount lt 0">ORDER BY TRL.LIKEY_COUNT DESC, T.COMPLETE_DATE DESC</when>
+			<when test="buyCount lt 0">ORDER BY US.BUY_COUNT DESC, T.COMPLETE_DATE DESC</when>
+			<otherwise>
+				ORDER BY T.COMPLETE_DATE DESC, T.TRV_ID DESC
+			</otherwise>
+		</choose>
 	</select>
 	
 	<!-- 여행일정 전체 조회용 -->
-	<select id="selectTravelBoardList" resultMap="travelBoardResultSet">
+	<select id="selectTravelBoardList" resultMap="travelBoardResultSet" parameterType="java.util.Map">
 		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
        		   M.USER_NAME, T.TRV_REF, TG.TAG_ID, TA.TAG_NAME, CITY_NAME_KO, COUNTRY_NAME_KO, CITY_ID, LIKEY_COUNT, BUY_COUNT,
                SFI.FILE_ID, SFI.ORIGIN_NAME, SFI.CHANGE_NAME, SFI.FILE_PATH
@@ -204,32 +294,21 @@
 	    WHERE T.STATUS = 'Y'
 	    AND T.TRV_REF IS NULL
 	    AND T.COMPLETE_DATE IS NOT NULL
+	    <if test="list.size gt 0">
+	    	AND (
+	    </if>
+		<foreach item="trvId" collection="list" separator="OR">
+			T.TRV_ID = #{ trvId }
+		</foreach>
+		<if test="list.size gt 0">
+	    	)
+	    </if>
+	    
 	    <choose>
-			<when test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
-			<when test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </when>
-		</choose>
-		
-		<if test="trvTags != null">
-			AND (
-			<foreach item="s" collection="trvTags" separator="OR">
-				TA.TAG_NAME = #{ s }
-			</foreach>
-			)
-		</if>
-		
-		<if test="trvCities != null">
-			AND (
-			<foreach item="c" collection="trvCities" separator="OR">
-				COUNTRY_NAME_KO = #{ c }
-			</foreach>
-			)
-		</if>
-        
-        <choose>
-			<when test="likeyCount = -1"> ORDER BY LIKEY_COUNT DESC </when>
-			<when test="buyCount = -1"> ORDER BY BUY_COUNT DESC </when>
+			<when test="tb.likeyCount lt 0">ORDER BY TRL.LIKEY_COUNT DESC, T.COMPLETE_DATE DESC</when>
+			<when test="tb.buyCount lt 0">ORDER BY US.BUY_COUNT DESC, T.COMPLETE_DATE DESC</when>
 			<otherwise>
-				ORDER BY T.COMPLETE_DATE DESC
+				ORDER BY T.COMPLETE_DATE DESC, T.TRV_ID DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -315,7 +394,6 @@
 		LEFT JOIN TRV_SCH TSCH ON (TD.DAY_ID = TSCH.DAY_ID)
 		LEFT JOIN SCH_FILE SF ON (TSCH.SCH_ID = SF.SCH_ID)
 		WHERE TD.TRV_ID = #{ trvId }
-		AND TSCH.SCH_ID != 0
 		ORDER BY TD.DAY_NUMBER, TSCH.SCH_ID, TSCH.SCH_NUMBER
 	</select>
 	
@@ -326,6 +404,7 @@
 		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
 		WHERE TRV_ID = #{ trvId }
 		AND REVIEW_STATUS = 'Y'
+		ORDER BY REVIEW_DATE DESC
 	</select>
 	
 	<select id="CheckWriteStatus" resultType="string">

@@ -236,7 +236,7 @@ public class TravelBoard implements java.io.Serializable {
 				+ ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId + ", userName="
 				+ userName + ", trvRef=" + trvRef + ", budget=" + budget + ", trvCities=" + trvCities + ", trvTags="
 				+ trvTags + ", schFiles=" + schFiles + ", likeyCount=" + likeyCount + ", buyCount=" + buyCount
-				+ ", buyStatus=" + buyStatus + ", likeyStatus=" + likeyStatus + ", writeStatus=" + writeStatus + "]";
+				+ ", buyStatus=" + buyStatus + ", likeyStatus=" + likeyStatus + ", writeStatus=" + writeStatus + "]\n";
 	}
 
 }

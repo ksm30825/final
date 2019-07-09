@@ -48,8 +48,17 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
 		
+		
+		//페이징 처리된 여행일정 리스트 TRV_ID 가져오기
+		ArrayList trvIdList = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardId", tb, rowBounds);
+		
+		HashMap hmap = new HashMap();
+		hmap.put("tb", tb);
+		hmap.put("list", trvIdList);
+		
 		//여행일정 리스트
-		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardList", tb, rowBounds);
+		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardList", hmap);
+		
 		tbMap.put("tbList", tbList);
 		
 		//여행테마 태그 리스트
@@ -118,8 +127,12 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 	@Override
 	public ArrayList<TourReview> tourReviewList(SqlSessionTemplate sqlSession, PageInfo pi, TourReview tr) {
 		
+		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
+		
 		//구매리뷰 조회
-		ArrayList<TourReview> trList =  (ArrayList) sqlSession.selectList("TravelBoard.tourReviewList", tr);
+		ArrayList<TourReview> trList =  (ArrayList) sqlSession.selectList("TravelBoard.tourReviewList", tr, rowBounds);
+		
 		//구매리뷰 작성여부 조회
 		for(int i = 0; i < trList.size(); i++) {
 			trList.get(i).setWriteStatus(sqlSession.selectOne("TravelBoard.CheckWriteStatus", tr));

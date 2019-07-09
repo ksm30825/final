@@ -126,19 +126,45 @@
 				<!-- 페이징 -->
 				<div class="paging" align="center">
 					<nav class="pagination is-rounded" role="navigation" aria-label="pagination">
-						<ul class="pagination-list">
+					<ul class="pagination-list">
+						<!-- 이전버튼 -->
+						<c:if test="${ pi.currentPage <= 1 }">
 							<li><a class="pagination-previous">이전</a></li>
-							<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-							<li><span class="pagination-ellipsis">…</span></li>
-							<li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-							<li><a class="pagination-link is-current"
-								aria-label="Page 46" aria-current="page">페이징아직안함</a></li>
-							<li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-							<li><span class="pagination-ellipsis">…</span></li>
-							<li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+						</c:if>
+						<c:if test="${ pi.currentPage > 1 }">
+							<c:url var="previous" value="selectTourReview.tb">
+							<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
+							</c:url>
+							<li><a class="pagination-previous" onclick="reviewSelect(currentPage)">이전</a></li>
+						</c:if>
+						<!--  -->
+						
+						<!-- 숫자버튼 -->
+						<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+							<c:if test="${ p eq pi.currentPage }">
+								<li><a class="pagination-link" aria-label="Goto page 1" onclick="reviewSelect(${ p })">${ p }</a></li>
+							</c:if>
+							<c:if test="${ p ne pi.currentPage }">
+								<c:url var="number" value="">
+								<c:param name="currentPage" value="${ p }"/>
+								</c:url>
+								<li><a class="pagination-link" aria-label="Goto page 1" onclick="reviewSelect(${ p })">${ p }</a></li>
+							</c:if>
+						</c:forEach>
+						<!--  -->
+						
+						<!-- 다음 버튼 -->
+						<c:if test="${ pi.currentPage >= pi.maxPage }">
 							<li><a class="pagination-next">다음</a></li>
-						</ul>
-					</nav>
+						</c:if>
+						<c:if test="${ pi.currentPage < pi.maxPage }">
+							<c:url var="next" value="reviewSelect()">
+							<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
+							</c:url>
+							<li><a class="pagination-next" onclick="reviewSelect(currentPage)">다음</a></li>
+						</c:if>
+					</ul>
+				</nav>
 				</div>
 				
 			</div>
@@ -332,6 +358,60 @@
 				alert("접속실패");
 			}
 		})
+	}
+	
+	function reviewSelect(currentPage) {
+		var currentPage = currentPage;
+		var trvId = ${ detailTb.trvId };
+		
+		$.ajax({
+			url : "selectTourReview.tb",
+			data : {currentPage : currentPage, trvId : trvId},
+			type : "post",
+			success : function(trList) {
+				
+				var table = $("#reviewTable > tbody");
+				table.children().remove();
+				
+				for (var key in trList) {
+					
+					var star = "";
+					//별점을 별로 표기
+					for(var i = 1; i < 6; i++) {
+						if(i <= trList[key].grade) {
+							star += '<a class="starImg" style="cursor: default;"><i class="fas fa-star"></i></a>';
+						}else {
+							star += '<a class="starImg" style="cursor: default;"><i class="far fa-star"></i></a>';
+						}
+					}
+					
+					var memberId = $("#loginId").val();
+					
+					
+					var no = 0;
+					if(currentPage > 1) {
+						no = Number(currentPage - 1);
+					}
+					
+					var number = Number(no + key) + 1;
+					
+					var review = "<tr><td>" + number + "</td><td>" + star + "</td><td>" + trList[key].reviewContent;
+					if(trList[key].memberId == memberId) {
+						review += '<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a></td><td>' + trList[key].userName + "</td></tr>";
+					}else {
+						review += "</td><td>" + trList[key].userName + "</td></tr>";
+					}
+					
+					
+					table.append(review);
+				}
+				
+			},
+			error : function(data) {
+				alert("접속실패");
+			}
+				
+		});
 	}
 </script>
 

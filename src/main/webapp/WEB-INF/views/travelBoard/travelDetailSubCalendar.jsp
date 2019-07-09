@@ -125,10 +125,9 @@
 						
 							<c:when test="${ st.count <= showDays }">
 								<c:set var="check" value="false" />
-								<c:forEach var="j" begin="0" end="${ fn:length(allCost) }" step="1">
-								<c:if test="${ st.count == detailDay[j].dayNumber && fn:length(detailDay[j].trvSchedule) > 0}">
+								<c:forEach var="j" begin="0" end="${ totalDays }" step="1">
+								<c:if test="${ st.count == detailDay[j].dayNumber }">
 										<%-- <p>DAY ${ st.count } 결제 안해도 볼 수 있음(정보 있음)</p> --%>
-										
 										<div class="calendarTable" style="padding: 10.5px 0; display: none;" id="calendarTable-day${ st.count }">
 											<nav class="panel costPanel">
 												<div class="panel-heading" align="center"
@@ -137,7 +136,12 @@
 												</div>
 												<div class="panel-heading" align="center" style="margin: 0">
 													<div style="display: table-cell;">
-														<span style="vertical-align: middle;">${ detailDay[j].dayMemo }</span>&nbsp;
+														<c:if test="${ !empty detailDay[j].dayMemo }">
+															<span style="vertical-align: middle;">${ detailDay[j].dayMemo }</span>&nbsp;
+														</c:if>
+														<c:if test="${ empty detailDay[j].dayMemo }">
+															<span style="vertical-align: middle; color: gray;">(제목없음)</span>&nbsp;
+														</c:if>
 														<!-- 날씨 아이콘 -->
 														<c:choose>
 															<c:when test="${ detailDay[st.count-1].dayWeather eq 'SUN' }">
@@ -170,27 +174,8 @@
 													
 													</div> 
 												</div>
-												<ul class="connectedSortable menu-list costList" style="background: white">
-													<li class="panel-block" style="display:none">
-														<div class="media-left" style="width: 20%">
-															<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
-															<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
-															<span class="icon costType food"><i class="fas fa-utensils"></i></span>
-															<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>
-															<span class="icon costType tour"><i class="fab fa-tripadvisor"></i></span>
-															<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>
-														</div>
-														<div class="media-content" style="width: 70%">
-															<div class="content">
-																<p>
-																	<strong class="costAmount"></strong>
-																	<small class="costCurrency"></small>
-																</p>
-																<small class="costContent"></small>
-															</div>
-														</div>
-													</li>
-													
+												<ul>
+													<c:if test="${ fn:length(detailDay[j].trvSchedule) > 0 && detailDay[j].trvSchedule[0].schId ne 0 }">
 													<c:forEach var="days" items="${ detailDay[j].trvSchedule }" varStatus="st" >
 														<li class="panel-block">
 															<div class="ui label" style="background: #209cee;">${ st.count }</div>&nbsp;&nbsp;
@@ -235,6 +220,12 @@
 															</div>
 														</li>
 													</c:forEach>
+													</c:if>
+													<c:if test="${ detailDay[j].trvSchedule[0].schId eq 0 }">
+														<li class="panel-block" style="justify-content: center; border: none;">
+															<p style="color: gray; margin: 2em;">상세정보없음</p>
+														</li>
+													</c:if>
 												</ul>
 											</nav>
 										</div>
@@ -244,49 +235,12 @@
 								</c:if>
 								</c:forEach>
 								
-								<c:if test="${ check == false }">
-									<div class="column" style="padding: 10.5px 0;" id="calendarTable-day${ st.count }">
-											<nav class="panel costPanel">
-												<div class="panel-heading" align="center" style="background: whitesmoke; color: black; height: 30px">
-													<p class="help">${ detailDay[st.count-1].dayDate }</p>
-												</div>
-												<div class="panel-heading" align="center" style="margin: 0">
-													<span>DAY ${ st.count }</span>&nbsp; 
-												</div>
-												<ul class="connectedSortable menu-list costList" style="background: white">
-													<li class="panel-block" style="display:none">
-														<div class="media-left" style="width: 20%">
-															<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
-															<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
-															<span class="icon costType food"><i class="fas fa-utensils"></i></span>
-															<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>
-															<span class="icon costType tour"><i class="fab fa-tripadvisor"></i></span>
-															<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>
-														</div>
-														<div class="media-content" style="width: 70%">
-															<div class="content">
-																<p>
-																	<strong class="costAmount"></strong>
-																	<small class="costCurrency"></small>
-																</p>
-																<small class="costContent"></small>
-															</div>
-														</div>
-													</li>
-													
-													<li class="panel-block" style="justify-content: center;">
-														<p>상세정보없음</p>
-													</li>
-												</ul>
-											</nav>
-										</div>
-								</c:if>
 							</c:when>
 							
 							<c:otherwise>
 							
 								<c:set var="check" value="false" />
-								<c:forEach var="j" begin="0" end="${ fn:length(allCost) }" step="1">
+								<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
 								<c:if test="${ st.count == detailDay[j].dayNumber && fn:length(detailDay[j].trvSchedule) > 0}">
 										<%-- <p>DAY ${ st.count } 결제 안해도 볼 수 있음(정보 있음)</p> --%>
 										
@@ -298,7 +252,12 @@
 												</div>
 												<div class="panel-heading" align="center" style="margin: 0">
 													<div style="display: table-cell;">
-														<span style="vertical-align: middle;">${ detailDay[j].dayMemo }</span>&nbsp;
+														<c:if test="${ !empty detailDay[j].dayMemo }">
+															<span style="vertical-align: middle;">${ detailDay[j].dayMemo }</span>&nbsp;
+														</c:if>
+														<c:if test="${ empty detailDay[j].dayMemo }">
+															<span style="vertical-align: middle; color: gray;">(제목없음)</span>&nbsp;
+														</c:if>
 														<!-- 날씨 아이콘 -->
 														<c:choose>
 															<c:when test="${ detailDay[st.count-1].dayWeather eq 'SUN' }">
@@ -331,71 +290,21 @@
 													
 													</div> 
 												</div>
-												<ul class="connectedSortable menu-list costList" style="background: white">
-													<li class="panel-block" style="display:none">
-														<div class="media-left" style="width: 20%">
-															<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
-															<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
-															<span class="icon costType food"><i class="fas fa-utensils"></i></span>
-															<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>
-															<span class="icon costType tour"><i class="fab fa-tripadvisor"></i></span>
-															<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>
-														</div>
-														<div class="media-content" style="width: 70%">
-															<div class="content">
-																<p>
-																	<strong class="costAmount"></strong>
-																	<small class="costCurrency"></small>
-																</p>
-																<small class="costContent"></small>
-															</div>
-														</div>
+												
+												<ul>
+												<c:if test="${ fn:length(detailDay[j].trvSchedule) > 0 && detailDay[j].trvSchedule[0].schId ne 0 }">
+													<li class="panel-block" onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다." style="cursor: pointer; justify-content: center; border: none;">
+														<p style="color: gray; margin: 2em;"><i class="fas fa-exclamation-circle"></i> 미리보기 종료<br><br>
+				            							해당 날짜의 상세일정 정보는<br>
+				            							해당 일정을 구매하셔야 볼 수 있습니다.</p>
+				            						</li>
+				            					</c:if>
+				            					<c:if test="${ detailDay[j].trvSchedule[0].schId eq 0 }">
+													<li class="panel-block" style="justify-content: center; border: none;">
+														<p style="color: gray; margin: 2em;"><i class="fas fa-exclamation-circle"></i> 미리보기 종료<br><br>
+				            							해당 날짜의 상세일정 정보가 없습니다.</p>
 													</li>
-													
-													<c:forEach var="days" items="${ detailDay[j].trvSchedule }" varStatus="st" >
-														<li class="panel-block">
-															<div class="ui label" style="background: #209cee;">${ st.count }</div>&nbsp;&nbsp;
-															<c:if test="${ !empty days.schTitle }">
-																<strong>${ days.schTitle }</strong>
-															</c:if>
-															<c:if test="${ empty days.schTitle }">
-																<span style="color: gray;">일정 제목 없음</span>
-															</c:if>
-														</li>
-														<li class="panel-block">
-															<div class="media-left times" style="width: 30%; display: none;">
-																<c:choose>
-																	<c:when test="${ days.isTimeset eq 'Y' }">
-																		<span><i class="far fa-clock"></i>&nbsp; ${ days.startTime } ~
-																		<br>${ days.endTime }</span>
-																	</c:when>
-																	<c:otherwise>
-																		<span><i class="far fa-clock"></i>&nbsp; 시간정보없음</span>
-																	</c:otherwise>
-																</c:choose>
-															</div>
-															<div class="media-content" style="width: 70%;">
-																<div class="content" style="display: inline-block;">
-																	<c:if test="${ !empty days.plcName }">
-																		<span style="white-space: pre-line;">
-																			<strong class="costAmount">${ days.plcName }</strong>
-																			<small class="costCurrency"></small>
-																		</span>
-																	</c:if>
-																	<c:if test="${ empty days.plcName }">
-																		<span style="white-space: pre-line;">
-																			<span class="costAmount" style="color: gray;">장소명 없음</span>
-																			<small class="costCurrency"></small>
-																		</span>
-																	</c:if>
-																	<c:if test="${ !empty days.schTransp }">
-																		<span><i class="fas fa fa-taxi"></i> ${ days.schTransp }</span>
-																	</c:if>
-																	
-																</div>
-															</div>
-														</li>
-													</c:forEach>
+												</c:if>
 												</ul>
 											</nav>
 										</div>
@@ -404,44 +313,6 @@
 										<c:set var="check" value="true" />
 								</c:if>
 								</c:forEach>
-								
-								<c:if test="${ check == false }">
-									<div class="column" style="padding: 10.5px 0;" id="calendarTable-day${ st.count }">
-											<nav class="panel costPanel">
-												<div class="panel-heading" align="center" style="background: whitesmoke; color: black; height: 30px">
-													<p class="help">${ detailDay[st.count-1].dayDate }</p>
-												</div>
-												<div class="panel-heading" align="center" style="margin: 0">
-													<span>DAY ${ st.count }</span>&nbsp; 
-												</div>
-												<ul class="connectedSortable menu-list costList" style="background: white">
-													<li class="panel-block" style="display:none">
-														<div class="media-left" style="width: 20%">
-															<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
-															<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
-															<span class="icon costType food"><i class="fas fa-utensils"></i></span>
-															<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>
-															<span class="icon costType tour"><i class="fab fa-tripadvisor"></i></span>
-															<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>
-														</div>
-														<div class="media-content" style="width: 70%">
-															<div class="content">
-																<p>
-																	<strong class="costAmount"></strong>
-																	<small class="costCurrency"></small>
-																</p>
-																<small class="costContent"></small>
-															</div>
-														</div>
-													</li>
-													
-													<li class="panel-block" style="justify-content: center;">
-														<p>상세정보없음</p>
-													</li>
-												</ul>
-											</nav>
-										</div>
-								</c:if>
 								
 							</c:otherwise>
 							
