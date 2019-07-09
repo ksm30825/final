@@ -35,5 +35,6 @@ public interface MyRequestService {
 
 	int updateBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp);
 
+	int insertBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp);
 
 }

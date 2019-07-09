@@ -405,7 +405,7 @@ th, td {
 		var memberId = ${ loginUser.memberId }	
 		console.log(memberId);
 		$.ajax({
-			url:"loadRequestPlan.mr",
+			url:"loadRequestPlanList.mr",
 			data:{memberId:memberId},
 			success:function(data) {
 				console.log(data);

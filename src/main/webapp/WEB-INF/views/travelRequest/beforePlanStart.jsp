@@ -8,7 +8,6 @@
 <meta charset="UTF-8">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
 <title>Insert title here</title>
 <style>
 .input {
@@ -96,7 +95,7 @@ th, td {
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<form action="myRequestPlan.mr">
+	<form action="insertBeforePlan.mr">
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="form">
@@ -105,10 +104,8 @@ th, td {
 			<textarea id="lng" name="PplaceLng" class="hidden"></textarea>
 			<textarea id="placeName" name="PplaceTitle" class="hidden"></textarea>
 			<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
-			<input type="hidden" value="${ reqId }" name="requestId" id="reqId">
 			<input type="hidden" value="${ loginUser.memberId }" name="memberId">
 			<input type="text" value="${ loginUser.userName }" name="userName">
-			<input type="hidden" value="${ userName }" id="userName">
 				<h1 class="title">일정작성</h1>
 				<hr>
 				<div class="columns">
@@ -368,7 +365,7 @@ th, td {
 	
 	//불러오기
 	function load() {
-		var memberId = ${ loginUser.memberId }
+		var memberId = "${ loginUser.memberId }";
 		console.log(memberId);
 		$.ajax({
 			url:"loadRequestPlanList.mr",
@@ -415,7 +412,6 @@ th, td {
 	}
 
 	function back() {
-		var reqId = $("#reqId").val();
 		var userName = $("#userName").val();
 		location = "requestDetail.tr?reqId=" + reqId + "&userName=" + userName;
 	}
@@ -426,21 +422,21 @@ th, td {
 	
 	//불러올 일정 선택
 	function ok() {
-		var reqId = ${ reqId };
-		console.log(reqId);
-		var planId = new Array();
+		var planId = "${ planId }";
+		console.log(planId);
+		var planArr = new Array();
 		$(".load").each(function() {
 			if($(this).find(".ok").is(":checked")) {	
 				console.log($(this).find("td").eq(1).text());
-				planId.push($(this).find("td").eq(1).text());
+				planArr.push($(this).find("td").eq(1).text());
 			}
 		});
-		if(planId.length > 1) {
+		if(planArr.length > 1) {
 			alert("한개만 선택하세요");
 			return false;
 		}
-		console.log(planId);
-		location = "loadRequetPlan.mr?reqId=" + reqId + "&planId=" + planId;
+		console.log(planArr);
+		location = "beforeLoadPlan.mr?memberId=${ loginUser.memberId }";
 	}
 	
 	//불러오기 취소

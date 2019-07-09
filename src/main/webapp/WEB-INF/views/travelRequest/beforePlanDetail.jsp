@@ -118,8 +118,6 @@ th, td {
 						<c:forEach var="day" items="${ trp }" varStatus="number">
 						<c:set var="placeList" value="${ day.getDayList().get(0).getPlaceList() }"/>
 							<c:if test="${ number.index == 0 }">
-								<textarea name="PdayId">${ trp.get(0).getDayList().get(0).getPdayId() }</textarea>
-								<textarea name="PplaceId">${ trp.get(0).getDayList().get(0).getPlaceList().get(0).getPplaceId() }</textarea>
 								<a class="button is-primary">Day${ number.count }</a> &nbsp;
 								<input type="hidden" value="Day${ number.count }" name="pDay">
 								<!-- X버튼 -->
@@ -149,8 +147,6 @@ th, td {
 						</c:if>
 						<c:if test="${ number.index != 0 }">
 						<div class="field">
-						<textarea name="PdayId">${ trp.get(number.index).getDayList().get(0).getPdayId() }</textarea>
-						<textarea name="PplaceId">${ trp.get(number.index).getDayList().get(0).getPlaceList().get(0).getPplaceId() }</textarea>
 							<a class="button is-primary">
 								Day <p class="day">${ number.count }</p> 
 							</a> &nbsp; 
@@ -409,7 +405,7 @@ th, td {
 		var memberId = ${ loginUser.memberId }	
 		console.log(memberId);
 		$.ajax({
-			url:"loadRequestPlan.mr",
+			url:"loadRequestPlanList.mr",
 			data:{memberId:memberId},
 			success:function(data) {
 				console.log(data);
@@ -479,7 +475,7 @@ th, td {
 			return false;
 		}
 		console.log(planId);
-		location = "loadRequetPlan.mr?reqId=" + reqId + "&planId=" + planId;
+		location = "beforeLoadPlan.mr?planId=" + planId + "&memberId=${ loginUser.memberId }";
 		console.log(placeList);
 	}
 	
