@@ -948,6 +948,7 @@ public class PointController {
 		refund.setRefundId(refundId);
 		
 		if(condition == 10 ) {
+			//승인
 			refund.setRefundStatus(20);
 		}else {
 			refund.setRefundStatus(30);
@@ -984,7 +985,7 @@ public class PointController {
 				return "redirect:/toAdRefundView.po";
 			}
 		}else if(updatedRefund.getUseType() == 20){
-			if(update>0 && updateUserPoint>0 &&updateUserProceeds>0) {
+			if(update>0 && updateUserPoint>0 &&updateUserProceeds>0 && refund.getRefundStatus()==20) {
 				return "redirect:/myChooseCanel.mr?requestId="+updatedRefund.getRequestId();
 			}
 		}
