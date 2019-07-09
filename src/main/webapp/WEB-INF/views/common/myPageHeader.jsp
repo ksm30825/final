@@ -108,7 +108,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a href="myRequestList.mr">
+	        <a href="myRequestList.mr?memberId=${ loginUser.memberId }">
 	          <span class="icon"><i class="fas fa-award"></i></span>
 	          <span>여행 의뢰</span>
 	        </a>

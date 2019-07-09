@@ -171,8 +171,15 @@
 	function start() {
 		var reqId = $("#reqId").text();
 		var userName = $("#userName").text();
-		console.log(reqId);
-		location = "showrequestStartForm.tr?reqId=" + reqId + "&userName=" + userName;
+		var loginName = "${ loginUser.userName }";
+		console.log(userName);
+		console.log(loginName);
+		if(userName == (loginName)) {
+			alert("본인이 설계해줄수 없습니다.");
+			return false;
+		} else {
+			location = "showrequestStartForm.tr?reqId=" + reqId + "&userName=" + userName;
+		}
 	}
 	function reset() {
 		location = "travelRequest.tr";

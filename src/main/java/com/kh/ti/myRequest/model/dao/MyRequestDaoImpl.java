@@ -144,9 +144,12 @@ public class MyRequestDaoImpl implements MyRequestDao{
 	@Override
 	public int updateBeforeDay(SqlSessionTemplate sqlSession, ArrayList<PlanDay> dayList) {
 		int result2 = 0;
+		int count = 1;
 		for(int i = 0; i < dayList.size(); i++) {
+			dayList.get(i).setCount(count++);
 			sqlSession.update("TravelRequest.updateBeforeDay", dayList.get(i));
 			result2++;
+			dayList.get(i).setCount(1);
 		}
 		System.out.println(result2);
 		return result2;
@@ -156,9 +159,12 @@ public class MyRequestDaoImpl implements MyRequestDao{
 	@Override
 	public int updateBeforePlace(SqlSessionTemplate sqlSession, ArrayList<PlanPlace> placeList) {
 		int result3 = 0;
+		int count = 1;
 		for(int i = 0; i < placeList.size(); i++) {
+			placeList.get(i).setCount(count++);
 			sqlSession.update("TravelRequest.updateBeforePlace", placeList.get(i));
 			result3++;
+			placeList.get(i).setCount(1);
 		}
 		System.out.println(result3);
 		return result3;

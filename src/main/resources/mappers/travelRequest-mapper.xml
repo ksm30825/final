@@ -44,7 +44,7 @@
 	
 	<!-- 선택된 설계글 조회(불러오기2단계(각 일정)) -->
 	<resultMap type="PlanDay" id="dayListResultSet">
-		<id property="PdayId" column="PLAN_ID"/>
+		<id property="PdayId" column="PDAY_ID"/>
 		<result property="pDay" column="PDAY"/>
 		<result property="pDayMemo" column="PDAY_MEMO"/>
 		<result property="openStatus" column="OPEN_STATUS"/>
@@ -182,9 +182,9 @@
 	
 	<!-- 선택한 설계글 불러오기 -->
 	<select id="selectLoadRequestPlan" parameterType="_int" resultMap="loadPlanResultSet">
-		SELECT  P.PTCP_ID, TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ROOM_CHARGE,
+		SELECT P.PTCP_ID, TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ROOM_CHARGE,
         TP.TRAFFIC_CHARGE, TP.ETC_CHARGE,
-        PD.PDAY_ID, PD.PDAY, PD.PDAY_MEMO,
+        PD.PDAY_ID, PD.PDAY, PD.PDAY_MEMO, PD.OPEN_STATUS,
         PP.PPLACE_ID, PP.PPLACE_TITLE, PP.PPLACE_ADDRESS,
         PP.PPLACE_LAT, PP.PPLACE_LNG
 		FROM TRV_PLAN TP
@@ -290,7 +290,7 @@
 	<!-- 미리작성 설계글 업데이트(1단계) -->
 	<update id="updateBeforePlan" parameterType="TravelRequestPlan">
 		UPDATE TRV_PLAN
-		SET PLAN_TITLE = #{planTitle}
+		SET PLAN_TITLE = #{planTitle},
 		PLAN_CONTENT = #{planContent},
 		MODIFY_DATE = SYSDATE,
 		ROOM_CHARGE = #{roomCharge},
@@ -300,11 +300,33 @@
 	</update>
 	
 	<!-- 미리작성 일자 업데이트(2단계) -->
-	<update id="updateBeforeDay" parameterType="PlanDay">
-		<selectKey keyProperty="planId" resultType="_int" order="BEFORE">
-			SELECT TRV_PLAN_SEQ.CURRVAL FROM DUAL
-		</selectKey>
-		INSERT INTO PLAN_DAY
-		VALUES (PLAN_DAY_SEQ.NEXTVAL, #{pDay}, #{pDayMemo}, #{openStatus}, #{planId})
+	<update id="updateBeforeDay">
+		UPDATE PLAN_DAY
+		SET PDAY_MEMO = #{pDayMemo},
+		OPEN_STATUS = #{openStatus}
+		WHERE PDAY_ID = (SELECT PDAY_ID
+						 FROM (SELECT ROWNUM RNUM, PDAY_ID, PLAN_ID 
+						       FROM(SELECT PD.PDAY_ID, TP.PLAN_ID
+						       FROM PLAN_DAY PD
+						       JOIN TRV_PLAN TP ON(PD.PLAN_ID = TP.PLAN_ID)
+						       WHERE TP.PLAN_ID = #{planId}))
+						 WHERE RNUM = #{count})
+	</update>
+	
+	<!-- 미리작성 각 장소 업데이트(3단계) -->
+	<update id="updateBeforePlace" parameterType="PlanPlace">
+		UPDATE PLAN_PLACE
+		SET PPLACE_TITLE = #{PplaceTitle},
+		PPLACE_ADDRESS = #{PplaceAddress},
+		PPLACE_LAT = #{PplaceLat},
+		PPLACE_LNG = #{PplaceLng}
+		WHERE PPLACE_ID = (SELECT PPLACE_ID
+						 FROM (SELECT ROWNUM RNUM, PDAY_ID, PLAN_ID, PPLACE_ID
+						        FROM(SELECT PD.PDAY_ID, PD.PLAN_ID, PP.PPLACE_ID
+						        FROM PLAN_PLACE PP
+						        JOIN PLAN_DAY PD ON(PP.PDAY_ID = PD.PDAY_ID)
+						        WHERE PD.PLAN_ID = #{PdayId}
+						        ORDER BY PPLACE_ID))
+						 WHERE RNUM = #{count})
 	</update>
 </mapper>
