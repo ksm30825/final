@@ -302,7 +302,11 @@ public class TravelDaoImpl implements TravelDao {
 		return (ArrayList)sqlSession.selectList("Travel.selectDownloadSch", trvId);
 	}
 
-	
+	@Override
+	public ArrayList<HashMap> selectDownloadCost(SqlSessionTemplate sqlSession, int trvId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectDownloadCost", trvId);
+	}
+
 	
 	
 	
@@ -337,6 +341,7 @@ public class TravelDaoImpl implements TravelDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 
 

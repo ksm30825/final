@@ -102,8 +102,9 @@
 				<div align="right">
 					<button class="button is-link" id="downSchBtn">
 						<span class="icon is-small"><i class="fas fa-file-excel"></i></span>
-						<span>엑셀다운</span>
+						<span>일정 엑셀로 다운받기</span>
 					</button>
+					<br>
 				</div>
 				<div class="columns is-multiline">
 					<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st">
@@ -195,7 +196,7 @@
 			});
 			
 			$("#downSchBtn").click(function() {
-				$.ajax({
+				/* $.ajax({
 					url:"downloadSch.trv",
 					type:"POST",
 					data:{trvId:"${ trv.trvId }"},
@@ -207,7 +208,8 @@
 						alert("err");
 					}
 						
-				});
+				}); */
+				location.href="downloadSch.trv?trvId=${ trv.trvId }";
 			});
 		});
 	</script>

@@ -1,5 +1,6 @@
 package com.kh.ti.travel.model.service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,11 +9,21 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +33,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.ti.common.CommonUtils;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.dao.TravelDao;
 import com.kh.ti.travel.model.vo.City;
@@ -686,63 +698,150 @@ public class TravelServiceImpl implements TravelService {
 	
 //-------------excelDown-------------------------------------------------------------
 	@Override
-	public void selectDownloadSch(int trvId) {
+	public void selectDownloadSch(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		SXSSFWorkbook wb = new SXSSFWorkbook();
-		Sheet sheet = wb.createSheet("schedule");
+		SXSSFSheet sheet = wb.createSheet("schedule");
+		for(int i = 0; i <= 7; i++) {
+			sheet.trackColumnForAutoSizing(i);
+		}
+		
+		OutputStream fileOut = response.getOutputStream();
 		
 		ArrayList<HashMap> schList = td.selectDownloadSch(sqlSession, trvId);
 		
+			
+		Map<String, CellStyle> styles = CommonUtils.createStyles(wb);
+			
+		Row title = sheet.createRow(0);
+		title.createCell(0).setCellValue("TITLE : ");
+		Cell titleCell = title.createCell(1);
+		titleCell.setCellValue(schList.get(0).get("trvTitle").toString());
+		titleCell.setCellStyle(styles.get("cell_b"));
+		title.createCell(5).setCellValue("AUTHOR : ");
+		title.createCell(6).setCellValue(schList.get(0).get("userName").toString());
+		Row header = sheet.createRow(2);
+			
+		header.setHeightInPoints(20f);
+			
+			
+			
+			
+		for (int i = 1; i <= 7; i++) {
+			Cell cell = header.createCell(i);
+	        switch(i) {
+	            case 1: cell.setCellValue("DAY");break;
+	            case 2: cell.setCellValue("날짜");break;
+	            case 3: cell.setCellValue("시작시간");break;
+	            case 4: cell.setCellValue("종료시간");break;
+	            case 5: cell.setCellValue("일정제목");break;
+	            case 6: cell.setCellValue("장소명");break;
+	            case 7: cell.setCellValue("교통정보");break;
+	        }
+	        cell.setCellStyle(styles.get("header"));
+	    }
 		
-		try (OutputStream fileOut = new FileOutputStream("workbook.xlsx")) {
-			Row title = sheet.createRow(0);
-			title.createCell(0).setCellValue("여행제목 : ");
-			title.createCell(1).setCellValue(schList.get(0).get("trvTitle").toString());
-			Row header = sheet.createRow(2);
-			// Create a cell and put a value in it.
-			header.createCell(1).setCellValue("DAY");
-			header.createCell(2).setCellValue("날짜");
-			header.createCell(3).setCellValue("시작시간");
-			header.createCell(4).setCellValue("종료시간");
-			header.createCell(5).setCellValue("일정제목");
-			header.createCell(6).setCellValue("장소명");
-			header.createCell(7).setCellValue("교통정보");
 			
-			
-			for(int i = 0; i < schList.size(); i++) {
-				HashMap schMap = schList.get(i);
-				Row row = sheet.createRow(i + 3);
-				String start = "";
+		for(int i = 0; i < schList.size(); i++) {
+			HashMap schMap = schList.get(i);
+			Row row = sheet.createRow(i + 3);
 				
-				row.createCell(1).setCellValue(schMap.get("dayNumber").toString());
-				row.createCell(2).setCellValue(schMap.get("dayDate").toString());
-				if(schMap.get("startTime") != null) {
-					row.createCell(3).setCellValue(schMap.get("startTime").toString());
-				}
-				if(schMap.get("endTime") != null) {
-					row.createCell(4).setCellValue(schMap.get("endTime").toString());
-				}
-				row.createCell(5).setCellValue(schMap.get("schTitle").toString());
-				if(schMap.get("plcName") != null) {
-					row.createCell(6).setCellValue(schMap.get("plcName").toString());
-				}
-				if(schMap.get("schTransp") != null) {
-					row.createCell(7).setCellValue(schMap.get("schTransp").toString());
-				}
+				
+				
+			row.createCell(1).setCellValue(schMap.get("dayNumber").toString());
+			row.createCell(2).setCellValue(schMap.get("dayDate").toString());
+			if(schMap.get("startTime") != null) {
+				row.createCell(3).setCellValue(schMap.get("startTime").toString());
 			}
-
-			wb.write(fileOut);
-			
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			if(schMap.get("endTime") != null) {
+				row.createCell(4).setCellValue(schMap.get("endTime").toString());
+			}
+			row.createCell(5).setCellValue(schMap.get("schTitle").toString());
+			if(schMap.get("plcName") != null) {
+				row.createCell(6).setCellValue(schMap.get("plcName").toString());
+			}
+			if(schMap.get("schTransp") != null) {
+				row.createCell(7).setCellValue(schMap.get("schTransp").toString());
+			}
 		}
-	    
+
+			
+		for(int i = 0; i <= 7; i++) {
+			sheet.autoSizeColumn(i);
+		}
+		response.setContentType("Application/Msexcel");
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"schedule.xlsx\""));
+		wb.write(fileOut);
+			
+		fileOut.close();
 		
 	}
 
+
+	@Override
+	public void selectDownloadCost(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		SXSSFWorkbook wb = new SXSSFWorkbook();
+		SXSSFSheet sheet = wb.createSheet("cost");
+		for(int i = 0; i <= 6; i++) {
+			sheet.trackColumnForAutoSizing(i);
+		}
+		
+		OutputStream fileOut = response.getOutputStream();
+		
+		ArrayList<HashMap> costList = td.selectDownloadCost(sqlSession, trvId);
+		
+			
+		Map<String, CellStyle> styles = CommonUtils.createStyles(wb);
+			
+		Row title = sheet.createRow(0);
+		title.createCell(0).setCellValue("TITLE : ");
+		Cell titleCell = title.createCell(1);
+		titleCell.setCellValue(costList.get(0).get("trvTitle").toString());
+		titleCell.setCellStyle(styles.get("cell_b"));
+		title.createCell(5).setCellValue("AUTHOR : ");
+		title.createCell(6).setCellValue(costList.get(0).get("userName").toString());
+		Row header = sheet.createRow(2);
+			
+		header.setHeightInPoints(20f);
+			
+			
+			
+		for (int i = 1; i <= 6; i++) {
+			Cell cell = header.createCell(i);
+	        switch(i) {
+	            case 1: cell.setCellValue("DAY");break;
+	            case 2: cell.setCellValue("날짜");break;
+	            case 3: cell.setCellValue("가계부 항목");break;
+	            case 4: cell.setCellValue("경비 타입");break;
+	            case 5: cell.setCellValue("금액");break;
+	            case 6: cell.setCellValue("통화");break;
+	        }
+	        cell.setCellStyle(styles.get("header"));
+	    }
+		
+			
+		for(int i = 0; i < costList.size(); i++) {
+			HashMap costMap = costList.get(i);
+			Row row = sheet.createRow(i + 3);
+				
+			row.createCell(1).setCellValue(costMap.get("dayNumber").toString());
+			row.createCell(2).setCellValue(costMap.get("dayDate").toString());
+			row.createCell(3).setCellValue(costMap.get("costContent").toString());
+			row.createCell(4).setCellValue(costMap.get("costType").toString());
+			row.createCell(5).setCellValue(costMap.get("costAmount").toString());
+			row.createCell(6).setCellValue(costMap.get("currency").toString());
+		}
+
+			
+		for(int i = 0; i <= 6; i++) {
+			sheet.autoSizeColumn(i);
+		}
+		response.setContentType("Application/Msexcel");
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"cost.xlsx\""));
+		wb.write(fileOut);
+		
+		fileOut.close();
+	}
 
 
 	

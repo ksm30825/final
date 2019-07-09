@@ -156,6 +156,8 @@ public interface TravelDao {
 	
 	ArrayList<HashMap> selectDownloadSch(SqlSessionTemplate sqlSession, int trvId);
 
+	ArrayList<HashMap> selectDownloadCost(SqlSessionTemplate sqlSession, int trvId);
+
 
 
 

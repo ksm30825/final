@@ -97,14 +97,26 @@
 	</resultMap>
 	<resultMap id="SchDownResultMap" type="java.util.HashMap">
 		<result property="trvTitle" column="TRV_TITLE"/>
+		<result property="userName" column="USER_NAME" />
 		<result property="dayNumber" column="DAY_NUMBER"/>
 		<result property="dayDate" column="DAY_DATE" />
 		<result property="startTime" column="START_TIME" />
 		<result property="endTime" column="END_TIME" />
 		<result property="schTitle" column="SCH_TITLE" />
-		<result property="placeName" column="PLC_NAME" />
+		<result property="plcName" column="PLC_NAME" />
 		<result property="schTransp" column="SCH_TRANSP" />
 	</resultMap>
+	<resultMap id="CostDownResultMap" type="java.util.HashMap">
+		<result property="trvTitle" column="TRV_TITLE" />
+		<result property="userName" column="USER_NAME" />
+		<result property="dayNumber" column="DAY_NUMBER" />
+		<result property="dayDate" column="DAY_DATE" />
+		<result property="costContent" column="COST_CONTENT" />
+		<result property="costType" column="COST_TYPE" />
+		<result property="costAmount" column="COST_AMOUNT" />
+		<result property="currency" column="CURRENCY" />
+	</resultMap>
+
 
 	<!-- Country & City -->
 	<select id="selectCity" parameterType="_int" resultMap="CityResultSet">
@@ -280,11 +292,12 @@
 	</update>
 	
 	<select id="selectDownloadSch" parameterType="_int" resultMap="SchDownResultMap">
-		SELECT TRV.TRV_TITLE, DAY.DAY_NUMBER, DAY.DAY_DATE, SCH.START_TIME, SCH.END_TIME, 
+		SELECT TRV.TRV_TITLE, M.USER_NAME, DAY.DAY_NUMBER, DAY.DAY_DATE, SCH.START_TIME, SCH.END_TIME, 
 		SCH.SCH_TITLE, SCH.PLC_NAME, SCH.SCH_TRANSP
 		FROM TRV_SCH SCH
 		JOIN TRV_DAY DAY ON (SCH.DAY_ID = DAY.DAY_ID)
 		JOIN TRAVEL TRV ON (TRV.TRV_ID = DAY.TRV_ID)
+		JOIN MEMBER M ON (M.MEMBER_ID = TRV.MEMBER_ID)
 		WHERE TRV.TRV_ID = #{trvId}
 		ORDER BY DAY.DAY_NUMBER, SCH.SCH_NUMBER
 	</select>
@@ -382,6 +395,16 @@
 		AND SCH_ID IS NULL
 		ORDER BY COST_TYPE, COST_ID
 	</select>
+	<select id="selectDownloadCost" parameterType="_int" resultMap="CostDownResultMap">
+		SELECT TRV.TRV_TITLE, M.USER_NAME, DAY.DAY_NUMBER, DAY.DAY_DATE, COST.COST_CONTENT, COST.COST_TYPE, COST.COST_AMOUNT, COST.CURRENCY
+		FROM TRV_COST COST
+		JOIN TRV_DAY DAY ON (COST.DAY_ID = DAY.DAY_ID)
+		JOIN TRAVEL TRV ON (TRV.TRV_ID = DAY.TRV_ID)
+		JOIN MEMBER M ON (M.MEMBER_ID = TRV.MEMBER_ID)
+		WHERE TRV.TRV_ID = #{trvId}
+		ORDER BY DAY.DAY_NUMBER, COST.COST_TYPE
+	</select>
+	
 	
 	
 	<!-- TrvTag -->

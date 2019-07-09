@@ -1,7 +1,15 @@
 package com.kh.ti.travel.model.service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.travel.model.vo.City;
@@ -114,7 +122,9 @@ public interface TravelService {
 
 	
 
-	void selectDownloadSch(int trvId);
+	void selectDownloadSch(int trvId, HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException, IOException;
+
+	void selectDownloadCost(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 
 

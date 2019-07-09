@@ -135,6 +135,13 @@
 				</table>
 			</section>
 			<section class="section">
+				<div align="right">
+					<button class="button is-link" id="downCostBtn">
+						<span class="icon is-small"><i class="fas fa-file-excel"></i></span>
+						<span>가계부 엑셀로 다운받기</span>
+					</button>
+					<br>
+				</div>
 				<div class="columns is-multiline">
 					<c:forEach var="trvDay" items="${ trvDayList }" varStatus="st">
 						<div class="column is-one-fifth" style="padding: 10.5px 0">
@@ -425,6 +432,11 @@
 						}
 					});
 				}
+			});
+			
+			
+			$("#downCostBtn").click(function() {
+				location.href="downloadCost.trv?trvId=${ trv.trvId }";
 			});
 			
 		});
