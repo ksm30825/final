@@ -845,7 +845,28 @@ public class TravelServiceImpl implements TravelService {
 
 
 	
-	
+//------------구매일정으로 새 일정 작성-----------------------------------------------------
+
+	@Override
+	public int insertOverrideTravel(int trvId, int memberId) {
+		
+		Travel trv = td.selectTravel(sqlSession, trvId);
+		
+		Travel overrideTrv = new Travel();
+		overrideTrv.setTrvTitle("제목 없음");
+		overrideTrv.setStartDate(trv.getStartDate());
+		overrideTrv.setEndDate(trv.getEndDate());
+		overrideTrv.setCompNumber(1);
+		overrideTrv.setBudget(trv.getBudget());
+		overrideTrv.setMemberId(memberId);
+		overrideTrv.setTrvRef(trvId);
+		
+		int result = td.insertOverrideTrv(sqlSession, overrideTrv);
+		
+		int ovTrvId = td.selectTrvId(sqlSession);
+		return ovTrvId;
+	}
+
 	
 	
 	

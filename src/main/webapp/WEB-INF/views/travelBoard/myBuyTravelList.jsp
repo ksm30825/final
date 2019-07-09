@@ -196,7 +196,6 @@
 		$('#myModal').toggleClass('is-active').removeAttr('style');
 		
 		$("#travelMake").click(function() {
-
 			location.href="overrideTravel.trv?trvId=" + trvId;
 		});
 
