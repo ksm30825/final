@@ -165,8 +165,16 @@
 		          ,minDate: "0D" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
 		          ,maxDate: "+1Y" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
 		      });
-				 		
-			 $("#trStartDate").datepicker();      
+	  		
+			//set datePicker
+			var startDate;
+	         $("#trStartDate").datepicker({
+	        		onSelect:function(selectedDate) {
+						startDate = $(this).datepicker('getDate');
+						$("#trEndDate").datepicker("option", "minDate", startDate);
+					}, 
+	        });
+	       
 		 	 $("#trEndDate").datepicker();
 		 	 
 		 	

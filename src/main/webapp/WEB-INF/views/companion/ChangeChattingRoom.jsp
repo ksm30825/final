@@ -87,7 +87,7 @@
 				         		</tr>
 				         	</table> 
 				         </form>
-				         <button type = "button" class = "modifybtn">변경하기</button>
+				         <button type = "button" class = "modifybtn" id = "editRoomBtn">변경하기</button>
 			        </div>
 			      </div>
 			    </div>
@@ -105,7 +105,7 @@
 				        	 <option selected>방장선택</option> 
 			        	 </select>
 			        	 </div>
-			        	  <button type = "button" class = "modifybtn">변경하기</button>
+			        	  <button type = "button" class = "modifybtn" id = "chiefStaffbtn">변경하기</button>
 
 			        </div>
 			      </div>
@@ -133,8 +133,18 @@
 		          ,maxDate: "+1Y" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
 		      });
 				 		
-			 $("#trStartDate").datepicker();
-		 	 $("#trEndDate").datepicker();
+		
+		 	 
+		 	//set datePicker
+			var startDate;
+		    $("#trStartDate").datepicker({
+		        onSelect:function(selectedDate) {
+					startDate = $(this).datepicker('getDate');
+					$("#trEndDate").datepicker("option", "minDate", startDate);
+				}, 
+		    });
+		       
+			$("#trEndDate").datepicker();
 		 	
 		 	$(document).ready(function() { //start
 				
@@ -188,7 +198,7 @@
 	        	 	   
 		 		});
 	           
-	         //채팅Manager 값 가져오기
+	           //채팅Manager 값 가져오기
 		       socket.emit('preChatManager' , {chatId : chatId , div : "처음"});
 		          
 		       socket.on('preChatManager', function(data){
@@ -211,9 +221,17 @@
 		        	   });
 		         });
 	           
+		       
+		       //패팅방 update 
+		       $("#editRoomBtn").click(function(){
+		    	   
+		       });
+		       
+		       
+		       
 	           
 	    		
-		});    
+		});    //end
 		 	 
 	</script>
 	

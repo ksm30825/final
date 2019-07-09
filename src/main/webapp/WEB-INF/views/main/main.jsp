@@ -41,11 +41,13 @@
 		height : auto;
 	}
 	
+	.selectBox{
+	}
+	
 	
 </style>
 </head>
 <body>
-
 	<jsp:include page = "../common/mainNav.jsp"/>
 	
 	<!-- <section class="section" id="content"> -->
@@ -65,20 +67,25 @@
  						<tr>
  							<td>
 								<div class="field">
-		        					<p class="control">
-	          							<input class="input is-primary" id = "SearchPlace" name = "SearchPlace" type="text" placeholder="검색하실 여행지를 입력해주세요">
-	       							 </p>
+									<span class="select ">
+							           <select id = "Searchcontry" >
+							              <option>여행지 선택</option>
+							            </select>
+							        </span>
      						 	</div>
 							</td>
  							<td>
 								<div class="field">
-	        						<p class="control">
-	          							<input class="input is-primary" id = "SearchCategory" name = "SearchCategory" type="text" placeholder="검색하실 테마를 입력해주세요">
-	       							 </p>
+									<span class="select ">
+							            <select id = "Searchtag">
+							              <option>태그 선택</option>
+							            </select>
+							        </span>
+							
      						 	</div>
 							</td>
  							<td>
-								<div class="buttons">
+								<div class="buttons" id = "searchBtn">
        								 <a class="button is-primary is-outlined">검색</a>   
        							</div>
 							</td>
@@ -132,9 +139,53 @@
 			            step((index + 1) % count);
 			        });
 			    }
-
-	
+			    
 			    step(1);
+			    
+			    
+			    $.ajax({
+	        		   url : "${contextPath}/trBoardList.ch",
+	        	       success : function(data) {
+	        	    	   var $select = $("#Searchcontry");
+		   					  for(var key in data) {
+		   						var id = data[key].countryId;
+		   						var country = data[key].countryNameKo;
+		   						var $option = $("<option value='" + country + "'>").text(country);
+		   						$select.append($option);
+		   					 }
+	        	       },
+	        	       error : function(){
+	        	    	   console.log("에러발생");
+	        	       }
+	        	   });
+			    
+			    $.ajax({
+	        		   url : "${contextPath}/trTagList.ch",
+	        	       success : function(data) {
+	        	    	   var $select = $("#Searchtag");
+		   				   for(var key in data) {
+		   						var id = data[key].tagId;
+		   						var tag = data[key].tagName;
+		   						var $option = $("<option value='" + tag + "'>").text(tag);
+		   						$select.append($option);
+		   					 }
+	        	       },
+	        	       error : function(){
+	        	    	   console.log("에러발생");
+	        	       }
+	        	   });
+			    
+			    
+			    $("#searchBtn").click(function(){
+			    	var selectTag = $("#Searchtag").val();
+			    	var selectContry = $("#Searchcontry").val();
+			    	
+			    	console.log(selectTag + "-" + selectContry);
+			    	
+			    	location.href = "${contextPath}/searchTagTravelList.tb?trvTags="+selectTag+"&cityTags="+selectContry;
+			    });
+			    
+			    
 			});
 		</script>
 </body>

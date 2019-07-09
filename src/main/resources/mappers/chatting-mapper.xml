@@ -25,10 +25,37 @@
 		<result property="enrollType" column="ENROLL_TYPE"/>
 	</resultMap>
 	
+	<!-- country -->
+	<resultMap type="Country" id="CountryResultSet">
+		<id property="countryId" column="COUNTRY_ID"/>
+		<result property="continentName" column="CONTINENT_NAME"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+		<result property="currencyUnit" column="CURRENCY_UNIT"/>
+	</resultMap>
+	
+	<!-- trvTags -->
+	<resultMap type="Tag" id="TagResultSet">
+		<id property="tagId" column="TAG_ID"/>
+		<result property="tagName" column="TAG_NAME"/>
+	</resultMap>
+	
 	<select id="selectMemberInfo" resultMap="ChattingmemberResultSet" parameterType="int">
 		SELECT *
 		FROM MEMBER
 		WHERE MEMBER_ID = #{userId}
+	</select>
+	
+	<select id="selectTagList" resultMap="TagResultSet">
+		SELECT *
+		FROM Tag
+		ORDER BY TAG_NAME ASC
+	</select>
+	
+	<select id="selectContryList" resultMap="CountryResultSet">
+		SELECT *
+		FROM Country
+		ORDER BY CONTINENT_NAME ASC
 	</select>
 	
 
