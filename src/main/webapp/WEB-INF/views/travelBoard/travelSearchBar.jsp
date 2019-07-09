@@ -13,6 +13,7 @@
 	}
 	.tags.has-addons {
 		display: inline-block;
+		padding-left: 7px;
 	}
 	
 </style>
@@ -26,7 +27,7 @@
 		
 		<!-- 검색조건 -->
 		<div class="ui teal buttons">
-			<div class="ui button" style="margin-right: 0;">여행 검색</div>
+			<div class="ui button" style="margin-right: 0;" id="searchTitle">여행 검색</div>
 				<div class="ui floating dropdown icon button" style="padding: 0.8em; width: 2.5em;">
 					<i class="dropdown icon"></i>
 				<div class="menu">
@@ -72,11 +73,13 @@
 	<div id="detailSearchArea" style="display: none;">
 	
 		<!-- 여행스타일 태그 -->
-		<div class="field has-addons" style="width: 35%; margin-top: 1em;">
+		<div class="tagSearchBar" style="display: inline-block; margin-top: 1em;">
+		<div class="field has-addons">
 			<a class="button is-info searchClose" data-tooltip="검색창 닫기" data-position="top right">X</a>
-			<p class="control is-expanded" style="color: red;">
+			<p class="control is-expanded">
 				<span class="select is-fullwidth">
 					<select id="travelStyle" name="travelStyle">
+						<option id="styleTag">-여행태그-</option>
 						<c:forEach var="tagList" items="${ tagList }" varStatus="st">
 							<option value="${ tagList.tagId }">${ tagList.tagName }</option>
 						</c:forEach>
@@ -86,18 +89,11 @@
 			<p class="control">
 			  <button class="button is-info" id="styleAdd">추가</button>
 			</p>
-		</div>
-		
-		<div id="selectStyle">
 			
-		</div>
-		
-		<!-- 나라 태그 -->
-		<div class="field has-addons" style="width: 35%; margin-top: 1em;">
-			<a class="button is-primary searchClose" data-tooltip="검색창 닫기" data-position="top right">X</a>
 			<p class="control is-expanded">
 				<span class="select is-fullwidth">
 					<select name="country" id="travelCountry">
+						<option id="countryTag">-나라태그-</option>
 						<c:forEach var="cityList" items="${ cityList }" varStatus="st">
 							<option value="${ cityList.countryId }">${ cityList.countryNameKo }</option>
 						</c:forEach>
@@ -107,10 +103,18 @@
 			<p class="control">
 			  <button class="button is-primary" id="countryAdd">추가</button>
 			</p>
+			
+			<p class="control" onclick="searchTravelTag()">
+				<a class="button" data-tooltip="태그 검색하기"><i class="fas fa-search"></i></a>
+			</p>
+		</div>
 		</div>
 		
-		<div id="selectCountry">
-			
+		<div id="selectStyle" style="height: 25px;">
+		
+		</div>
+		
+		<div id="selectCountry" style="height: 25px;">
 		</div>
 		
       	</div>
@@ -127,9 +131,6 @@
 		var searchCondition = $("#searchCondition").children("option:selected").val();
 		var searchContent = $("#searchContent").val();
 		
-		console.log(searchCondition);
-		console.log(searchContent);
-		
 		location.href="searchTravelList.tb?orderBy=" + orderBy + "&searchCondition=" + searchCondition + "&searchContent=" + searchContent;
 	};
 	
@@ -141,33 +142,65 @@
 	$("#simpleSearch").click(function() {
 		$("#simpleSearchArea").removeAttr("style");
 		$("#detailSearchArea").css("display", "none");
+		$("#searchTitle").text("간편 검색");
 	});
 	
 	$("#detailSearch").click(function() {
 		$("#simpleSearchArea").css("display", "none");
 		$("#detailSearchArea").removeAttr("style");
+		$("#searchTitle").text("태그 검색");
 	});
 	
 	$(".searchClose").click(function() {
 		$("#simpleSearchArea").css("display", "none");
 		$("#detailSearchArea").css("display", "none");
+		$("#searchTitle").text("여행 검색");
 	});
 	
+	/* 여행태그 선택 */
 	$('#styleAdd').click(function() {
 		var style = $("#travelStyle").children("option:selected").text();
-		var tag = '<div class="tags has-addons"><a class="tag is-link style">'+style+'</a><span class="tag is-delete">　</span></div>';
-		$("#travelStyle").children("option:selected").attr("disabled", true);
-		$("#selectStyle").append(tag);
+		var tag = '<div class="tags has-addons"><a class="styleTag tag is-link style" style="background-color: #209cee;">' + style 
+					+',</a><span class="tag is-delete">　</span></div>';
 		
+		if(style != '-여행태그-') {
+			$("#travelStyle").children("option:selected").attr("disabled", true);
+			$("#selectStyle").append(tag);
+			
+			$("#styleTag").prop("selected", true);
+		}
 	});
 	
+	/* 나라태그 선택 */
 	$('#countryAdd').click(function() {
-		var country = $("#travelCountry").children("option:selected").text();
-		var tag = '<div class="tags has-addons"><a class="tag is-link style">'+country+'</a><a class="tag is-delete" onclick="tagDelete()">　</a></div>';
 		
-		$("#travelCountry").children("option:selected").attr("disabled", true);
-		$("#selectCountry").append(tag);
+		
+		var country = $("#travelCountry").children("option:selected").text();
+		var tag = '<div class="tags has-addons"><a class="countryTag tag is-link style" style="background-color: #8e44ad;">' + country 
+					+ ',</a><a class="tag is-delete">　</a></div>';
+		
+		if(country != '-나라태그-') {
+			$("#travelCountry").children("option:selected").attr("disabled", true);
+			$("#selectCountry").append(tag);
+			
+			$("#countryTag").prop("selected", true);
+		}
 	});
+	
+	$("body").on("click", ".tag, .is-delete", function(){
+		$(this).parent().remove();
+	});
+	
+	function searchTravelTag() {
+		var trvTags = $(".styleTag").text();
+		var cityTags = $(".countryTag").text();
+		
+		alert(trvTags);
+		alert(cityTags);
+		
+		location.href="searchTagTravelList.tb?trvTags="+trvTags+"&cityTags="+cityTags;
+	}
+	
 	
 </script>
 </html>

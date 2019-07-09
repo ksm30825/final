@@ -2,7 +2,9 @@ package com.kh.ti.travelBoard.controller;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -94,6 +96,50 @@ public class TravelBoardController {
 		
 		//일정 리스트 조회
 		HashMap tbMap = tbs.travelList(pi, tb);
+		
+		model.addAttribute("tbList", tbMap.get("tbList"));
+		model.addAttribute("tagList", tbMap.get("tagList"));
+		model.addAttribute("cityList", tbMap.get("cityList"));
+		
+		return "travelBoard/travelList";
+	}
+	
+	//여행일정 리스트 태그 검색 - 예랑
+	@RequestMapping("searchTagTravelList.tb")
+	public String searchTagTravelList(String trvTags, String cityTags, Model model) {
+		
+		System.out.println("trvTags : " + trvTags);
+		System.out.println("cityTags : " + cityTags);
+		
+		TravelBoard tb = new TravelBoard(); 
+		
+		if(trvTags != null) {
+			ArrayList<String> trvTag = new ArrayList<String>(Arrays.asList(trvTags.split(",")));
+			System.out.println("trvTag : " + trvTag.size());
+			
+			tb.setTrvTags((ArrayList) trvTag);
+		}
+		
+		if(cityTags != null) {
+			ArrayList<String> cityTag = new ArrayList<String>(Arrays.asList(cityTags.split(",")));
+			System.out.println("cityTag : " + cityTag.size());
+			
+			tb.setTrvCities((ArrayList) cityTag);
+		}
+		
+		int currentPage = 1;
+		
+		//전체 목록 조회(페이징용)
+		HashMap pageMap = new HashMap();
+		pageMap.put("tb", tb);
+		
+		int listCount = tbs.getListCount(pageMap);
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		
+		//일정 리스트 조회
+		HashMap tbMap = tbs.travelList(pi, tb);
+		
+		System.out.println("tbList : " + tbMap.get("tbList"));
 		
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		model.addAttribute("tagList", tbMap.get("tagList"));

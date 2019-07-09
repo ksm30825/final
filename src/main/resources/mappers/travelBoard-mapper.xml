@@ -208,6 +208,22 @@
 			<when test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </when>
 			<when test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </when>
 		</choose>
+		
+		<if test="trvTags != null">
+			AND (
+			<foreach item="s" collection="trvTags" separator="OR">
+				TA.TAG_NAME = #{ s }
+			</foreach>
+			)
+		</if>
+		
+		<if test="trvCities != null">
+			AND (
+			<foreach item="c" collection="trvCities" separator="OR">
+				COUNTRY_NAME_KO = #{ c }
+			</foreach>
+			)
+		</if>
         
         <choose>
 			<when test="likeyCount = -1"> ORDER BY LIKEY_COUNT DESC </when>
@@ -226,6 +242,7 @@
 	<select id="selectCityList" resultMap="travelCountryResultSet">
 		SELECT *
 		FROM COUNTRY
+		ORDER BY COUNTRY_NAME_KO
 	</select>
 	
 	<select id="selectTravelDetailForm" resultMap="travelBoardResultSet">
