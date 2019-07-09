@@ -47,11 +47,11 @@
 									<input class="input" type="text" placeholder="회원ID를 검색하세요" style="width:150px;height:20px;display:none" id="nameArea">
 								</p>
 								<div class="select is-small is-primary" style="display:inline-block;float:right;margin-left:2%;">
-						            <select name="chargeSelect" style="height:20px;">
-						              <option>--환불승인상태--</option>
-						              <option>대기중</option>
-						              <option>승인</option>
-						              <option>거절</option>
+						            <select name="refundSelect" id="refundSelect"style="height:20px;">
+						              <option value="0">--환불승인상태--</option>
+						              <option value="10">대기중</option>
+						              <option value="20">승인</option>
+						              <option value="30">거절</option>
 						            </select>
 						        </div>
 								<p class="control" id="search" style="margin-left:1%;display:inline-block;float:right;">
@@ -139,6 +139,8 @@
 					$("#nameArea").css({"display":"none"});
 				}
 			});
+			
+			//검색 버튼 눌렀을 때
 			$("body").on("click", "#search", function(){
 				var memberId = ${sessionScope.loginUser.memberId};//검색 버튼 눌렀을 때
 				searchFunc(currentPage, memberId);//검색 에이작스 함수 호출
@@ -398,21 +400,29 @@
 		};
 		//검색 에이작스 함수
 		function searchFunc(currentPage, memberId){
+			$("#refundSelect").change(function(){
+				var refundSta = $(this).children('option:selected').val();
+				console.log(refundSta);
+				
+				if(refundSta != 0){
+					
+				}
+			});
 			var userName = $("#nameArea").val();
 			//console.log(userName);
 			
 			var condition = 99;
 			
-			var status = 99;
+			var status = 99;//정상
 			
-			if($("#searchNameCheck").is(":checked") && $("#searchDateCheck").is(":checked")){
-				condition = 30;
+			if($("#searchNameCheck").is(":checked")){
+				condition = 10;
 				if(userName ==""){
-					status = 10;
+					status = 10;//비정상
 				}
 			}
 			
-			if(condition ==99){
+			if(condition == 99){
 				status = 10;
 			}
 			
