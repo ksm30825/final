@@ -180,6 +180,14 @@
 			    	var selectTag = $("#Searchtag").val();
 			    	var selectContry = $("#Searchcontry").val();
 			    	
+			    	if (selectTag == "태그 선택"){
+		                   selectTag = null;
+		                }
+		                
+		                if (selectContry == "여행지 선택" ){
+		                   selectContry = null;
+		                }
+			    	
 			    	console.log(selectTag + "-" + selectContry);
 			    	
 			    	location.href = "${contextPath}/searchTagTravelList.tb?trvTags="+selectTag+"&cityTags="+selectContry;
