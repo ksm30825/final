@@ -925,15 +925,9 @@ public class PointController {
 		
 		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
-	//포인트 환불 회원 검색 내역--수민
+	//포인트 환불 검색 내역--수민
 	@RequestMapping("/oneMemberAdRefund.po")
 	public ModelAndView adSelectOneMemberRefund(String userName, ModelAndView mv) {
-		
-		return mv;
-	}
-	//포인트 환불 상태 검색 내역--수민
-	@RequestMapping("/statusAdRefund.po")
-	public ModelAndView adSelectStatusRefund(String status, ModelAndView mv) {
 		
 		return mv;
 	}
@@ -981,14 +975,20 @@ public class PointController {
 			//설계채택
 			proceeds = ps.selectMemberIdRequest(updatedRefund);
 			System.out.println("PLAN Proceeds : " + proceeds);
-			//myChooseCanel.mr?requestId=
 		}
 		System.out.println("Proceeds : " + proceeds);
 		int updateUserProceeds = ps.updateUserProceedsRefund(proceeds);
 		
-		if(update>0 && updateUserPoint>0 &&updateUserProceeds>0) {
-			return "redirect:/toAdRefundView.po";
+		if(updatedRefund.getUseType() == 10) {
+			if(update>0 && updateUserPoint>0 &&updateUserProceeds>0) {
+				return "redirect:/toAdRefundView.po";
+			}
+		}else if(updatedRefund.getUseType() == 20){
+			if(update>0 && updateUserPoint>0 &&updateUserProceeds>0) {
+				return "redirect:/myChooseCanel.mr?requestId="+updatedRefund.getRequestId();
+			}
 		}
+		
 		return "common/errorPage";
 	}
 }
