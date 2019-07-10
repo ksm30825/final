@@ -9,6 +9,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <style>
 	#bell:hover {
 		color: red;
@@ -227,27 +229,37 @@
 										<c:when test="${ st.count <= showDays }">
 											<c:set var="check" value="false" />
 											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
-												<c:if test="${ st.count == detailDay[j].dayNumber && fn:length(detailDay[j].trvSchedule[j].schFiles) > 0 }">
-													<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ st.count }"'>DAY ${ detailDay[j].dayNumber }</a></li>
-													<c:set var="check" value="true" />
-												</c:if>
+												<c:forEach var="a" begin="0" end="${ fn:length(detailDay[j].trvSchedule) }">
+													<c:if test="${ st.count == detailDay[j].dayNumber && detailDay[j].trvSchedule[a].schFiles[0].fileId > 0 }">
+														<c:set var="check" value="true" />
+													</c:if>
+												</c:forEach>
 											</c:forEach>
+											<c:if test="${ check == true }">
+												<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ st.count }"'>DAY ${ st.count }</a></li>
+											</c:if>
 											<c:if test="${ check == false }">
 												<li><a style="color: ligntgray;">DAY ${ st.count }<br>(사진없음)</a></li>
 											</c:if>
 										</c:when>
 										
 										<c:otherwise>
+											<!--  -->
 											<c:set var="check" value="false" />
 											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
-												<c:if test="${ st.count == detailDay[j].dayNumber && fn:length(detailDay[j].trvSchedule[j].schFiles) > 0 }">
-													<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
-													<c:set var="check" value="true" />
-												</c:if>
+												<c:forEach var="a" begin="0" end="${ fn:length(detailDay[j].trvSchedule) }">
+													<c:if test="${ st.count == detailDay[j].dayNumber && detailDay[j].trvSchedule[a].schFiles[0].fileId > 0 }">
+														<c:set var="check" value="true" />
+													</c:if>
+												</c:forEach>
 											</c:forEach>
+											<c:if test="${ check == true }">
+												<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
+											</c:if>
 											<c:if test="${ check == false }">
 												<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>(사진없음)</a></li>
 											</c:if>
+											<!--  -->
 										</c:otherwise>
 										
 									</c:choose>
@@ -262,72 +274,65 @@
 		<!-- 상세일정 본문 영역 -->
 		<div class="column is-9" >
 		
-		<section class="section" style="margin-top :3.15em;">
+		<section class="section" style="margin-top :0;">
 						
 			<div class="ui divided items">
-		
-			<!-- 날짜별 타이틀 -->
-			<div id="day1" class="dayTitle" style="padding-bottom: 0.5em;">
-				<span class="title is-3">DAY 1</span>&nbsp; <span>2019년 00월 00일 (화)</span>
-				<p class="city">도시명, 도시명</p>
-			</div>
-		
-			<!-- 날짜별 상세 내용(장소분류) -->
-			<div class="item">
-				<div class="image" data-tooltip="여행사진보기" onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"상세일정정보"'>
-					<img src="resources/images/sample1.jpg">
-				</div>
 				
-				<div class="content">
-					<a class="header">1&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
-					<div class="meta">
-						<span class="cinema">
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						</span>
-					</div>
-					
-					<div class="extra">
-						<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
-						<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
-					</div>
-				</div>	<!-- <div class="content"> -->
-			</div>	<!-- <div class="item"> -->
+			<!-- 일자별 타이틀 -->
+			<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
+				<c:if test="${ st.count <= showDays }">
+					<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+						<c:if test="${ st.count == detailDay[j].dayNumber }">
+							<div id="day${ st.count }" class="dayTitle" style="padding: 1em; background-color: #AFDCF5; margin-top: 1em; display: flex;">
+								<div class="column is-10" style="justify-content: flex-start;">
+									<span class="title is-3">DAY ${ st.count }</span>&nbsp; <span class="schTitle title is-5">${ detailDay[j].dayMemo }</span>
+									<br>
+									<span>${ detailDay[j].dayDate }</span>
+								</div>
+								<div class="column is-1" style="justify-content: flex-end;">
+									<c:choose>
+										<c:when test="${ detailDay[st.count-1].dayWeather eq 'SUN' }">
+											<a class="button is-danger weatherBtn" id="SUN" data-tooltip="맑음" style="vertical-align: middle;">
+											<i class="fas fa-sun"></i>
+											</a>
+										</c:when>
+										<c:when test="${ detailDay[st.count-1].dayWeather eq 'CLOUD' }">
+											<a class="button is-dark  weatherBtn" id="CLOUD" data-tooltip="흐림" style="vertical-align: middle;">
+											<span class="icon"><i class="fas fa-cloud"></i></span>
+											</a>
+										</c:when>
+										<c:when test="${ detailDay[st.count-1].dayWeather eq 'RAIN' }">
+											<a class="button is-info weatherBtn" id="RAIN" data-tooltip="비" style="vertical-align: middle;">
+											<span class="icon"><i class="fas fa-umbrella"></i></span>
+											</a>	
+										</c:when>
+										<c:when test="${ detailDay[st.count-1].dayWeather eq 'SNOW' }">
+											<a class="button is-primary weatherBtn" id="SNOW" data-tooltip="눈" style="vertical-align: middle;">
+											<span class="icon"><i class="far fa-snowflake"></i></span>
+											</a>
+										</c:when>
+										<c:when test="${ detailDay[st.count-1].dayWeather eq 'LIGHTNING' }">
+											<a class="button is-warning weatherBtn" id="LIGHTNING" data-tooltip="번개" style="vertical-align: middle;">
+											<span class="icon"><i class="fas fa-bolt"></i></span>
+											</a>
+										</c:when>
+									</c:choose>
+								</div>
+								 
+								<div class="column is-1" style="justify-content: flex-end;">
+									<a class="card-header-icon" data-tooltip="상세일정 보기"><i class="fas fa-sort-down"></i></a>
+								</div>
+							</div>
+						</c:if>
+					</c:forEach>
+				</c:if>
+			</c:forEach>
 			
-			<!-- 교통 상세내용 -->
-			<div class="description">
-				<p><i class="fas fa-ellipsis-h"></i>&nbsp;&nbsp; 0.00km  |  이동수단  |  00시간 00분 소요  |  $ 0.00  /  ￦ 00000</p>
+			<!-- 일자별 타이틀 끝 -->
+			
+			
+			
 			</div>
-			
-			<!-- 날짜별 상세 내용(장소분류) -->
-			<div class="item">
-				<div class="image" data-tooltip="여행사진보기" onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"상세일정정보"'>
-					<img src="resources/images/sample1.jpg">
-				</div>
-				
-				<div class="content">
-					<a class="header">2&nbsp; 장소명</a><span>&nbsp; 장소분류</span>
-					<div class="meta">
-						<span class="cinema">
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						본문내용본문내용본문내용본문내용본문내용본문내용본문내용본문내용<br>
-						</span>
-					</div>
-					
-					<div class="extra">
-						<div class="ui label" data-tooltip="여행지 정보 보기"><i class="fas fa-info-circle"></i></div>
-						<div class="ui label" data-tooltip="지도 위치 보기"><i class="fas fa-map-marker-alt"></i></div>
-					</div>
-				</div>
-			</div>	<!-- <div class="item"> -->
-			
-		</div>
 
 		</section>
 		
@@ -558,7 +563,15 @@
 			$("#travelBuySection").css("display","none");
 	    });
 	}
-
+	
+	/* //상세일정
+	var quill = new Quill('#editor', {
+    theme: 'snow'
+  	});
+	
+	var content = ${ detailDay[0].trvSchedule[0].schContent };
+	quill.setContents(content); */
+	
 </script>
 </body>
 </html>
