@@ -544,7 +544,7 @@
 	        	 
 	        	  
 	        	  //채팅방 수정될때 다시 채팅방 정보불러오기 
-		          socket.emit('updateChatInfo' , {chatId : chatId});
+		          socket.emit('updateChatName' , {chatId : chatId});
 	 				
 		       	
 	 	       
@@ -616,7 +616,7 @@
 	        	  
 	        	 
 	        	  //채팅방 수정될때 다시 채팅방 정보불러오기 
-		          socket.emit('updateChatInfo' , {chatId : chatId});
+		          socket.emit('updateChatName' , {chatId : chatId});
 	 			
 	 	       
 	         });
@@ -640,7 +640,7 @@
 	          });
 	          
 	          //채팅방에 누군가 들어왔을때 다시 채팅방 정보 띄워주는 함수
-	          socket.on('updateChatInfo' , function(data){
+	          socket.on('updateChatName' , function(data){
 				  var title = data.title;
 	        	  
 				  if (title != null){
@@ -665,7 +665,69 @@
 	          });
 	          
 	          
+	          //채팅방 정보 수정
+	          socket.on('updateChatInfo' , function(data){
+	        	  $("#RoomInfoDIV").remove();
+	        	  
+ 				  var title = data.title;
+	        	  
+				  if (title != null){
+					  if (title.length > 7){
+				        	  $("#ChatRoomTitle").text(title.substr(0,7) + "...    (" + data.activityNum  + ")" );
+			          }else {
+			        		  $("#ChatRoomTitle").text(title + "     (" + data.activityNum + ")");
+			          } 
+				  }
+				  
+				  var formattedStartDate = new Date(data.start);
+	        	  var sd = formattedStartDate.getDate();
+	        	  var sm =  formattedStartDate.getMonth();
+	        	  sm += 1;  // JavaScript months are 0-11
+	        	  var sy = formattedStartDate.getFullYear();
+
+				 var startDate = sy + "/" + sm  + '/' + sd;
+				 
+				 var formattedEndDate = new Date(data.end);
+	        	  var ed = formattedEndDate.getDate();
+	        	  var em =  formattedEndDate.getMonth();
+	        	  em += 1;  // JavaScript months are 0-11
+	        	  var ey = formattedEndDate.getFullYear();
+
+				 var endDate = ey + "/" + em  + '/' + ed;
+
+	        	 var output = "";
+	        	  
+	        	 output += '<table id = "Chattinginfor">';
+	        	 output += '<tr><td><b>채팅방 제목</b></td>';
+	  	  		 output += '<td>'+title+'</td>';
+	  	  		 output += '</tr><tr>';
+	  	  		 output += '<td><b>여행지</b></td>';
+	  	  		 output += '<td>'+data.place+'</td>'
+	  	  		 output +=	'</tr><tr>'
+	  	  		 output += '<td><b>여행날짜</b></td>';
+	  	  		 output += '<td>' + startDate + "~" + endDate + "</td>"
+	  	  		 output += "</tr>"
+	  	  		 output += '<tr><td><b>상세설명</b></td>';
+	  	  		 output += "</tr>"
+	  	  		 output += "<tr>"
+	  	  		 output += "<td colspan = '2'>" + data.detail + "</td>"
+	  	  		 output += '</table>';
+	        	  
+	  	  		 $(output).appendTo('#RoomInfoDIV');
+	          });
 	         
+	          //방장 임명 
+	          socket.on('giveAbbot', function(data){
+	        	 var loginUser = $("#loginId").val();
+    			 var changebath = data;
+    			 
+    			 if (loginUser == changebath){
+    			   $("#outbtn").attr("disabled" , "disabled");
+       			   $("#checkModel").show();
+       			   $("#setting").show();
+       			   $("#Firebtn").show();
+    			 }
+    		  });
 	         
 	           
 	           

@@ -192,7 +192,7 @@
 	     
 	        
 	        //여기서부터 서버
-	        $(document).ready(function() {
+	        $(document).ready(function() { //start
 	        
 	        	
 	        	//서버
@@ -361,15 +361,120 @@
 		 			socket.on('EnterChattingRoom' , function(data){
 		 				console.log(data);
 		 				 
-		 			 	 
+		 				enterUser = data.userId; 
+		 				
 		 				location.href = "${contextPath}/enterChatting.ch?num=" + data;
 		 			 });
 		 			
+		 		
+		 			
 	        	});
-	        	
+	 		 	
+	 		 	//채팅방 들어가기 
+	 			 socket.on('UpdateChattingPeople', function(data){
+	 				 console.log("들어간 후 ? 시동되니?" + data.peoplenum);
+		 				var updateChatId = data._id;
+		 		 		
+			 		  	  $(".AllChatList").each(function(index ,item) {
+			 		  		var checkUserID = $(this).children().children().children().children("#chatNum").val();
+			 		  		 console.log("updateChatId : " + updateChatId + "- checkUserId :" + checkUserID);
+	        			 	if (checkUserID == updateChatId){
+	        			 		console.log("시동?");
+	        			 		
+	        			 		$(this).remove();
+		        				
+		        				 var output = '';
+		    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
+		    	                 output += '<tr>';
+		    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
+		    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.updateChatId +'">';
+		    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+		    		     		 output += '<label>'+ data.title +'</label></td>'
+		    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
+		    	     			 output += '</tr>';
+		    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
+		    		     		 output += '<td colspan = "3">';
+		    		     		 output += '<i class="material-icons" id = "peopleIcon">group</i>';
+		    		     		 output +=	'&nbsp;&nbsp;&nbsp;<label id = "pnum">('+ data.activityNum + '/' + data.peoplenum +')</label>';
+		    		     		 output +=	'</td></tr>'
+		    	                 output += '</table>';
+		    	                 $(output).prependTo('#menu1');
+	        				
+	        			 } 
+	        	 	});
+	 			 });
+	 		 	
+	 		 	//채팅방 수정 
+	 		 	socket.on('updateChatInfo', function(data){
+	 		 		var updateChatId = data._id;
+	 		 		
+	 		  	  $(".AllChatList").each(function(index ,item) {
+	        			 var checkUserID = $(this).children().children().children().children("#chatNum").val();
+	        			 console.log("updateChatId : " + updateChatId + "- checkUserId :" + checkUserID);
+	        			 if (checkUserID == updateChatId){
+	        				$(this).remove();
+	        				
+	        				 var output = '';
+	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
+	    	                 output += '<tr>';
+	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
+	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.updateChatId +'">';
+	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+	    		     		 output += '<label>'+ data.title +'</label></td>'
+	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
+	    	     			 output += '</tr>';
+	    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
+	    		     		 output += '<td colspan = "3">';
+	    		     		 output += '<i class="material-icons" id = "peopleIcon">group</i>';
+	    		     		 output +=	'&nbsp;&nbsp;&nbsp;<label id = "pnum">('+ data.activityNum + '/' + data.peoplenum +')</label>';
+	    		     		 output +=	'</td></tr>'
+	    	                 output += '</table>';
+	    	                 $(output).prependTo('#menu1');
+	        				
+	        			 } 
+	        	 });
+	 		 		
+	 		 		
+	 		 		
+	 		 	});
+	 		 	
+	 		 	//채팅방 다시 불러오기 
+	 		 	socket.on('updateChatName', function(data){
+	 		 		
+	 		 		var updateChatId = data._id;
+	 		 		
+	 		  	  $(".AllChatList").each(function(index ,item) {
+	        			 var checkUserID = $(this).children().children().children().children("#chatNum").val();
+	        			 console.log("updateChatId : " + updateChatId + "- checkUserId :" + checkUserID);
+	        			 if (checkUserID == updateChatId){
+	        				$(this).remove();
+	        				
+	        				 var output = '';
+	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
+	    	                 output += '<tr>';
+	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
+	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.updateChatId +'">';
+	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+	    		     		 output += '<label>'+ data.title +'</label></td>'
+	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
+	    	     			 output += '</tr>';
+	    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
+	    		     		 output += '<td colspan = "3">';
+	    		     		 output += '<i class="material-icons" id = "peopleIcon">group</i>';
+	    		     		 output +=	'&nbsp;&nbsp;&nbsp;<label id = "pnum">('+ data.activityNum + '/' + data.peoplenum +')</label>';
+	    		     		 output +=	'</td></tr>'
+	    	                 output += '</table>';
+	    	                 $(output).prependTo('#menu1');
+	        				
+	        			 } 
+	        	 });
+	 		 		
+	 		 		
+	 		 		
+	 		 	});
 	             
 	             
-	        });
+	        }); //end 
 
 		 		
 	  </script>
