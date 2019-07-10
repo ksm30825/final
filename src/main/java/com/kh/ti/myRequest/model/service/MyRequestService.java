@@ -19,7 +19,7 @@ public interface MyRequestService {
 
 	//int selectPlan(int code);
 
-	int updateRequest(int code);
+	int updateRequest(int planId, int code);
 
 	int getRequestCount(int memberId);
 	

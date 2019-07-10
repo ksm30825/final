@@ -309,6 +309,11 @@ public class TravelDaoImpl implements TravelDao {
 
 	
 	
+	@Override
+	public int insertOverrideTrv(SqlSessionTemplate sqlSession, Travel overrideTrv) {
+		return sqlSession.insert("Travel.insertOverrideTrv", overrideTrv);
+	}
+
 	
 	
 	

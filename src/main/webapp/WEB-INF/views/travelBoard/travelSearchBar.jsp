@@ -195,9 +195,6 @@
 		var trvTags = $(".styleTag").text();
 		var cityTags = $(".countryTag").text();
 		
-		alert(trvTags);
-		alert(cityTags);
-		
 		location.href="searchTagTravelList.tb?trvTags="+trvTags+"&cityTags="+cityTags;
 	}
 	

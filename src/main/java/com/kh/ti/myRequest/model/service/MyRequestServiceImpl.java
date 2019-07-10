@@ -70,10 +70,10 @@ public class MyRequestServiceImpl implements MyRequestService{
 
 	//의뢰글 채택상태 업데이트 - 이선우
 	@Override
-	public int updateRequest(int code) {
+	public int updateRequest(int planId, int code) {
 		int result = 0;
 		//참여(설계)글 채택상태 업데이트
-		int result1 = mrd.updateParticipation(sqlSession, code);
+		int result1 = mrd.updateParticipation(sqlSession, planId);
 		//의뢰글 채택상태 업데이트
 		int result2 = mrd.updateRequest(sqlSession, code);
 		

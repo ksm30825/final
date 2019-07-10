@@ -143,6 +143,10 @@
 </body>
 <script>
 	$(function() {
+		var menu = $(".myPageMenu li").eq(5);
+        menu.addClass('is-active');
+        menu.siblings().removeClass('is-active');
+        
 		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",

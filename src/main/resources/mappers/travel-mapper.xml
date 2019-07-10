@@ -178,7 +178,10 @@
 		SET BUDGET = #{budget}
 		WHERE TRV_ID = #{trvId}
 	</update>
-	
+	<insert id="insertOverrideTrv" parameterType="Travel">
+		INSERT INTO TRAVEL
+		VALUES(TRAVEL_SEQ.NEXTVAL, #{trvTitle}, #{startDate}, #{endDate}, #{compNumber}, #{budget}, SYSDATE, SYSDATE, NULL, 'Y', #{memberId}, #{trvRef})
+	</insert>
 
 	
 	

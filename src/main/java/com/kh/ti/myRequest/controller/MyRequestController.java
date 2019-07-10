@@ -41,7 +41,7 @@ public class MyRequestController {
 		//의뢰글의 채택된 설계글 조회
 		//int planId = mrs.selectPlan(code);
 		//System.out.println("설계번호 : " + planId);
-		updateRequest(code);
+		//updateRequest(code);
 		
 		//나의 의뢰목록 조회(페이징)
 		int currentPage = 1;
@@ -65,9 +65,19 @@ public class MyRequestController {
 	
 	//의뢰글 채택상태 업데이트
 	@RequestMapping("updateRequest.mr")
-	public void updateRequest(@RequestParam("code")int code) {
-		System.out.println("설계글 번호 : " + code);
-		int result = mrs.updateRequest(code);
+	public String updateRequest(@RequestParam("memberId")int memberId,
+								@RequestParam("planId")int planId,
+								@RequestParam("code")int code,
+								@RequestParam("useType")int useType,
+								@RequestParam("uPoint")int uPoint) {
+		System.out.println("의뢰자 번호 : " + memberId);
+		System.out.println("설계글 번호 : " + planId);
+		System.out.println("의뢰글 번호 : " + code);
+		System.out.println("사용타입 : " + useType);
+		System.out.println("의뢰 가격 : " + uPoint);
+		int result = mrs.updateRequest(planId, code);
+		
+		return "redirect:usePoint.po?memberId=" + memberId + "&code=" + code + "&useType=" + useType + "&uPoint=" + uPoint;
 	}
 	
 	// 여행 의뢰 - 이선우

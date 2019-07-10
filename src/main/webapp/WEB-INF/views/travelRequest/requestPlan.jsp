@@ -307,20 +307,21 @@ th, td {
 		var result = confirm("정말로 채택하시겠습니까?");
 		console.log(result);
 		if(result == true) {
+			var planId = "${ code }";
 			var useType = $("#useType").val();
 			var uPoint = $("#uPoint").val();
 			var code = $("#reqId").val();
 			var userName = $("#userName").val();
 			var memberId = $("#memberId").val();
 			
+			console.log(planId);
 			console.log(code);
 			console.log(useType);
 			console.log(uPoint);
 			console.log(reqId);
 			console.log(userName);
 			
-			location = "usePoint.po?memberId=" + memberId + "&code=" + code + "&useType=" + useType + "&uPoint=" + uPoint;
-			//location = "selectRequest.mr?code=" + code +"&memberId=" + memberId;
+			location = "updateRequest.mr?memberId=" + memberId + "&planId=" + planId + "&code=" + code + "&useType=" + useType + "&uPoint=" + uPoint;
 		} else {
 			location = location;
 		}
