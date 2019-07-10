@@ -99,5 +99,8 @@ public interface PointService {
 	Proceeds selectMemberIdRequest(Refund updatedRefund);
 	//관리자 - 판 사람의 userProceeds 차감
 	int updateUserProceedsRefund(Proceeds proceeds);
+	//판매자의 참여번호를 조회해와야 함
+	int selectOnePtcp(int requestId);
+	
 
 }

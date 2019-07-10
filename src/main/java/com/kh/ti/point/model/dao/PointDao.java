@@ -101,6 +101,8 @@ public interface PointDao {
 	Proceeds selectMemberIdRequest(SqlSessionTemplate sqlSession, Refund updatedRefund);
 	//관리자 - 판 사람의 userProceeds 차감
 	int updateUserProceedsRefund(SqlSessionTemplate sqlSession, Proceeds proceeds);
+	//판매자의 참여번호를 조회해와야 함
+	int selectOnePtcp(SqlSessionTemplate sqlSession, int requestId);
 	
 	
 	

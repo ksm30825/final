@@ -174,7 +174,7 @@
 				var $listTr = $("<tr>");
 				
 				var $noTd = $("<td class='modalOpen'>").text(i+1);
-				var $refId = $("<input type='hidden'>").val(list.refundId);
+				var $refId = $("<input type='text'>").val(list.refundId);
 				$noTd.append($refId);
 				var $boardId, $useTypeId;
 				var $memberId = $("<input type='hidden'>").val(list.memberId);
@@ -274,6 +274,7 @@
 			var refId = $(this).parent().parent().children().eq(0).children().eq(0).val();
 			var bid = $(this).parent().parent().children().eq(0).children().eq(1).val();
 			var cond = 10;
+			console.log(refId);
 			approve(refId, bid, cond);
 		});
 		$("body").on("click", "#toRefuse", function(){

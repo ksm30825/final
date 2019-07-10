@@ -180,12 +180,17 @@
 			    	var selectContry = $("#Searchcontry").val();
 			    	
 			    	if (selectTag == "태그 선택"){
+
+		             
+		                
+		                
 		                   selectTag = "";
 		            }
 		                
 		             if (selectContry == "여행지 선택" ){
 		                   selectContry = "";
 		             }
+
 			    	
 			    	console.log(selectTag + "-" + selectContry);
 			    	

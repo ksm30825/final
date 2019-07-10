@@ -288,7 +288,11 @@ public class PointDaoImpl implements PointDao{
 	public int updateUserProceedsRefund(SqlSessionTemplate sqlSession, Proceeds proceeds) {
 		return sqlSession.update("Payment.updateUserProceedsRefund", proceeds);
 	}
-	
+	//판매자의 참여번호를 조회해와야 함
+	@Override
+	public int selectOnePtcp(SqlSessionTemplate sqlSession, int requestId) {
+		return sqlSession.selectOne("Payment.selectOnePtcp", requestId);
+	}
 	
 	
 	

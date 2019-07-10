@@ -38,11 +38,11 @@
 		color:#adadff;
 		font-weight:bold;
 	}
-	#reserveLink, #useLink, #refundStatus{
+	#reserveLink, #useLink, #requestLink,  #refundStatus{
 		border-radius:5px;
 		line-height:80%;
 	}
-	#reserveLink:hover, #useLink:hover, #refundStatus:hover{
+	#reserveLink:hover, #useLink:hover, #requestLink:hover, #refundStatus:hover{
 		border: 1px solid purple;
 	}
 </style>
@@ -318,7 +318,7 @@
 													</c:if>
 													<c:if test="${ us.useType eq 20}">
 														<input type="text" value="${ us.requestId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${us.memberId}&bid=${ us.requestId }">의뢰채택</a>
+														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRequest.po?mid=${us.memberId}&bid=${ us.requestId }">의뢰채택</a>
 													</c:if>
 												</td>
 												<td>
@@ -601,8 +601,8 @@
 				
 				var $reserveTypeTd = $("<td>");
 				var reserveType = list.reserveType;	//10:일정작성, 20:일정리뷰, 30:여행지리뷰
-				var $reserveTypeIn, $reserveTypeA, mid, bid;
-				
+				var $reserveTypeIn, $reserveTypeA, mid, bid, rT;
+				rT = reserveType;
 				if(reserveType==10){
 					//일정작성
 					mid = list.memberId;
@@ -618,9 +618,13 @@
 					
 					$reserveBidIn = $('<input type="text" style="display:none;">');
 					$reserveBidIn.val(bid);
+
+					$reserverTIn = $('<input type="text" style="display:none;">');
+					$reserverTIn.val(rT);
 					
 					$reserveTypeA.append($reserveMidIn);
 					$reserveTypeA.append($reserveBidIn);
+					$reserveTypeA.append($reserverTIn);
 					
 					$reserveTypeTd.append($reserveTypeIn);
 					$reserveTypeTd.append($reserveTypeA);
@@ -640,8 +644,12 @@
 					$reserveBidIn = $('<input type="text" style="display:none;">');
 					$reserveBidIn.val(bid);
 					
+					$reserverTIn = $('<input type="text" style="display:none;">');
+					$reserverTIn.val(rT);
+					
 					$reserveTypeA.append($reserveMidIn);
 					$reserveTypeA.append($reserveBidIn);
+					$reserveTypeA.append($reserverTIn);
 					
 					$reserveTypeTd.append($reserveTypeIn);
 					$reserveTypeTd.append($reserveTypeA);
@@ -733,7 +741,7 @@
 					$useTypeIn = $('<input type="text" style="display:none;">');
 					$useTypeIn.val(list.requestId);
 					
-					$useTypeA = $('<button id="useLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">설계구매</button>');
+					$useTypeA = $('<button id="requestLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">설계구매</button>');
 					$useMidIn = $('<input type="text" style="display:none;">');
 					$useMidIn.val(mid);
 					
@@ -764,6 +772,18 @@
 			var mid = $(this).children().eq(0).val();
 			var bid = $(this).children().eq(1).val();
 			var url = "oneBoardRPoint.po?mid="+mid+"&bid="+bid;
+			
+			console.log("mid : " + mid);
+			console.log("bid : " + bid);
+
+			window.open(url, "oneBoard", "width=1000,height=700");
+
+			
+		});
+		$("body").on("click", "#requestLink",function(){
+			var mid = $(this).children().eq(0).val();
+			var bid = $(this).children().eq(1).val();
+			var url = "oneBoardRequest.po?mid="+mid+"&bid="+bid;
 			
 			console.log("mid : " + mid);
 			console.log("bid : " + bid);
@@ -804,7 +824,7 @@
 			//console.log(time);
 			var sub = Number(milisFuture) - Number(milisNow);
 			if(sub<=0){
-				console.log('24시간 지남');
+				//console.log('24시간 지남');
 				$("#modalHeader2").text('24시간이 지나 환불신청이 불가능합니다.');
 				$('#myModal2').toggleClass('is-active');
 				$('#back2, #del2').click(function() {
@@ -815,7 +835,7 @@
 				});
 				
 			}else{
-				console.log('24시간 안지남');
+				//console.log('24시간 안지남');
 				$("#refundPointId").val(usePointId);
 				$("#modalHeader").text('환불을 신청하시겠습니까?');
 				$("#modalContent").attr('placeholder','환불사유를 입력해주세요');

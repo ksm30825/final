@@ -547,4 +547,11 @@
 		SET USER_PROCEEDS = USER_PROCEEDS - #{proceeds}
 		WHERE MEMBER_ID = #{memberId}
 	</update>
+	<!-- 판매자의 참여번호를 조회해와야 함  -->
+	<select id="selectOnePtcp" resultType="_int">
+		SELECT PTCP_ID
+		FROM PARTICIPATION 
+		WHERE REQUEST_ID = #{requestId} AND CHOOSE_STATUS='Y'
+	</select>
+	
 </mapper>
