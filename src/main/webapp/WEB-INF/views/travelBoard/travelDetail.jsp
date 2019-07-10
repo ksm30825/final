@@ -32,7 +32,9 @@
 </style>
 </head>
 <body>
-	<jsp:include page="travelSearchBar.jsp" />
+	
+	<jsp:include page="../common/mainNav.jsp" />
+	
 	<input type="text" id="loginId" value="${ sessionScope.loginUser.memberId }" hidden="hidden">
 	<input type="text" id="userPoint" value="${ sessionScope.loginUser.userPoint }" hidden="hidden">
 	
@@ -55,7 +57,7 @@
 	<input type="number" hidden="hidden" id="totalDays" value="${ endDay - startDay + 1 }">
 	<input type="number" hidden="hidden" id="showDays" value="${ showDays }">
 	
-	<div class="coumns">
+	<div class="coumns" style="padding-top: 2.5em;">
 		<div class="column">
 		
 			<!-- 버튼영역 -->
@@ -67,7 +69,7 @@
 							<c:when test="${ !empty loginUser }">
 								<c:choose>
 									<c:when test="${ detailTb.buyStatus eq 'N' && loginUser.memberId ne detailTb.memberId }">
-										<a class="button is-primary" onclick="travelBuy();">
+										<a class="button is-primary" onclick="travelBuy()">
 											<span class="icon" id="starIcon"><i class="fas fa-shopping-cart"></i></span>
 								          	<span> &nbsp;일정구매 </span>
 					        			</a>
@@ -333,39 +335,31 @@
 		
 	</div>	<!-- <div class="columns"> -->
 			
-			<c:choose>
-				<c:when test="${ loginUser.memberId eq detailTb.memberId }">
-					<section class="section" align="center">
-						<div class="columns">
-							<div class="column">
-								<a class="button is-primary" href="travelList.tb">
-									<span class="icon"><i class="fas fa-list"></i></span>
-						          	<span> &nbsp;목록으로 </span>
-				        		</a>
-				        		<%-- &nbsp;
-				        		<a class="button is-primary" onclick="location.href='selectTravel.trv?trvId=${ detailTb.trvId }'">
-									<span class="icon"><i class="fas fa-pen"></i></span>
-						          	<span> &nbsp;수정하기 </span>
-				        		</a> --%>
-				        		&nbsp;
-				        		<a class="button is-primary" onclick="travelDelete()">
-									<span class="icon"><i class="fas fa-times"></i></span>
-						          	<span> &nbsp;삭제하기 </span>
-				        		</a>
-							</div>
-						</div>
-					</section>
-				</c:when>
-			</c:choose>
-			<c:if test="${ !empty loginUser }">
-			
-		</c:if>	
+		<section class="section" align="center" style="padding: 0.5em;">
+			<div class="columns">
+				<div class="column">
+					<a class="button is-primary" href="travelList.tb">
+						<span class="icon"><i class="fas fa-list"></i></span>
+						<span> &nbsp;목록으로 </span>
+					</a>
+					
+					<c:if test="${ loginUser.memberId eq detailTb.memberId }">
+						&nbsp;
+						<a class="button is-primary" onclick="travelDelete()">
+							<span class="icon"><i class="fas fa-times"></i></span>
+							<span> &nbsp;삭제하기 </span>
+						</a>
+					</c:if>
+				
+				</div>
+			</div>
+		</section>
 				
 		</div>
 	</div>
 	
-	<!-- 일정만들기 안내 모달 -->
-	<section class="section" id="modal">
+	<!-- 일정삭제 안내 모달 -->
+	<section class="section" id="modal" style="display: none;">
 		<div class="modal" id="travelDeleteModal">
 		    <div class="modal-background"></div>
 		    <div class="modal-card">
@@ -393,7 +387,7 @@
 	</section>
 	
 	<!-- 일정구매 안내 모달 -->
-	<section class="section" id="travelBuySection">
+	<section class="section" id="travelBuySection" style="display: none;">
 		<div class="modal" id="travelBuyModal">
 		    <div class="modal-background"></div>
 		    <div class="modal-card">
@@ -424,6 +418,7 @@
 		    </div>
 		</div>
 	</section>
+	
 
 <script>
 	function loginInfo() {
@@ -434,9 +429,10 @@
 		var answer = confirm("결제가 필요한 서비스입니다. 결제하시겠습니까?");
 		var memberId = $("#loginId").val();
 		
-		if(answer && memberId != "") {
+		if(answer && memberId > 0) {
 			travelBuy();
-		}else {
+		}
+		if(memberId == "") {
 			loginInfo();
 		}
 	}
@@ -516,6 +512,7 @@
 	
 	function travelDelete() {
 		
+		$("#modal").removeAttr('style');
 		$('#travelDeleteModal').toggleClass('is-active').removeAttr('style');
 		
 		$("#travelDelete").click(function() {
@@ -525,12 +522,14 @@
 		
 		$(".cancel").click(function(){
 			$('#travelDeleteModal').removeClass('is-active');
+			$("#modal").css("display","none");
 	    });
 	}
 	
 	function travelBuy() {
 		
-		$("#travelBuyModal").toggleClass('is-active').removeAttr('style');
+		$("#travelBuySection").removeAttr('style');
+		$('#travelBuyModal').toggleClass('is-active').removeAttr('style');
 		
 		$("#travelBuy").click(function() {
 			
@@ -556,6 +555,7 @@
 		
 		$(".cancel").click(function(){
 			$('#travelBuyModal').removeClass('is-active');
+			$("#travelBuySection").css("display","none");
 	    });
 	}
 

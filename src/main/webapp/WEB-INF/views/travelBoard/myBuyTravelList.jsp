@@ -84,7 +84,12 @@
 										</div>
 									</div>
 								</div>
-			                  <img src="resources/images/sample1.jpg">
+								<c:if test="${ !empty tbList.schFiles[0] }">
+									<img src="resources/uploadFiles/${ tbList.schFiles[0].changeName }">
+								</c:if>
+								<c:if test="${ empty tbList.schFiles[0] }">
+									<img src="resources/images/sample1.jpg">
+								</c:if>
 			               </div>
 			               
 			               <div class="content" onclick="location.href='travelDetailForm.tb?trvId=${ tbList.trvId }'">

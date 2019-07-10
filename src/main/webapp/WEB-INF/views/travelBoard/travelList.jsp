@@ -16,6 +16,9 @@
    .card {
       cursor: pointer;
    }
+   #pagination {
+		display: flex;
+   }
 </style>
 </head>
 <body>
@@ -111,7 +114,55 @@
            	</div>
            </c:otherwise>
            </c:choose>
-         
+	           
+			<!-- 페이징 -->
+			
+			<section class="section" id="pagination" style="justify-content: center;">
+				<hr>
+				<nav class="pagination is-rounded" role="navigation" aria-label="pagination">
+					<ul class="pagination-list">
+						<!-- 이전버튼 -->
+						<c:if test="${ pi.currentPage <= 1 }">
+							<li><a class="pagination-previous">이전</a></li>
+						</c:if>
+						<c:if test="${ pi.currentPage > 1 }">
+							<c:url var="previous" value="travelList.tb">
+							<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
+							</c:url>
+							<li><a class="pagination-previous" href="${ previous }">이전</a></li>
+						</c:if>
+						<!--  -->
+						
+						<!-- 숫자버튼 -->
+						<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+							<c:if test="${ p eq pi.currentPage }">
+								<li><a class="pagination-link" aria-label="Goto page 1">${ p }</a></li>
+							</c:if>
+							<c:if test="${ p ne pi.currentPage }">
+								<c:url var="number" value="travelList.tb">
+								<c:param name="currentPage" value="${ p }"/>
+								</c:url>
+								<li><a class="pagination-link" aria-label="Goto page 1" href="${ number }">${ p }</a></li>
+							</c:if>
+						</c:forEach>
+						<!--  -->
+						
+						<!-- 다음 버튼 -->
+						<c:if test="${ pi.currentPage >= pi.maxPage }">
+							<li><a class="pagination-next">다음</a></li>
+						</c:if>
+						<c:if test="${ pi.currentPage < pi.maxPage }">
+							<c:url var="next" value="travelList.tb">
+							<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
+							</c:url>
+							<li><a class="pagination-next" href="${ next }">다음</a></li>
+						</c:if>
+					</ul>
+				</nav>
+				<br>
+			</section>
+           
+			<!-- 페이징 끝 -->
          
       </div>   <!-- class="column" -->
    </div>   <!-- class="columns is-mobile" -->
@@ -123,7 +174,7 @@
    $('.special.cards .image').dimmer({
      on: 'hover'
    });
-   
+
 </script>
 </body>
 </html>
