@@ -29,5 +29,8 @@
 	<!-- 라이브러리추가 : pom.xml -->
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	
-	
+	<beans:bean id="multipartResolver" 
+	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="10000000" />
+	</beans:bean>
 </beans:beans>

@@ -405,9 +405,9 @@ th, td {
 	    	$("#placeAddress").append(pAddress[index] + "#");
     	});
     	
-    	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
+    	map = new google.maps.Map(document.getElementById('map'), myOptions);
     	//폴리라인 객체
-    	/* poly = new google.maps.Polyline({
+    	poly = new google.maps.Polyline({
     		path: destinations,
     	  	strokeColor: "#FF0000",
     	  	strokeWeight : 3
@@ -427,7 +427,7 @@ th, td {
 
         var infowindow = new google.maps.InfoWindow();
         var infowindowContent = document.getElementById('infowindow-content');
-        infowindow.setContent(infowindowContent);*/
+        infowindow.setContent(infowindowContent);
     }
     </c:if>
     

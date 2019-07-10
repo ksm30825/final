@@ -140,7 +140,7 @@ textarea {
 									<c:if test="${ pList.chooseStatus eq 'N' }">
 										<td>미채택</td>
 									</c:if>
-									<td class="report" onclick="$('#reportModal').toggleClass('is-active')">
+									<td class="report">
 										<i class="far fa-bell"></i>
 									</td>
 								</tr>
@@ -202,6 +202,7 @@ textarea {
 		</div>
 	</div>
 	<!-- 의뢰인 신고하기 -->
+	<form action="insertPanelty.pe" method="post" enctype="multipart/form-data">
 	<div class="modal" id="reportModal">
 		<div class="modal-background"></div>
 		<div class="modal-card">
@@ -209,16 +210,17 @@ textarea {
 				<p class="modal-card-title">신고하기</p>
 			</header>
 			<section class="modal-card-body">
+			<input type="hidden" value="${ loginUser.memberId }" name="complainantId">
 				<div class="column">
 					<h1>신고 종류</h1>
 					<hr>
 					<div class="field">
 						<p class="control">
-							<span class="select"> <select>
-									<option>부적절 게시물</option>
-									<option>욕설 및 비방</option>
-									<option>저작권 침해 및 명의 도용</option>
-									<option>기타</option>
+							<span class="select"> <select name="penalityId">
+									<option value="11">부적절 게시물</option>
+									<option value="12">욕설 및 비방</option>
+									<option value="13">저작권 침해 및 명의 도용</option>
+									<option value="30">기타</option>
 							</select>
 							</span>
 						</p>
@@ -226,13 +228,14 @@ textarea {
 				</div>
 				<section class="section" id="box">
 					<h1>신고사유</h1>
-					<h5>의뢰인 : user01</h5>
+					<textarea name="list" readonly>의뢰글</textarea>
+					<textarea id="panelty" name="listType" readonly></textarea>
 					<hr>
 					<div class="box">
 						<article class="media">
 							<div class="media-content">
 								<div class="content">
-									<textarea placeholder="신고사유를 입력하세요" rows="5"></textarea>
+									<textarea placeholder="신고사유를 입력하세요" rows="5" name="penalityContent"></textarea>
 								</div>
 							</div>
 						</article>
@@ -242,7 +245,7 @@ textarea {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -253,7 +256,7 @@ textarea {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -264,7 +267,7 @@ textarea {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -275,7 +278,7 @@ textarea {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -286,11 +289,12 @@ textarea {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<a type="submit" class="button is-primary" onclick="report();">신고</a>
-				<a class="button" onclick="cancel();">취소</a>
+				<button type="submit" class="button is-primary">신고</a>
+				<button class="button" onclick="cancel();">취소</a>
 			</footer>
 		</div>
 	</div>
+	</form>
 </body>
 <script>
 	$(function() {
@@ -361,11 +365,29 @@ textarea {
 	function cancel() {
 		location = location;
 	}
-	function report() {
-		location = "paneltyList.pe";
-	}
 	function beforePlan() {
 		location = "beforePlan.mr?memberId=${ loginUser.memberId}";
 	}
+	
+	$(document).on("click",".report", function(){
+		var code = $(this).parent().find("td").eq(1).text();
+		console.log($(this).parent().find("td").eq(1).text());
+		$.ajax({
+			url:"selectPanelty.pe",
+			data:{code:code},
+			success:function(data) {
+				console.log(data);
+				
+				var $code = $("#panelty").text(data);
+				
+				$("#panelty").append($code);
+				
+				$('#reportModal').toggleClass('is-active');
+			},
+			error:function() {
+				alert("실패");
+			}
+		});
+	});
 </script>
 </html>
