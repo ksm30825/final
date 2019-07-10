@@ -317,7 +317,6 @@
 		 	 	 			 
 		 	 	 			 if (status == '활동'){
 		 	 	 				location.href = "${contextPath}/enterChatting.ch?num=" + data.chat_id;
-		 	 	 				
 		 	 	 			 }else  if (status  == '강퇴'){
 		 	 	 				$("#checkTable").children().children().children().children("#checkDetail").text("해당 채팅방은 들어갈수 없습니다.");
 		 	 	 				$("#checkTable").children().children().children().children("#enterBtn").attr("disabled", "disabled");
@@ -382,12 +381,14 @@
 	        			 		console.log("시동?");
 	        			 		
 	        			 		$(this).remove();
+	        			 		
+	        			 		console.log(data.activityNum + "활동");
 		        				
 		        				 var output = '';
 		    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
 		    	                 output += '<tr>';
 		    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
-		    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.updateChatId +'">';
+		    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data._id +'">';
 		    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
 		    		     		 output += '<label>'+ data.title +'</label></td>'
 		    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
@@ -413,6 +414,8 @@
 	        			 console.log("updateChatId : " + updateChatId + "- checkUserId :" + checkUserID);
 	        			 if (checkUserID == updateChatId){
 	        				$(this).remove();
+	        				
+	        				
 	        				
 	        				 var output = '';
 	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
@@ -448,6 +451,7 @@
 	        			 console.log("updateChatId : " + updateChatId + "- checkUserId :" + checkUserID);
 	        			 if (checkUserID == updateChatId){
 	        				$(this).remove();
+	        				
 	        				
 	        				 var output = '';
 	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
