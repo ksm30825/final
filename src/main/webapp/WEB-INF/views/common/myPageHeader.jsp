@@ -69,7 +69,7 @@
 				<i class="fas fa-2x fa-plane"></i>
 			</span>
 			<span class="subtitle myHead">등록한 여행일정</span>
-			<span class="title myHead">0</span>
+			<span class="title myHead" id="publicTrvCount"></span>
 		</div>
 		<div class="column is-one-third-mobile" >
 			<span class="icon is-medium has-text-primary">
@@ -130,6 +130,18 @@
  	
  	<script>
  		$(function() {
+ 			
+ 			$.ajax({
+ 				url:"selectPublicTrvCount.trv",
+ 				type:"POST",
+ 				data:{memberId:"${ loginUser.memberId }"},
+ 				success:function(data) {
+ 					$("#publicTrvCount").text(data.publicTrvCount);
+ 				},
+ 				error:function(err) {
+ 					alert("err");
+ 				}
+ 			});
  			
 	 		$(".myPageMenu li").click(function() {
 				$(this).addClass('is-active');

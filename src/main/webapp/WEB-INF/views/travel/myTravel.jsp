@@ -38,6 +38,7 @@
 					<ul style="padding-left:20px">
 						<li class="my-trv-menu is-active" id="private"><a id="open">작성중</a></li>
 						<li class="my-trv-menu" id="public"><a id="closed">작성완료</a></li>
+						<li class="my-trv-menu" id="shared"><a id="closed">나에게 공유된 일정</a></li>
 					</ul>
 				</nav>
 			</section>
@@ -133,6 +134,52 @@
 					</c:forEach>
 				</div>
 			</section>
+			<section class="section" id="sharedSection" style="display:none">
+				<div class="columns is-multiline">
+					<c:forEach var="trv" items="${ sharedTrvList }" varStatus="st">
+						<div class="column is-one-third">
+							<div class="card privateTrvCard">
+								<input type="hidden" value="${ trv.trvId }" name="trvId" />
+								<div class="card-image">
+									<figure class="image" style="margin:0">
+										<c:if test="${ trv.mainImage ne null }">
+											<img src="resources/uploadFiles/${ trv.mainImage.changeName }">
+										</c:if>
+										<c:if test="${ trv.mainImage eq null }">
+											<img src="resources/images/logo1.png">
+										</c:if>
+									</figure>
+								</div>
+								<div class="card-content">
+									<div class="media">
+										<div class="media-left">
+											<p class="title is-4">${ trv.trvTitle }</p>
+											<p class="subtitle is-6">
+												<c:forEach var="trvCity" items="${ trv.trvCityList }" varStatus="st2">
+													${ trvCity.countryNameKo } &nbsp; ${ trvCity.cityNameKo }
+													<c:if test="${ st2.count ne trv.trvCityList.size() }">/</c:if>&nbsp;
+												</c:forEach>
+											</p>
+											<small>${ trv.startDate } ~ ${ trv.endDate }</small>&nbsp;&nbsp;
+											<a class="button is-small"> 
+												<span class="icon is-small"><i class="fa fa-user"></i></span> 
+												<span> ${ trv.userName } </span>
+											</a>
+										</div>
+										<div class="media-right">
+										</div>
+									</div>
+									<div class="content">
+										<c:forEach var="trvTag" items="${ trv.trvTagList }" varStatus="st2">
+											<a>#${ trvTag.tagName }</a>
+										</c:forEach>
+									</div>
+								</div>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+			</section>
 		</div>
 	</div>
 	<script>
@@ -147,9 +194,15 @@
 				if($(this).is("#private")) {
 					$("#privateSection").show();
 					$("#publicSection").hide();
-				}else {
+					$("#sharedSection").hide();
+				}else if($(this).is("#public")) {
 					$("#privateSection").hide();
 					$("#publicSection").show();
+					$("#sharedSection").hide();
+				}else {
+					$("#privateSection").hide();
+					$("#publicSection").hide();
+					$("#sharedSection").show();
 				}
 			});
 		});
