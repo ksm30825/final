@@ -126,6 +126,8 @@ public interface TravelService {
 
 	void selectDownloadCost(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
+	int insertOverrideTravel(int trvId, int memberId);
+
 
 
 

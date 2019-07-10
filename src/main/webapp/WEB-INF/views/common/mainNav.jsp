@@ -92,8 +92,8 @@
             	<a class="navbar-item" href="travelRequest.tr"> <strong>여행의뢰</strong> </a>
             	<a class="navbar-item " href="noticeList.cc"> <strong>고객센터</strong> </a>
               <!--임시-->
-              <a class="navbar-item " href="showMyTravel.trv"> <strong>임시 마이페이지</strong> </a>
-              <a class="navbar-item " href="genderStatisticsYear.sta"> <strong>임시 관리자페이지</strong> </a>
+              <!-- <a class="navbar-item " href="showMyTravel.trv"> <strong>임시 마이페이지</strong> </a>
+              <a class="navbar-item " href="genderStatisticsYear.sta"> <strong>임시 관리자페이지</strong> </a> -->
 			</div>
         	<div class="navbar-end is-hidden-mobile">
             	<div class="navbar-item">

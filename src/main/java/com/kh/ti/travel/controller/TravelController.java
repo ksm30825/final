@@ -477,11 +477,27 @@ public class TravelController {
 
 	// 구매한 일정으로 새일정 작성
 	@RequestMapping("overrideTravel.trv")
-	public String overrideTravel(int trvId, Model model) {
+	public String overrideTravel(int trvId, HttpSession session, Model model) {
 
-		HashMap trvMap = ts.selectTravel(trvId);
-
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int memberId = loginUser.getMemberId();
+		int ovTrvId = ts.insertOverrideTravel(trvId, memberId);
+		
+		//HashMap trvMap = ts.selectRefTravel(trvId);
+		
+		
+		return "redirect:selectOvTravel.trv?trvId=" + ovTrvId + "&refId=" + trvId;
+	}
+	
+	@RequestMapping("selectOvTravel.trv")
+	public String selectOvTravel(int trvId, int refId) {
+		
+		System.out.println(trvId);
+		System.out.println(refId);
+		
 		return "";
 	}
+	
+
 
 }

@@ -158,6 +158,8 @@ public interface TravelDao {
 
 	ArrayList<HashMap> selectDownloadCost(SqlSessionTemplate sqlSession, int trvId);
 
+	int insertOverrideTrv(SqlSessionTemplate sqlSession, Travel overrideTrv);
+
 
 
 
