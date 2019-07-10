@@ -256,19 +256,9 @@
 		<choose>
 			<when test="trvId != 0">
 				WHERE TRV_ID=#{trvId} 
-				AND PROCEEDS_ID = (
-					    SELECT MAX(PROCEEDS_ID)
-					    FROM PROCEEDS
-					    WHERE TRV_ID=#{trvId}	    
-					)
 			</when>
 			<when test="ptcpId != 0">
 				WHERE PTCP_ID=#{ptcpId}
-				AND PROCEEDS_ID = (
-					    SELECT MAX(PROCEEDS_ID)
-					    FROM PROCEEDS
-					    WHERE PTCP_ID=#{ptcpId}    
-					)
 			</when>
 		</choose>
 	</select>
@@ -282,6 +272,12 @@
 				<when test="ptcpId != 0">null, #{ptcpId}</when>
 			</choose>)
 	</insert>
+	<!-- 판매자의 기존 수익금 내역이 존재할 시 update만 -->
+	<update id="updateReceiverProceeds" parameterType="Proceeds">
+		UPDATE PROCEEDS
+		SET PROCEEDS = #{proceeds}
+		WHERE PROCEEDS_ID = #{proceedsId}
+	</update>
 	<!-- 성공시 member 테이블의 누적 포인트 차감(memberId) -->
 	<update id="updateUserDeductionPoint" parameterType="UsePoint">
 		UPDATE MEMBER
@@ -528,10 +524,11 @@
 	</update>
 	<!-- 관리자 - 판 사람의 아이디 조회 -trvId 이용 -->
 	<select id="selectMemberIdTrv" parameterType="Refund" resultMap="proceedsResultSet">
-		SELECT P.MEMBER_ID, PROCEEDS
-		FROM PROCEEDS P
-		JOIN TRAVEL T ON (P.TRV_ID = T.TRV_ID)
-		WHERE P.TRV_ID = #{trvId}
+		SELECT T.MEMBER_ID, USE_POINT
+		FROM REFUND R
+		JOIN USE_POINT UP ON(R.POINT_ID=UP.POINT_ID)
+		JOIN TRAVEL T ON(UP.TRV_ID = T.TRV_ID)
+		WHERE REFUND_ID=#{refundId}
 	</select>
 	<!-- 관리자 - 판 사람의 아이디 조회 -planId 이용 -->
 	<select id="selectMemberIdRequest" parameterType="Refund" resultMap="proceedsResultSet">
@@ -553,5 +550,10 @@
 		FROM PARTICIPATION 
 		WHERE REQUEST_ID = #{requestId} AND CHOOSE_STATUS='Y'
 	</select>
-	
+	<!-- 차감된 userPoint 찾기 -->
+	<select id="selectOnePoint" resultType="_int">
+		SELECT USER_POINT
+		FROM MEMBER
+		WHERE MEMBER_ID=#{memberId}
+	</select>
 </mapper>

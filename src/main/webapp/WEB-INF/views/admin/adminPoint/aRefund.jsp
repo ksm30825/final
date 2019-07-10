@@ -174,7 +174,7 @@
 				var $listTr = $("<tr>");
 				
 				var $noTd = $("<td class='modalOpen'>").text(i+1);
-				var $refId = $("<input type='text'>").val(list.refundId);
+				var $refId = $("<input type='hidden'>").val(list.refundId);
 				$noTd.append($refId);
 				var $boardId, $useTypeId;
 				var $memberId = $("<input type='hidden'>").val(list.memberId);
@@ -211,20 +211,30 @@
 				var $refundReasonTd = $("<td class='modalOpen'>").text(refundReason+"...");
 				
 				var $processTd = $("<td>");
-				var $processBtnYes = $('<button id="toApprove" class="button is-success is-outlined yes" style="width:70px;height:20px;line-height:50%;"> 승인 </button>');
-				var $processBtnNo = $('<button id="toRefuse" class="button is-danger is-outlined no" style="width:70px;height:20px;line-height:50%;"> 거절 </button>');
+				
+				var $processBtnYes, $processBtnNo;
+				
+				var refundStatus = list.refundStatus;
+				
+				console.log(refundStatus);
+				if(refundStatus != 10){
+					$processBtnYes = $('<button id="toApprove" disabled="true" class="button is-success is-outlined yes" style="width:70px;height:20px;line-height:50%;"> 승인 </button>');
+					$processBtnNo = $('<button id="toRefuse" disabled="true" class="button is-danger is-outlined no" style="width:70px;height:20px;line-height:50%;"> 거절 </button>');
+				}else{
+					$processBtnYes = $('<button id="toApprove" class="button is-success is-outlined yes" style="width:70px;height:20px;line-height:50%;"> 승인 </button>');
+					$processBtnNo = $('<button id="toRefuse" class="button is-danger is-outlined no" style="width:70px;height:20px;line-height:50%;"> 거절 </button>');
+				}
 				
 				$processTd.append($processBtnYes);
 				$processTd.append($processBtnNo);
 				
 				var $statusTd = $("<td>");
 				var $statusIn;
-				var refundStatus = list.refundStatus;
-				if(refundStatus==10){
+				if(refundStatus==10){//대기중
 					$statusIn = $('<a class="button is-primary" style="width:70px;height:20px;"> 대기중 </a>');
-				}else if(refundStatus == 20){
-					$statusIn = $('<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>');
-				}else if(refundStatus == 30){
+				}else if(refundStatus == 20){//승인
+					$statusIn = $('<a class="button is-success" style="width:70px;height:20px;"> 승인 </a>');		
+				}else if(refundStatus == 30){//거절
 					$statusIn = $('<a class="button is-danger" style="width:70px;height:20px;"> 거절 </a>');
 				}
 				
@@ -250,6 +260,7 @@
 				bid = $(this).parent().children().eq(0).children().eq(1).val();
 				mid = $(this).parent().children().eq(0).children().eq(2).val();
 				useTypeId = $(this).parent().children().eq(0).children().eq(3).val();
+				
 				if(list.useType == 10){
 					title = list.trvTitle;
 					bid = list.trvId;

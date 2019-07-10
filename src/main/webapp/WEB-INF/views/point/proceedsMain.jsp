@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -93,12 +95,6 @@
 						  	</table>
 				    	</div>
 				    	<div align="center" class="rebatePagingArea">
-				    		<button class="pageingBtn"> << </button>
-				    		<button class="pageingBtn"> < </button>
-				    		<button class="pageingBtn"> 1 </button>
-				    		<button class="pageingBtn"> 2 </button>
-				    		<button class="pageingBtn"> > </button>
-				    		<button class="pageingBtn"> >> </button>
 				    	</div>
 				    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				  		</div>
@@ -130,7 +126,16 @@
 					            </select>
 					        </div>
 					        <div style="float:right;">
-					        	<a class="button is-danger is-outlined" onclick="$('#myModal').toggleClass('is-active')" id="toRebate">환급신청 하기</a>
+					        	<c:if test ="${ sessionScope.loginUser.accCode eq null}" >
+					        		<a class="button is-danger is-outlined" id="toAccount"href="showConfirmAcc.me" 
+					              		 onclick="window.open(this.href, '_blank', 'width=800px, height=280px, toolbars=no, scrollbars=no'); return false;">계좌인증하기</a>
+				              	</c:if>
+					            <c:set var="standard" value="30000"/>
+					            <c:if test ="${ sessionScope.loginUser.accCode ne null}" >
+					            	<c:if test="${ sessionScope.loginUser.userProceeds ge 30000}">
+							        	<a class="button is-danger is-outlined" id="toRebate"onclick="$('#myModal').toggleClass('is-active')">환급신청 하기</a>
+					            	</c:if>
+					            </c:if>
 					        </div>
 				 		</div>
 				 		<div id="proceedsTB">
@@ -149,12 +154,6 @@
 						  </table>
 						</div>
 						<div align="center" class="proceedsPagingArea">
-				    		<button class="pageingBtn"> << </button>
-				    		<button class="pageingBtn"> < </button>
-				    		<button class="pageingBtn"> 1 </button>
-				    		<button class="pageingBtn"> 2 </button>
-				    		<button class="pageingBtn"> > </button>
-				    		<button class="pageingBtn"> >> </button>
 			    		</div>
 			    		<a style="height:20px;color:purple;margin-left:90%;" href="#pt"><i class='fas fa-chevron-circle-up' style='font-size:36px'></i></a>
 				 		</div>
@@ -231,69 +230,76 @@
 			function makeProceedsTB(proPi, proceedsList){
 				//console.log(proPi);
 				console.log(proceedsList);
+				
 				//console.log(month);
 				$("#proceedsTBody").empty();
+				
 				var len = proceedsList.length;
 				//console.log(len);
 				for(var i=0 ; i<len ; i++){
 					var list = proceedsList[i];
-					//console.log(list);
-					var pi = proPi;
-					//console.log(pi);
-					
-					var $listTr = $("<tr>");
-					var $noTd = $("<td width='10px'>").text(i+1);
-					
-					var date = new Date(list.proceedsDate);
-					date = getFormatDate(date);
-					var $proceedsDateTd = $("<td>").text(date);
-					
-					var accumulateProceeds = list.accumulateProceeds;
-					accumulateProceeds = comma(accumulateProceeds);
-					var $accumulateProceedsTd = $("<td>").text(accumulateProceeds);
-					
-					var $boardTd =$("<td>");
-					var mid, bid, $proceedsIn, $proceedsBtn, $proceedsMidIn, $proceedsBidIn; 
-					mid = list.memberId;
-					if(list.trvId != 0){
-						bid = list.trvId;
-						console.log(bid);
+					var proceeds = list.proceeds;
+					if(proceeds>=30000){
+						//console.log(list);
+						var pi = proPi;
+						//console.log(pi);
 						
-						$proceedsIn = $('<input type="hidden">').val(list.trvId);
+						var $listTr = $("<tr>");
+						var $noTd = $("<td width='10px'>").text(i+1);
 						
-						$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">판매된 일정</button>');
+						var date = new Date(list.proceedsDate);
+						date = getFormatDate(date);
+						var $proceedsDateTd = $("<td>").text(date);
 						
-						$proceedsMidIn = $('<input type="hidden">').val(mid);
-						$proceedsBidIn = $('<input type="hidden">').val(bid);
 						
-						$proceedsBtn.append($proceedsMidIn);
-						$proceedsBtn.append($proceedsBidIn);
+						proceeds = comma(proceeds);
+						var $proceedsTd = $("<td>").text(proceeds);
 						
-						$boardTd.append($proceedsIn);
-						$boardTd.append($proceedsBtn);
-					}else{
-						bid = list.ptcpId;
-						console.log(bid);
+						var $boardTd =$("<td>");
+						var mid, bid, $proceedsIn, $proceedsBtn, $proceedsMidIn, $proceedsBidIn; 
+						mid = list.memberId;
+						if(list.trvId != 0){
+							bid = list.trvId;
+							console.log(bid);
+							
+							$proceedsIn = $('<input type="hidden">').val(list.trvId);
+							
+							$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">판매된 일정</button>');
+							
+							$proceedsMidIn = $('<input type="hidden">').val(mid);
+							$proceedsBidIn = $('<input type="hidden">').val(bid);
+							
+							$proceedsBtn.append($proceedsMidIn);
+							$proceedsBtn.append($proceedsBidIn);
+							
+							$boardTd.append($proceedsIn);
+							$boardTd.append($proceedsBtn);
+						}else{
+							bid = list.ptcpId;
+							console.log(bid);
+							
+							$proceedsIn = $('<input type="hidden">').val(list.ptcpId);
+							
+							$proceedsBtn = $('<button id="requsetLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
+							
+							$proceedsMidIn = $('<input type="hidden">').val(mid);
+							$proceedsBidIn = $('<input type="hidden">').val(bid);
+							
+							$proceedsBtn.append($proceedsMidIn);
+							$proceedsBtn.append($proceedsBidIn);
+							
+							$boardTd.append($proceedsIn);
+							$boardTd.append($proceedsBtn);
+						}
+						$listTr.append($noTd);
+						$listTr.append($proceedsDateTd);
+						$listTr.append($proceedsTd);
+						$listTr.append($boardTd);
 						
-						$proceedsIn = $('<input type="hidden">').val(list.ptcpId);
-						
-						$proceedsBtn = $('<button id="requsetLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
-						
-						$proceedsMidIn = $('<input type="hidden">').val(mid);
-						$proceedsBidIn = $('<input type="hidden">').val(bid);
-						
-						$proceedsBtn.append($proceedsMidIn);
-						$proceedsBtn.append($proceedsBidIn);
-						
-						$boardTd.append($proceedsIn);
-						$boardTd.append($proceedsBtn);
+						$("#proceedsTBody").append($listTr);
 					}
-					$listTr.append($noTd);
-					$listTr.append($proceedsDateTd);
-					$listTr.append($accumulateProceedsTd);
-					$listTr.append($boardTd);
 					
-					$("#proceedsTBody").append($listTr);
+					
 				}
 			}
 			//환급 신청 테이블 생성

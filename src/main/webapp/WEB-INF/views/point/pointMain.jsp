@@ -831,6 +831,7 @@
 					$(this).parent().removeClass('is-active');
 				});
 				$("#okay").click(function(){
+					$("#toRefund").attr("disabled", true).removeClass('is-primary').addClass('is-success');
 					$("#myModal2").removeClass('is-active');
 				});
 				
@@ -866,6 +867,7 @@
 					//location.href="환불메소드로";
 				});
 				$("#okay").click(function(){
+					
 					$("#myModal2").removeClass('is-active');
 					//location.href="환불메소드로";
 				});
