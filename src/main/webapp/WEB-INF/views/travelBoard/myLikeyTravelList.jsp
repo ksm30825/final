@@ -49,7 +49,7 @@
 						</a>
 					</li>
 					<li style="width: 100%;">
-						<a>
+						<a href="selectAllLikeySpot.sp">
 						<span class="icon"><i class="fas fa-globe-americas"></i></span>
 						<span>여행지 좋아요</span>
 						</a>

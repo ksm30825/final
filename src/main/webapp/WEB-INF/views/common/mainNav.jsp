@@ -58,7 +58,10 @@
 	                        	<span>${ loginUser.email }</span>
 	                    	</a>
 	                    	<div class="navbar-dropdown">
-		                  		<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a> 
+	                    		<c:if test="${ loginUser.email eq 'admin@gmail.com' }">
+                    				<a class="navbar-item " href="genderStatisticsYear.sta"> 관리자페이지 </a> 
+                    			</c:if>
+                   				<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a>
 		                  		<a class="navbar-item " href="logout.me"> 로그아웃 </a>
 		              		</div>
 	                  	</div> 
@@ -122,7 +125,10 @@
 		                        	<span>${ loginUser.email }</span>
 		                    	</a>
 		                    	<div class="navbar-dropdown">
-			                  		<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a> 
+	                    			<c:if test="${ loginUser.email eq 'admin@gmail.com' }">
+	                    				<a class="navbar-item " href="genderStatisticsYear.sta"> 관리자페이지 </a> 
+	                    			</c:if>
+                    				<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a>
 			                  		<a class="navbar-item " href="logout.me"> 로그아웃 </a>
 			              		</div>
 		                  	</div> 
