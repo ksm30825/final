@@ -125,7 +125,7 @@ th, td {
 										</div>
 										<footer class="card-footer">
 											<a class="card-footer-item" onclick="back();">돌아가기</a> <a
-												class="card-footer-item" onclick="ok();">채택하기</a> <a
+												class="card-footer-item" onclick="return ok();">채택하기</a> <a
 												class="card-footer-item"
 												onclick="$('#reportModal').toggleClass('is-active')">신고하기</a>
 										</footer>
@@ -167,7 +167,8 @@ th, td {
 			</section>
 		</div>
 	</div>
-	<!-- 신고하기 모달 -->
+	<!-- 설계자 신고하기 -->
+	<form action="insertPanelty.pe" method="post" enctype="multipart/form-data">
 	<div class="modal" id="reportModal">
 		<div class="modal-background"></div>
 		<div class="modal-card">
@@ -175,40 +176,42 @@ th, td {
 				<p class="modal-card-title">신고하기</p>
 			</header>
 			<section class="modal-card-body">
+			<input type="hidden" value="${ loginUser.memberId }" name="complainantId">
 				<div class="column">
-					<h1 class="title">신고 종류</h1>
+					<h1>신고 종류</h1>
 					<hr>
 					<div class="field">
 						<p class="control">
-							<span class="select"> <select>
-									<option>부적절 게시물</option>
-									<option>욕설 및 비방</option>
-									<option>저작권 침해 및 명의 도용</option>
-									<option>기타</option>
+							<span class="select"> <select name="penaltyId">
+									<option value="11">부적절 게시물</option>
+									<option value="12">욕설 및 비방</option>
+									<option value="13">저작권 침해 및 명의 도용</option>
+									<option value="30">기타</option>
 							</select>
 							</span>
 						</p>
 					</div>
 				</div>
 				<section class="section" id="box">
-					<h1 class="title">신고사유</h1>
-					<h1><b>설계인 : user01</b></h1>
+					<h1>신고사유</h1>
+					<textarea name="list" readonly>설계글</textarea>
+					<textarea id="panelty" name="listType" readonly>${ code }</textarea>
 					<hr>
 					<div class="box">
 						<article class="media">
 							<div class="media-content">
 								<div class="content">
-									<textarea placeholder="신고사유를 입력하세요" rows="5"></textarea>
+									<textarea placeholder="신고사유를 입력하세요" rows="5" name="penaltyContent"></textarea>
 								</div>
 							</div>
 						</article>
 					</div>
-					<h1  class="title">첨부파일</h1>
+					<h1>첨부파일</h1>
 					<hr>
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -219,7 +222,7 @@ th, td {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -230,7 +233,7 @@ th, td {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -241,7 +244,7 @@ th, td {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="resume"> <span class="file-cta">
+								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -252,11 +255,12 @@ th, td {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<a type="submit" class="button is-primary" onclick="report();">신고</a> <a class="button"
-					onclick="cancel();">취소</a>
+				<button type="submit" class="button is-primary">신고</a>
+				<button class="button" onclick="cancel();">취소</a>
 			</footer>
 		</div>
 	</div>
+	</form>
 </body>
 <script>
 	$(function() {
@@ -303,6 +307,12 @@ th, td {
 		</c:if>
 	}
 	function ok() {
+		<c:if test="${ loginUser.userPoint < uPoint}">
+			alert("내 포인트 : " + '${ loginUser.userPoint }원' + 
+				  "\n의뢰가격 : " + '${ uPoint }원' + 
+				  "\n보유 포인트가 부족합니다.");
+			return false;
+		</c:if>
 		<c:if test="${ trp.get(0).getChooseStatus() == 'N' }">
 		var result = confirm("정말로 채택하시겠습니까?");
 		console.log(result);

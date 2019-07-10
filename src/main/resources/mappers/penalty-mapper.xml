@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="Penalty">
+	<resultMap type="Penalty" id="PenaltyResultSet">
+		<id property="listId" column="LIST_ID"/>
+		<result property="penaltyContent" column="PENALTY_CONTENT" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="penaltyDate" column="PENALTY_DATE"/>
+		<result property="penaltyResult" column="PENALTY_RESULT"/>
+		<result property="processDate" column="PROCESS_DATE"/>
+		<result property="penaltyId" column="PENALTY_ID"/>
+		<result property="complainantId" column="COMPLAINANT_ID"/>
+
+	</resultMap>
+	
+	<!-- 신고글 인서트 -->
+	<insert id="insertPenalty" parameterType="Penalty">
+		INSERT INTO PENALTY_LIST
+		VALUES(PENALTY_LIST_SEQ.NEXTVAL, #{penaltyContent}, SYSDATE, '처리대기', NULL, #{penaltyId}, #{complainantId}, #{list}, NULL,
+		<choose>
+			<when test="trvId != 0">
+				#{trvId}, NULL, NULL, NULL, NULL,
+			</when>
+			<when test="reviewId != 0">
+				NULL, #{reviewId}, NULL, NULL, NULL,
+			</when>
+			<when test="memberId != 0">
+				NULL, NULL, #{memberId}, NULL, NULL,
+			</when>
+			<when test="planId != 0">
+				NULL, NULL, NULL, #{planId}, NULL,
+			</when>
+			<when test="requestId != 0">
+				NULL, NULL, NULL, NULL, #{requestId},
+			</when>
+		</choose>
+		(SELECT PENALTY
+		 FROM PENALTY
+		 WHERE PENALTY_ID = #{penaltyId}))
+	</insert>
+	
+	<!-- 해당 신고글의 이미지 인서트 -->
+	<insert id="insertPenaltyImg" parameterType="PenaltyAttachment">
+		<selectKey keyProperty="penaltyId" resultType="_int" order="BEFORE">
+			SELECT PENALTY_LIST_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		INSERT INTO ATTACHMENT_FILE
+		VALUES(ATTACHMENT_SEQ.NEXTVAL, #{originName}, #{changeName}, #{filePath}, SYSDATE, #{fileType}, #{penaltyId}, 1, NULL)
+	</insert>
+</mapper>

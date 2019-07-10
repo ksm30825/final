@@ -201,6 +201,7 @@ textarea {
 	</section>
 		</div>
 	</div>
+	
 	<!-- 의뢰인 신고하기 -->
 	<form action="insertPanelty.pe" method="post" enctype="multipart/form-data">
 	<div class="modal" id="reportModal">
@@ -216,7 +217,7 @@ textarea {
 					<hr>
 					<div class="field">
 						<p class="control">
-							<span class="select"> <select name="penalityId">
+							<span class="select"> <select name="penaltyId">
 									<option value="11">부적절 게시물</option>
 									<option value="12">욕설 및 비방</option>
 									<option value="13">저작권 침해 및 명의 도용</option>
@@ -235,7 +236,7 @@ textarea {
 						<article class="media">
 							<div class="media-content">
 								<div class="content">
-									<textarea placeholder="신고사유를 입력하세요" rows="5" name="penalityContent"></textarea>
+									<textarea placeholder="신고사유를 입력하세요" rows="5" name="penaltyContent"></textarea>
 								</div>
 							</div>
 						</article>

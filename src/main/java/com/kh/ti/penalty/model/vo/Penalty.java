@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class Penalty implements Serializable{
 	private int listId;		//신고번호
-	private String penalityContent;		//신고내용
-	private Date penalityDate;		//신고일
+	private String penaltyContent;		//신고내용
+	private Date penaltyDate;		//신고일
 	private String penalityResult;		//신고결과
 	private Date processDate;		//처리일
-	private int penalityId;		//신고종류코드
+	private int penaltyId;		//신고종류코드
 	private int complainantId;		//신고인 번호
 	private String list;			//구분
 	private String listType;		//구분번호
@@ -21,21 +21,21 @@ public class Penalty implements Serializable{
 	private int planId;				//설계번호
 	private int requestId;			//의뢰번호
 	private int memberPenalty;		//벌점
-	private ArrayList<PenalityAttachment> attachmentFileList;	//사진들
+	private ArrayList<PenaltyAttachment> attachmentFileList;	//사진들
 	
 	public Penalty() {}
 
-	public Penalty(int listId, String penalityContent, Date penalityDate, String penalityResult, Date processDate,
-			int penalityId, int complainantId, String list, String listType, String rejectionReson, int trvId,
+	public Penalty(int listId, String penaltyContent, Date penaltyDate, String penalityResult, Date processDate,
+			int penaltyId, int complainantId, String list, String listType, String rejectionReson, int trvId,
 			int reviewId, int memberId, int planId, int requestId, int memberPenalty,
-			ArrayList<PenalityAttachment> attachmentFileList) {
+			ArrayList<PenaltyAttachment> attachmentFileList) {
 		super();
 		this.listId = listId;
-		this.penalityContent = penalityContent;
-		this.penalityDate = penalityDate;
+		this.penaltyContent = penaltyContent;
+		this.penaltyDate = penaltyDate;
 		this.penalityResult = penalityResult;
 		this.processDate = processDate;
-		this.penalityId = penalityId;
+		this.penaltyId = penaltyId;
 		this.complainantId = complainantId;
 		this.list = list;
 		this.listType = listType;
@@ -57,20 +57,20 @@ public class Penalty implements Serializable{
 		this.listId = listId;
 	}
 
-	public String getPenalityContent() {
-		return penalityContent;
+	public String getPenaltyContent() {
+		return penaltyContent;
 	}
 
-	public void setPenalityContent(String penalityContent) {
-		this.penalityContent = penalityContent;
+	public void setPenaltyContent(String penaltyContent) {
+		this.penaltyContent = penaltyContent;
 	}
 
-	public Date getPenalityDate() {
-		return penalityDate;
+	public Date getPenaltyDate() {
+		return penaltyDate;
 	}
 
-	public void setPenalityDate(Date penalityDate) {
-		this.penalityDate = penalityDate;
+	public void setPenaltyDate(Date penaltyDate) {
+		this.penaltyDate = penaltyDate;
 	}
 
 	public String getPenalityResult() {
@@ -89,12 +89,12 @@ public class Penalty implements Serializable{
 		this.processDate = processDate;
 	}
 
-	public int getPenalityId() {
-		return penalityId;
+	public int getPenaltyId() {
+		return penaltyId;
 	}
 
-	public void setPenalityId(int penalityId) {
-		this.penalityId = penalityId;
+	public void setPenaltyId(int penaltyId) {
+		this.penaltyId = penaltyId;
 	}
 
 	public int getComplainantId() {
@@ -177,18 +177,18 @@ public class Penalty implements Serializable{
 		this.memberPenalty = memberPenalty;
 	}
 
-	public ArrayList<PenalityAttachment> getAttachmentFileList() {
+	public ArrayList<PenaltyAttachment> getAttachmentFileList() {
 		return attachmentFileList;
 	}
 
-	public void setAttachmentFileList(ArrayList<PenalityAttachment> attachmentFileList) {
+	public void setAttachmentFileList(ArrayList<PenaltyAttachment> attachmentFileList) {
 		this.attachmentFileList = attachmentFileList;
 	}
 
 	@Override
 	public String toString() {
-		return "Penalty [listId=" + listId + ", penalityContent=" + penalityContent + ", penalityDate=" + penalityDate
-				+ ", penalityResult=" + penalityResult + ", processDate=" + processDate + ", penalityId=" + penalityId
+		return "Penalty [listId=" + listId + ", penaltyContent=" + penaltyContent + ", penaltyDate=" + penaltyDate
+				+ ", penalityResult=" + penalityResult + ", processDate=" + processDate + ", penaltyId=" + penaltyId
 				+ ", complainantId=" + complainantId + ", list=" + list + ", listType=" + listType + ", rejectionReson="
 				+ rejectionReson + ", trvId=" + trvId + ", reviewId=" + reviewId + ", memberId=" + memberId
 				+ ", planId=" + planId + ", requestId=" + requestId + ", memberPenalty=" + memberPenalty
