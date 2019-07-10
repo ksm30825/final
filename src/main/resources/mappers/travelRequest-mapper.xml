@@ -218,7 +218,7 @@
 		UPDATE PARTICIPATION
 		SET CHOOSE_STATUS = 'Y',
 		CHOOSE_DATE = SYSDATE
-		WHERE REQUEST_ID = #{code}
+		WHERE PLAN_ID = #{planId}
 	</update>
 	
 	<!-- 의뢰글 채택상태 업데이트 -->
