@@ -550,7 +550,7 @@ public class PointController {
 //				}
 				break;
 		}
-		
+		System.out.println("receiverBoard : " + receiverBoard);
 		//성공시 수익금발생내역에 인서트
 		int receiverResult = ps.insertReceiverProceeds(receiverBoard);
 		
@@ -560,15 +560,15 @@ public class PointController {
 		//성공시 member 테이블의 누적 수익금 추가
 		int updateUserProceeds = ps.updateUserIncreaseProceeds(receiverBoard);
 		
-		int useMemberPoint=0;
-		
-		//int recevieMemberProceeds=0;
-		
-		if(memberId == mid) {
-			//구매한 사람
-			useMemberPoint = ps.getUseMemberPoint(mid); 
-			loginUser.setUserPoint(useMemberPoint);
-		}
+//		int useMemberPoint=0;
+//		
+//		int recevieMemberProceeds=0;
+//		
+//		if(memberId == mid) {
+//			//구매한 사람
+//			useMemberPoint = ps.getUseMemberPoint(mid); 
+//			loginUser.setUserPoint(useMemberPoint);
+//		}
 //		else {
 //			//판 사람
 //			recevieMemberProceeds = ps.getRecevieMemberProceeds(receiverMemberId);

@@ -263,8 +263,8 @@
 						
 						$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">판매된 일정</button>');
 						
-						$proceedsMidIn = $('<input type="text">').val(mid);
-						$proceedsBidIn = $('<input type="text">').val(bid);
+						$proceedsMidIn = $('<input type="hidden">').val(mid);
+						$proceedsBidIn = $('<input type="hidden">').val(bid);
 						
 						$proceedsBtn.append($proceedsMidIn);
 						$proceedsBtn.append($proceedsBidIn);
@@ -277,10 +277,10 @@
 						
 						$proceedsIn = $('<input type="hidden">').val(list.ptcpId);
 						
-						$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
+						$proceedsBtn = $('<button id="requsetLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
 						
-						$proceedsMidIn = $('<input type="text">').val(mid);
-						$proceedsBidIn = $('<input type="text">').val(bid);
+						$proceedsMidIn = $('<input type="hidden">').val(mid);
+						$proceedsBidIn = $('<input type="hidden">').val(bid);
 						
 						$proceedsBtn.append($proceedsMidIn);
 						$proceedsBtn.append($proceedsBidIn);
@@ -388,6 +388,13 @@
 				var mid = $(this).children().eq(0).val();
 				var bid = $(this).children().eq(1).val();
 				var url = "oneBoardRPoint.po?mid="+mid+"&bid="+bid;
+
+				window.open(url, "oneBoard", "width=1000,height=700");
+			});
+			$("body").on("click", "#requsetLink",function(){
+				var mid = $(this).children().eq(0).val();
+				var bid = $(this).children().eq(1).val();
+				var url = "oneBoardRequest.po?mid="+mid+"&bid="+bid;
 
 				window.open(url, "oneBoard", "width=1000,height=700");
 			});
