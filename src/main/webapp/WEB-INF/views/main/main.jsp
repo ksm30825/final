@@ -112,7 +112,6 @@
 							                        <li><a href="#">10 순위</a></li>
 							                    </ol>
 							                </dd>
-							                
 							            </dl>
        							 </div>
  							</td>
@@ -179,6 +178,14 @@
 			    $("#searchBtn").click(function(){
 			    	var selectTag = $("#Searchtag").val();
 			    	var selectContry = $("#Searchcontry").val();
+			    	
+			    	if (selectTag == "태그 선택"){
+		                   selectTag = "";
+		            }
+		                
+		             if (selectContry == "여행지 선택" ){
+		                   selectContry = "";
+		             }
 			    	
 			    	console.log(selectTag + "-" + selectContry);
 			    	

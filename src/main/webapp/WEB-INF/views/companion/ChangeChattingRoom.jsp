@@ -224,6 +224,13 @@
 		       
 		       //패팅방 update 
 		       $("#editRoomBtn").click(function(){
+		    	   var chatTitle = $("#chatTitle").val();
+		    	   var chatPlace = $("#chatPlace").val();
+		    	   var stardate = $("#trStartDate").val();
+		    	   var enddate = $("#trEndDate").val();
+		    	   var peoplenum = $("#peopleNum").val();
+		    	   var detail = $("#txtDetail").val();
+		    	   
 		    	   
 		       });
 		       

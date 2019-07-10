@@ -55,7 +55,7 @@
 	<select id="selectContryList" resultMap="CountryResultSet">
 		SELECT *
 		FROM Country
-		ORDER BY CONTINENT_NAME ASC
+		ORDER BY COUNTRY_NAME_KO ASC
 	</select>
 	
 
