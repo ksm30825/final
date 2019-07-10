@@ -230,7 +230,7 @@
 			//수익금 달성 테이블 생성
 			function makeProceedsTB(proPi, proceedsList){
 				//console.log(proPi);
-				//console.log(proceedsList);
+				console.log(proceedsList);
 				//console.log(month);
 				$("#proceedsTBody").empty();
 				var len = proceedsList.length;
@@ -257,13 +257,14 @@
 					mid = list.memberId;
 					if(list.trvId != 0){
 						bid = list.trvId;
+						console.log(bid);
 						
 						$proceedsIn = $('<input type="hidden">').val(list.trvId);
 						
-						$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+' style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">판매된 일정</button>');
+						$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">판매된 일정</button>');
 						
-						$proceedsMidIn = $('<input type="hidden">').val(mid);
-						$proceedsBidIn = $('<input type="hidden">').val(bid);
+						$proceedsMidIn = $('<input type="text">').val(mid);
+						$proceedsBidIn = $('<input type="text">').val(bid);
 						
 						$proceedsBtn.append($proceedsMidIn);
 						$proceedsBtn.append($proceedsBidIn);
@@ -271,14 +272,15 @@
 						$boardTd.append($proceedsIn);
 						$boardTd.append($proceedsBtn);
 					}else{
-						bid = list.trvId;
+						bid = list.ptcpId;
+						console.log(bid);
 						
 						$proceedsIn = $('<input type="hidden">').val(list.ptcpId);
 						
-						$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+' style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
+						$proceedsBtn = $('<button id="proceedsLink" class="button is-primary" data-mid='+mid+'data-bid='+bid+'style="height:20px;line-height:60%;border-radius:5px;" data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
 						
-						$proceedsMidIn = $('<input type="hidden">').val(mid);
-						$proceedsBidIn = $('<input type="hidden">').val(bid);
+						$proceedsMidIn = $('<input type="text">').val(mid);
+						$proceedsBidIn = $('<input type="text">').val(bid);
 						
 						$proceedsBtn.append($proceedsMidIn);
 						$proceedsBtn.append($proceedsBidIn);

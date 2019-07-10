@@ -235,6 +235,11 @@ public class PointServiceImpl implements PointService{
 	public int updateUserProceedsRefund(Proceeds proceeds) {
 		return pd.updateUserProceedsRefund(sqlSession, proceeds);
 	}
+	//판매자의 참여번호를 조회해와야 함
+	@Override
+	public int selectOnePtcp(int requestId) {
+		return pd.selectOnePtcp(sqlSession, requestId);
+	}
 
 	
 

@@ -314,10 +314,20 @@ public class PointController {
 		
 		//System.out.println("memberID : " + memberId);
 		//System.out.println("boardCode : " + boardCode);
-		
-		return "redirect:/selectTravel.trv?trvId="+boardCode;
+		return "redirect:/selectTravel.trv?trvId="+boardCode;//-------------------------------------------------------------------------------
 	}
-	
+	@RequestMapping("/oneBoardRequest.po")
+	public String selectOneBoardRequest(String mid, String bid, HttpServletRequest request) {
+		int memberId = Integer.parseInt(mid);
+		int boardCode = Integer.parseInt(bid);
+		
+		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+		String userName = loginUser.getUserName();
+		
+		//System.out.println("memberID : " + memberId);
+		//System.out.println("boardCode : " + boardCode);
+		return "redirect:/requestDetail.tr?reqId="+bid+"&userName="+userName;//-------------------------------------------------------------------------------
+	}
 	//포인트 자동 인서트!!
 	//10:일정작성, 20:일정리뷰, 30:여행지리뷰
 	//일정작성:300P, 일정리뷰:50P, 여행지리뷰:10P
@@ -459,65 +469,85 @@ public class PointController {
 		//uPoint : 사용 포인트
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		//System.out.println("loginUser : " + loginUser);
-		//System.out.println("loginUser userPoint 1: " + loginUser.getUserPoint());
-		//System.out.println("loginUser userProceeds 1: " + loginUser.getUserProceeds());
-		int mid = loginUser.getMemberId();
+		System.out.println("loginUser userPoint 1: " + loginUser.getUserPoint());
+		System.out.println("loginUser userProceeds 1: " + loginUser.getUserProceeds());
+		int mid = loginUser.getMemberId();//포인트를 사용한 사람의 아이디
 		
-		//포인트 사용 내역에 insert
+		//포인트 사용 내역에 insert(포인트 사용)
 		UsePoint userPoint = new UsePoint(); 
-		userPoint.setUsePoint(uPoint);
-		userPoint.setUseType(useType);
+		userPoint.setUsePoint(uPoint);//사용 포인트
+		userPoint.setUseType(useType);//사용타입 10:일정구매, 20:설계채택
 		userPoint.setMemberId(memberId);//포인트 사용하는 사람 아이디
 		switch(useType) {
-		case 10 : userPoint.setTrvId(code); break;
-		case 20 : userPoint.setRequestId(code); break;
+		case 10 : userPoint.setTrvId(code); break;//일정구매일 경우
+		case 20 : userPoint.setRequestId(code); break;//설계채택일 경우
 		}
-		//System.out.println("userPoint : " + userPoint);
+		System.out.println("userPoint : " + userPoint);
 		int userResult = ps.insertPointUse(userPoint); 
-		//System.out.println("userResult : "+userResult);
+		System.out.println("userResult : "+userResult);
 		
-		//성공시 수익금발생내역에 인서트
+		//성공시 판 사람의 수익금발생내역에 인서트
 		double receiveProceeds = uPoint * 0.8;
 		int proceeds=(int) Math.round(receiveProceeds);//수익금 발생금액 -> 원금*0.8
 		
-		int receiverMemberId=0;//수익금 받는 사람 아이디
-		int accumulateProceeds=0;
-		Proceeds findProceeds=null;
-		Proceeds receiverBoard = new Proceeds();
-		receiverBoard.setProceeds(proceeds);
-		receiverBoard.setProceedsType(useType);
+		int receiverMemberId=0;//수익금 받는 사람 아이디(판 사람 아이디)
+		int accumulateProceeds=0;//판사람의 누적 수익금 
+		
+		Proceeds findProceeds=null;//판매한 사람의 기존 수익금 내역
+		
+		Proceeds receiverBoard = new Proceeds();//판매자의 새로운 수익금 내역
+		receiverBoard.setProceeds(proceeds);//판매자의 새로운 수익금 내역에  수익금 발생금액 setter
+		receiverBoard.setProceedsType(useType);//판매자의 새로운 수익금 내역의 타입 10:일정판매, 20:설계판매
 		switch(useType) {
 		//(trvId, requestId 통해서 memberId 조회)
-		case 10 : receiverBoard.setTrvId(code); 
-				receiverMemberId = ps.selectReceiverTrvMemberId(receiverBoard.getTrvId()); 
-				receiverBoard.setMemberId(receiverMemberId);
+		case 10 : //일정판매시 
+				receiverBoard.setTrvId(code); //판매자의 새로운 수익금 내역의  여행일정글 코드
+				receiverMemberId = ps.selectReceiverTrvMemberId(receiverBoard.getTrvId()); //판매한 여행일정코드와 일치하는 회원번호를 조회
+				receiverBoard.setMemberId(receiverMemberId);//판매자의 새로운 수익금 내역에 판매한 사람의 회원번호를 setter
 				//System.out.println("receiverBoard : " + receiverBoard);
-				findProceeds = ps.selectOneProceeds(receiverBoard);
+				findProceeds = ps.selectOneProceeds(receiverBoard);//판매한 사람의 기존 수익금 내역을 찾아옴
 				//System.out.println("findProceeds : " + findProceeds);
-				if(findProceeds == null) {
-					accumulateProceeds = receiverBoard.getProceeds();
-					receiverBoard.setAccumulateProceeds(accumulateProceeds);
+				if(findProceeds == null) {//판매자의 기존 수익금 내역이 없을 경우
+					accumulateProceeds = receiverBoard.getProceeds();//판매자의 새로운 수익금 내역의 수익금발생금액을 
+					receiverBoard.setAccumulateProceeds(accumulateProceeds);//누적수익금 컬럼에 넣어준다.
 					//System.out.println("0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
-				}else {					
-					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();
-					receiverBoard.setAccumulateProceeds(accumulateProceeds);		
+					
+				}else {//판매자의 기존 수익금 내역이 존재 할 경우		
+					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();//기존 수익금 내역의 누적수익금에 새로운 수익발생금액을 넣어준다.
+					receiverBoard.setAccumulateProceeds(accumulateProceeds);
 					//System.out.println("!0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
 				}
 				break;
-		case 20 : receiverBoard.setPtcpId(code); //-------------------------------------선우 확인되면 해볼것
-				receiverMemberId = ps.selectReceiverRequestMemberId(receiverBoard.getPtcpId()); 
-				receiverBoard.setMemberId(receiverMemberId);
-				findProceeds = ps.selectOneProceeds(receiverBoard);
-				//System.out.println("findProceeds : " + findProceeds);
-				if(findProceeds == null) {
-					accumulateProceeds = receiverBoard.getProceeds();
-					receiverBoard.setAccumulateProceeds(accumulateProceeds);
-					//System.out.println("0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
-				}else {					
-					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();
-					receiverBoard.setAccumulateProceeds(accumulateProceeds);		
-					//System.out.println("!0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
-				}
+		case 20 : //설계판매시 
+				//판매자의 새로운 수익금 내역의 참여번호를 넣어줘야 한다.
+				//넘어온 것이 requestId
+				//해당 requestId와 일치하는 ptcpId를 찾고 채택여부가 Y인 내역을 조회해 와야 한다.
+				System.out.println("userPoint.getRequestId() : " + userPoint.getRequestId());
+				int ptcpId = ps.selectOnePtcp(userPoint.getRequestId());
+				receiverBoard.setPtcpId(ptcpId); //판매자의 새로운 수익금 내역의 참여번호를 넣어준다.
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		//-------------------------------------선우 확인되면 해볼것
+		
+				receiverMemberId = ps.selectReceiverRequestMemberId(receiverBoard.getPtcpId()); //판매한 여행일정코드와 일치하는 회원번호를 조회해온다.
+				receiverBoard.setMemberId(receiverMemberId);//판매자의 회원 아이디 집어넣고
+//				findProceeds = ps.selectOneProceeds(receiverBoard);//기존의 판매이력이 있는지 확인
+//				//System.out.println("findProceeds : " + findProceeds);
+//				if(findProceeds == null) {//없으면
+//					accumulateProceeds = receiverBoard.getProceeds();
+//					receiverBoard.setAccumulateProceeds(accumulateProceeds);
+//					//System.out.println("0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+//				}else {					
+//					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();
+//					receiverBoard.setAccumulateProceeds(accumulateProceeds);		
+//					//System.out.println("!0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+//				}
 				break;
 		}
 		
@@ -951,6 +981,7 @@ public class PointController {
 			//승인
 			refund.setRefundStatus(20);
 		}else {
+			//거절
 			refund.setRefundStatus(30);
 		}
 		
@@ -986,7 +1017,7 @@ public class PointController {
 			}
 		}else if(updatedRefund.getUseType() == 20){
 			if(update>0 && updateUserPoint>0 &&updateUserProceeds>0 && refund.getRefundStatus()==20) {
-				return "redirect:/myChooseCanel.mr?requestId="+updatedRefund.getRequestId();
+				return "redirect:/myChooseCancel.mr?requestId="+updatedRefund.getRequestId();
 			}
 		}
 		
