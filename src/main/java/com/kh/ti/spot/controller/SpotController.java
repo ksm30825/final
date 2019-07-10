@@ -135,7 +135,7 @@ public class SpotController {
 	//명소좋아요전체조회용메소드
 	@RequestMapping("selectAllLikeySpot.sp")
 	public String selectAllLikeySpot() {
-		return null;
+		return "spot/myLikeySpotList";
 	}
 	
 	//명소좋아요조건조회용메소드

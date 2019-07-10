@@ -52,7 +52,7 @@
 			<span class="icon is-large has-text-info" id="userEditBtn" data-tooltip="회원정보 수정" onclick="location.href='updateMemberForm.me'">
 				<i class="fas fa-3x fa-user-edit"></i>
 			</span>&nbsp;&nbsp;
-			<span class="title is-3">홍길동</span>
+			<span class="title is-3">${ loginUser.userName }</span>
 			<%-- <a href="pointMainView.po?currentPage=1">&nbsp;&nbsp;
 				<span class="icon has-text-danger">
 					<i class="fab fa-product-hunt"></i>&nbsp;&nbsp;<i class='fab fa-maxcdn' style="color:green;"></i>
