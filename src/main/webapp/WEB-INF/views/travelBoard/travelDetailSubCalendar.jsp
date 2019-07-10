@@ -202,7 +202,7 @@
 																<div class="content" style="display: inline-block;">
 																	<c:if test="${ !empty days.plcName }">
 																		<span style="white-space: pre-line;">
-																			<strong class="costAmount">${ days.plcName }</strong>
+																			<strong class="costAmount"><i class="fas fa-map-marker-alt" style="color: #8e44ad;"></i>&nbsp;${ days.plcName }</strong>
 																			<small class="costCurrency"></small>
 																		</span>
 																	</c:if>

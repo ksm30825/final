@@ -40,7 +40,7 @@
 	</resultMap>
 	
 	<!-- schFile -->
-	<resultMap type="SchFile" id="schFileResultSet">
+	<resultMap type="schFile" id="schFileResultSet">
 		<id property="fileId" column="FILE_ID"/>
 		<result property="originName" column="ORIGIN_NAME"/>
 		<result property="changeName" column="CHANGE_NAME"/>
@@ -50,6 +50,19 @@
 		<result property="fileCaption" column="FILE_CAPTION"/>
 		<result property="schId" column="SCH_ID"/>
 		<result property="fileStatus" column="FILE_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="Gallary" id="gallaryResultSet">
+		<id property="fileId" column="FILE_ID"/>
+		<result property="originName" column="ORIGIN_NAME"/>
+		<result property="changeName" column="CHANGE_NAME"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="uploadDate" column="UPLOAD_DATE"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+		<result property="fileCaption" column="FILE_CAPTION"/>
+		<result property="schId" column="SCH_ID"/>
+		<result property="fileStatus" column="FILE_STATUS"/>
+		<result property="dayNumber" column="DAY_NUMBER"/>
 	</resultMap>
 	
 	<!-- likey -->
@@ -397,6 +410,13 @@
 		ORDER BY TD.DAY_NUMBER, TSCH.SCH_NUMBER
 	</select>
 	
+	<!-- 상세일정 본문내용 조회 -->
+	<select id="selectSchContent" resultMap="trvScheduleResultSet" parameterType="_int">
+		SELECT *
+		FROM TRV_SCH
+		WHERE SCH_ID = #{ schId }
+	</select>
+	
 	<!-- 구매리뷰 조회 -->
 	<select id="tourReviewList" resultMap="tourReviewResultSet">
 		SELECT *
@@ -579,6 +599,18 @@
 	    AND T.COMPLETE_DATE IS NOT NULL
 	    AND LI.SPOT_ID IS NULL
         AND LI.MEMBER_ID = #{ memberId }
+	</select>
+	
+	<select id="travelDetailGallery" resultMap="gallaryResultSet">
+		SELECT DISTINCT SF.FILE_ID, SF.ORIGIN_NAME, SF.CHANGE_NAME, SF.FILE_PATH, SF.UPLOAD_DATE, 
+		SF.FILE_LEVEL, SF.FILE_CAPTION, SF.SCH_ID, SF.FILE_STATUS, TD.DAY_NUMBER, TS.SCH_NUMBER
+		FROM TRAVEL T
+		JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		JOIN TRV_SCH TS ON (TS.DAY_ID = TD.DAY_ID)
+		JOIN SCH_FILE SF ON (TS.SCH_ID = SF.SCH_ID)
+		WHERE T.TRV_ID = 1000
+		AND SF.FILE_STATUS = 'Y'
+		ORDER BY TD.DAY_NUMBER, TS.SCH_NUMBER
 	</select>
 	
 </mapper>

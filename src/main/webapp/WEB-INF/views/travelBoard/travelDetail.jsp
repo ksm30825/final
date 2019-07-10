@@ -31,6 +31,9 @@
 		color: white;
 		padding: 1em;
 	}
+	.ql-toolbar.ql-snow{
+		display: none;
+	}
 </style>
 </head>
 <body>
@@ -185,7 +188,11 @@
 					<section class="section" style="padding-left: 0px;">
 						<aside class="menu">
 							<p class="menu-label">일자별 상세글</p>
-							<ul class="menu-list">
+							<ul class="menu-list" id="schMenu">
+								<li><a id="dayAll" class="dayList is-active">전체보기</a></li>
+								<li><p style="margin: 0.3em;">일자별 모아보기</p>
+								
+								<ul>
 								<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
 									<c:choose>
 									
@@ -193,12 +200,12 @@
 											<c:set var="check" value="false" />
 											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
 												<c:if test="${ st.count == detailDay[j].dayNumber }">
-													<li><a href="#day${ detailDay[j].dayNumber }"><strong>DAY ${ detailDay[j].dayNumber }</strong></a></li>
+													<li><a class="dayList" id="day${ detailDay[j].dayNumber }"><strong>DAY${ detailDay[j].dayNumber }</strong></a></li>
 													<c:set var="check" value="true" />
 												</c:if>
 											</c:forEach>
 											<c:if test="${ check == false }">
-												<li><a style="color: lightgray;">DAY ${ st.count }<br>(일정없음)</a></li>
+												<li><a style="color: lightgray;">DAY${ st.count }<br>(일정없음)</a></li>
 											</c:if>
 										</c:when>
 										
@@ -206,22 +213,23 @@
 											<c:set var="check" value="false" />
 											<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
 												<c:if test="${ st.count == detailDay[j].dayNumber }">
-													<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
+													<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
 													<c:set var="check" value="true" />
 												</c:if>
 											</c:forEach>
 											<c:if test="${ check == false }">
-												<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>(일정없음)</a></li>
+												<li><a onclick="buyInfo()" style="color: lightgray;">DAY${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>(일정없음)</a></li>
 											</c:if>
 										</c:otherwise>
 										
 									</c:choose>
-								</c:forEach>	
+								</c:forEach>
+								</ul>	
 							</ul>
 							<p class="menu-label">사진 갤러리</p>
-							<ul class="menu-list">
-								<li><a>전체보기</a></li>
-								<li><a>일자별 모아보기</a>
+							<ul class="menu-list" id="gallaryMenu">
+								<li><a class="dayList">전체보기</a></li>
+								<li><p style="margin: 0.3em;">일자별 모아보기</p>
 									<ul>
 										<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
 									<c:choose>
@@ -236,10 +244,10 @@
 												</c:forEach>
 											</c:forEach>
 											<c:if test="${ check == true }">
-												<li><a onclick='window.open("about:blank").location.href="travelDetailGallery.tb?num="+"${ st.count }"'>DAY ${ st.count }</a></li>
+												<li><a class="dayList" id="day${ st.count }-gal">DAY${ st.count }</a></li>
 											</c:if>
 											<c:if test="${ check == false }">
-												<li><a style="color: ligntgray;">DAY ${ st.count }<br>(사진없음)</a></li>
+												<li><a style="color: ligntgray;">DAY${ st.count }<br>(사진없음)</a></li>
 											</c:if>
 										</c:when>
 										
@@ -254,10 +262,10 @@
 												</c:forEach>
 											</c:forEach>
 											<c:if test="${ check == true }">
-												<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
+												<li onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><a onclick="buyInfo()" style="color: gray;">DAY${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료</a></li>
 											</c:if>
 											<c:if test="${ check == false }">
-												<li><a onclick="buyInfo()" style="color: lightgray;">DAY ${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>(사진없음)</a></li>
+												<li><a onclick="buyInfo()" style="color: lightgray;">DAY${ st.count } <i class="fas fa-exclamation-circle"></i> 미리보기 종료<br>(사진없음)</a></li>
 											</c:if>
 											<!--  -->
 										</c:otherwise>
@@ -272,20 +280,21 @@
 				</div>	<!-- <div class="column is-3"> -->
 				
 		<!-- 상세일정 본문 영역 -->
-		<div class="column is-9" >
+		<div class="column is-9" id="schArea">
 		
-		<section class="section" style="margin-top :0;">
+		<section class="section" style="margin-top: -0.5em;">
 						
 			<div class="ui divided items">
 				
 			<!-- 일자별 타이틀 -->
 			<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
-				<c:if test="${ st.count <= showDays }">
+				<c:choose>
+				<c:when test="${ st.count <= showDays }">
 					<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
 						<c:if test="${ st.count == detailDay[j].dayNumber }">
-							<div id="day${ st.count }" class="dayTitle" style="padding: 1em; background-color: #AFDCF5; margin-top: 1em; display: flex;">
+							<div id="day${ detailDay[j].dayNumber }-sch" class="dayTitle" style="padding: 1em; background-color: #AFDCF5; margin-top: 1em; display: flex;">
 								<div class="column is-10" style="justify-content: flex-start;">
-									<span class="title is-3">DAY ${ st.count }</span>&nbsp; <span class="schTitle title is-5">${ detailDay[j].dayMemo }</span>
+									<span class="title is-3">DAY ${ st.count }</span>&nbsp; <span class="schTitle title is-5" style="vertical-align: middle;">${ detailDay[j].dayMemo }</span>
 									<br>
 									<span>${ detailDay[j].dayDate }</span>
 								</div>
@@ -298,12 +307,12 @@
 										</c:when>
 										<c:when test="${ detailDay[st.count-1].dayWeather eq 'CLOUD' }">
 											<a class="button is-dark  weatherBtn" id="CLOUD" data-tooltip="흐림" style="vertical-align: middle;">
-											<span class="icon"><i class="fas fa-cloud"></i></span>
+											<span class="icon" style="color: white;"><i class="fas fa-cloud"></i></span>
 											</a>
 										</c:when>
 										<c:when test="${ detailDay[st.count-1].dayWeather eq 'RAIN' }">
 											<a class="button is-info weatherBtn" id="RAIN" data-tooltip="비" style="vertical-align: middle;">
-											<span class="icon"><i class="fas fa-umbrella"></i></span>
+											<span class="icon" style="color: white;"><i class="fas fa-umbrella"></i></span>
 											</a>	
 										</c:when>
 										<c:when test="${ detailDay[st.count-1].dayWeather eq 'SNOW' }">
@@ -320,23 +329,144 @@
 								</div>
 								 
 								<div class="column is-1" style="justify-content: flex-end;">
-									<a class="card-header-icon" data-tooltip="상세일정 보기"><i class="fas fa-sort-down"></i></a>
+									<c:if test="${ fn:length(detailDay[j].trvSchedule) > 0 }">
+										<a class="card-header-icon" data-tooltip="상세일정 보기">
+											<i class="fas fa-sort-down"></i>
+											<input value="${ detailDay[j].dayNumber }" name="dayNum" hidden="hidden">
+										</a>
+									</c:if>
+									<c:if test="${ fn:length(detailDay[j].trvSchedule) <= 0 }">
+										<span class="card-header-icon" data-tooltip="상세일정이 없습니다."><i class="fas fa-sort-down"></i></span>
+									</c:if>
 								</div>
+							</div>
+							
+							<div id="day${ detailDay[j].dayNumber }Content" style="border: 1px solid #AFDCF5; border-top: none; display: none;">
+								
+								<c:if test="${ fn:length(detailDay[j].trvSchedule) > 0 }">
+									<c:forEach var="sch" items="${ detailDay[j].trvSchedule }" varStatus="status">
+										<div class="contentTitle" style="background: #e1f4ff">
+										<div class="column is-1" align="center" style="justify-content: flex-start; display: inline-block; vertical-align: middle;">
+											<div class="ui label" style="background: #209cee;">${ status.count }</div>
+										</div>
+										<div class="column is-10" style="justify-content: center; display: inline-block; vertical-align: middle;">
+											<c:if test="${ sch.isTimeset eq 'Y' }">
+												<p><i class="far fa-clock"></i>&nbsp;${ sch.startTime } - ${ sch.endTime }</p>
+											</c:if>
+											<c:if test="${ sch.isTimeset eq 'N' }">
+												<p style="color: gray;"><i class="far fa-clock"></i>&nbsp;시간정보 없음</p>
+											</c:if>
+											<p><strong>${ sch.schTitle }</strong></p>
+										</div>
+										</div>
+										<div class="editor" style="border: 0px;">
+											<input name="schId" value="${ sch.schId }" hidden="hidden">
+										</div>
+									</c:forEach>
+								</c:if>
+								
 							</div>
 						</c:if>
 					</c:forEach>
-				</c:if>
+				</c:when>
+				<c:otherwise>
+					<div id="day${ st.count }-sch" class="dayTitle" style="padding: 1em; background-color: #AFDCF5; margin-top: 1em; display: flex;">
+						<div class="column is-10" style="justify-content: flex-start;">
+							<span class="title is-3">DAY ${ st.count }</span>&nbsp; <span class="schTitle title is-5" style="vertical-align: middle;">${ detailDay[st.count-1].dayMemo }</span>
+							<br>
+							<span>${ detailDay[st.count-1].dayDate }</span>
+						</div>
+						<div class="column is-1" style="justify-content: flex-end;">
+							<c:choose>
+								<c:when test="${ detailDay[st.count-1].dayWeather eq 'SUN' }">
+									<a class="button is-danger weatherBtn" id="SUN" data-tooltip="맑음" style="vertical-align: middle;">
+									<i class="fas fa-sun"></i>
+									</a>
+								</c:when>
+								<c:when test="${ detailDay[st.count-1].dayWeather eq 'CLOUD' }">
+									<a class="button is-dark  weatherBtn" id="CLOUD" data-tooltip="흐림" style="vertical-align: middle;">
+									<span class="icon" style="color: white;"><i class="fas fa-cloud"></i></span>
+									</a>
+								</c:when>
+								<c:when test="${ detailDay[st.count-1].dayWeather eq 'RAIN' }">
+									<a class="button is-info weatherBtn" id="RAIN" data-tooltip="비" style="vertical-align: middle;">
+									<span class="icon" style="color: white;"><i class="fas fa-umbrella"></i></span>
+									</a>	
+								</c:when>
+								<c:when test="${ detailDay[st.count-1].dayWeather eq 'SNOW' }">
+									<a class="button is-primary weatherBtn" id="SNOW" data-tooltip="눈" style="vertical-align: middle;">
+									<span class="icon"><i class="far fa-snowflake"></i></span>
+									</a>
+								</c:when>
+								<c:when test="${ detailDay[st.count-1].dayWeather eq 'LIGHTNING' }">
+									<a class="button is-warning weatherBtn" id="LIGHTNING" data-tooltip="번개" style="vertical-align: middle;">
+									<span class="icon"><i class="fas fa-bolt"></i></span>
+									</a>
+								</c:when>
+							</c:choose>
+						</div>
+						 
+						<div class="column is-1" style="justify-content: flex-end;">
+							<c:if test="${ fn:length(detailDay[st.count-1].trvSchedule) > 0 }">
+								<a class="card-header-icon" onclick="buyInfo()" data-tooltip="상세보기를 원하시면 결제가 필요합니다."><i class="fas fa-sort-down"></i></a>
+							</c:if>
+							<c:if test="${ fn:length(detailDay[st.count-1].trvSchedule) <= 0 }">
+								<span class="card-header-icon" data-tooltip="상세일정이 없습니다."><i class="fas fa-sort-down"></i></span>
+							</c:if>
+						</div>
+					</div>
+				</c:otherwise>
+				</c:choose>
 			</c:forEach>
 			
 			<!-- 일자별 타이틀 끝 -->
 			
-			
-			
 			</div>
-
 		</section>
-		
 		</div>	<!-- class="column is-9" -->
+		
+		<!-- 갤러리 영역! -->
+		<div class="column is-9" id="gallaryArea">
+			<section class="section">
+				<!-- 타이틀 영역 -->
+				<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
+				<c:if test="${ st.count <= showDays }">
+					<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+						<c:if test="${ st.count == detailDay[j].dayNumber }">
+							<div class="gallay" id="gallary-day${ st.count }">
+							<div id="day${ detailDay[j].dayNumber }-sch" class="dayTitle" style="padding: 1em; background-color: #155173; margin-top: 1em; display: flex;">
+								<div class="column is-10" style="justify-content: flex-start;">
+									<span class="title is-3" style="color: white;">DAY ${ st.count }</span>&nbsp; <span class="schTitle title is-5" style="color: white; vertical-align: middle;">${ detailDay[j].dayMemo }</span>
+									<br>
+									<span style="color: white;">${ detailDay[j].dayDate }</span>
+								</div>
+							</div>
+							
+							<!-- 사진영역 -->
+							
+							<c:forEach var="gallary" items="${ gallary }" varStatus="gst">
+								<c:if test="${ gallary.dayNumber == detailDay[j].dayNumber }">
+									<div class="imgArea" id="imgArea-day${ st.count }" style="display: inline-block;">
+										<div class="ui centered card" style="padding: 1.3em; margin: 1em;">
+											<div class="image">
+												<img src="resources/uploadFiles/${ gallary.changeName }">
+											</div>
+										</div>
+									</div>
+								</c:if>
+							</c:forEach>
+						</div>	
+							
+						</c:if>
+					</c:forEach>
+				</c:if>
+				</c:forEach>
+				
+				<!-- 타이틀 영역 끝 -->
+				
+			</section>
+		</div>
+		<!-- 갤러리 영역끝 -->
 		
 	</div>	<!-- <div class="columns"> -->
 			
@@ -564,14 +694,106 @@
 	    });
 	}
 	
-	/* //상세일정
-	var quill = new Quill('#editor', {
-    theme: 'snow'
-  	});
+	//상세일정
+	$(".editor").each(function() {
+		var container = $(this).get(0);
+		var schId = $(this).children("input[name=schId]").val();
+		var quill = new Quill(container, {
+		    theme: 'snow'
+		});
+		
+		//상세일정 내용 조회
+		$.ajax({
+			url : "selectSchContent.tb",
+			data : {schId : schId},
+			type : "post",
+			success : function(data) {
+				quill.setContents(JSON.parse(data.schContent));
+			},
+			error : function(data) {
+				console.log("접속실패");
+			}
+		});
+	});
 	
-	var content = ${ detailDay[0].trvSchedule[0].schContent };
-	quill.setContents(content); */
+	//상세일정 펼치기
+/* 	$('#button').toggle(function() {
+  $(this).parent().css('height', 'auto');
+}, function() {
+  $(this).parent().css('height', '18px');
+}); */
+
+	$(".card-header-icon").click(function() {
+		var dayNumber = $(this).children("input[name=dayNum]").val();
+		var div = 'day' + dayNumber + 'Content';
+		$("#" + div).toggle(function() {
+			$(this).removeAttr("style");
+		},function() {
+			
+		})
+	});
 	
+	/* 일자별 보기 */
+	$(".dayList").click(function() {
+		
+		var menu = $(this).text();
+		$(".dayList").removeClass("is-active");
+		$(this).addClass("is-active");
+		
+		
+	})
+	
+	//일자별 상세글 전체보기
+	$("#schMenu>li").children('a').click(function() {
+		
+		$("#schArea").show();
+		$("#gallaryArea").hide();
+		
+		$(".dayList").removeClass("is-active");
+		$(this).addClass("is-active");
+		
+		$(".dayTitle").show();
+	});
+	
+	//각 일자별 상세글 보기
+	$("#schMenu>li>ul>li").children('a').click(function() {
+		
+		$("#schArea").show();
+		$("#gallaryArea").hide();
+		
+		var menu = $(this).text();
+		menu = menu.toLowerCase();
+		
+		$(".dayTitle").hide();
+		$("#" + menu + "-sch").show();
+	});
+	
+	
+	//갤러리 전체 보기
+	$("#gallaryMenu>li").children('a').click(function() {
+		$("#gallaryArea").show();
+		$("#schArea").hide();
+		
+		$(".dayList").removeClass("is-active");
+		$(this).addClass("is-active");
+		
+		$(".dayTitle").show();
+	});
+	$("#gallaryMenu>li>ul>li").children('a').click(function() {
+		
+		$("#gallaryArea").show();
+		$("#schArea").hide();
+		
+		var menu = $(this).text();
+		menu = menu.toLowerCase();
+		
+		$(".gallay").hide();
+		$("#gallary-" + menu).show();
+		
+	});
+	
+	
+
 </script>
 </body>
 </html>
