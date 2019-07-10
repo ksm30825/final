@@ -27,6 +27,7 @@ import com.kh.ti.travelBoard.model.service.TravelBoardService;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvBoardSch;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 import net.sf.json.JSON;
@@ -197,6 +198,23 @@ public class TravelBoardController {
 		ArrayList<TourReview> trList = tbs.tourReviewList(pi, tr);
 		model.addAttribute("trList", trList);
 		model.addAttribute("pi", pi);
+		
+		System.out.println("detailDay : " + detailDay);
+		
+		for(int i = 0; i < detailDay.size(); i++) {
+			TrvDaySchedule tds = (TrvDaySchedule) detailDay.get(i);
+			ArrayList list = (ArrayList) tds.getTrvSchedule();
+			System.out.println("day : " + tds.getDayNumber() );
+			for(int j = 0; j < list.size(); j++) {
+				TrvBoardSch tbs = (TrvBoardSch) list.get(j);
+				ArrayList file = (ArrayList) tbs.getSchFiles();
+				System.out.println("사진 사이즈 : " + file.size());
+				for(int a = 0; a < file.size(); a++) {
+					System.out.println("사진 : " + file.get(a));
+				}
+			}
+			
+		}
 		
 		return "travelBoard/travelDetail";
 	}

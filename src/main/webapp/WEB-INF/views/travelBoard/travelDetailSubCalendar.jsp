@@ -165,7 +165,7 @@
 																</a>
 															</c:when>
 															<c:when test="${ detailDay[st.count-1].dayWeather eq 'LIGHTNING' }">
-																<a class="button is-danger is-outlined weatherBtn" id="LIGHTNING" data-tooltip="번개" style="vertical-align: middle;">
+																<a class="button is-warning weatherBtn" id="LIGHTNING" data-tooltip="번개" style="vertical-align: middle;">
 																<span class="icon"><i class="fas fa-bolt"></i></span>
 																</a>
 															</c:when>
