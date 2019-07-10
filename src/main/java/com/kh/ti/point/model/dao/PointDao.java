@@ -52,6 +52,8 @@ public interface PointDao {
 	int selectReceiverRequestMemberId(SqlSessionTemplate sqlSession, int ptcpId);
 	//성공시 수익금발생내역에 인서트
 	int insertReceiverProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard);
+	//판매자의 기존 수익금 내역이 존재할 시 update만
+	int updateReceiverProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard);
 	//성공시 member 테이블의 누적 포인트 차감(memberId)
 	int updateUserDeductionPoint(SqlSessionTemplate sqlSession, UsePoint userPoint);
 	//성공시 member 테이블의 누적 수익금 추가
@@ -103,7 +105,8 @@ public interface PointDao {
 	int updateUserProceedsRefund(SqlSessionTemplate sqlSession, Proceeds proceeds);
 	//판매자의 참여번호를 조회해와야 함
 	int selectOnePtcp(SqlSessionTemplate sqlSession, int requestId);
-	
+	//차감된 userPoint 찾기
+	int selectOnePoint(SqlSessionTemplate sqlSession, int memberId);
 	
 	
 	

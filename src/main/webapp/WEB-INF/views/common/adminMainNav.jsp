@@ -69,7 +69,7 @@
             <div class="navbar-item">
                <div class="field is-grouped">
                   <p class="control">
-                     <a class="button is-info is-rounded" href="#"> 
+                     <a class="button is-info is-rounded" href="logout.me"> 
                         <span class="icon"><i class="fa fa-user"></i></span> 
                         <span>LOG OUT</span>
                      </a>

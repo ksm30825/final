@@ -116,6 +116,11 @@ public class PointServiceImpl implements PointService{
 	public int insertReceiverProceeds(Proceeds receiverBoard) {
 		return pd.insertReceiverProceeds(sqlSession, receiverBoard);
 	}
+	//판매자의 기존 수익금 내역이 존재할 시 update만
+	@Override
+	public int updateReceiverProceeds(Proceeds receiverBoard) {
+		return pd.updateReceiverProceeds(sqlSession, receiverBoard);
+	}
 	//성공시 member 테이블의 누적 포인트 차감(memberId)
 	@Override
 	public int updateUserDeductionPoint(UsePoint userPoint) {
@@ -240,6 +245,12 @@ public class PointServiceImpl implements PointService{
 	public int selectOnePtcp(int requestId) {
 		return pd.selectOnePtcp(sqlSession, requestId);
 	}
+	//차감된 userPoint 찾기
+	@Override
+	public int selectOnePoint(int memberId) {
+		return pd.selectOnePoint(sqlSession, memberId);
+	}
+	
 
 	
 

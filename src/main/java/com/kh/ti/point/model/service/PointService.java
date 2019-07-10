@@ -50,6 +50,8 @@ public interface PointService {
 	int selectReceiverRequestMemberId(int ptcpId);
 	//성공시 수익금발생내역에 인서트
 	int insertReceiverProceeds(Proceeds receiverBoard);
+	//판매자의 기존 수익금 내역이 존재할 시 update만
+	int updateReceiverProceeds(Proceeds receiverBoard);
 	//성공시 member 테이블의 누적 포인트 차감(memberId)
 	int updateUserDeductionPoint(UsePoint userPoint);
 	//성공시 member 테이블의 누적 수익금 추가
@@ -101,6 +103,9 @@ public interface PointService {
 	int updateUserProceedsRefund(Proceeds proceeds);
 	//판매자의 참여번호를 조회해와야 함
 	int selectOnePtcp(int requestId);
+	//차감된 userPoint 찾기
+	int selectOnePoint(int mid);
+	
 	
 
 }

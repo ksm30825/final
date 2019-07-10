@@ -143,6 +143,11 @@ public class PointDaoImpl implements PointDao{
 	public int insertReceiverProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
 		return sqlSession.insert("Payment.insertReceiverProceeds", receiverBoard);
 	}
+	//판매자의 기존 수익금 내역이 존재할 시 update만
+	@Override
+	public int updateReceiverProceeds(SqlSessionTemplate sqlSession, Proceeds receiverBoard) {
+		return sqlSession.update("Payment.updateReceiverProceeds", receiverBoard);
+	}
 	//성공시 member 테이블의 누적 포인트 차감(memberId)
 	@Override
 	public int updateUserDeductionPoint(SqlSessionTemplate sqlSession, UsePoint userPoint) {
@@ -293,7 +298,11 @@ public class PointDaoImpl implements PointDao{
 	public int selectOnePtcp(SqlSessionTemplate sqlSession, int requestId) {
 		return sqlSession.selectOne("Payment.selectOnePtcp", requestId);
 	}
-	
+	//차감된 userPoint 찾기
+	@Override
+	public int selectOnePoint(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Payment.selectOnePoint", memberId);
+	}
 	
 	
 	

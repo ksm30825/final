@@ -469,8 +469,8 @@ public class PointController {
 		//uPoint : 사용 포인트
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		//System.out.println("loginUser : " + loginUser);
-		System.out.println("loginUser userPoint 1: " + loginUser.getUserPoint());
-		System.out.println("loginUser userProceeds 1: " + loginUser.getUserProceeds());
+		//System.out.println("loginUser userPoint 1: " + loginUser.getUserPoint());
+		//System.out.println("loginUser userProceeds 1: " + loginUser.getUserProceeds());
 		int mid = loginUser.getMemberId();//포인트를 사용한 사람의 아이디
 		
 		//포인트 사용 내역에 insert(포인트 사용)
@@ -482,9 +482,9 @@ public class PointController {
 		case 10 : userPoint.setTrvId(code); break;//일정구매일 경우
 		case 20 : userPoint.setRequestId(code); break;//설계채택일 경우
 		}
-		System.out.println("userPoint : " + userPoint);
+		//System.out.println("userPoint : " + userPoint);
 		int userResult = ps.insertPointUse(userPoint); 
-		System.out.println("userResult : "+userResult);
+		//System.out.println("userResult : "+userResult);
 		
 		//성공시 판 사람의 수익금발생내역에 인서트
 		double receiveProceeds = uPoint * 0.8;
@@ -496,88 +496,79 @@ public class PointController {
 		Proceeds findProceeds=null;//판매한 사람의 기존 수익금 내역
 		
 		Proceeds receiverBoard = new Proceeds();//판매자의 새로운 수익금 내역
-		receiverBoard.setProceeds(proceeds);//판매자의 새로운 수익금 내역에  수익금 발생금액 setter
+		
 		receiverBoard.setProceedsType(useType);//판매자의 새로운 수익금 내역의 타입 10:일정판매, 20:설계판매
+		
+		//성공시 수익금발생내역에 인서트
+		int insertProceeds=0;
+		int updateProceeds=0;
+		
 		switch(useType) {
 		//(trvId, requestId 통해서 memberId 조회)
 		case 10 : //일정판매시 
 				receiverBoard.setTrvId(code); //판매자의 새로운 수익금 내역의  여행일정글 코드
 				receiverMemberId = ps.selectReceiverTrvMemberId(receiverBoard.getTrvId()); //판매한 여행일정코드와 일치하는 회원번호를 조회
-				receiverBoard.setMemberId(receiverMemberId);//판매자의 새로운 수익금 내역에 판매한 사람의 회원번호를 setter
-				//System.out.println("receiverBoard : " + receiverBoard);
+				
 				findProceeds = ps.selectOneProceeds(receiverBoard);//판매한 사람의 기존 수익금 내역을 찾아옴
 				//System.out.println("findProceeds : " + findProceeds);
-				if(findProceeds == null) {//판매자의 기존 수익금 내역이 없을 경우
-					accumulateProceeds = receiverBoard.getProceeds();//판매자의 새로운 수익금 내역의 수익금발생금액을 
-					receiverBoard.setAccumulateProceeds(accumulateProceeds);//누적수익금 컬럼에 넣어준다.
-					//System.out.println("0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+				
+				receiverBoard.setMemberId(receiverMemberId);//판매자의 새로운 수익금 내역에 판매한 사람의 회원번호를 setter
+				
+				if(findProceeds == null) {//판매자의 기존 수익금 내역이 없을 경우 -->insert
+					receiverBoard.setProceeds(proceeds);//판매자의 수익금 발생금액 setter
 					
-				}else {//판매자의 기존 수익금 내역이 존재 할 경우		
-					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();//기존 수익금 내역의 누적수익금에 새로운 수익발생금액을 넣어준다.
-					receiverBoard.setAccumulateProceeds(accumulateProceeds);
-					//System.out.println("!0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
+					//판매자의 기존 수익금 내역이 없을 경우 -->insert
+					insertProceeds= ps.insertReceiverProceeds(receiverBoard);
+					
+				}else {//판매자의 기존 수익금 내역이 존재 할 경우 --> update
+					//System.out.println("findProceeds.getProceedsId() : "+findProceeds.getProceedsId());
+					receiverBoard.setProceedsId(findProceeds.getProceedsId());
+					receiverBoard.setProceeds(findProceeds.getProceeds()+proceeds);
+					//System.out.println(receiverBoard);
+					
+					//판매자의 기존 수익금 내역이 존재 할 경우 --> update
+					updateProceeds = ps.updateReceiverProceeds(receiverBoard);
 				}
 				break;
 		case 20 : //설계판매시 
 				//판매자의 새로운 수익금 내역의 참여번호를 넣어줘야 한다.
 				//넘어온 것이 requestId
 				//해당 requestId와 일치하는 ptcpId를 찾고 채택여부가 Y인 내역을 조회해 와야 한다.
-				System.out.println("userPoint.getRequestId() : " + userPoint.getRequestId());
+				//System.out.println("userPoint.getRequestId() : " + userPoint.getRequestId());
 				int ptcpId = ps.selectOnePtcp(userPoint.getRequestId());
+				//System.out.println("ptcpId : " + ptcpId);
 				receiverBoard.setPtcpId(ptcpId); //판매자의 새로운 수익금 내역의 참여번호를 넣어준다.
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
-		//-------------------------------------선우 확인되면 해볼것
 		
 				receiverMemberId = ps.selectReceiverRequestMemberId(receiverBoard.getPtcpId()); //판매한 여행일정코드와 일치하는 회원번호를 조회해온다.
 				receiverBoard.setMemberId(receiverMemberId);//판매자의 회원 아이디 집어넣고
-//				findProceeds = ps.selectOneProceeds(receiverBoard);//기존의 판매이력이 있는지 확인
-//				//System.out.println("findProceeds : " + findProceeds);
-//				if(findProceeds == null) {//없으면
-//					accumulateProceeds = receiverBoard.getProceeds();
-//					receiverBoard.setAccumulateProceeds(accumulateProceeds);
-//					//System.out.println("0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
-//				}else {					
-//					accumulateProceeds = findProceeds.getAccumulateProceeds() + receiverBoard.getProceeds();
-//					receiverBoard.setAccumulateProceeds(accumulateProceeds);		
-//					//System.out.println("!0->receiverBoard.getAccumulateProceeds() : " + receiverBoard.getAccumulateProceeds());
-//				}
+				
+				receiverBoard.setProceeds(proceeds);
+				
+				//판매자의 수익금 내역에 새로 insert -> 설계글이니까
+				insertProceeds= ps.insertReceiverProceeds(receiverBoard);
 				break;
 		}
-		System.out.println("receiverBoard : " + receiverBoard);
-		//성공시 수익금발생내역에 인서트
-		int receiverResult = ps.insertReceiverProceeds(receiverBoard);
+		//System.out.println("receiverBoard : " + receiverBoard);
 		
-		//성공시 member 테이블의 누적 포인트 차감
+		
+		//성공시 구매자 member 테이블의 누적 포인트 차감
 		int updateUserPoint = ps.updateUserDeductionPoint(userPoint);
 		
-		//성공시 member 테이블의 누적 수익금 추가
+		//성공시 판매자 member 테이블의 누적 수익금 추가
 		int updateUserProceeds = ps.updateUserIncreaseProceeds(receiverBoard);
 		
-//		int useMemberPoint=0;
-//		
-//		int recevieMemberProceeds=0;
-//		
-//		if(memberId == mid) {
-//			//구매한 사람
-//			useMemberPoint = ps.getUseMemberPoint(mid); 
-//			loginUser.setUserPoint(useMemberPoint);
-//		}
-//		else {
-//			//판 사람
-//			recevieMemberProceeds = ps.getRecevieMemberProceeds(receiverMemberId);
-//			loginUser.setUserProceeds(recevieMemberProceeds);
-//		}
+		//기존 loginUser의 userPoint
+		int existingPoint = loginUser.getUserPoint();
+		//System.out.println("existingPoint : " + existingPoint);
 		
-		System.out.println("loginUser userPoint 2: " + loginUser.getUserPoint());
-		System.out.println("loginUser userProceeds 2: " + loginUser.getUserProceeds());
-		if(userResult>0 && receiverResult>0 && updateUserPoint>0 && updateUserProceeds>0) {
+		//차감된 userPoint 찾기
+		int laterPoint = ps.selectOnePoint(mid);
+		//System.out.println("laterPoint : "+ laterPoint);
+		loginUser.setUserPoint(laterPoint);
+		//System.out.println("loginUser.getUserPoint() : " + loginUser.getUserPoint());
+		
+		
+		if((updateProceeds>0 || insertProceeds>0) &&userResult>0 && updateUserPoint>0 && updateUserProceeds>0) {
 			switch(useType) {
 			//(trvId, requestId 통해서 memberId 조회)
 			case 10 : return "redirect:/travelDetailForm.tb?trvId="+userPoint.getTrvId(); 
@@ -961,6 +952,7 @@ public class PointController {
 		
 		return mv;
 	}
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//포인트 환불 승인여부 update 
 		//-> 거절 ->변화없음
 		//-> 승인 ->환불한 사람 포인트 해당포인트만큼 증가
@@ -973,21 +965,21 @@ public class PointController {
 		int boardId = Integer.parseInt(bid);
 		int condition = Integer.parseInt(cond);
 		
-		
+		//환불 상태 바꿔주기
 		Refund refund = new Refund();
-		refund.setRefundId(refundId);
+		refund.setRefundId(refundId);//환불코드를 이용하여
 		
 		if(condition == 10 ) {
 			//승인
-			refund.setRefundStatus(20);
+			refund.setRefundStatus(20);//상태를 입력해주고
 		}else {
 			//거절
 			refund.setRefundStatus(30);
 		}
 		
-		int update = ps.updateRefund(refund);
+		int update = ps.updateRefund(refund);//업데이트 해준다
 		
-		//환불 내역 들고오기
+		//환불 신청한 내역에서 refundId가 일치하는 하나의 환불내역 조회
 		Refund updatedRefund = ps.selectOneRefund(refund);
 		System.out.println("updatedRefund : " + updatedRefund);
 		
