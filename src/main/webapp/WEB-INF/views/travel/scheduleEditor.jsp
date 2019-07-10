@@ -170,8 +170,7 @@
 						</c:forEach>
 					</ul>
 					<div class="panel-block">
-						<button class="button is-primary is-outlined is-fullwidth"
-							onclick="$('#newScheduleModal').toggleClass('is-active')">일정 추가</button>
+						<button class="button is-primary is-outlined is-fullwidth newSchBtn">일정 추가</button>
 					</div>
 				</nav>
 			</c:forEach>
@@ -266,9 +265,7 @@
 									</c:forEach>
 								</ul>
 								<div class="panel-block">
-									<button class="button is-primary is-outlined is-fullwidth"
-									onclick="$('#newScheduleModal').toggleClass('is-active')">
-									일정 추가</button>
+									<button class="button is-primary is-outlined is-fullwidth newSchBtn" >일정 추가</button>
 								</div>
 							</nav>
 						</c:forEach>
@@ -576,6 +573,13 @@
 									$("#day" + dayNumber + "ListAll").append(list2);
 									
 									
+									//마커
+									var places = [];
+									$("#day" + dayNumber).find("input[name=plcId]").each(function() {
+										places.push($(this).val());
+									});
+									showRoute(places, map);
+									
 								},
 								error:function(data) {
 									alert('updateSchNumber 서버전송 실패');
@@ -721,6 +725,17 @@
 				
 			});
 			
+			//새일정
+			$(".newSchBtn").click(function() {
+				var dayId = $(this).parent().prev().prev().find("input[name=dayId]").val();
+				$("#dayId1").children().each(function() {
+					if($(this).val() == dayId) {
+						$(this).prop("selected", true);
+					}
+				});
+				$('#newScheduleModal').toggleClass('is-active');
+			});
+		
 			
 			//일정 수정
 			$(".schInfoBtn").click(function() {
@@ -761,11 +776,11 @@
 				if(startTime == "" && endTime == "") {
 					modal.find("#isTimeset2").prop("checked", true);
 					modal.find("#startTime2").val("");
-					modal.find("#endTime3").val("");
+					modal.find("#endTime2").val("");
 				}else {
 					modal.find("#isTimeset2").prop("checked", false);
 					modal.find("#startTime2").val(startTime);
-					modal.find("#endTime3").val(endTime);
+					modal.find("#endTime2").val(endTime);
 				}
 				
 				modal.find("#costType2").children().each(function() {
@@ -956,8 +971,6 @@
 			});
 
 		});
-		
-		
 		
 		
 		

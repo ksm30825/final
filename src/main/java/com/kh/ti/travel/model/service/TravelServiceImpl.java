@@ -42,6 +42,7 @@ import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
 import com.kh.ti.travel.model.vo.TrvCity;
+import com.kh.ti.travel.model.vo.TrvCompany;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
@@ -862,8 +863,64 @@ public class TravelServiceImpl implements TravelService {
 		overrideTrv.setTrvRef(trvId);
 		
 		int result = td.insertOverrideTrv(sqlSession, overrideTrv);
-		
 		int ovTrvId = td.selectTrvId(sqlSession);
+		int result1 = 0;
+		
+		ArrayList<TrvCity> trvCityList = td.selectTrvCityList(sqlSession, trvId);
+		for(int i = 0; i < trvCityList.size(); i++) {
+			TrvCity trvCity = new TrvCity();
+			trvCity.setCityId(trvCityList.get(i).getCityId());
+			trvCity.setTrvId(ovTrvId);
+			result1 += td.insertTrvCity(sqlSession, trvCity);
+		}
+		
+		ArrayList<TrvDay> trvDayList = td.selectTrvDayList(sqlSession, trvId);
+		for(int i = 0; i < trvDayList.size(); i++) {
+			TrvDay trvDay = new TrvDay();
+			trvDay.setDayNumber(trvDayList.get(i).getDayNumber());
+			trvDay.setDayDate(trvDayList.get(i).getDayDate());
+			trvDay.setTrvId(ovTrvId);
+			result1 += td.insertTrvDay(sqlSession, trvDay);
+			int dayId = td.selectTrvDayId(sqlSession);
+			
+			ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, trvDayList.get(i).getDayId());
+			for(int j = 0; j < schList.size(); j++) {
+				TrvSchedule sch = schList.get(j);
+				sch.setSchContent("");
+				sch.setDayId(dayId);
+				if(sch.getSchTransp() == null) sch.setSchTransp("");
+				if(sch.getPlcId() == null) sch.setPlcId("");
+				if(sch.getPlcName() == null) sch.setPlcName("");
+				if(sch.getStartTime() == null) sch.setStartTime("");
+				if(sch.getEndTime() == null) sch.setEndTime("");
+				result1 += td.insertTrvSchedule(sqlSession, sch);
+				int schId = td.selectSchId(sqlSession);
+				
+				TrvCost cost = td.selectSchCost(sqlSession, schList.get(j).getSchId());
+				if(cost != null) {
+					cost.setSchId(schId);
+					cost.setDayId(dayId);
+					result1 += td.insertSchCost(sqlSession, cost);
+				}
+			}
+			
+			ArrayList<TrvCost> costList = td.selectCostList(sqlSession, trvDayList.get(i).getDayId());
+			for(int j = 0; j < costList.size(); j++) {
+				TrvCost cost = costList.get(j);
+				cost.setDayId(dayId);
+				result1 += td.insertTrvCost(sqlSession, cost);
+			}
+			
+			
+		}
+		ArrayList<TrvTag> trvTagList = td.selectTrvTagList(sqlSession, trvId);
+		for(int i = 0; i < trvTagList.size(); i++) {
+			TrvTag trvTag = new TrvTag();
+			trvTag.setTagId(trvTagList.get(i).getTagId());
+			trvTag.setTrvId(ovTrvId);
+			result1 += td.insertTag(sqlSession, trvTag);
+		}
+		
 		return ovTrvId;
 	}
 
@@ -893,8 +950,8 @@ public class TravelServiceImpl implements TravelService {
 	
 	
 	@Override
-	public int insertTrvCompany(Travel trv, Member m) {
-		return td.insertTrvCompany(sqlSession, trv, m);
+	public int insertTrvCompany(TrvCompany trvComp) {
+		return td.insertTrvCompany(sqlSession, trvComp);
 	}
 
 	
@@ -902,6 +959,11 @@ public class TravelServiceImpl implements TravelService {
 	public int deleteTrvComp(Travel trv, int memberId) {
 		int result = td.deleteTrvComp(sqlSession, trv, memberId);
 		return 0;
+	}
+
+	@Override
+	public Member selectCompany(String email) {
+		return td.selectCompany(sqlSession, email);
 	}
 
 

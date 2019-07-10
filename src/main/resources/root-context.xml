@@ -45,11 +45,11 @@
 			<tx:method name="select*" read-only="true" rollback-for="Exception"/>
 			<!-- insert, update, delete로 시작하는 메소드에 적용/Exception발생시 rollback -->
 			<tx:method name="insert*" rollback-for="Exception"
-					propagation="REQUIRED" isolation="SERIALIZABLE"/>
+					propagation="REQUIRED" isolation="DEFAULT"/>
 			<tx:method name="update*" rollback-for="Exception"
-					propagation="REQUIRED" isolation="SERIALIZABLE"/>
+					propagation="REQUIRED" isolation="DEFAULT"/>
 			<tx:method name="delete*" rollback-for="Exception"
-					propagation="REQUIRED" isolation="SERIALIZABLE"/>
+					propagation="REQUIRED" isolation="DEFAULT"/>
 		</tx:attributes>
 	</tx:advice>
 

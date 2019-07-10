@@ -34,6 +34,7 @@ import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
 import com.kh.ti.travel.model.vo.TrvCity;
+import com.kh.ti.travel.model.vo.TrvCompany;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
@@ -428,11 +429,69 @@ public class TravelController {
 		return mv;
 	}
 
+
+
+	// 일정엑셀다운-민지
+	@RequestMapping("downloadSch.trv")
+	public void downloadSch(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ts.selectDownloadSch(trvId, request, response);
+	}
+	
+	//가계부 엑셀다운-민지
+	@RequestMapping("downloadCost.trv")
+	public void downloadCost(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ts.selectDownloadCost(trvId, request, response);
+	}
+
+	//구매한 일정으로 새일정 작성
+	@RequestMapping("overrideTravel.trv")
+	public String overrideTravel(int trvId, HttpSession session, Model model) {
+
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int memberId = loginUser.getMemberId();
+		int ovTrvId = ts.insertOverrideTravel(trvId, memberId);
+		
+		
+		return "redirect:selectTravel.trv?trvId=" + ovTrvId;
+	}
+	
+	//구매한 일정으로 새일정 작성 정보 불러오기
+	@RequestMapping("selectOvTravel.trv")
+	public String selectOvTravel(int trvId, int refId, Model model) {
+		
+		System.out.println("trvId : " + trvId);
+		System.out.println("refId : " + refId);
+		HashMap refMap = ts.selectTravel(refId);
+		
+		
+		return "travel/travelEditor";
+	}
+	
+
+	
+	//동행검색
+	@RequestMapping("searchCompany.trv")
+	public ModelAndView searchCompany(String email, ModelAndView mv) {
+		
+		System.out.println(email);
+		
+		Member member = ts.selectCompany(email);
+		if(member != null) {
+			mv.addObject("member", member);
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
 	// 동행추가-민지
 	@RequestMapping("insertCompany.trv")
-	public String insertTrvCompany(Travel trv, Member m) {
-		int result = ts.insertTrvCompany(trv, m);
-		return "";
+	public ModelAndView insertTrvCompany(int trvId, int memberId, ModelAndView mv) {
+		TrvCompany trvComp = new TrvCompany(memberId, trvId);
+		int result = ts.insertTrvCompany(trvComp);
+		
+		mv.setViewName("jsonView");
+		return mv;
 	}
 
 	// 여행동행삭제-민지
@@ -449,12 +508,6 @@ public class TravelController {
 		return "";
 	}
 
-	// 여행사진추가-민지
-	@RequestMapping("/insertFile.trv")
-	public String insertSchFile(SchFile schFile) {
-		int result = ts.insertSchFile(schFile);
-		return "";
-	}
 
 	// 사진삭제-민지
 	@RequestMapping("deleteFile.trv")
@@ -462,42 +515,8 @@ public class TravelController {
 		int result = ts.deleteSchFile(file);
 		return "";
 	}
-
-	// 일정엑셀다운-민지
-	@RequestMapping("downloadSch.trv")
-	public void downloadSch(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ts.selectDownloadSch(trvId, request, response);
-	}
 	
-	//가계부 엑셀다운-민지
-	@RequestMapping("downloadCost.trv")
-	public void downloadCost(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ts.selectDownloadCost(trvId, request, response);
-	}
-
-	// 구매한 일정으로 새일정 작성
-	@RequestMapping("overrideTravel.trv")
-	public String overrideTravel(int trvId, HttpSession session, Model model) {
-
-		Member loginUser = (Member)session.getAttribute("loginUser");
-		int memberId = loginUser.getMemberId();
-		int ovTrvId = ts.insertOverrideTravel(trvId, memberId);
-		
-		//HashMap trvMap = ts.selectRefTravel(trvId);
-		
-		
-		return "redirect:selectOvTravel.trv?trvId=" + ovTrvId + "&refId=" + trvId;
-	}
 	
-	@RequestMapping("selectOvTravel.trv")
-	public String selectOvTravel(int trvId, int refId) {
-		
-		System.out.println(trvId);
-		System.out.println(refId);
-		
-		return "";
-	}
 	
-
 
 }

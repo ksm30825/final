@@ -17,6 +17,7 @@ import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
+import com.kh.ti.travel.model.vo.TrvCompany;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
@@ -111,9 +112,6 @@ public interface TravelService {
 	
 
 
-
-	int insertTrvCompany(Travel trv, Member m);
-
 	int deleteTrvComp(Travel trv, int memberId);
 
 	
@@ -128,6 +126,9 @@ public interface TravelService {
 
 	int insertOverrideTravel(int trvId, int memberId);
 
+	Member selectCompany(String email);
+
+	int insertTrvCompany(TrvCompany trvComp);
 
 
 

@@ -144,58 +144,29 @@
 											<span class="icon is-small is-left"> 
 												<i class="fas fa-search-plus"></i>
 											</span> 
-											<input class="input is-rounded" type="text" placeholder="ID로 검색">
+											<input class="input is-rounded" type="text" placeholder="이메일 주소 입력" id="searchComp">
 										</p>
 										<p>
-											user01 (홍길동) 
-											<button class="button is-info is-small is-rounded">추가</button>
+											<input type="hidden" value="" name="memberId" id="compSearchMemberId"> 
+											<span id="compSearchResult"></span>
+											<button class="button is-info is-small is-rounded" id="addCompBtn"
+											 style="display:none">동행 추가</button>
 										</p>
 									</div>
 									<hr class="dropdown-divider">
 									<div class="dropdown-item">
-										<table class="table ">
-											<!-- <thead>
-												<tr>
-													<th >초대된 사람</th>
-													<th></th>
-												</tr>
-											</thead> -->
-											<tbody>
-												<tr>
-													<td width="10%">
-														<span class="icon">
-															<i class="far fa-user"></i>
-														</span>
-													</td>
-													<td width="70%">user01 (홍길동)</td>
-													<td width="20%">
-														<button class="button is-dark is-small">삭제</button>
-													</td>
-												</tr>
-												<tr>
-													<td width="10%">
-														<span class="icon">
-															<i class="far fa-user"></i>
-														</span>
-													</td>
-													<td width="70%">user02 (문지원)</td>
-													<td width="20%">
-														<button class="button is-dark is-small">삭제</button>
-													</td>
-												</tr>
-												<tr>
-													<td width="10%">
-														<span class="icon">
-															<i class="far fa-user"></i>
-														</span>
-													</td>
-													<td width="70%">user03 (천예랑)</td>
-													<td width="20%">
-														<button class="button is-dark is-small">삭제</button>
-													</td>
-												</tr>
-												
-											</tbody>
+										<table class="table " id="compTable">
+											<tr class="compTr" style="display:none">
+												<td width="10%">
+													<span class="icon">
+														<i class="far fa-user"></i>
+													</span>
+												</td>
+												<td width="70%"></td>
+												<td width="20%">
+													<button class="button is-dark is-small compDeleteBtn">삭제</button>
+												</td>
+											</tr>
 										</table>
 									</div>
 									<hr class="dropdown-divider">
@@ -277,34 +248,85 @@
 					}
 				});
 			});
+			
+			//동행검색
+			$("#searchComp").change(function() {
+				var input = $(this).val();
+				$.ajax({
+					url:"searchCompany.trv",
+					type:"POST",
+					data:{email:input},
+					success:function(data) {
+						
+						if(data.member != undefined) {
+							$("#compSearchMemberId").val(data.member.memberId);
+							$("#compSearchResult").text(data.member.email + " (" + data.member.userName + ")");
+							$("#addCompBtn").show();
+						}else {
+							$("#compSearchMemberId").val(0);
+							$("#compSearchResult").text("일치하는 회원 정보를 찾을 수 없습니다.");
+							$("#addCompBtn").hide();
+						}
+					},
+					error:function(err) {
+						alert("err");
+					}
+				});
+			});
+			
+			//동행추가
+			$("#addCompBtn").click(function() {
+				var memberId = $(this).prev().prev().val();
+				var compTr = $(".compTr").eq(0).clone(true);
+				$.ajax({
+					url:"insertCompany.trv",
+					type:"POST",
+					data:{memberId:memberId, trvId:"${ trv.trvId }"},
+					success:function(data) {
+						console.log(data);
+						//compTr.children().eq(1).text(data.)
+					},
+					error:function(err) {
+						alert("err");
+					}
+				});
+			});
+			
+			
+			$(".editorMenu li").click(function() {
+				$(this).addClass('is-active');
+				$(this).siblings().removeClass('is-active');
+				var menu = $(this).children().children().text();
+				switch(menu) {
+				case '일정작성' : $("#scheduleEditor").show();
+								$("#scheduleEditor").siblings().hide();loadMap(map); break;
+				case '상세글작성' : $("#detailEditor").show();
+								$("#detailEditor").siblings().hide(); break;
+				case '일정전체보기' : $("#allSchedule").show();
+								$("#allSchedule").siblings().hide();loadMapWide(mapWide); break;
+				case '가계부' : $("#costEditor").show();
+								$("#costEditor").siblings().hide(); break;
+				}
+			});
+			
+			
 		});
 		
-		$(".editorMenu li").click(function() {
-			$(this).addClass('is-active');
-			$(this).siblings().removeClass('is-active');
-			var menu = $(this).children().children().text();
-			switch(menu) {
-			case '일정작성' : $("#scheduleEditor").show();
-							$("#scheduleEditor").siblings().hide();loadMap(map); break;
-			case '상세글작성' : $("#detailEditor").show();
-							$("#detailEditor").siblings().hide(); break;
-			case '일정전체보기' : $("#allSchedule").show();
-							$("#allSchedule").siblings().hide();loadMapWide(mapWide); break;
-			case '가계부' : $("#costEditor").show();
-							$("#costEditor").siblings().hide(); break;
-			}
-		});
 		function goToMyTravel() {
 			location.href="showMyTravel.trv";
 		}
 		function completeTravel() {
-			var answer = window.confirm("[작성완료 안내] \n1. 작성완료 처리시 사이트에 이 일정의 1/3이 미리보기로 공개되며" 
-						+ "\n2. 다른 회원이 이 일정을 구입하여 이를 바탕으로 새일정 작성이 가능해집니다." 
-						+ "\n3. 한 일정당 총 구매된 금액이 최소 금액을 초과하게 되면 수익금이 작성자에게 지급됩니다."
-						+ "\n4. 또한, 추후 이 일정은 수정 및 삭제가 불가합니다."
-						+ "\n5. 작성완료 처리시 일정 공유에 대한 포인트가 지급됩니다. \n공개하시겠습니까?");
-			if(answer) {
-				location.href="completeTravel.trv?trvId=${ trv.trvId }&memberId=${ sessionScope.loginUser.memberId }";
+			if("${ trv.trvRef }" == 0) {
+				var answer = window.confirm("[작성완료 안내] \n1. 작성완료 처리시 사이트에 이 일정의 1/3이 미리보기로 공개되며" 
+							+ "\n2. 다른 회원이 이 일정을 구입하여 이를 바탕으로 새일정 작성이 가능해집니다." 
+							+ "\n3. 한 일정당 총 구매된 금액이 최소 금액을 초과하게 되면 수익금이 작성자에게 지급됩니다."
+							+ "\n4. 또한, 추후 이 일정은 수정 및 삭제가 불가합니다."
+							+ "\n5. 작성완료 처리시 일정 공유에 대한 포인트가 지급됩니다. \n공개하시겠습니까?");
+				if(answer) {
+					location.href="completeTravel.trv?trvId=${ trv.trvId }&memberId=${ sessionScope.loginUser.memberId }";
+				}
+			}else {
+				alert("다른 일정을 오버라이딩 한 일정은 개인소장만 가능하며, 사이트 공개가 불가합니다.");
 			}
 		}
 		function deleteTravel() {

@@ -278,8 +278,7 @@
 									</c:forEach>
 								</ul>
 								<div class="panel-block">
-									<button class="button is-link is-outlined is-fullwidth"
-										onclick="$('#newCostModal').toggleClass('is-active')">가계부 항목 추가</button>
+									<button class="button is-link is-outlined is-fullwidth newCostBtn">가계부 항목 추가</button>
 								</div>
 							</nav>
 						</div>
@@ -316,6 +315,16 @@
 			getLocalBudget(budgetWon);
 			
 		
+			//새가계부
+			$(".newCostBtn").click(function() {
+				var dayId = $(this).parent().prev().prev().find("input[name=dayId]").val();
+				$("#costDayId").children().each(function() {
+					if($(this).val() == dayId) {
+						$(this).prop("selected", true);
+					}
+				});
+				$('#newCostModal').toggleClass('is-active');
+			});
 		
 		
 			$("input[data-type='currency']").on({
