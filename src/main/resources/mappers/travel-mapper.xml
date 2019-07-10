@@ -116,7 +116,15 @@
 		<result property="costAmount" column="COST_AMOUNT" />
 		<result property="currency" column="CURRENCY" />
 	</resultMap>
-
+	<resultMap id="MemberResultSet" type="Member">
+		<id property="memberId" column="MEMBER_ID" />
+		<result property="email" column="EMAIL"/>
+		<result property="userName" column="USER_NAME"/>
+	</resultMap>
+	<resultMap id="TrvCompResultSet" type="TrvComp">
+		<id property="memberId" column="MEMBER_ID" />
+		<id property="trvId" column="TRV_ID" />
+	</resultMap>
 
 	<!-- Country & City -->
 	<select id="selectCity" parameterType="_int" resultMap="CityResultSet">
@@ -235,6 +243,10 @@
 		SET DAY_WEATHER = #{dayWeather}
 		WHERE DAY_ID = #{dayId}
 	</update>
+	<select id="selectTrvDayId" resultType="_int">
+		SELECT TRV_DAY_SEQ.CURRVAL FROM DUAL
+	</select>
+	
 	
 	
 	<!-- sch -->
@@ -431,6 +443,16 @@
 	</select>
 	
 	
+	<!-- TrvComp -->
+	<select id="selectCompany" parameterType="java.lang.String" resultMap="MemberResultSet">
+		SELECT MEMBER_ID, EMAIL, USER_NAME
+		FROM MEMBER
+		WHERE EMAIL = #{email}
+	</select>
+	<insert id="insertTrvComp" parameterType="TrvComp">
+		INSERT INTO TRV_COMP
+		VALUES(#{memberId}, #{trvId})
+	</insert>
 
 </mapper>
 

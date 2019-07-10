@@ -13,6 +13,7 @@ import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
 import com.kh.ti.travel.model.vo.TrvCity;
+import com.kh.ti.travel.model.vo.TrvCompany;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
@@ -314,7 +315,11 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.insert("Travel.insertOverrideTrv", overrideTrv);
 	}
 
-	
+	@Override
+	public int selectTrvDayId(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Travel.selectTrvDayId");
+	}
+
 	
 	
 	
@@ -325,11 +330,6 @@ public class TravelDaoImpl implements TravelDao {
 	
 	
 
-	@Override
-	public int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 
 
@@ -345,6 +345,16 @@ public class TravelDaoImpl implements TravelDao {
 	public int deleteTrvComp(SqlSessionTemplate sqlSession, Travel trv, int memberId) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Member selectCompany(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.selectOne("Travel.selectCompany", email);
+	}
+
+	@Override
+	public int insertTrvCompany(SqlSessionTemplate sqlSession, TrvCompany trvComp) {
+		return sqlSession.insert("Travel.insertTrvComp", trvComp);
 	}
 
 

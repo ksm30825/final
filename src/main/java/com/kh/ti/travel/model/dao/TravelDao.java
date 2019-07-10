@@ -12,6 +12,7 @@ import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travel.model.vo.Travel;
 import com.kh.ti.travel.model.vo.TrvCity;
+import com.kh.ti.travel.model.vo.TrvCompany;
 import com.kh.ti.travel.model.vo.TrvCost;
 import com.kh.ti.travel.model.vo.TrvDay;
 import com.kh.ti.travel.model.vo.TrvSchedule;
@@ -140,8 +141,6 @@ public interface TravelDao {
 	
 	
 	
-	
-	int insertTrvCompany(SqlSessionTemplate sqlSession, Travel trv, Member m);
 
 
 	HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityCode);
@@ -159,6 +158,12 @@ public interface TravelDao {
 	ArrayList<HashMap> selectDownloadCost(SqlSessionTemplate sqlSession, int trvId);
 
 	int insertOverrideTrv(SqlSessionTemplate sqlSession, Travel overrideTrv);
+
+	int selectTrvDayId(SqlSessionTemplate sqlSession);
+
+	Member selectCompany(SqlSessionTemplate sqlSession, String email);
+	
+	int insertTrvCompany(SqlSessionTemplate sqlSession, TrvCompany trvComp);
 
 
 
