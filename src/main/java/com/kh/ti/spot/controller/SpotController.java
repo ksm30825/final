@@ -1,10 +1,20 @@
 package com.kh.ti.spot.controller;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.kh.ti.spot.model.service.SpotService;
+import com.kh.ti.spot.model.vo.SpotList;
 
 @Controller
 public class SpotController {
+	
+	@Autowired
+	private SpotService ss;
 	
 	//메인화면으로 가는 용 메소드 -- 세령
 	@RequestMapping("showIndex.me")
@@ -80,7 +90,11 @@ public class SpotController {
 	
 	//사용자여행지전체조회용메소드 --세령
 	@RequestMapping("selectAllSpotUser.sp")
-	public String selectAllSpotFromUser() {
+	public String selectAllSpotFromUser(Model model) {
+		ArrayList<SpotList> cityNameList = ss.selectCityNames();
+		ArrayList<SpotList> cityList = ss.selectCityList();
+		model.addAttribute("cityNameList", cityNameList);
+		model.addAttribute("cityList", cityList);
 		return "spot/spotHome";
 	}
 	
