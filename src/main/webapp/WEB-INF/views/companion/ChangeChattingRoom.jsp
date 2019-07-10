@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/changechattingroom.css">
 
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 </head>
 <body>
@@ -71,8 +72,7 @@
 				         		</tr>
 				         		<tr>
 				         			<td>
-				         				<b>인원 </b>
-				         				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="number" name= "peopleNum" id = "peopleNum" min="1" value = "1">
+				         				<b>인원 </b>   &nbsp;&nbsp;<input type="number" name= "peopleNum" id = "peopleNum" min="1" value = "1">
 				         			</td>
 				         		</tr>
 				         		<tr>
@@ -99,10 +99,12 @@
 			      </div>
 			      <div id="collapse2" class="panel-collapse collapse">
 			        <div class="panel-body">
+			        	<input type = "hidden" id = "nowBath">
+			        	<h5>현재 방장은 <b id = "bath"></b>입니다.</h5>
 			        	<h5><b>방장을 위임할 사람을 선택해주세요</b></h5>
-			        	<div class="selectbox"> <label for="ex_select">방장선택</label>
+			        	<div class="selectbox"> <label for="ex_select" id = "selectVar">방장선택</label>
 			        	<select id="ex_select">
-				        	 <option selected>방장선택</option> 
+			        		<option>선택하세요</option>
 			        	 </select>
 			        	 </div>
 			        	  <button type = "button" class = "modifybtn" id = "chiefStaffbtn">변경하기</button>
@@ -113,6 +115,23 @@
 			 </div>
 		</div>
 	</div>
+	
+	<div id="okmodal" class="w3-modal">
+	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
+	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
+	        <span onclick="document.getElementById('okmodal').style.display='none'" 
+	        class="w3-button w3-display-topright">&times;</span>
+	        <h4 align="center" >채팅방 수정</h4>
+	      </header>
+	      <div class="w3-container">
+	      		<h4 align="center" >채팅 정보가 수정되었습니다.</h4>
+	      </div>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
+	       	 <button  class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;"
+	       	 onclick="document.getElementById('okmodal').style.display='none'" >확인</button>
+	      </footer>
+	    </div>
+  	</div>
 	
 	 <script src="http://localhost:8010/socket.io/socket.io.js"></script>
      <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -204,21 +223,26 @@
 		       socket.on('preChatManager', function(data){
 		        	   console.log(data);
 		      
-		      	  
-		        	   $.ajax({
-		        		   url : "${contextPath}/memberInfo.ch",
-		        		   data : {userId : data.user},
-		        	       success : function(userInfo) {
-		        	    	   var output = '<option value ='+userInfo.memberId+'>'+userInfo.userName +'</option>';
-					     		
-		        	    	   
-		        	    	   $('#ex_select').append(output);
-		    		  	
-		        	       },
-		        	       error : function(){
-		        	    	   console.log("에러발생");
-		        	       }
-		        	   });
+		        		$.ajax({
+			        		   url : "${contextPath}/memberInfo.ch",
+			        		   data : {userId : data.user},
+			        	       success : function(userInfo) {
+			        	    	   if (data.level == 1){
+					        		   $("#bath").text(userInfo.userName);
+					        		   $("#nowBath").val(userInfo.memberId);
+					        	   }else {
+			        	    	  	 var output = '<option value ='+userInfo.memberId+'>'+userInfo.userName +'</option>';
+			        	    	  	 
+			        	    	  	 $('#ex_select').append(output);
+					        	   }
+			        	    	   
+	
+			        	       },
+			        	       error : function(){
+			        	    	   console.log("에러발생");
+			        	       }
+			        	});  
+		        	   
 		         });
 	           
 		       
@@ -231,8 +255,81 @@
 		    	   var peoplenum = $("#peopleNum").val();
 		    	   var detail = $("#txtDetail").val();
 		    	   
+		    	 //  console.log("채팅  :" + chatTitle + "/" + chatPlace + "/" + stardate + "/" + enddate + peoplenum + detail );
 		    	   
+		    	 //채팅정보  수정
+		         socket.emit('updateChatInfo' , {chatId : chatId , Title : chatTitle , place : chatPlace , startdate : stardate , enddate : enddate , peoplenum : peoplenum , detail : detail  });
+		    	 
+		    	 
+		    	 socket.on('updateChatInfo', function(data){
+		    		  var title = data.title;
+		        	  var place = data.place;
+		        	  
+		        	  console.log("upateDate :" + data.title);
+		        	  
+		        	  $("#chatTitle").val(title);
+		        	  $("#chatPlace").val(place);
+		        	  var formattedStartDate = new Date(data.start);
+		        	  var sd = formattedStartDate.getDate();
+		        	  var sm =  formattedStartDate.getMonth();
+		        	  sm += 1;  // JavaScript months are 0-11
+		        	 
+		        	  var sy = formattedStartDate.getFullYear();
+
+					 var startDate = sy + "-" + sm  + '-' + sd;
+					 
+					 var formattedEndDate = new Date(data.end);
+		        	  var ed = formattedEndDate.getDate();
+		        	  var em =  formattedEndDate.getMonth();
+		        	  em += 1;  // JavaScript months are 0-11
+		        	  var ey = formattedEndDate.getFullYear();
+
+					 var endDate = ey + "-" + em  + '-' + ed;
+		        	  
+		        	  $("#trStartDate").val(startDate); $("#trEndDate").val(endDate);
+		        	  
+		        	  var pnum = data.peoplenum;
+		        	  
+		        	  $("#peopleNum").val(pnum); $("#txtDetail").val(data.detail);
+		        	  
+		        	  
+		        	  document.getElementById('okmodal').style.display='block';
+		        	  
+		    	 });
+		      });
+		       
+		       $("#ex_select").change(function(){
+		    	   var select = $("#ex_select").val();
+		    	   $("#ex_select option").each(function(index ,item) {
+		    		   var value = $(this).val();
+		    		   
+		    		   //console.log("option value :" +value);
+		    		   
+		    		   if (select == value){
+		    			   $("#selectVar").text($(this).text());
+		    		   }
+		    		     		   
+		    		   
+		    	   });
+		    	 	
 		       });
+		     
+		       
+		      $("#chiefStaffbtn").click(function(){
+		    	  var changebath = $("#ex_select").val();
+		    	  
+		    	 // console.log(changebath + "?");
+		    	  if (changebath != "선택하세요"){
+		    		  socket.emit('giveAbbot', {chatId : chatId, changebath : changebath , nowbath : $("#nowBath").val() });
+		    		  
+		    		  socket.on('giveAbbot', function(data){
+		    			  console.log("?????????????");
+		    			  location.href = "${contextPath}/enterChatting.ch?num="+ chatId;
+		    		  });
+		    	  }
+		      });
+		       
+		    
 		       
 		       
 		       
