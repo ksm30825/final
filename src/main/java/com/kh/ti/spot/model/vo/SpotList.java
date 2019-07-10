@@ -21,8 +21,9 @@ public class SpotList implements Serializable{
 	private String cityNameKo;
 	private String cityNameEn;
 	private String spotStatus;
-	private int placeId;
-	private String placeName;
+	private String countryNameKo;
+	private String countryNameEn;
+	private int plcTypeId;
 	
 	public SpotList() {
 		// TODO Auto-generated constructor stub
@@ -31,7 +32,7 @@ public class SpotList implements Serializable{
 	public SpotList(int spotId, String spotNameKo, String spotNameEn, String spotContent, String spotAddress,
 			String openingHours, String spotPhone, String webAddress, Date enrollDate, Date modifyDate, Date delDate,
 			Date recoveryDate, int spotCount, int cityId, String cityNameKo, String cityNameEn, String spotStatus,
-			int placeId, String placeName) {
+			String countryNameKo, String countryNameEn, int plcTypeId) {
 		super();
 		this.spotId = spotId;
 		this.spotNameKo = spotNameKo;
@@ -50,8 +51,9 @@ public class SpotList implements Serializable{
 		this.cityNameKo = cityNameKo;
 		this.cityNameEn = cityNameEn;
 		this.spotStatus = spotStatus;
-		this.placeId = placeId;
-		this.placeName = placeName;
+		this.countryNameKo = countryNameKo;
+		this.countryNameEn = countryNameEn;
+		this.plcTypeId = plcTypeId;
 	}
 
 	public int getSpotId() {
@@ -190,20 +192,28 @@ public class SpotList implements Serializable{
 		this.spotStatus = spotStatus;
 	}
 
-	public int getPlaceId() {
-		return placeId;
+	public String getCountryNameKo() {
+		return countryNameKo;
 	}
 
-	public void setPlaceId(int placeId) {
-		this.placeId = placeId;
+	public void setCountryNameKo(String countryNameKo) {
+		this.countryNameKo = countryNameKo;
 	}
 
-	public String getPlaceName() {
-		return placeName;
+	public String getCountryNameEn() {
+		return countryNameEn;
 	}
 
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName;
+	public void setCountryNameEn(String countryNameEn) {
+		this.countryNameEn = countryNameEn;
+	}
+
+	public int getPlcTypeId() {
+		return plcTypeId;
+	}
+
+	public void setPlcTypeId(int plcTypeId) {
+		this.plcTypeId = plcTypeId;
 	}
 
 	@Override
@@ -213,9 +223,9 @@ public class SpotList implements Serializable{
 				+ ", spotPhone=" + spotPhone + ", webAddress=" + webAddress + ", enrollDate=" + enrollDate
 				+ ", modifyDate=" + modifyDate + ", delDate=" + delDate + ", recoveryDate=" + recoveryDate
 				+ ", spotCount=" + spotCount + ", cityId=" + cityId + ", cityNameKo=" + cityNameKo + ", cityNameEn="
-				+ cityNameEn + ", spotStatus=" + spotStatus + ", placeId=" + placeId + ", placeName=" + placeName + "]";
+				+ cityNameEn + ", spotStatus=" + spotStatus + ", countryNameKo=" + countryNameKo + ", countryNameEn="
+				+ countryNameEn + ", plcTypeId=" + plcTypeId + "]";
 	}
-	
 	
 	
 }

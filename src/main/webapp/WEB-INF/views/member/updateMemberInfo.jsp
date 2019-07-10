@@ -89,8 +89,8 @@
 					        </div>
 				          <div class="field is-grouped" style="flex-grow:1;">
 				            <p class="control is-expanded has-icons-left has-icons-right">
-				              <button class="button is-primary is-outlined" style="width:50%;" id="resetPasswordBtn"
-				              		  onclick="$('#modalUpdatePassword').toggleClass('is-active');"> 비밀번호 재설정 </button>
+				              <a class="button is-primary is-outlined" style="width:50%;" id="resetPasswordBtn"
+				              		  onclick="$('#modalUpdatePassword').toggleClass('is-active');"> 비밀번호 재설정 </a>
 				               <span class="icon is-small is-left">
 					              <i class="fas fa-mobile-alt"></i>
 					           </span>
@@ -213,7 +213,6 @@
 	
 	<jsp:include page="../common/footer.jsp"/>
 	<jsp:include page="updatePasswordModal.jsp"/>
-	<%-- <jsp:include page="confirmAccountPopup.jsp"/> --%>
 	<jsp:include page="dropOutMemberModal.jsp"/>
 	
 	<script>
@@ -271,7 +270,6 @@
 			if('${ loginUser.enrollType }' == '카카오가입') {
 				$("#resetPasswordBtn").attr("disabled", "disabled");
 			}
-	  		console.log('${ loginUser }');
 	  	});
 	</script>
 	

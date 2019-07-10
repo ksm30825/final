@@ -15,6 +15,11 @@
 <script src="resources/js/jquery-ui.min.js"></script>
 <script src="resources/js/semantic.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+<!-- kakao -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <style>
 	body {
 		overflow-x:visible !important;
@@ -62,7 +67,7 @@
                     				<a class="navbar-item " href="genderStatisticsYear.sta"> 관리자페이지 </a> 
                     			</c:if>
                    				<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a>
-		                  		<a class="navbar-item " href="logout.me"> 로그아웃 </a>
+		                  		<a class="navbar-item " onclick="Logout();"> 로그아웃 </a>
 		              		</div>
 	                  	</div> 
             		</c:if>
@@ -87,7 +92,7 @@
                   		<a class="navbar-item " href="#"> 주요도시 </a> 
                   		<a class="navbar-item " href="#"> 아시아 </a> 
                   		<a class="navbar-item " href="#"> 유럽 </a> 
-                  		<a class="navbar-item " href="#"> 남태평양 </a> 
+                  		<a class="navbar-item " href="#"> 오세아니아 </a> 
                   		<a class="navbar-item " href="#"> 북미 </a> 
                   		<a class="navbar-item " href="#"> 중남미 </a> 
               		</div>
@@ -129,7 +134,7 @@
 	                    				<a class="navbar-item " href="genderStatisticsYear.sta"> 관리자페이지 </a> 
 	                    			</c:if>
                     				<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a>
-			                  		<a class="navbar-item " href="logout.me"> 로그아웃 </a>
+                    				<a class="navbar-item " onclick="Logout();"> 로그아웃 </a>
 			              		</div>
 		                  	</div> 
 	            		</c:if>
@@ -163,6 +168,20 @@
 		function showPopup(){
        		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left=100, top=50");        	
         }
+		
+		function Logout(){
+			if('${ loginUser.enrollType }' == "카카오가입"){
+				Kakao.init('a78d747cfbe06a103ff9224f83633086');
+				Kakao.Auth.logout(function(data){
+					if(data==true){
+						alert("로그아웃");				
+						location.href="logout.me";
+					}
+				});
+			} else {
+				location.href="logout.me";
+			}
+		}
    </script>
 </body>
 </html>

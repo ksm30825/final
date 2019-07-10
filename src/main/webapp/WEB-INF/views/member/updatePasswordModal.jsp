@@ -8,7 +8,7 @@
 	    <div class="modal-card">
 	      <header class="modal-card-head">
 	        <p class="modal-card-title" style="padding-top:20px;">비밀번호 재설정</p>
-	        <button class="delete is-large" onclick="return closeModal(1);"></button>
+	        <button class="delete is-large" onclick="closeModal(1);"></button>
 	      </header>
 	      <section class="modal-card-body">
 	        <div class="columns">
@@ -69,7 +69,7 @@
 	      <footer class="modal-card-foot" style="justify-content:flex-end;">
 	        <button class="button is-primary" type="submit" id="submitBtn"
 	        		onclick="return confirmPassword();" disabled>비밀번호 변경하기</button>
-	        <a class="button" onclick="return closeModal(1);">취소</a>
+	        <a class="button" onclick="closeModal(1);">취소</a>
 	      </footer>
 	    </div>
 	  </div>

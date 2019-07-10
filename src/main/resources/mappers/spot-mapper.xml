@@ -1,1 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="Spot">
+ 	<!-- SpotList Map -->
+ 	<resultMap type="com.kh.ti.spot.model.vo.SpotList" id="spotResultSet">
+ 		<id property="spotId" column="SPOT_ID"/>
+ 		<result property="spotNameKo" column="SPOT_NAME_KO"/>
+ 		<result property="spotNameEn" column="SPOT_NAME_EN"/>
+ 		<result property="spotContent" column="SPOT_CONTENT"/>
+ 		<result property="spotAddress" column="SPOT_ADDRESS"/>
+ 		<result property="openingHours" column="OPENING_HOURS"/>
+ 		<result property="spotPhone" column="SPOT_PHONE"/>
+ 		<result property="webAddress" column="WEB_ADDRESS"/>
+ 		<result property="enrollDate" column="ENROLL_DATE"/>
+ 		<result property="modifyDate" column="MODIFY_DATE"/>
+ 		<result property="delDate" column="DEL_DATE"/>
+ 		<result property="recoveryDate" column="RECOVERY_DATE"/>
+ 		<result property="spotCount" column="SPOT_COUNT"/>
+ 		<result property="cityId" column="CITY_ID"/>
+ 		<result property="cityNameKo" column="CITY_NAME_KO"/>
+ 		<result property="cityNameEn" column="CITY_NAME_EN"/>
+ 		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+ 		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+ 		<result property="spotStatus" column="SPOT_STATUS"/>
+ 		<result property="placeId" column="PLACE_ID"/>
+  	</resultMap> 
+  	
+  	<select id="selectCityNames" resultMap="spotResultSet">
+  		SELECT CITY_ID, CITY_NAME_KO, CITY_NAME_EN, COUNTRY_NAME_KO, COUNTRY_NAME_EN
+		FROM CITY T JOIN COUNTRY C ON (T.COUNTRY_ID = C.COUNTRY_ID)
+		WHERE CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
+  	</select> 	
+  	
+  	<select id="selectCityList" resultMap="spotResultSet">
+  		SELECT SPOT_ID, SPOT_NAME_KO, SPOT_NAME_EN, SPOT_CONTENT, SPOT_ADDRESS, 
+       		   OPENING_HOURS, SPOT_PHONE, WEB_ADDRESS, ENROLL_DATE, MODIFY_DATE, DEL_DATE, RECOVERY_DATE, 
+        	   SPOT_COUNT, SP.CITY_ID, SPOT_STATUS, PLCTYPE_ID, CITY_NAME_KO, CITY_NAME_EN, COUNTRY_NAME_KO, COUNTRY_NAME_EN
+		FROM SPOTLIST SP JOIN CITY CT ON (SP.CITY_ID = CT.CITY_ID)
+		                 JOIN COUNTRY C ON (CT.COUNTRY_ID = C.COUNTRY_ID)
+		WHERE SPOT_STATUS = 'Y'
+  	</select>
+  	
+ </mapper>

@@ -267,6 +267,7 @@
 			throughTalk : false, //간편 로그인 사용 여부
 			persistAccessToken : false, //세션 종료 후 로컬 스토리지 저장 안함
 		    success: function(authObj) {
+		      
 		      Kakao.API.request({
 		        url: '/v1/user/me',
 		        success: function(res) {
@@ -284,6 +285,7 @@
 		        },
 	        fail: function(error) { //로그인 실패 시 에러를 받을 콜백 함수
 	          alert("카카오 계정을 찾을 수 없습니다.");
+	          Kakao.Auth.logout();
 		      console.log(JSON.stringify(error));
 	        }
 		 });

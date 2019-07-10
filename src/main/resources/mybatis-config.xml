@@ -5,8 +5,9 @@
 
 <configuration>
 	<typeAliases>
-		<!-- Member Part 수정(세령) -->
+		<!-- 세령 -->
 			<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.SpotList" alias="Spot"/>
 		<!-- 수민 -->
 			<typeAlias type="com.kh.ti.point.model.vo.Payment" alias="Payment"/>
 			<typeAlias type="com.kh.ti.point.model.vo.UsePoint" alias="UsePoint"/>
@@ -42,8 +43,9 @@
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelCost" alias="TravelCost"/>
 	</typeAliases>
 	<mappers>
-		<!-- Member Part 수정(세령) -->
+		<!-- 세령 -->
 			<mapper resource="mappers/member-mapper.xml"/>
+			<mapper resource="mappers/spot-mapper.xml"/>
 		<!-- 수민 -->
 			<mapper resource="mappers/point-mapper.xml"/>
 	    <!-- 선우 -->

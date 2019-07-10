@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,14 +27,13 @@
 	<jsp:include page="../common/mainNav.jsp" /> <br><br>
 	<div class="columns is-mobile"  style="width:90%; margin:0 auto;">
 		<div class="column">
-		
 			<!-- condition area -->
 			<nav class="breadcrumb">
 			    <ul style="justify-content:flex-end;">
 			      <li> <a class="conditionStyle" href="selectAllSpotUser.sp">주요도시</a> </li>
 			      <li> <a class="conditionStyle">아시아</a> </li>
 			      <li> <a class="conditionStyle">유럽</a> </li>
-			      <li> <a class="conditionStyle">남태평양</a> </li>
+			      <li> <a class="conditionStyle">오세아니아</a> </li>
 			      <li> <a class="conditionStyle">북미</a> </li>
 			      <li> <a class="conditionStyle">중남미</a> </li>
 			  </ul>
@@ -44,8 +44,8 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="buttons">
-							<c:forEach var="i" begin="1" end="10">
-								<a class="button is-primary is-outlined is-rounded"> Country Name </a>
+							<c:forEach var="cityName" items="${ cityNameList }" varStatus="names">
+								<a class="button is-primary is-outlined is-rounded"> ${ cityName.cityNameKo  } </a>
 							</c:forEach>
 						</div>
 					</div>
@@ -53,10 +53,9 @@
 			</div> <!-- end country area -->		
 			
 			<!-- card area -->
-			<c:forEach var="i" begin="1" end="10" step="4">
+			<c:forEach var="i" begin="0" end="${ fn:length(cityList) - 1 }" step="1">
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<c:forEach var="j" begin="1" end="4" step="1">
 							<div class="field" onclick="location.href='selectSpotInfoUser.sp'">
 								<div class="card">
 							     <div class="card-image"> 
@@ -65,16 +64,13 @@
 							     <div class="card-content">
 							       <div class="media">
 							         <div class="media-content">
-							           <p class="title is-4">일본 오사카</p>
+							           <p class="title is-4">${ cityList[i].spotNameKo }</p>
 							         </div>
 							       </div>
-							       <div class="content"> 
-							         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-							       </div>
+							       <div class="content"> ${ cityList[i].spotContent } </div>
 							     </div>
 							   </div> <!-- end cord -->
 							</div> <!-- end field -->
-						</c:forEach>
 					</div> <!-- end field-body -->
 				</div> <!-- end is horizontal -->
 			</c:forEach> <!-- end cardArea -->

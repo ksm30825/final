@@ -125,9 +125,9 @@
 	<div style="display: none;">
 		<form name="authCodeFrm" id="authCodeFrm" method="GET" action="https://testapi.open-platform.or.kr/oauth/2.0/authorize">
 			<!-- <span class="ess">Client ID</span> -->
-			<span><input type="hidden" id="client_id" name="client_id" value="l7xx189ac28f214d4f85b3a3202ee3bd211c"></span>
+			<span><input type="hidden" id="client_id" name="client_id" value="l7xx12c95ed6254a439b8cff2ac3cd6703fb"></span>
 			<!-- <span>Client Secret</span> -->
-			<span><input type="hidden" id="client_secret" name="client_secret" value="18324f9c1684427d848923a4f54bc377"></span>
+			<span><input type="hidden" id="client_secret" name="client_secret" value="9ee0c423de724527b73b00486e37b4c2"></span>
 			<!-- <span>Access Token</span> -->
 			<span><input type="hidden" id="access_token" name="access_token"></span>
 			<!-- <span>요청일시</span> -->
@@ -204,11 +204,16 @@
 			var account_holder_info = $("#account_holder_info").val();
 			var tran_dtime = $("#tran_dtime").val();
 			var access_token = "Bearer " + $("#access_token").val();
+			console.log(bank_code_std);
+			console.log(account_num);
+			console.log(account_holder_info);
+			console.log(tran_dtime);
+			console.log(access_token);
 			var resData = {
 				"bank_code_std" : bank_code_std,
 				"account_num" : account_num,
 				"account_holder_info" : account_holder_info,
-				"tran_dtime" : tran_dtime
+				"tran_dtime" : "20160310101921"
 			};
 			$.ajax({
 				url : "https://testapi.open-platform.or.kr/v1.0/inquiry/real_name",
@@ -239,7 +244,6 @@
 						
 						alert('인증 성공!!!');
 						$("#confirmacc").hide();
-						//$("#updateAccInfo").show();
 						$("#changeacc").show();
 						$("#sbm-flag").attr("checked", true);
 								$("#sbm-ok").show();

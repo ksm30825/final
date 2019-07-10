@@ -74,7 +74,7 @@ public class MemberServiceTest {
 		System.out.println("셋팅 완료!");
 	}
 	
-	
+	@Ignore
 	@Test
 	public void testInsertMember() {
 		ms.insertMember(m);
