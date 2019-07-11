@@ -67,29 +67,50 @@
  		<collection property="sFileList" javaType="java.util.ArrayList" resultMap="spotFileResultSet"/>
   	</resultMap>
   	
-  	<!-- 여행지 도시명 조회용 세령 -->
-  	<select id="selectCityNames" resultMap="spotCityListResultSet">
-  		SELECT CITY_ID, CITY_NAME_KO, CITY_CONTENT, CITY_NAME_EN,  T.COUNTRY_ID, CONTINENT_NAME, COUNTRY_NAME_KO, COUNTRY_NAME_EN, CURRENCY_UNIT
-		FROM CITY T JOIN COUNTRY C ON (T.COUNTRY_ID = C.COUNTRY_ID)
-		WHERE CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
-  	</select> 	
+  	<!-- 여행지 도시 와 사진을 가지고 오기 위한 hashmap 세령-->
+  	<resultMap type="java.util.HashMap" id="spopCityAllResultSet">
+  		<id property="cityId" column="CITY_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+		<result property="cityContent" column="CITY_CONTENT" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="countryId" column="COUNTRY_ID"/>
+		<result property="cityNameEn" column="CITY_NAME_EN"/>
+		<result property="fileId" column="FILE_ID"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="picType" column="PIC_TYPE"/>
+		<result property="picStatus" column="PIC_STATUS"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+  	</resultMap>
   	
-  	<!-- 여행지 도시 리스트 조회용 세령 -->
-  	<select id="selectCityList" resultMap="spotCityListResultSet">
-		SELECT T.CITY_ID, CITY_NAME_KO, CITY_CONTENT, CITY_NAME_EN, C.COUNTRY_ID,  CONTINENT_NAME, COUNTRY_NAME_KO, COUNTRY_NAME_EN, CURRENCY_UNIT,
-		       FILE_ID, FILE_PATH, PIC_TYPE, UPLOAD_DATE, PIC_STATUS, FILE_LEVEL
-		FROM CITY T JOIN COUNTRY C ON (T.COUNTRY_ID = C.COUNTRY_ID)
-		            JOIN SPOT_FILE F ON (F.CITY_ID = T.CITY_ID)
-		WHERE T.CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
-		AND PIC_STATUS = 'Y'
-  	</select>
+  	<!-- 도시상세 명소리스트 가지고 오기위한 hashmapp 세령 -->
+	<resultMap type="java.util.HashMap" id="spotListAllResultSet">
+		<id property="spotId" column="SPOT_ID"/>
+ 		<result property="spotNameKo" column="SPOT_NAME_KO"/>
+ 		<result property="spotNameEn" column="SPOT_NAME_EN"/>
+ 		<result property="spotContent" column="SPOT_CONTENT"  jdbcType="CLOB" javaType="java.lang.String"/>
+ 		<result property="spotAddress" column="SPOT_ADDRESS"/>
+ 		<result property="openingHours" column="OPENING_HOURS"/>
+ 		<result property="spotPhone" column="SPOT_PHONE"/>
+ 		<result property="webAddress" column="WEB_ADDRESS"/>
+ 		<result property="enrollDate" column="ENROLL_DATE"/>
+ 		<result property="modifyDate" column="MODIFY_DATE"/>
+ 		<result property="delDate" column="DEL_DATE"/>
+ 		<result property="recoveryDate" column="RECOVERY_DATE"/>
+ 		<result property="spotCount" column="SPOT_COUNT"/>
+ 		<result property="cityId" column="CITY_ID"/>
+ 		<result property="spotStatus" column="SPOT_STATUS"/>
+ 		<result property="placeId" column="PLACE_ID"/>
+ 		<result property="fileId" column="FILE_ID"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="picType" column="PIC_TYPE"/>
+		<result property="picStatus" column="PIC_STATUS"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+	</resultMap>
   	
   	<!-- 여행지 상세(명소 조회용) 세령 -->
-  	<select id="selectSpotList" resultMap="spotResultSet" parameterType="_int">
+  	<select id="selectSpotList" resultMap="spotListAllResultSet" parameterType="_int">
 		SELECT SP.SPOT_ID, SPOT_NAME_KO, SPOT_NAME_EN, SPOT_CONTENT, SPOT_ADDRESS, 
 		        OPENING_HOURS, SPOT_PHONE, WEB_ADDRESS, ENROLL_DATE, MODIFY_DATE, DEL_DATE, RECOVERY_DATE, 
-		        SPOT_COUNT, SP.CITY_ID, SPOT_STATUS, PLCTYPE_ID, CITY_NAME_KO, CITY_NAME_EN,
-		        FILE_ID, FILE_PATH, PIC_TYPE, UPLOAD_DATE, PIC_STATUS, FILE_LEVEL
+		        SPOT_COUNT, SP.CITY_ID, SPOT_STATUS, PLCTYPE_ID, FILE_ID, FILE_PATH, PIC_TYPE, PIC_STATUS, FILE_LEVEL
 		FROM SPOTLIST SP JOIN CITY CT ON (SP.CITY_ID = CT.CITY_ID)
 		                 JOIN SPOT_FILE SF ON (SP.SPOT_ID = SF.SPOT_ID)
 		WHERE SPOT_STATUS = 'Y'
@@ -113,4 +134,32 @@
 		WHERE L.MEMBER_ID = #{ memberId }
   	</select>
   	
+  	<!-- ******* -->
+  	<!-- 여행지 국가만 조회용 세령 -->
+  	<select id="selectCountryList" resultMap="countryResultSetSpot">
+  		SELECT C.COUNTRY_ID, COUNTRY_NAME_KO, CONTINENT_NAME
+		FROM CITY CT JOIN COUNTRY C ON (CT.COUNTRY_ID = C.COUNTRY_ID)
+		WHERE CT.CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
+  	</select>
+  	
+  	<!-- 여행지 도시 전체 조회 세령 -->
+  	<select id="selectCityMap" resultMap="spopCityAllResultSet">
+  		SELECT C.CITY_ID, CITY_NAME_KO, CITY_CONTENT, C.COUNTRY_ID, CITY_NAME_EN, 
+		       FILE_ID, FILE_PATH, PIC_TYPE, PIC_STATUS, FILE_LEVEL
+		FROM CITY C JOIN SPOT_FILE SF ON (C.CITY_ID = SF.CITY_ID) 
+		WHERE C.CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
+		AND SF.FILE_LEVEL = 1
+  	</select>
+  	
+  	<!-- CITY ID로 도시정보 조회 세령 -->
+	<select id="selectCountryOneInfo" parameterType="_int" resultMap="countryResultSetSpot">
+		SELECT * FROM COUNTRY
+		WHERE COUNTRY_ID = (SELECT COUNTRY_ID FROM CITY WHERE CITY_ID = #{ cityId })
+	</select>
+	
+	<!-- CITY ID로 도시 사진 조회 세령 -->
+	<select id="selectCityFile" parameterType="_int" resultMap="spotFileResultSet">
+		SELECT * FROM SPOT_FILE
+		WHERE CITY_ID = #{ cityId }
+	</select>
  </mapper>

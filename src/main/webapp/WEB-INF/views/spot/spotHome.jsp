@@ -44,8 +44,11 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="buttons">
-							<c:forEach var="i" begin="0" end="${ fn:length(cityNameList) - 1 }" step="1">
+							<%-- <c:forEach var="i" begin="0" end="${ fn:length(cityNameList) - 1 }" step="1">
 								<a class="button is-primary is-outlined is-rounded"> ${ cityNameList[i].countryList[0].countryNameKo } </a>
+							</c:forEach> --%>
+							<c:forEach var="country" items="${ countryList }">
+								<a class="button is-primary is-outlined is-rounded"> ${ country.countryNameKo } </a>
 							</c:forEach>
 						</div>
 					</div>
@@ -56,28 +59,22 @@
 			<!-- card area -->
 			<div class="field is-horizontal">
 				<div class="field-body">
-					<c:forEach var="j" begin="0" end="${ fn:length(cityNameList) - 1 }" step="1">
-						<c:forEach var="i" begin="0" end="${ fn:length(cityNameList[0].cityList ) - 1 }" step="1">
+					<c:forEach var="city" items="${ cityMap }">
 							<div class="field">
-								<div class="card" style="width: 350px;"  onclick="clickCard('${ cityNameList[i].cityList[i].cityId }');">
+								<div class="card" style="width: 350px;" onclick="clickCard('${ city['cityId'] }');">
 							     <div class="card-image"> 
-							     	<c:forEach var="n" begin="0" end="4" step="1">
-							     		<c:if test="${ cityList[i].sFileList[n].fileLevel eq 1 && cityList[i].cityList[i].cityId eq cityNameList[j].cityList[i].cityId }">
-							     			<figure class="image"> <img src="${ cityList[i].sFileList[n].filePath }" alt="Image"> </figure>
-							     		</c:if>
-							     	</c:forEach>
+							     	<figure class="image"> <img src="${ city['filePath'] }" alt="Image"> </figure>
 							     </div>
 							     <div class="card-content">
 							       <div class="media">
 							         <div class="media-content">
-							           <p class="title">${ cityNameList[j].cityList[i].cityNameKo }</p>
+							           <p class="title">${ city['cityNameKo'] }</p>
 							         </div>
 							       </div>
-							       <div class="content" style="height: 120px;"> ${ cityNameList[j].cityList[i].cityContent } </div>
+							       <div class="content" style="height: 120px;"> ${ city['cityContent'] } </div>
 							     </div>
 							   </div> <!-- end cord -->
 							</div> <!-- end field -->
-						</c:forEach> 
 					</c:forEach>
 				</div> <!-- end field-body -->
 			</div> <!-- end cardArea -->
@@ -87,20 +84,7 @@
 		</div> <!-- end column -->
 	</div> <!-- end columns -->
 	
-	<script>
-		$(function(){
-			//test
-			console.log('${ cityNameList[0].countryList[0].countryNameKo }');
-			console.log("크기 : " + '${ fn:length(cityNameList )}');
-			console.log('${ cityList }');
-			console.log("cityNameList[0] 크기 : " + '${ fn:length(cityNameList[0].cityList )}');
-			console.log('${ cityNameList[0].cityList[0].cityNameKo }');
-			console.log('${ cityNameList[0].cityList[0].cityContent }');
-			console.log('${ cityList[0].sFileList[0].fileLevel }');
-			console.log('${ cityList[0].cityList[0].cityId }');
-			console.log('${ cityNameList[0].cityList[0].cityId }');
-		});
-		
+	<script>		
 		function clickCard(cityId){
 			location.href='selectSpotInfoUser.sp?cityId=' + cityId;
 		}
