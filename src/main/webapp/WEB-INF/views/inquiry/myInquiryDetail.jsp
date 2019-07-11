@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -53,17 +54,22 @@
 							<th>문의 번호</th>
 							<th>종류</th>
 							<th>제목</th>
-							<th>작성일</th>
+							<th>문의일</th>
 							<th>문의 상태</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td><b>1</b></td>
-							<td>이용</td>
-							<td>여행 의뢰 어떻게 하나요?</td>
-							<td>2019/07/10</td>
-							<td>답변 중</td>
+							<td><b>${ i.inquiryId }</b></td>
+							<td>${ i.inquiryType }</td>
+							<td>${ i.inquiryTitle }</td>
+							<td>${ i.inquiryDate }</td>
+							<c:if test="${ i.replyStatus eq 'N' }">
+								<td>답변 대기중</td>							
+							</c:if>
+							<c:if test="${ i.replyStatus eq 'Y' }">
+								<td>답변 완료</td>
+							</c:if>
 						</tr>
 					</tbody>
 				</table>
@@ -75,11 +81,16 @@
 					<article class="media">
 						<div class="media-content">
 							<div class="content">
-								<p>여행의뢰하고 싶은데 알려주세요 몰라요</p>
+								<p>${ i.inquiryContent }</p>
 							</div>
 							<h1>답변 내용</h1>
 							<div class="content" id="result">
-								<p>답변 중입니다</p>
+							<c:if test="${ i.replyStatus eq 'N' }">
+								<p>답변 중입니다</p>							
+							</c:if>
+							<c:if test="${ i.replyStatus eq 'Y' }">
+								<p>${ i.replyContent }</p>
+							</c:if>
 							</div>
 						</div>
 					</article>
@@ -89,7 +100,7 @@
 				<div class="columns">
 					<div class="column">
 						<div class="buttons">
-							<a class="button is-primary back" href="myInquiryList.mr">
+							<a class="button is-primary back" href="myInquiryList.mr?memberId=${ loginUser.memberId }">
 								돌아가기 </a>
 						</div>
 					</div>

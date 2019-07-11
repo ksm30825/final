@@ -44,7 +44,7 @@ textarea {
 			<h1 style="text-align: center;">문의 하기</h1>
 			<section class="section" id="box">
 				<form action="insertInquiry.mr">
-					<input type="hidden" value="${ loginUser.memberId }">
+					<input type="hidden" value="${ loginUser.memberId }" name="memberId">
 					<div class="box">
 						<article class="media">
 							<div class="media-content">
@@ -55,24 +55,25 @@ textarea {
 												<div class="field">
 													<label class="label">문의 종류</label>
 													<p class="control">
-														<span class="select"> <select>
-																<option>이용</option>
-																<option>결제</option>
-																<option>기타</option>
-														</select>
+														<span class="select">
+															<select name="inquiryType">
+																<option value="이용">이용</option>
+																<option value="결제">결제</option>
+																<option value="기타">기타</option>
+															</select>
 														</span>
 													</p>
 												</div>
 												<div class="field">
 													<label class="label">제목</label>
 													<p class="control">
-														<input class="input" type="text" placeholder="제목을 입력하세요">
+														<input class="input" type="text" placeholder="제목을 입력하세요" name="inquiryTitle">
 													</p>
 												</div>
 												<div class="field">
 													<label class="label">문의 내용</label>
 													<p class="control">
-														<textarea class="textarea" placeholder="문의 내용을 입력하세요"></textarea>
+														<textarea class="textarea" placeholder="문의 내용을 입력하세요" name="inquiryContent"></textarea>
 													</p>
 												</div>
 											</div>
@@ -85,10 +86,10 @@ textarea {
 					<br>
 					<div class="field is-grouped">
 						<p class="control result">
-							<button class="button is-link">돌아가기</button>
+							<button type="reset" class="button is-link">돌아가기</button>
 						</p>
 						<p class="control result">
-							<button class="button is-primary">문의하기</button>
+							<button type="submit" class="button is-primary">문의하기</button>
 						</p>
 					</div>
 				</form>

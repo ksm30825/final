@@ -84,6 +84,7 @@ public class TravelRequestController {
 									  @RequestParam("userName")String userName, Model model) {
 		int reqNum = Integer.parseInt(reqId);
 		System.out.println("의뢰글 번호 : " + reqNum);
+		System.out.println("의뢰자 이름 : " + userName);
 		
 		TravelRequest tr = trs.selectOneRequest(reqNum);
 		System.out.println(tr);

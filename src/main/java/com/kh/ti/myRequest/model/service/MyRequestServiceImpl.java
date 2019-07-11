@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.myRequest.model.dao.MyRequestDao;
+import com.kh.ti.myRequest.model.vo.Inquiry;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
@@ -163,5 +164,29 @@ public class MyRequestServiceImpl implements MyRequestService{
 		}
 		
 		return result;
+	}
+
+	//문의하기
+	@Override
+	public int insertInquiry(Inquiry i) {
+		return mrd.insertInquiry(sqlSession, i);
+	}
+
+	//나의 문의글 수
+	@Override
+	public int getInquiryCount(int memberId) {
+		return mrd.getInquiryCount(sqlSession, memberId);
+	}
+
+	//나의 문의글 목록들
+	@Override
+	public ArrayList<Inquiry> selectInquiryList(PageInfo pi, int memberId) {
+		return mrd.selectInquiryList(sqlSession, pi, memberId);
+	}
+
+	//나의 문의글 상세보기
+	@Override
+	public Inquiry selectMyInquiryDetail(int inquiryId) {
+		return mrd.slectMyInquiryDetail(sqlSession, inquiryId);
 	}
 }

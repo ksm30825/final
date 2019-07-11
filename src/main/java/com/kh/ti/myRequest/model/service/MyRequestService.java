@@ -3,6 +3,7 @@ package com.kh.ti.myRequest.model.service;
 import java.util.ArrayList;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.myRequest.model.vo.Inquiry;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
@@ -36,5 +37,13 @@ public interface MyRequestService {
 	int updateBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp);
 
 	int insertBeforePlan(ArrayList<PlanDay> dayList, ArrayList<PlanPlace> placeList, TravelRequestPlan tp);
+
+	int insertInquiry(Inquiry i);
+
+	int getInquiryCount(int memberId);
+
+	ArrayList<Inquiry> selectInquiryList(PageInfo pi, int memberId);
+
+	Inquiry selectMyInquiryDetail(int inquiryId);
 
 }
