@@ -101,7 +101,7 @@ public class ChattingController {
 	     if (birthStr != null) {
 	    	 //birthStr = birthStr.substring(0,4);
 	    	 
-			/*
+	    	 /*
 			 * int century = Integer.parseInt(birthStr.substring(0, 1));
 			 * 
 			 * if(century == 0) { birthStr = "20" + birthStr; } else { birthStr = "19" +

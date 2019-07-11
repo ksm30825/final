@@ -422,6 +422,7 @@
 	                
 	                if (data.userName != null){
                 		output += data.userName;
+                		
                 	}
 	                
 	                output += '</strong> ';

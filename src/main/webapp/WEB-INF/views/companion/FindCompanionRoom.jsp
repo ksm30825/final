@@ -490,7 +490,7 @@
 			        			 } 
 			        	 }); 
 	        		  }else if (status == "모집중"){
-	        			  
+	        			 
 	        			 	 var output = '';
 	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
 	    	                 output += '<tr>';
