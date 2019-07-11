@@ -1,13 +1,21 @@
 package com.kh.ti.spot.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.spot.model.service.SpotService;
+import com.kh.ti.spot.model.vo.Likey;
+import com.kh.ti.spot.model.vo.SpotCityList;
 import com.kh.ti.spot.model.vo.SpotList;
 
 @Controller
@@ -91,8 +99,8 @@ public class SpotController {
 	//사용자여행지전체조회용메소드 --세령
 	@RequestMapping("selectAllSpotUser.sp")
 	public String selectAllSpotFromUser(Model model) {
-		ArrayList<SpotList> cityNameList = ss.selectCityNames();
-		ArrayList<SpotList> cityList = ss.selectCityList();
+		ArrayList<SpotCityList> cityNameList = ss.selectCityNames();
+		ArrayList<SpotCityList> cityList = ss.selectCityList();
 		model.addAttribute("cityNameList", cityNameList);
 		model.addAttribute("cityList", cityList);
 		return "spot/spotHome";
@@ -106,7 +114,9 @@ public class SpotController {
 	
 	//사용자여행지상세보기용메소드 --세령
 	@RequestMapping("selectSpotInfoUser.sp")
-	public String selectSpotInfoFromUser() {
+	public String selectSpotInfoFromUser(@RequestParam("cityId") int cityId, Model model) {
+		ArrayList<SpotList> spotList = ss.selectSpotList(cityId);
+		model.addAttribute("spotList", spotList);
 		return "spot/spotInfoPage";
 	}
 	
@@ -142,13 +152,27 @@ public class SpotController {
 	
 	//명소좋아요추가용메소드
 	@RequestMapping("insertLikeySpot.sp")
-	public String insertLikeySpot() {
-		return null;
+	public void insertLikeySpot(@RequestParam("spotId") int spotId, HttpServletResponse response, HttpServletRequest request) {
+		Likey likey = new Likey();
+		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+		likey.setMemberId(loginUser.getMemberId());
+		likey.setSpotId(spotId);
+		try {
+			System.out.println("spotId : " + spotId);
+			int result = ss.insertSpotLikey(likey);
+			response.getWriter().print(false);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} //end try
 	}
 	
 	//명소좋아요전체조회용메소드
 	@RequestMapping("selectAllLikeySpot.sp")
-	public String selectAllLikeySpot() {
+	public String selectAllLikeySpot(HttpServletRequest request, Model model) {
+		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+		ArrayList<SpotList> spotList = ss.selectMyLikeySpotList(loginUser.getMemberId());
+		model.addAttribute("spotList", spotList);
 		return "spot/myLikeySpotList";
 	}
 	

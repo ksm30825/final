@@ -34,6 +34,15 @@ public class SpotFile implements Serializable{
 		this.fileLevel = fileLevel;
 	}
 	
+	
+	
+	@Override
+	public String toString() {
+		return "SpotFile [fileId=" + fileId + ", filePath=" + filePath + ", changeName=" + changeName + ", orginName="
+				+ orginName + ", picType=" + picType + ", uploadDate=" + uploadDate + ", picStatus=" + picStatus
+				+ ", spotId=" + spotId + ", cityId=" + cityId + ", fileLevel=" + fileLevel + "]";
+	}
+
 	public int getFileId() {
 		return fileId;
 	}

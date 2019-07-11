@@ -2,6 +2,10 @@ package com.kh.ti.spot.model.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
+
+import com.kh.ti.travel.model.vo.City;
+import com.kh.ti.travel.model.vo.Country;
 
 public class SpotList implements Serializable{
 	private int spotId;
@@ -18,12 +22,11 @@ public class SpotList implements Serializable{
 	private Date recoveryDate;
 	private int spotCount;
 	private int cityId;
-	private String cityNameKo;
-	private String cityNameEn;
 	private String spotStatus;
-	private String countryNameKo;
-	private String countryNameEn;
 	private int plcTypeId;
+	private ArrayList<City> cityList;
+	private ArrayList<Country> countryList;
+	private ArrayList<SpotFile> sFileList;
 	
 	public SpotList() {
 		// TODO Auto-generated constructor stub
@@ -31,8 +34,8 @@ public class SpotList implements Serializable{
 
 	public SpotList(int spotId, String spotNameKo, String spotNameEn, String spotContent, String spotAddress,
 			String openingHours, String spotPhone, String webAddress, Date enrollDate, Date modifyDate, Date delDate,
-			Date recoveryDate, int spotCount, int cityId, String cityNameKo, String cityNameEn, String spotStatus,
-			String countryNameKo, String countryNameEn, int plcTypeId) {
+			Date recoveryDate, int spotCount, int cityId, String spotStatus, int plcTypeId, ArrayList<City> cityList,
+			ArrayList<Country> countryList, ArrayList<SpotFile> sFileList) {
 		super();
 		this.spotId = spotId;
 		this.spotNameKo = spotNameKo;
@@ -48,12 +51,22 @@ public class SpotList implements Serializable{
 		this.recoveryDate = recoveryDate;
 		this.spotCount = spotCount;
 		this.cityId = cityId;
-		this.cityNameKo = cityNameKo;
-		this.cityNameEn = cityNameEn;
 		this.spotStatus = spotStatus;
-		this.countryNameKo = countryNameKo;
-		this.countryNameEn = countryNameEn;
 		this.plcTypeId = plcTypeId;
+		this.cityList = cityList;
+		this.countryList = countryList;
+		this.sFileList = sFileList;
+	}
+
+	@Override
+	public String toString() {
+		return "SpotList [spotId=" + spotId + ", spotNameKo=" + spotNameKo + ", spotNameEn=" + spotNameEn
+				+ ", spotContent=" + spotContent + ", spotAddress=" + spotAddress + ", openingHours=" + openingHours
+				+ ", spotPhone=" + spotPhone + ", webAddress=" + webAddress + ", enrollDate=" + enrollDate
+				+ ", modifyDate=" + modifyDate + ", delDate=" + delDate + ", recoveryDate=" + recoveryDate
+				+ ", spotCount=" + spotCount + ", cityId=" + cityId + ", spotStatus=" + spotStatus + ", plcTypeId="
+				+ plcTypeId + ", cityList=" + cityList + ", countryList=" + countryList + ", sFileList=" + sFileList
+				+ "]";
 	}
 
 	public int getSpotId() {
@@ -168,44 +181,12 @@ public class SpotList implements Serializable{
 		this.cityId = cityId;
 	}
 
-	public String getCityNameKo() {
-		return cityNameKo;
-	}
-
-	public void setCityNameKo(String cityNameKo) {
-		this.cityNameKo = cityNameKo;
-	}
-
-	public String getCityNameEn() {
-		return cityNameEn;
-	}
-
-	public void setCityNameEn(String cityNameEn) {
-		this.cityNameEn = cityNameEn;
-	}
-
 	public String getSpotStatus() {
 		return spotStatus;
 	}
 
 	public void setSpotStatus(String spotStatus) {
 		this.spotStatus = spotStatus;
-	}
-
-	public String getCountryNameKo() {
-		return countryNameKo;
-	}
-
-	public void setCountryNameKo(String countryNameKo) {
-		this.countryNameKo = countryNameKo;
-	}
-
-	public String getCountryNameEn() {
-		return countryNameEn;
-	}
-
-	public void setCountryNameEn(String countryNameEn) {
-		this.countryNameEn = countryNameEn;
 	}
 
 	public int getPlcTypeId() {
@@ -216,16 +197,30 @@ public class SpotList implements Serializable{
 		this.plcTypeId = plcTypeId;
 	}
 
-	@Override
-	public String toString() {
-		return "SpotList [spotId=" + spotId + ", spotNameKo=" + spotNameKo + ", spotNameEn=" + spotNameEn
-				+ ", spotContent=" + spotContent + ", spotAddress=" + spotAddress + ", openingHours=" + openingHours
-				+ ", spotPhone=" + spotPhone + ", webAddress=" + webAddress + ", enrollDate=" + enrollDate
-				+ ", modifyDate=" + modifyDate + ", delDate=" + delDate + ", recoveryDate=" + recoveryDate
-				+ ", spotCount=" + spotCount + ", cityId=" + cityId + ", cityNameKo=" + cityNameKo + ", cityNameEn="
-				+ cityNameEn + ", spotStatus=" + spotStatus + ", countryNameKo=" + countryNameKo + ", countryNameEn="
-				+ countryNameEn + ", plcTypeId=" + plcTypeId + "]";
+	public ArrayList<City> getCityList() {
+		return cityList;
 	}
+
+	public void setCityList(ArrayList<City> cityList) {
+		this.cityList = cityList;
+	}
+
+	public ArrayList<Country> getCountryList() {
+		return countryList;
+	}
+
+	public void setCountryList(ArrayList<Country> countryList) {
+		this.countryList = countryList;
+	}
+
+	public ArrayList<SpotFile> getsFileList() {
+		return sFileList;
+	}
+
+	public void setsFileList(ArrayList<SpotFile> sFileList) {
+		this.sFileList = sFileList;
+	}
+
 	
 	
 }
