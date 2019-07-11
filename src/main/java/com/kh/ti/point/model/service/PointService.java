@@ -105,7 +105,6 @@ public interface PointService {
 	int selectOnePtcp(int requestId);
 	//차감된 userPoint 찾기
 	int selectOnePoint(int mid);
-	
-	
+	//설계자 이름 찾기, 설계번호 찾기
 
 }

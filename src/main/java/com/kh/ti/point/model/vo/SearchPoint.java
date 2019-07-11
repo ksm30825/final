@@ -6,7 +6,7 @@ public class SearchPoint {
 	private String userName;
 	private Date startDate;
 	private Date endDate;
-	private int refundStatus;
+	private int refundStatus;	//10: 대기중, 20: 승인, 30: 거절
 	private int rebateStatus;
 	private int condition;
 	

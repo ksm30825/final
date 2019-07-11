@@ -471,10 +471,18 @@
 			<choose>
 		    	<when test="condition != 99">
 		    		WHERE
+		    		<choose>
+		    			<when test="condition == 10">
+							USER_NAME LIKE '%'||#{userName}||'%' 
+						</when>
+		    			<when test="condition == 30">
+							USER_NAME LIKE '%'||#{userName}||'%' AND REFUND_STATUS = #{refundStatus} 
+						</when>
+						<when test="condition == 20">
+							REFUND_STATUS = #{refundStatus} 
+						</when>
+		    		</choose>
 		    	</when>
-		    	<when test="condition == 10 and userName != null">
-					USER_NAME LIKE '%'||#{userName}||'%' 
-				</when>
 		    </choose>
 		)
 	</select>
@@ -491,12 +499,20 @@
 		<choose>
 	    	<when test="condition != 99">
 	    		WHERE
+	    		<choose>
+					<when test="condition == 10">
+						USER_NAME LIKE '%'||#{userName}||'%' 
+					</when>
+	    			<when test="condition == 30">
+						USER_NAME LIKE '%'||#{userName}||'%' AND REFUND_STATUS = #{refundStatus} 
+					</when>
+					<when test="condition == 20">
+						REFUND_STATUS = #{refundStatus} 
+					</when>
+	    		</choose>
 	    	</when>
-	    	<when test="condition == 10 and userName != null">
-				USER_NAME LIKE '%'||#{userName}||'%' 
-			</when>
 	    </choose>
-	    ORDER BY USE_DATE DESC
+	    ORDER BY APPLY_DATE DESC
 	</select>
 	<!-- 관리자 - 환불 상태 바꿔주기 -->
 	<update id="updateRefund" parameterType="Refund">
@@ -556,4 +572,6 @@
 		FROM MEMBER
 		WHERE MEMBER_ID=#{memberId}
 	</select>
+	<!-- 환불 내역 검색 리스트 카운트 -->
+	
 </mapper>

@@ -250,7 +250,7 @@ public class PointServiceImpl implements PointService{
 	public int selectOnePoint(int memberId) {
 		return pd.selectOnePoint(sqlSession, memberId);
 	}
-	
+	//설계자 이름 찾기, 설계번호 찾기
 
 	
 
