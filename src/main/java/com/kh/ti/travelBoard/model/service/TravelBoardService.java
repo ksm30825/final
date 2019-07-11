@@ -5,9 +5,11 @@ import java.util.HashMap;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.UsePoint;
+import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvBoardSch;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 public interface TravelBoardService {
@@ -41,6 +43,10 @@ public interface TravelBoardService {
 	HashMap myBuyTravelListView(int memberId);
 
 	HashMap myLikeyTravelListView(int memberId);
+
+	TrvBoardSch selectSchContent(int schId);
+
+	ArrayList travelDetailGallery(TrvDaySchedule sch);
 
 
 }

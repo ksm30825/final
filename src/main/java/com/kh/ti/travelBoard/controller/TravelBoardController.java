@@ -23,7 +23,9 @@ import com.kh.ti.common.Pagination;
 import com.kh.ti.member.model.vo.Member;
 import com.kh.ti.point.model.vo.ReservePoint;
 import com.kh.ti.point.model.vo.UsePoint;
+import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travelBoard.model.service.TravelBoardService;
+import com.kh.ti.travelBoard.model.vo.Gallary;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
@@ -194,29 +196,29 @@ public class TravelBoardController {
 		int listCount = tbs.getListCount(pageMap);
 		PageInfo pi = Pagination.getPageInfo(1, listCount);
 		
-		//일정 리스트 조회
+		//리뷰 리스트 조회
 		ArrayList<TourReview> trList = tbs.tourReviewList(pi, tr);
 		model.addAttribute("trList", trList);
 		model.addAttribute("pi", pi);
 		
-		System.out.println("detailDay : " + detailDay);
+		//갤러리 조회
+		TrvDaySchedule sch = new TrvDaySchedule();
+		sch.setTrvId(trvId);
+		ArrayList gallary = tbs.travelDetailGallery(sch);
+		model.addAttribute("gallary", gallary);
 		
-		for(int i = 0; i < detailDay.size(); i++) {
-			TrvDaySchedule tds = (TrvDaySchedule) detailDay.get(i);
-			ArrayList list = (ArrayList) tds.getTrvSchedule();
-			System.out.println("day : " + tds.getDayNumber() );
-			for(int j = 0; j < list.size(); j++) {
-				TrvBoardSch tbs = (TrvBoardSch) list.get(j);
-				ArrayList file = (ArrayList) tbs.getSchFiles();
-				System.out.println("사진 사이즈 : " + file.size());
-				for(int a = 0; a < file.size(); a++) {
-					System.out.println("사진 : " + file.get(a));
-				}
-			}
-			
-		}
+		System.out.println("gal " + gallary.get(0));
 		
 		return "travelBoard/travelDetail";
+	}
+	
+	//여행상세일정 조회
+	@RequestMapping("selectSchContent.tb")
+	public ResponseEntity selectSchContent(int schId) {
+		
+		TrvBoardSch sch = tbs.selectSchContent(schId);
+		
+		return new ResponseEntity(sch, HttpStatus.OK);
 	}
 	
 	//여행일정 구매리뷰 조회용
@@ -390,13 +392,6 @@ public class TravelBoardController {
 		mv.addObject(msg);
 		
 		return mv;
-	}
-	
-	//여행일정 상세 / 날짜별 갤러리 보기 - 예랑
-	@RequestMapping("travelDetailGallery.tb")
-	public String travelDetailGallery() {
-		
-		return "travelBoard/travelDetailGallery";
 	}
 	
 	//마이페이지 / 구매한 일정 보기 - 예랑

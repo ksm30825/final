@@ -7,9 +7,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.UsePoint;
+import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvBoardSch;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 public interface TravelBoardDao {
@@ -43,6 +45,10 @@ public interface TravelBoardDao {
 	HashMap myBuyTravelListView(SqlSessionTemplate sqlSession, int memberId);
 
 	HashMap myLikeyTravelListView(SqlSessionTemplate sqlSession, int memberId);
+
+	TrvBoardSch selectSchContent(SqlSessionTemplate sqlSession, int schId);
+
+	ArrayList travelDetailGallery(SqlSessionTemplate sqlSession, TrvDaySchedule sch);
 
 
 }

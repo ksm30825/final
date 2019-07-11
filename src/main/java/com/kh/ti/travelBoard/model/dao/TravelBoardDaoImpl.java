@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.UsePoint;
+import com.kh.ti.travel.model.vo.SchFile;
 import com.kh.ti.travel.model.vo.Tag;
 import com.kh.ti.travelBoard.model.vo.Likey;
 import com.kh.ti.travelBoard.model.vo.TourReview;
 import com.kh.ti.travelBoard.model.vo.TravelBoard;
+import com.kh.ti.travelBoard.model.vo.TrvBoardSch;
 import com.kh.ti.travelBoard.model.vo.TrvDaySchedule;
 
 @Service
@@ -218,6 +220,20 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		tbMap.put("tbList", tbList);
 		
 		return tbMap;
+	}
+	
+	//여행상세일정 조회
+	@Override
+	public TrvBoardSch selectSchContent(SqlSessionTemplate sqlSession, int schId) {
+		
+		return sqlSession.selectOne("TravelBoard.selectSchContent", schId);
+	}
+	
+	//여행일정 상세 / 날짜별 갤러리 보기 - 예랑
+	@Override
+	public ArrayList travelDetailGallery(SqlSessionTemplate sqlSession, TrvDaySchedule sch) {
+		
+		return (ArrayList) sqlSession.selectList("TravelBoard.travelDetailGallery", sch);
 	}
 	
 
