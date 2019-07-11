@@ -107,8 +107,26 @@
 								<input type="hidden" id="refIdArea">
 								<input type="hidden" id="bidArea">
 								<input type="hidden" id="midArea">
-								<a class="button is-success modalYes" style="border-radius:5px; height:25px;"> 승인 </a>
-								<a class="button is-danger modalNo" style="border-radius:5px; height:25px;"> 거절 </a>
+								<div>
+									<a class="button is-success modalYes" style="border-radius:5px; height:25px;"> 승인 </a>
+									<a class="button is-danger modalNo" style="border-radius:5px; height:25px;"> 거절 </a>
+								</div>
+							</div>
+						</footer>
+					</div>
+				</div>
+			</section>
+			<section class="section" id="modal2">
+				<div class="modal" id="myModal2">
+					<div class="modal-background" id="back2"></div>
+					<div class="modal-card">
+						<header class="modal-card-head">
+							<p class="modal-card-title" id="modalHeader2" style="font-size:15px;text-align:center"></p>
+							<button class="delete" id="del2"></button>
+						</header>
+						<footer class="modal-card-foot">
+							<div style="margin-left:auto;margin-right:auto;">
+								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" id="okay"> 확인 </a>
 							</div>
 						</footer>
 					</div>
@@ -128,9 +146,8 @@
 				$(this).parent().parent().parent().removeClass('is-active');
 			});
 			
-			var memberId = ${sessionScope.loginUser.memberId};
 			var currentPage = 1;
-			total(currentPage, memberId);
+			total(currentPage);
 			//체크 상태에 따라 인풋태그 보여주기
 			$("#searchNameCheck").change(function(){
 				if($("#searchNameCheck").is(":checked")){
@@ -140,21 +157,20 @@
 				}
 			});
 			
-			//검색 버튼 눌렀을 때
-			$("body").on("click", "#search", function(){
-				var memberId = ${sessionScope.loginUser.memberId};//검색 버튼 눌렀을 때
-				searchFunc(currentPage, memberId);//검색 에이작스 함수 호출
-			});
 		});
-		function total(currentPage, memberId){
+		//검색 버튼 눌렀을 때
+		$("body").on("click", "#search", function(){
+			searchFunc(1);
+		});
+		function total(currentPage){
 			var condition = 99;
 			$.ajax({
 				url:"adRefund.po",
 				type:"post",
-				data:{memberId:memberId,currentPage:currentPage, condition:condition},
+				data:{currentPage:currentPage, condition:condition},
 				success:function(data){
 					console.log('success');
-					console.log(data);
+					//console.log(data);
 					makeRefundTB(data.adRefundList, data.adRefundPi, condition);
 				},
 				error:function(data){
@@ -163,7 +179,7 @@
 			});
 		};
 		function makeRefundTB(adRefundList, adRefundPi, condition){
-			console.log(condition);
+			//console.log(condition);
 			$("#aRefundTBody").empty();
 			var len = adRefundList.length;
 			
@@ -179,21 +195,24 @@
 				var $boardId, $useTypeId;
 				var $memberId = $("<input type='hidden'>").val(list.memberId);
 				
+				
 				var $userNameTd = $("<td class='modalOpen'>").text(list.userName);
 				var $emailTd = $("<td class='modalOpen'>").text(list.email);
 				
 				var date = new Date(list.useDate);
 				date = getFormatDate(date);
 				var $useDateTd = $("<td class='modalOpen'>").text(date);
-				
-				var $titleTd;
-				
+				var $titleTd, title;
 				if(list.useType == 10){
-					$titleTd = $("<td class='modalOpen'>").text(list.trvTitle);
+					title = list.trvTitle;
+					title = title.substring(0,6) + '...';
+					$titleTd = $("<td class='modalOpen'>").text(title);
 					$boardId = $("<input type='hidden'>").val(list.trvId);
 					$useTypeId = $("<input type='hidden'>").val(list.useType);
 				}else if(list.useType == 20){
-					$titleTd = $("<td class='modalOpen'>").text(list.planTitle);
+					title = list.planTitle;
+					title = title.substring(0,6) + '...';
+					$titleTd = $("<td class='modalOpen'>").text(title);
 					$boardId = $("<input type='hidden'>").val(list.requestId);
 					$useTypeId = $("<input type='hidden'>").val(list.useType);
 				}
@@ -216,7 +235,7 @@
 				
 				var refundStatus = list.refundStatus;
 				
-				console.log(refundStatus);
+				//console.log(refundStatus);
 				if(refundStatus != 10){
 					$processBtnYes = $('<button id="toApprove" disabled="true" class="button is-success is-outlined yes" style="width:70px;height:20px;line-height:50%;"> 승인 </button>');
 					$processBtnNo = $('<button id="toRefuse" disabled="true" class="button is-danger is-outlined no" style="width:70px;height:20px;line-height:50%;"> 거절 </button>');
@@ -255,11 +274,12 @@
 			}
 			$(".modalOpen").click(function(){
 				$('#myModal').toggleClass('is-active');
-				var title, bid, refId, mid;
+				var title, bid, refId, mid, useTypeId;
 				refId = $(this).parent().children().eq(0).children().eq(0).val();
 				bid = $(this).parent().children().eq(0).children().eq(1).val();
 				mid = $(this).parent().children().eq(0).children().eq(2).val();
 				useTypeId = $(this).parent().children().eq(0).children().eq(3).val();
+				useTypeId = $(this).parent().children().eq(8).css({"background":"red"})
 				
 				if(list.useType == 10){
 					title = list.trvTitle;
@@ -285,7 +305,7 @@
 			var refId = $(this).parent().parent().children().eq(0).children().eq(0).val();
 			var bid = $(this).parent().parent().children().eq(0).children().eq(1).val();
 			var cond = 10;
-			console.log(refId);
+			//console.log(refId);
 			approve(refId, bid, cond);
 		});
 		$("body").on("click", "#toRefuse", function(){
@@ -318,7 +338,6 @@
 		} 
 		function paging(pi, condition){
 			//console.log(pi);
-			var memberId = ${sessionScope.loginUser.memberId};
 			var $page = $(".pagingBtnArea");
 			
 			var currentPage = pi.currentPage;
@@ -331,9 +350,9 @@
 			
 			$page.append($("<button>").attr("class", "pagingBtn").text(" << ").css({"cursor":"pointer"}).click(function(){
 				if(condition == 99){
-					total(1, memberId);
+					total(1);
 				}else{
-					searchFunc(1, memberId);
+					searchFunc(1);
 				}
 			}));
 			
@@ -342,9 +361,9 @@
 			}else{
 				$page.append($("<button>").attr("class", "pagingBtn").text("<").click(function(){
 					if(condition == 99){
-						total(currentPage-1, memberId);
+						total(currentPage-1);
 					}else{
-						searchFunc(currentPage-1, memberId);
+						searchFunc(currentPage-1);
 					}
               }));
 			}
@@ -354,9 +373,9 @@
 				}else{ 
 					$page.append($("<button>").attr("class", "pagingBtn").text(p).css({"cursor":"pointer"}).click(function(){
 						if(condition == 99){
-							total($(this).text(),memberId);
+							total($(this).text());
 						}else{
-							searchFunc($(this).text(),memberId);
+							searchFunc($(this).text());
 						}
 					}));
 				}
@@ -366,17 +385,17 @@
             }else {
             	$page.append($("<button>").attr("class", "pagingBtn").attr("disabled",true).text(" > ").css({"cursor":"pointer"}).click(function(){
             		if(condition == 99){
-            			total(currentPage + 1, memberId);
+            			total(currentPage + 1);
 					}else{
-						searchFunc(currentPage + 1, memberId);
+						searchFunc(currentPage + 1);
 					}
             	}));
             } 
 			$page.append($("<button>").attr("class", "pagingBtn").text(" >> ").css({"cursor":"pointer"}).click(function(){
 				if(condition == 99){
-					total(maxPage, memberId);
+					total(maxPage);
 				}else{
-					searchFunc(maxPage, memberId);
+					searchFunc(maxPage);
 				}
             }));
 		}
@@ -411,56 +430,65 @@
 		    return str;
 		};
 		//검색 에이작스 함수
-		function searchFunc(currentPage, memberId){
-			$("#refundSelect").change(function(){
-				var refundSta = $(this).children('option:selected').val();
-				console.log(refundSta);
-				
-				if(refundSta != 0){
-					
-				}
-			});
-			var userName = $("#nameArea").val();
-			//console.log(userName);
+		function searchFunc(currentPage){
+			//0: 선택 X, 10: 대기중, 20: 승인, 30: 거절
+			var refundSta = $('#refundSelect').children('option:selected').val();
 			
-			var condition = 99;
+			var userName = $("#nameArea").val();
+			
+			var condition = 99; //99 : 평소 상태, 10: 이름만 검색, 20: 상태만 검색, 30: 둘 다 검색
 			
 			var status = 99;//정상
 			
-			if($("#searchNameCheck").is(":checked")){
-				condition = 10;
-				if(userName ==""){
-					status = 10;//비정상
+			var msg;//오류메세지
+			
+			if(refundSta == 0){
+				//상태 검색 X
+				if($("#searchNameCheck").is(":checked")){
+					if(userName ==""){
+						status = 10;//비정상
+						msg = '검색하실 회원의 이름을 입력해주세요';
+					}else{
+						//이름 검색 O
+						condition = 10;
+					}
+				}
+			}else{
+				//상태 검색 O
+				if($("#searchNameCheck").is(":checked")){
+					if(userName ==""){
+						status = 10;//비정상
+						msg = '검색하실 회원의 이름을 입력해주세요';
+					}else{
+						//이름 검색 O
+						condition = 30;
+					}
+				}else{
+					//이름 검색 X
+					condition = 20;
 				}
 			}
 			
 			if(condition == 99){
-				status = 10;
+				status = 10;//비정상
 			}
 			
-			if(startMili <= endMili && status != 10){
+			if(status != 10){
 				$.ajax({
-					url:"seacrchAdPay.po",
+					url:"searchAdRefund.po",
 					type:"post",
-					data:{userName:userName, startDate:startDate, endDate:endDate, condition:condition, currentPage:currentPage},
+					data:{userName:userName, refundSta:refundSta, condition:condition, currentPage:currentPage},
 					success:function(data){
 						console.log('success');	
-						makePayTB(data.adPayList, data.adPayPi, condition);
+						makeRefundTB(data.adRefundList, data.adRefundPi, condition);
 					},
 					error:function(data){
 						console.log('error');
 					}
 				});
-			}else if(startMili > endMili){
+			}else {
 				$('#myModal').removeClass('is-active');
-				$('#modalHeader2').text('검색 시작날짜와 종료날짜의 폼은 맞춰주세요');
-				$("#myModal2").toggleClass('is-active');
-				$("#okay").click(function(){
-					$('#myModal2').removeClass('is-active');
-				});
-			}else if(status ==10){
-				$('#myModal').removeClass('is-active');
-				$('#modalHeader2').text('검색 조건을 입력해주세요');
+				$('#modalHeader2').text(msg);
 				$("#myModal2").toggleClass('is-active');
 				$("#okay").click(function(){
 					$('#myModal2').removeClass('is-active');

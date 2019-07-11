@@ -107,7 +107,7 @@ public interface PointDao {
 	int selectOnePtcp(SqlSessionTemplate sqlSession, int requestId);
 	//차감된 userPoint 찾기
 	int selectOnePoint(SqlSessionTemplate sqlSession, int memberId);
-	
+	//설계자 이름 찾기, 설계번호 찾기
 	
 	
 	

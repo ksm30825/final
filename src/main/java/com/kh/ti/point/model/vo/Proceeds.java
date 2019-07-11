@@ -15,20 +15,35 @@ public class Proceeds implements Serializable {
 	private int ptcpId;			//참여번호
 	private String month;		//검색월
 	
+	private String userName;
+	private String email;
+	private String trvTitle;
+	private int planId;
+	private String planTitle;
+	
+	private int usePoint;
+	private int requestId;
+	
 	public Proceeds() {}
 
-	public Proceeds(int proceedsId, int proceeds, Date proceedsDate, int proceedsType, int memberId, int trvId,
-			int ptcpId, String month, int accumulateProceeds) {
+	public Proceeds(int proceedsId, int proceeds, int accumulateProceeds, Date proceedsDate, int proceedsType,
+			int memberId, int trvId, int ptcpId, String month, String userName, String email, String trvTitle,
+			int planId, String planTitle) {
 		super();
 		this.proceedsId = proceedsId;
 		this.proceeds = proceeds;
+		this.accumulateProceeds = accumulateProceeds;
 		this.proceedsDate = proceedsDate;
 		this.proceedsType = proceedsType;
 		this.memberId = memberId;
 		this.trvId = trvId;
 		this.ptcpId = ptcpId;
 		this.month = month;
-		this.accumulateProceeds = accumulateProceeds;
+		this.userName = userName;
+		this.email = email;
+		this.trvTitle = trvTitle;
+		this.planId = planId;
+		this.planTitle = planTitle;
 	}
 
 	public int getProceedsId() {
@@ -37,6 +52,10 @@ public class Proceeds implements Serializable {
 
 	public int getProceeds() {
 		return proceeds;
+	}
+
+	public int getAccumulateProceeds() {
+		return accumulateProceeds;
 	}
 
 	public Date getProceedsDate() {
@@ -63,8 +82,24 @@ public class Proceeds implements Serializable {
 		return month;
 	}
 
-	public int getAccumulateProceeds() {
-		return accumulateProceeds;
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getTrvTitle() {
+		return trvTitle;
+	}
+
+	public int getPlanId() {
+		return planId;
+	}
+
+	public String getPlanTitle() {
+		return planTitle;
 	}
 
 	public void setProceedsId(int proceedsId) {
@@ -73,6 +108,10 @@ public class Proceeds implements Serializable {
 
 	public void setProceeds(int proceeds) {
 		this.proceeds = proceeds;
+	}
+
+	public void setAccumulateProceeds(int accumulateProceeds) {
+		this.accumulateProceeds = accumulateProceeds;
 	}
 
 	public void setProceedsDate(Date proceedsDate) {
@@ -99,17 +138,33 @@ public class Proceeds implements Serializable {
 		this.month = month;
 	}
 
-	public void setAccumulateProceeds(int accumulateProceeds) {
-		this.accumulateProceeds = accumulateProceeds;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setTrvTitle(String trvTitle) {
+		this.trvTitle = trvTitle;
+	}
+
+	public void setPlanId(int planId) {
+		this.planId = planId;
+	}
+
+	public void setPlanTitle(String planTitle) {
+		this.planTitle = planTitle;
 	}
 
 	@Override
 	public String toString() {
-		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", proceedsDate=" + proceedsDate
-				+ ", proceedsType=" + proceedsType + ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId="
-				+ ptcpId + ", month=" + month + ", accumulateProceeds=" + accumulateProceeds + "]";
+		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", accumulateProceeds="
+				+ accumulateProceeds + ", proceedsDate=" + proceedsDate + ", proceedsType=" + proceedsType
+				+ ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId=" + ptcpId + ", month=" + month
+				+ ", userName=" + userName + ", email=" + email + ", trvTitle=" + trvTitle + ", planId=" + planId
+				+ ", planTitle=" + planTitle + "]";
 	}
-
-	
 	
 }

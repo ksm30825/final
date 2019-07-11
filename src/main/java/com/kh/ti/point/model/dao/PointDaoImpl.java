@@ -303,7 +303,7 @@ public class PointDaoImpl implements PointDao{
 	public int selectOnePoint(SqlSessionTemplate sqlSession, int memberId) {
 		return sqlSession.selectOne("Payment.selectOnePoint", memberId);
 	}
-	
+	//설계자 이름 찾기, 설계번호 찾기
 	
 	
 	
