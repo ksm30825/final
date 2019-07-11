@@ -8,6 +8,8 @@
 		<!-- 세령 -->
 			<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
 			<typeAlias type="com.kh.ti.spot.model.vo.SpotList" alias="Spot"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.SpotCityList" alias="SpotCityList"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.Likey" alias="LikeySpot"/>
 		<!-- 수민 -->
 			<typeAlias type="com.kh.ti.point.model.vo.Payment" alias="Payment"/>
 			<typeAlias type="com.kh.ti.point.model.vo.UsePoint" alias="UsePoint"/>

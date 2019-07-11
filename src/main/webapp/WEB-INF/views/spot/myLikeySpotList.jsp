@@ -90,91 +90,56 @@
 				</div><!-- end condition keyword -->
 			</div> <!-- end spot likey condition search -->
 			
-			<!-- 리스트 반복문처리! -->
-			<!-- city name area -->
-			<div class="field is-horizontal">
-				<div class="field-body">
-					<i class="fas fa-map" style="color: purple; font-size: 30px; margin-right: 10px;"></i>
-					<div class="field">
-						<h3 class="title">도시명</h3>
-					</div>
-				</div>
-			</div> <!-- end city name area -->
-			
-			<!-- list area -->
-			<div class="field is-horizontal" id="scrollArea">
-				<div class="field-body">
-					<c:forEach var="j" begin="1" end="10" step="1">
-						<div class="columns" style="width: 400px; height: 200px;">
-							<div class="column">
-								<div class="field">
-									<div class="card">
-								     <div class="card-image"> 
-								       <figure class="image is-4by3" > <img src="resources/images/main.jpg" alt="Image"> </figure>
-								     </div>
-								     <div class="card-content">
-								       <div class="media">
-								         <div class="media-content">
-								           <p class="is-4"><strong>명소명</strong></p>
-								         </div>
-								         <span class="tag is-primary is-medium"> 명소유형 </span>
-								       </div>
-								     </div>
-								   </div> <!-- end cord -->
-								</div> <!-- end field -->
-							</div>
+			<c:if test="${ !empty spotList }">
+				<!-- 리스트 반복문처리! -->
+				<!-- city name area -->
+				<div class="field is-horizontal">
+					<div class="field-body">
+						<i class="fas fa-map" style="color: purple; font-size: 30px; margin-right: 10px;"></i>
+						<div class="field">
+							<h3 class="title">도시명</h3>
 						</div>
-					</c:forEach>
-				</div> <!-- end field-body -->
-			</div><!-- end list area -->
+					</div>
+				</div> <!-- end city name area -->
+				<!-- list area -->
+				<div class="field is-horizontal" id="scrollArea">
+					<div class="field-body">
+						<c:forEach var="spot" items="${ spotList }">
+							<div class="columns" style="width: 400px; height: 200px;">
+								<div class="column">
+									<div class="field">
+										<div class="card">
+									     <div class="card-image"> 
+									       <figure class="image is-4by3" > <img src="resources/images/main.jpg" alt="Image"> </figure>
+									     </div>
+									     <div class="card-content">
+									       <div class="media">
+									         <div class="media-content">
+									           <p class="is-4"><strong>${ spot.spotNameKo }</strong></p>
+									         </div>
+									         <c:choose>
+									         	<c:when test="${ spot.plcTypeId eq 0 }">
+									         		<span class="tag is-primary is-medium"> 맛집 </span>
+									         	</c:when>
+									         	<c:otherwise>
+									         		<span class="tag is-primary is-medium"> 명소 </span>
+									         	</c:otherwise>
+									         </c:choose>								         
+									       </div>
+									     </div>
+									   </div> <!-- end cord -->
+									</div> <!-- end field -->
+								</div>
+							</div>
+						</c:forEach>
+					</div> <!-- end field-body -->
+				</div><!-- end list area -->
+			</c:if>
+			
 		</section>
          
       </div>   <!-- class="column" -->
    </div>   <!-- class="columns is-mobile" -->
-
-<script>
-	
-	//각 글에 마우스 올렸을 때 설명글
-	$('.special.cards .image').dimmer({
-	  on: 'hover'
-	});
-	
-	function likeyCancel(num) {
-		console.log(num);
-		
-		$("#travelMake").click(function() {
-			alert("일정만들기 작성");
-			location.href="travelMake.tb";
-		})
-		
-		$(".cancel").click(function(){
-			$('#myModal').removeClass('is-active');
-	    });
-	}
-	
-	
-	function myLikeyTravelCancel(trvId) {
-		var answer = confirm("좋아요를 취소하시겠습니까?");
-		
-		if(answer) {
-			$.ajax({
-				url : "travelLikeyDelete.tb",
-				data : {trvId : trvId, memberId : ${ loginUser.memberId } },
-				success : function(data) {
-					alert("좋아요 취소 처리");
-					location.href="myLikeyTravelListView.tb";
-				}
-			})
-		}
-	}
-	
-	$(function() {
-		var menu = $(".myPageMenu li").eq(2);
-          menu.addClass('is-active');
-          menu.siblings().removeClass('is-active');
-	});
-	
-</script>
 
 </body>
 </html>

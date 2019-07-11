@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -122,24 +123,24 @@
 		<div class="column">
 			<!-- list area -->
 			<section class="section">
-			 	<c:forEach var="i" begin="1" end="10" step="1">
-			 		<div class="field" style="border:0.5px solid gray; padding:10px;" class="listItem" onclick="location.href='selectSpotDetailInfo.sp'">
+			 	<c:forEach var="i" begin="0" end="${ fn:length(spotList) - 1 }" step="1">
+			 		<div class="field" style="border:0.5px solid gray; padding:10px;" class="listItem">
 						<article class="media">
 						    <figure class="media-left">
 						      <p class="image">
-						        <img src="resources/images/main.jpg" style="width:400px; height:20%;">
+						        <img src="${ spotList[i].sFileList[0].filePath }" style="width:400px; height:20%;">
 						      </p>
 						    </figure>
 		    				<div class="media-content">
 		      					<div class="content">
 							        <p>
-							          <strong>John Smith</strong> <br>
-							          Spot Address &nbsp;&nbsp;&nbsp; <a href="#">google 지도</a>
-							          <br> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.
+							          <strong>${ spotList[0].spotNameKo}</strong> <br>
+							          ${ spotList[0].spotAddress } &nbsp;&nbsp;&nbsp; <a href="#">google 지도</a>
+							          <br> ${ spotList[0].spotContent } 
 							        </p>
 		      					</div>
 		        			</div>
-					    <div class="media-right">
+					    <div class="media-right" onclick="likeySpot('${ spotList[i].spotId }');">
 					      <a class="level-item">
 					        <span class="icon is-small"> <i class="fas fa-star"></i> </span>
 					      </a>
@@ -165,5 +166,31 @@
 			</section> <!-- end list area -->
 		</div> <!-- end column -->
 	</div> <!-- end columns -->
+	
+	<script>
+		$(function(){
+			console.log('${ fn:length(spotList) }');
+			console.log('${ spotList[0].spotNameKo}');
+			console.log('${ spotList[0].sFileList[0].fileId}');
+		});
+		
+		function likeySpot(spotId){
+			if('${ empty SessionScope.loginUser }' == null){
+				alert ("회원가입이 필요한 서비스 입니다.");
+			} else {
+				$.ajax({
+					url : "insertLikeySpot.sp",
+					type : "post",
+					data : {"spotId" : spotId},
+					success : function(data){
+						alert("좋아요 리스트에 추가했습니다.");
+					},
+					error : function(data){
+						alert("좋아요 리스트에 추가할 수 없습니다.");
+					}
+				}); //end ajax
+			} //end if
+		} //end func
+	</script>
 </body>
 </html>

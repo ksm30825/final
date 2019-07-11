@@ -44,8 +44,8 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="buttons">
-							<c:forEach var="cityName" items="${ cityNameList }" varStatus="names">
-								<a class="button is-primary is-outlined is-rounded"> ${ cityName.cityNameKo  } </a>
+							<c:forEach var="i" begin="0" end="${ fn:length(cityNameList) - 1 }" step="1">
+								<a class="button is-primary is-outlined is-rounded"> ${ cityNameList[i].countryList[0].countryNameKo } </a>
 							</c:forEach>
 						</div>
 					</div>
@@ -53,31 +53,57 @@
 			</div> <!-- end country area -->		
 			
 			<!-- card area -->
-			<c:forEach var="i" begin="0" end="${ fn:length(cityList) - 1 }" step="1">
-				<div class="field is-horizontal">
-					<div class="field-body">
-							<div class="field" onclick="location.href='selectSpotInfoUser.sp'">
-								<div class="card">
+			<!-- card area -->
+			<div class="field is-horizontal">
+				<div class="field-body">
+					<c:forEach var="j" begin="0" end="${ fn:length(cityNameList) - 1 }" step="1">
+						<c:forEach var="i" begin="0" end="${ fn:length(cityNameList[0].cityList ) - 1 }" step="1">
+							<div class="field">
+								<div class="card" style="width: 350px;"  onclick="clickCard('${ cityNameList[i].cityList[i].cityId }');">
 							     <div class="card-image"> 
-							       <figure class="image is-4by3" > <img src="resources/images/main.jpg" alt="Image"> </figure>
+							     	<c:forEach var="n" begin="0" end="4" step="1">
+							     		<c:if test="${ cityList[i].sFileList[n].fileLevel eq 1 && cityList[i].cityList[i].cityId eq cityNameList[j].cityList[i].cityId }">
+							     			<figure class="image"> <img src="${ cityList[i].sFileList[n].filePath }" alt="Image"> </figure>
+							     		</c:if>
+							     	</c:forEach>
 							     </div>
 							     <div class="card-content">
 							       <div class="media">
 							         <div class="media-content">
-							           <p class="title is-4">${ cityList[i].spotNameKo }</p>
+							           <p class="title">${ cityNameList[j].cityList[i].cityNameKo }</p>
 							         </div>
 							       </div>
-							       <div class="content"> ${ cityList[i].spotContent } </div>
+							       <div class="content" style="height: 120px;"> ${ cityNameList[j].cityList[i].cityContent } </div>
 							     </div>
 							   </div> <!-- end cord -->
 							</div> <!-- end field -->
-					</div> <!-- end field-body -->
-				</div> <!-- end is horizontal -->
-			</c:forEach> <!-- end cardArea -->
+						</c:forEach> 
+					</c:forEach>
+				</div> <!-- end field-body -->
+			</div> <!-- end cardArea -->
 			
 			<i class="fas fa-caret-square-up" onclick="location.href='#topPosition'"
 			   style="position:fixed; font-size:40px; right:20px; bottom:10px; color: #5c0099;"></i>
 		</div> <!-- end column -->
 	</div> <!-- end columns -->
+	
+	<script>
+		$(function(){
+			//test
+			console.log('${ cityNameList[0].countryList[0].countryNameKo }');
+			console.log("크기 : " + '${ fn:length(cityNameList )}');
+			console.log('${ cityList }');
+			console.log("cityNameList[0] 크기 : " + '${ fn:length(cityNameList[0].cityList )}');
+			console.log('${ cityNameList[0].cityList[0].cityNameKo }');
+			console.log('${ cityNameList[0].cityList[0].cityContent }');
+			console.log('${ cityList[0].sFileList[0].fileLevel }');
+			console.log('${ cityList[0].cityList[0].cityId }');
+			console.log('${ cityNameList[0].cityList[0].cityId }');
+		});
+		
+		function clickCard(cityId){
+			location.href='selectSpotInfoUser.sp?cityId=' + cityId;
+		}
+	</script>
 </body>
 </html>
