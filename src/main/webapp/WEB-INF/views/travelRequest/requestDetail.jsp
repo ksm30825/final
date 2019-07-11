@@ -76,7 +76,7 @@
 						<tr>
 							<td id="reqId"><b>${ tr.requestId }</b></td>
 							<td>${ tr.requestTitle }</td>
-							<td id="userName">${ userName }</td>
+							<td id="userName">${ loginUser.userName }</td>
 							<td>
 								<input type="hidden" id="uPoint" value="${ tr.requestPrice }">
 								<fmt:formatNumber value="${ tr.requestPrice }" groupingUsed="true"/>원

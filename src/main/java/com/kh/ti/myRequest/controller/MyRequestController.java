@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.common.Pagination;
 import com.kh.ti.myRequest.model.service.MyRequestService;
+import com.kh.ti.myRequest.model.vo.Inquiry;
+import com.kh.ti.penalty.model.vo.Penalty;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
@@ -385,12 +387,6 @@ public class MyRequestController {
 		return "redirect:beforePlan.mr?memberId=" + memberId;
 	}
 
-	// 나의 문의 내역 - 이선우
-	@RequestMapping("myInquiryList.mr")
-	public String selectMyInquiryList(@RequestParam("memberId")int memberId) {
-
-		return "inquiry/myInquiryList";
-	}
 
 	// 문의하기 입력 폼 - 이선우
 	@RequestMapping("goInquiryForm.mr")
@@ -400,14 +396,58 @@ public class MyRequestController {
 	
 	// 문의 내용 인서트 - 이선우
 	@RequestMapping("insertInquiry.mr")
-	public String insertInquiry() {
-		return "";
+	public String insertInquiry(@ModelAttribute Inquiry i) {
+		System.out.println("회원번호 : " + i.getMemberId());
+		System.out.println("문의 제목: " + i.getInquiryTitle());
+		System.out.println("문의종류 : " + i.getInquiryType());
+		System.out.println("문의 내용: " + i.getInquiryContent());
+		
+		int result = mrs.insertInquiry(i);
+		int memberId = i.getMemberId();
+		System.out.println("결과 : " + result);
+		return "redirect:myInquiryList.mr?memberId=" + memberId;
 	}
 
+	// 나의 문의 내역 - 이선우
+	@RequestMapping("myInquiryList.mr")
+	public String selectMyInquiryList(@RequestParam("memberId")int memberId,
+									  HttpServletRequest request,
+									  Model model) {
+		//신고내역 조회
+		int currentPage = 1;
+				
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
+		//전체 목록 조회
+		int listCount = mrs.getInquiryCount(memberId);
+		System.out.println("나의 문의글 수 : " + listCount);
+				
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		System.out.println("pageInfo : " + pi);
+				
+		ArrayList<Inquiry> list = mrs.selectInquiryList(pi, memberId);
+				
+		System.out.println("나의 문의 목록 : " + list);
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		return "inquiry/myInquiryList";
+	}
+	
 	// 나의 문의 상세보기 - 이선우
 	@RequestMapping("myInquiryDetail.mr")
-	public String selectMyInquiryDetail() {
-
-		return "inquiry/myInquiryDetail";
+	public String selectMyInquiryDetail(@RequestParam("inquiryId")int inquiryId,
+										Model model) {
+		System.out.println("문의 번호 : " + inquiryId);
+		
+		Inquiry i = mrs.selectMyInquiryDetail(inquiryId);
+		
+		System.out.println("조회결과  : " + i);
+		model.addAttribute("i", i);
+		if(i != null) {
+			return "inquiry/myInquiryDetail";			
+		} else {
+			return "common/errorPage";
+		}
 	}
 }

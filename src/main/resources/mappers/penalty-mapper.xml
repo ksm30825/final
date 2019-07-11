@@ -4,6 +4,8 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="Penalty">
+
+	<!-- 신고글 목록들 -->
 	<resultMap type="Penalty" id="PenaltyResultSet">
 		<id property="listId" column="LIST_ID"/>
 		<result property="penaltyContent" column="PENALTY_CONTENT" jdbcType="CLOB" javaType="java.lang.String"/>
@@ -12,9 +14,30 @@
 		<result property="processDate" column="PROCESS_DATE"/>
 		<result property="penaltyId" column="PENALTY_ID"/>
 		<result property="complainantId" column="COMPLAINANT_ID"/>
-
 	</resultMap>
 	
+	<!-- 신고분류 -->
+	<resultMap type="PenaltyType" id="PenaltyTypeResultSet">
+		<id property="penaltyId" column="PENALTY_ID"/>
+		<result property="penaltyName" column="PENALTY_NAME"/>
+		<result property="penalty" column="PENALTY"/>
+	</resultMap>
+	
+	<!-- 마이페이지 나의 신고목록들 -->
+	<resultMap type="Penalty" id="myPenaltyList">
+		<id property="listId" column="LIST_ID"/>
+		<result property="list" column="LIST_TYPE"/>
+		<result property="penaltyDate" column="PENALTY_DATE"/>
+		<result property="penaltyResult" column="PENALTY_RESULT"/>
+		<association property="penaltyType" column="PENALTY_NAME"
+					 javaType="PenaltyType" resultMap="PenaltyTypeResultSet"/>
+	</resultMap>
+	
+	<!-- 신고글 상세보기 -->
+	<!-- <resultMap type="Penalty" id="myPaneltyDetail">
+		<id property="listId" column="LIST_ID"/>
+		<result property="penalityContent" />
+	</resultMap> -->
 	<!-- 신고글 인서트 -->
 	<insert id="insertPenalty" parameterType="Penalty">
 		INSERT INTO PENALTY_LIST
@@ -49,4 +72,27 @@
 		INSERT INTO ATTACHMENT_FILE
 		VALUES(ATTACHMENT_SEQ.NEXTVAL, #{originName}, #{changeName}, #{filePath}, SYSDATE, #{fileType}, #{penaltyId}, 1, NULL)
 	</insert>
+	
+	<!-- 나의 신고 수 -->
+	<select id="getPenaltyCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		FROM PENALTY_LIST
+		WHERE COMPLAINANT_ID = #{memberId}
+	</select>
+	
+	<!-- 나의 신고내역 목록 -->
+	<select id="selectPenaltyList" resultMap="myPenaltyList" parameterType="_int">
+		SELECT PL.LIST_ID, PL.LIST_TYPE, P.PENALTY_NAME, PL.PENALTY_DATE, PL.PENALTY_RESULT
+		FROM PENALTY_LIST PL
+		JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+		WHERE COMPLAINANT_ID = #{memberId}
+	</select>
+	
+	<!-- 나의 신고 상세보기 -->
+	<!-- <select id="selectOnePanelty" resultMap="myPaneltyDetail">
+		SELECT *
+		FROM PENALTY_LIST PL
+		JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)
+		WHERE AF.PENALTY_ID = #{listId}
+	</select> -->
 </mapper>

@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.myRequest.model.vo.Inquiry;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
@@ -168,5 +169,33 @@ public class MyRequestDaoImpl implements MyRequestDao{
 		}
 		System.out.println(result3);
 		return result3;
+	}
+
+	//문의하기
+	@Override
+	public int insertInquiry(SqlSessionTemplate sqlSession, Inquiry i) {
+		return sqlSession.insert("Inquiry.insertInquiry", i);
+	}
+
+	//나의 문의글 수
+	@Override
+	public int getInquiryCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Inquiry.getInquiryCount", memberId);
+	}
+
+	//나의 문의글 목록들
+	@Override
+	public ArrayList<Inquiry> selectInquiryList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
+						
+		return (ArrayList)sqlSession.selectList("Inquiry.selectInquiryList", memberId, rowBounds);
+	}
+
+	//나의 문의글 상세보기
+	@Override
+	public Inquiry slectMyInquiryDetail(SqlSessionTemplate sqlSession, int inquiryId) {
+		return sqlSession.selectOne("Inquiry.selectMyInquiryDetail", inquiryId);
 	}
 }

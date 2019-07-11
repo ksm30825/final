@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 //신고 및 문의
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.ti.common.CommonUtils;
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.common.Pagination;
 import com.kh.ti.penalty.model.service.PenaltyService;
 import com.kh.ti.penalty.model.vo.Penalty;
 import com.kh.ti.penalty.model.vo.PenaltyAttachment;
+import com.kh.ti.travelRequest.model.vo.TravelRequest;
 
 @Controller
 public class PenaltyController {
@@ -38,7 +42,8 @@ public class PenaltyController {
 		@RequestMapping("insertPanelty.pe")
 		public String insertPanelty(@ModelAttribute Penalty p,
 				@RequestParam("attachmentFile") ArrayList<MultipartFile> attachmentFile,
-				HttpServletRequest request) {
+				HttpServletRequest request,
+				Model model) {
 			System.out.println(p);
 			System.out.println(attachmentFile);
 			System.out.println(attachmentFile.size());
@@ -112,20 +117,49 @@ public class PenaltyController {
 			System.out.println(p);
 			
 			int result = ps.insertPenalty(p, attachmentFileList);
-			return "redirect:paneltyList.pe";
+			int memberId= p.getComplainantId();
+			return "redirect:paneltyList.pe?memberId=" + memberId;
 		}
 	
 	// 신고 내역 - 이선우
 	@RequestMapping("paneltyList.pe")
-	public String selectPaneltyList() {
-
+	public String selectPaneltyList(@RequestParam("memberId")int memberId,
+									HttpServletRequest request,
+									Model model) {
+		
+		//신고내역 조회
+		int currentPage = 1;
+		
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
+		//전체 목록 조회
+		int listCount = ps.getPenaltyCount(memberId);
+		System.out.println("나의 신고글 수 : " + listCount);
+		
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		System.out.println("pageInfo : " + pi);
+		
+		ArrayList<Penalty> list = ps.selectPenaltyList(pi, memberId);
+		
+		System.out.println("나의 신고 목록 : " + list);
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
 		return "panelty/paneltyList";
 	}
 
 	// 신고 내역상세보기 - 이선우
 	@RequestMapping("paneltyDetail.pe")
-	public String selectPaneltyDetail() {
-
-		return "panelty/paneltyDetail";
+	public String selectPenaltyDetail(@RequestParam("listId")int listId) {
+		System.out.println("신고 번호 : " + listId);
+		
+		Penalty p = ps.selectOnePenalty(listId);
+		System.out.println("조회 결과 : " + p);
+		
+		if(p != null) {
+			return "panelty/paneltyDetail";			
+		} else {
+			return "common/errorPage";
+		}
 	}
 }

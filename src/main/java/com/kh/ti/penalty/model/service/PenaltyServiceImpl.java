@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 
+import com.kh.ti.common.PageInfo;
 import com.kh.ti.penalty.model.dao.PenaltyDao;
 import com.kh.ti.penalty.model.vo.Penalty;
 import com.kh.ti.penalty.model.vo.PenaltyAttachment;
@@ -38,5 +39,23 @@ public class PenaltyServiceImpl implements PenaltyService{
 			result = 0;
 		}
 		return result;
+	}
+
+	//신청한 신고내역 수
+	@Override
+	public int getPenaltyCount(int memberId) {
+		return pd.getPenaltyCount(sqlSession, memberId);
+	}
+
+	//신고글 내역들 조회
+	@Override
+	public ArrayList<Penalty> selectPenaltyList(PageInfo pi, int memberId) {
+		return pd.selectPenaltyList(sqlSession, pi, memberId);
+	}
+
+	//신고글 상세조회
+	@Override
+	public Penalty selectOnePenalty(int listId) {
+		return pd.selectOnePanelty(sqlSession, listId);
 	}
 }
