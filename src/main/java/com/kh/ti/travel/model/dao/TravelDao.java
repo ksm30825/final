@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.spot.model.vo.SpotList;
 import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.SchFile;
@@ -171,6 +172,10 @@ public interface TravelDao {
 	ArrayList<Travel> selectSharedTrvList(SqlSessionTemplate sqlSession, int memberId);
 
 	int selectPublicTrvCount(SqlSessionTemplate sqlSession, int memberId);
+
+	ArrayList<HashMap> selectLikeySpotList(SqlSessionTemplate sqlSession, Travel trv);
+
+	ArrayList<HashMap> selectRecommSpotList(SqlSessionTemplate sqlSession, Travel trv);
 
 
 
