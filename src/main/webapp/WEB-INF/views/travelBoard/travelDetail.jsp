@@ -120,7 +120,7 @@
 				</div>
 			</section>
 			
-			 <!-- 상단 타이틀 -->
+			<!-- 상단 타이틀 -->
 			<section class="section" style="padding-bottom:0;">
 				<div class="columns">
 					<div class="column" id="title">
@@ -630,17 +630,6 @@
 		});
 	}
 	
-	$(".photo").click(function() {
-		
-		$.ajax({
-			url : "selectGallery.tb",
-			data : {},
-			success : function() {
-				alert("갤러리 모달창 띄우기");
-			}
-		});
-	});
-	
 	$(".place").click(function() {
 		alert("여행지 정보로 연결");
 	});
@@ -715,13 +704,6 @@
 			}
 		});
 	});
-	
-	//상세일정 펼치기
-/* 	$('#button').toggle(function() {
-  $(this).parent().css('height', 'auto');
-}, function() {
-  $(this).parent().css('height', '18px');
-}); */
 
 	$(".card-header-icon").click(function() {
 		var dayNumber = $(this).children("input[name=dayNum]").val();
@@ -777,7 +759,7 @@
 		$(".dayList").removeClass("is-active");
 		$(this).addClass("is-active");
 		
-		$(".dayTitle").show();
+		$(".gallay").show();
 	});
 	$("#gallaryMenu>li>ul>li").children('a').click(function() {
 		
@@ -792,8 +774,6 @@
 		
 	});
 	
-	
-
 </script>
 </body>
 </html>
