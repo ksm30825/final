@@ -177,6 +177,8 @@ public class TravelBoardController {
 		ArrayList detailDay = tbs.selectTravelDetailDays(tb);
 		model.addAttribute("detailDay", detailDay);
 		
+		System.out.println("detailDay:" + detailDay);
+		
 		//가계부 정보 조회
 		HashMap trvCost = tbs.selectTravelCost(trvId);
 		model.addAttribute("allCost", trvCost.get("allCost"));
@@ -206,8 +208,6 @@ public class TravelBoardController {
 		sch.setTrvId(trvId);
 		ArrayList gallary = tbs.travelDetailGallery(sch);
 		model.addAttribute("gallary", gallary);
-		
-		System.out.println("gal " + gallary.get(0));
 		
 		return "travelBoard/travelDetail";
 	}
@@ -419,6 +419,12 @@ public class TravelBoardController {
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		
 		return "travelBoard/myLikeyTravelList";
+	}
+	
+	//지우기
+	@RequestMapping("showMapTest.tb")
+	public String showMapTest() {
+		return "travelBoard/mapTest";
 	}
 	
 }

@@ -8,7 +8,7 @@ public class Penalty implements Serializable{
 	private int listId;		//신고번호
 	private String penaltyContent;		//신고내용
 	private Date penaltyDate;		//신고일
-	private String penalityResult;		//신고결과
+	private String penaltyResult;		//신고결과
 	private Date processDate;		//처리일
 	private int penaltyId;		//신고종류코드
 	private int complainantId;		//신고인 번호
@@ -22,18 +22,19 @@ public class Penalty implements Serializable{
 	private int requestId;			//의뢰번호
 	private int memberPenalty;		//벌점
 	private ArrayList<PenaltyAttachment> attachmentFileList;	//사진들
+	private PenaltyType penaltyType;
 	
 	public Penalty() {}
 
-	public Penalty(int listId, String penaltyContent, Date penaltyDate, String penalityResult, Date processDate,
+	public Penalty(int listId, String penaltyContent, Date penaltyDate, String penaltyResult, Date processDate,
 			int penaltyId, int complainantId, String list, String listType, String rejectionReson, int trvId,
 			int reviewId, int memberId, int planId, int requestId, int memberPenalty,
-			ArrayList<PenaltyAttachment> attachmentFileList) {
+			ArrayList<PenaltyAttachment> attachmentFileList, PenaltyType penaltyType) {
 		super();
 		this.listId = listId;
 		this.penaltyContent = penaltyContent;
 		this.penaltyDate = penaltyDate;
-		this.penalityResult = penalityResult;
+		this.penaltyResult = penaltyResult;
 		this.processDate = processDate;
 		this.penaltyId = penaltyId;
 		this.complainantId = complainantId;
@@ -47,6 +48,7 @@ public class Penalty implements Serializable{
 		this.requestId = requestId;
 		this.memberPenalty = memberPenalty;
 		this.attachmentFileList = attachmentFileList;
+		this.penaltyType = penaltyType;
 	}
 
 	public int getListId() {
@@ -73,12 +75,12 @@ public class Penalty implements Serializable{
 		this.penaltyDate = penaltyDate;
 	}
 
-	public String getPenalityResult() {
-		return penalityResult;
+	public String getPenaltyResult() {
+		return penaltyResult;
 	}
 
-	public void setPenalityResult(String penalityResult) {
-		this.penalityResult = penalityResult;
+	public void setPenaltyResult(String penaltyResult) {
+		this.penaltyResult = penaltyResult;
 	}
 
 	public Date getProcessDate() {
@@ -185,13 +187,21 @@ public class Penalty implements Serializable{
 		this.attachmentFileList = attachmentFileList;
 	}
 
+	public PenaltyType getPenaltyType() {
+		return penaltyType;
+	}
+
+	public void setPenaltyType(PenaltyType penaltyType) {
+		this.penaltyType = penaltyType;
+	}
+
 	@Override
 	public String toString() {
 		return "Penalty [listId=" + listId + ", penaltyContent=" + penaltyContent + ", penaltyDate=" + penaltyDate
-				+ ", penalityResult=" + penalityResult + ", processDate=" + processDate + ", penaltyId=" + penaltyId
+				+ ", penaltyResult=" + penaltyResult + ", processDate=" + processDate + ", penaltyId=" + penaltyId
 				+ ", complainantId=" + complainantId + ", list=" + list + ", listType=" + listType + ", rejectionReson="
 				+ rejectionReson + ", trvId=" + trvId + ", reviewId=" + reviewId + ", memberId=" + memberId
 				+ ", planId=" + planId + ", requestId=" + requestId + ", memberPenalty=" + memberPenalty
-				+ ", attachmentFileList=" + attachmentFileList + "]";
+				+ ", attachmentFileList=" + attachmentFileList + ", penaltyType=" + penaltyType + "]";
 	}
 }

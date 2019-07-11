@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ti.common.PageInfo;
+import com.kh.ti.myRequest.model.vo.Inquiry;
 import com.kh.ti.travelRequest.model.vo.Participation;
 import com.kh.ti.travelRequest.model.vo.PlanDay;
 import com.kh.ti.travelRequest.model.vo.PlanPlace;
@@ -50,5 +51,13 @@ public interface MyRequestDao {
 	int updateBeforeDay(SqlSessionTemplate sqlSession, ArrayList<PlanDay> dayList);
 
 	int updateBeforePlace(SqlSessionTemplate sqlSession, ArrayList<PlanPlace> placeList);
+
+	int insertInquiry(SqlSessionTemplate sqlSession, Inquiry i);
+
+	int getInquiryCount(SqlSessionTemplate sqlSession, int memberId);
+
+	ArrayList<Inquiry> selectInquiryList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId);
+
+	Inquiry slectMyInquiryDetail(SqlSessionTemplate sqlSession, int inquiryId);
 	
 }

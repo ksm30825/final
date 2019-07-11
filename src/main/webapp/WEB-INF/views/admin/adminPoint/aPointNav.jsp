@@ -25,12 +25,12 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a href="allAdProceeds.po" class="apointPro">
+	        <a href="toAdProceedsView.po" class="apointPro">
 	          <span style="color:#ccccff;"><i class='fas fa-coins'></i>&nbsp;수익금 내역</span>
 	        </a>
 	      </li>
 	      <li>
-	        <a href="allAdRebate.po" class="apointReb">
+	        <a href="toAdRebateView.po" class="apointReb">
 	          <span style="color:#ccccff;"><i class='fas fa-money-check-alt'></i>&nbsp;환급 내역</span>
 	        </a>
 	      </li>

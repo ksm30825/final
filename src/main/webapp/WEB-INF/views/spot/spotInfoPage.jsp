@@ -45,7 +45,7 @@
 		<div class="column">
 			<!-- title -->
 			<section class="section">
-				<h1 class="title" style="color:gray;"><b style="color:black;">Country Name(KO)</b> Country Name(EN)</h1>
+				<h1 class="title" style="color:gray;"><b style="color:black;">${ countryInfo.countryNameKo }</b> &nbsp; ${ countryInfo.countryNameEn }</h1>
 			</section> <!-- end title -->
 			
 			<!-- content -->
@@ -54,7 +54,8 @@
 				<!-- header -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-							<img src="resources/images/main.jpg" style="margin-right:10px; width:45%; height:300px;">
+							<img src="${ cityFile[0].filePath }" id="bigImgArea"
+								 style="margin-right:10px; width:45%; height:300px;">
 						<div class="field">
 							<!-- 날씨 --><div class="field" style="background-color:blue; width:100%; height:50%;"></div>
 							<!-- 환율 --><div class="field" style="background-color:yellow; width:100%; height:50%;"></div>
@@ -67,9 +68,9 @@
 				<!-- header sub pic area -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<c:forEach var="i" begin="1" end="4" step="1">
-							<div class="field">
-								<img class="image" src="resources/images/main.jpg">
+						<c:forEach var="cityFile" items="${ cityFile }">
+							<div class="field" onclick="changeImg('${ cityFile.filePath }', this);" id="smallImgArea">
+								<img class="image" src="${ cityFile.filePath }" style="width: 300px; height: 180px;">
 							</div>
 						</c:forEach>
 					</div>
@@ -123,24 +124,24 @@
 		<div class="column">
 			<!-- list area -->
 			<section class="section">
-			 	<c:forEach var="i" begin="0" end="${ fn:length(spotList) - 1 }" step="1">
+			 	<c:forEach var="cityInfo" items="${ spotList }">
 			 		<div class="field" style="border:0.5px solid gray; padding:10px;" class="listItem">
 						<article class="media">
 						    <figure class="media-left">
 						      <p class="image">
-						        <img src="${ spotList[i].sFileList[0].filePath }" style="width:400px; height:20%;">
+						        <img src="${ cityInfo.filePath }" style="width:400px; height:20%;">
 						      </p>
 						    </figure>
 		    				<div class="media-content">
 		      					<div class="content">
 							        <p>
-							          <strong>${ spotList[0].spotNameKo}</strong> <br>
-							          ${ spotList[0].spotAddress } &nbsp;&nbsp;&nbsp; <a href="#">google 지도</a>
-							          <br> ${ spotList[0].spotContent } 
+							          <strong>${ cityInfo.spotNameKo}</strong> <br>
+							          ${ cityInfo.spotAddress } &nbsp;&nbsp;&nbsp; <a href="#">google 지도</a>
+							          <br> ${ cityInfo.spotContent } 
 							        </p>
 		      					</div>
 		        			</div>
-					    <div class="media-right" onclick="likeySpot('${ spotList[i].spotId }');">
+					    <div class="media-right" onclick="likeySpot('${ cityInfo.spotId }');">
 					      <a class="level-item">
 					        <span class="icon is-small"> <i class="fas fa-star"></i> </span>
 					      </a>
@@ -169,9 +170,10 @@
 	
 	<script>
 		$(function(){
-			console.log('${ fn:length(spotList) }');
+			/* console.log('${ fn:length(spotList) }');
 			console.log('${ spotList[0].spotNameKo}');
-			console.log('${ spotList[0].sFileList[0].fileId}');
+			console.log('${ spotList[0].sFileList[0].fileId}'); */
+			
 		});
 		
 		function likeySpot(spotId){
@@ -183,13 +185,17 @@
 					type : "post",
 					data : {"spotId" : spotId},
 					success : function(data){
-						alert("좋아요 리스트에 추가했습니다.");
+						alert(data);
 					},
 					error : function(data){
-						alert("좋아요 리스트에 추가할 수 없습니다.");
+						alert(data);
 					}
 				}); //end ajax
 			} //end if
+		} //end func
+		
+		function changeImg(srcVal, divArea){
+			$("#bigImgArea").attr("src", srcVal);
 		} //end func
 	</script>
 </body>

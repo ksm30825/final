@@ -305,12 +305,25 @@ public class PointController {
 		return mv.getModel();
 	}
 	
+	//-------------------------------------------------------------------------------일정작성, 일정리뷰, 명소리뷰
 	//포인트 지급 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(리뷰면 리뷰, 일정작성이면 일정작성)--수민
 	@RequestMapping("/oneBoardRPoint.po")
 	public String selectOneBoardRPoint(String mid, String bid) {
 		int memberId = Integer.parseInt(mid);
 		int boardCode = Integer.parseInt(bid);
+//		int reserveType = Integer.parseInt(rType);
+//		
+//		if(reserveType == 10) {
+//			//일정 작성
+//			return "redirect:/selectTravel.trv?trvId="+boardCode;//-------------------------------------------------------------------------------
+//		}else if(reserveType == 20) {
+//			//일정 리뷰
+//			return "redirect:/selectTravel.trv?trvId="+boardCode;
+//		}else {
+//			//명소 리뷰
+//			return "redirect:/selectTravel.trv?trvId="+boardCode;
+//		}
 		
 		//System.out.println("memberID : " + memberId);
 		//System.out.println("boardCode : " + boardCode);
@@ -323,9 +336,8 @@ public class PointController {
 		
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		String userName = loginUser.getUserName();
+		System.out.println("userName : " + userName);
 		
-		//System.out.println("memberID : " + memberId);
-		//System.out.println("boardCode : " + boardCode);
 		return "redirect:/requestDetail.tr?reqId="+bid+"&userName="+userName;//-------------------------------------------------------------------------------
 	}
 	//포인트 자동 인서트!!
@@ -765,23 +777,23 @@ public class PointController {
 			sp.setStartDate(startDate);
 			sp.setEndDate(endDate);
 			sp.setCondition(condition);
-			System.out.println("condition 30 -> sp : " + sp);
+			//System.out.println("condition 30 -> sp : " + sp);
 		}else if(condition == 10) {
 			//이름만 검색 조건
 			sp.setUserName(userName);
 			sp.setCondition(condition);
-			System.out.println("condition 10 -> sp : " + sp);
+			//System.out.println("condition 10 -> sp : " + sp);
 		}else if(condition == 20) {
 			//날짜만 검색 조건
 			sp.setStartDate(startDate);
 			sp.setEndDate(endDate);
 			sp.setCondition(condition);
-			System.out.println("condition 20 -> sp : " + sp);
+			//System.out.println("condition 20 -> sp : " + sp);
 		}
 		
-		System.out.println("sp : " + sp);
+		//System.out.println("sp : " + sp);
 		int adPaySearchListCount = ps.getAdPaySearchListCount(sp);
-		System.out.println("adPaySearchListCount : " + adPaySearchListCount);
+		//System.out.println("adPaySearchListCount : " + adPaySearchListCount);
 		
 		int adPayCurrentPage = currentPage;
 		
@@ -856,11 +868,30 @@ public class PointController {
 	
 	
 	//수익금 전체 내역 테이블--수민
-	@RequestMapping("/allAdProceeds.po")
+	@RequestMapping("/toAdProceedsView.po")
 	public String adSelectAllProceeds() {
 		
 		return "admin/adminPoint/aProceeds";
 	}	
+	@RequestMapping("/adProceeds.po")
+	public ResponseEntity adSelectAllProceeds(@RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
+		SearchPoint sp = new SearchPoint();
+		sp.setCondition(condition);
+		
+//		int adProceedsListCount = ps.getAdProceedsListCount(sp);
+//		
+//		int adProceedsCurrentPage = currentPage;
+//		
+//		PageInfo adProceedsPi = Pagination.getPageInfo(adProceedsCurrentPage, adProceedsListCount);
+//		
+//		ArrayList<Payment> adProceedsList = ps.selectAdProceedsList(adProceedsPi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+//		hmap.put("adPointList", adProceedsList);
+//		hmap.put("adPointPi", adProceedsPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
+	}
 	//수익금 회원 검색 내역 테이블--수민
 	@RequestMapping("/oneMemberAdProceeds.po")
 	public ModelAndView adSearchOneMemberProceeds(String userName, ModelAndView mv) {
@@ -878,7 +909,7 @@ public class PointController {
 	
 	
 	//수익금 환급 내역 전체 조회--수민
-	@RequestMapping("/allAdRebate.po")
+	@RequestMapping("/toAdRebateView.po")
 	public String adSelectAllRebate() {
 		
 		return "admin/adminPoint/aRebate";
@@ -928,7 +959,7 @@ public class PointController {
 	}
 	//환불 내역 전체 조회
 	@RequestMapping("/adRefund.po")
-	public ResponseEntity adSelectAllRefund(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
+	public ResponseEntity adSelectAllRefund(@RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
 		SearchPoint sp = new SearchPoint();
 		sp.setCondition(condition);
 		
@@ -947,10 +978,49 @@ public class PointController {
 		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	//포인트 환불 검색 내역--수민
-	@RequestMapping("/oneMemberAdRefund.po")
-	public ModelAndView adSelectOneMemberRefund(String userName, ModelAndView mv) {
+	@RequestMapping("/searchAdRefund.po")
+	public ResponseEntity adSelectOneMemberRefund(@RequestParam("userName") String userName, @RequestParam("refundSta") int refundSta, 
+			@RequestParam("condition") int condition, @RequestParam("currentPage") int currentPage) {
 		
-		return mv;
+		System.out.println("userName : " + userName);
+		System.out.println("refundSta : " + refundSta);
+		System.out.println("condition : " + condition);
+		SearchPoint sp = new SearchPoint();
+		
+		if(condition == 30) {
+			//이름과 셀렉트박스가 검색 조건
+			sp.setUserName(userName);
+			sp.setRefundStatus(refundSta);
+			sp.setCondition(condition);
+			//System.out.println("condition 30 -> sp : " + sp);
+		}else if(condition == 10) {
+			//이름만 검색 조건
+			sp.setUserName(userName);
+			sp.setCondition(condition);
+			//System.out.println("condition 10 -> sp : " + sp);
+		}else if(condition == 20) {
+			//셀렉트박스만 검색 조건
+			sp.setRefundStatus(refundSta);
+			sp.setCondition(condition);
+			//System.out.println("condition 20 -> sp : " + sp);
+		}
+		
+		System.out.println("sp : " + sp);
+		int adRefundSearchListCount = ps.getAdRefundListCount(sp);
+		System.out.println("adRefundSearchListCount : " + adRefundSearchListCount);
+		
+		int adRefundCurrentPage = currentPage;
+		
+		PageInfo adRefundPi= Pagination.getPageInfo(adRefundCurrentPage, adRefundSearchListCount);
+		
+		ArrayList<Payment> adRefundList = ps.selectAdRefundList(adRefundPi, sp);
+		
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adRefundList", adRefundList);
+		hmap.put("adRefundPi", adRefundPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//포인트 환불 승인여부 update 
@@ -981,7 +1051,7 @@ public class PointController {
 		
 		//환불 신청한 내역에서 refundId가 일치하는 하나의 환불내역 조회
 		Refund updatedRefund = ps.selectOneRefund(refund);
-		System.out.println("updatedRefund : " + updatedRefund);
+		//System.out.println("updatedRefund : " + updatedRefund);
 		
 		//산 사람한테 포인트 돌려주기
 		//member테이블의 userPoint 증가
@@ -994,13 +1064,13 @@ public class PointController {
 		if(updatedRefund.getUseType() == 10) {
 			//여행일정
 			proceeds = ps.selectMemberIdTrv(updatedRefund);
-			System.out.println("TRV Proceeds : " + proceeds);
+			//System.out.println("TRV Proceeds : " + proceeds);
 		}else if(updatedRefund.getUseType() == 20) {
 			//설계채택
 			proceeds = ps.selectMemberIdRequest(updatedRefund);
-			System.out.println("PLAN Proceeds : " + proceeds);
+			//System.out.println("PLAN Proceeds : " + proceeds);
 		}
-		System.out.println("Proceeds : " + proceeds);
+		//System.out.println("Proceeds : " + proceeds);
 		int updateUserProceeds = ps.updateUserProceedsRefund(proceeds);
 		
 		if(updatedRefund.getUseType() == 10) {

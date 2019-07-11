@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.kh.ti.spot.model.dao.SpotDao;
 import com.kh.ti.spot.model.vo.Likey;
-import com.kh.ti.spot.model.vo.SpotCityList;
+import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
+import com.kh.ti.travel.model.vo.Country;
 
 @Service
 public class SpotServiceImpl implements SpotService{
@@ -20,21 +21,10 @@ public class SpotServiceImpl implements SpotService{
 	@Autowired
 	private SpotDao sd;
 
-	//명소 도시 조회용 - 세령
-	@Override
-	public ArrayList<SpotCityList> selectCityNames() {
-		return sd.selectCityNames(sqlSession);
-	}
-
-	//도시 전체 조회용 - 세령
-	@Override
-	public ArrayList<SpotCityList> selectCityList() {
-		return sd.selectCityList(sqlSession);
-	}
 
 	//도시 상세보기용 - 세령
 	@Override
-	public ArrayList<SpotList> selectSpotList(int cityId) {
+	public ArrayList<HashMap> selectSpotList(int cityId) {
 		return sd.selectSpotList(sqlSession, cityId);
 	}
 	
@@ -50,5 +40,31 @@ public class SpotServiceImpl implements SpotService{
 		return sd.selectMyLikeySpotList(sqlSession, memberId);
 	}
 	
+	//-----------------------------
+
+	//여행지의 국가명만 조회 - 세령
+	@Override
+	public ArrayList<Country> selectCountryList() {
+		return sd.selectCountryList(sqlSession);
+	}
+
+	//여행지의 도시정보 조회(전체) - 세령
+	@Override
+	public ArrayList<HashMap> selectCityMap() {
+		return sd.selectCityMap(sqlSession);
+	}
+
+	//CITY ID로 도시정보 조회 - 세령
+	@Override
+	public Country selectCountryOneInfo(int cityId) {
+		return sd.selectCountryOneInfo(sqlSession, cityId);
+	}
+
+	//CITY ID로 도시 사진 조회 - 세령
+	@Override
+	public ArrayList<SpotFile> selectCityFile(int cityId) {
+		return sd.selectCityFile(sqlSession, cityId);
+	}
+
 
 }

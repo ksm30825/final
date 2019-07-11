@@ -58,8 +58,8 @@
                   <a class="navbar-item subnav" href="toAPaymentView.po"> 결제 내역 관리 </a> 
                   <a class="navbar-item subnav" href="toAPointView.po"> 포인트 내역 관리 </a>
                   <a class="navbar-item subnav" href="toAdRefundView.po" style="font-size:0.8em;margin-left:7%;" > 환불 관리</a>
-                  <a class="navbar-item subnav" href="allAdProceeds.po"> 수익금 내역 관리 </a>
-                  <a class="navbar-item subnav" href="allAdRebate.po" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
+                  <a class="navbar-item subnav" href="toAdProceedsView.po"> 수익금 내역 관리 </a>
+                  <a class="navbar-item subnav" href="toAdRebateView.po" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
                 </div>
           	</div>
             <a class="navbar-item " href="genderStatisticsYear.sta"> <strong>통계관리</strong> </a>

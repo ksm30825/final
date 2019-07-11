@@ -58,26 +58,20 @@
                     </a>
                 </p>
             </div>
+            <div class="navbar-item field is-grouped" style="margin:0" id="memberInArea">
+      		</div>
          	<div class="navbar-burger burger is-hidden-tablet">
-		        <!-- <a class="button is-primary is-rounded" href="#"> 
-                    <i class="fas fa-users"></i>
-                </a> -->
 		    	<a class="navbar-item" href="index.jsp"> 
 		            <img src="resources/images/logoWide.png" width="120px" height="40px">
 		        </a>
          	</div> 
 		</div>
       	<div id="mainNav" class="navbar-menu">
-         	<div class="navbar-start">
-			</div>
+      		<div class="navbar-start">
+      			
+      		</div>
         	<div class="navbar-end">
-        		<!-- <div class="navbar-item field" style="margin:0" data-tooltip="동행초대" data-position="left center">
-	         		<p class="control">
-	         			<a class="button is-primary is-rounded">
-	                        <i class="fas fa-users"></i><br>
-	                    </a>
-	            	</p>
-	            </div> --> 
+        		
             	<div class="navbar-brand">
 		        	<a class="navbar-item" href="index.jsp"> 
 		            	<img src="resources/images/logoWide.png" width="120px" height="40px">
@@ -679,6 +673,23 @@
 			});
 		}
 	
+		function placeTextSearch(placeName, map, insert) {
+			console.log(placeName);
+			var request = { 
+				query:placeName,
+				fields:['place_id', 'name']
+			};
+			service.findPlaceFromQuery(request, function(results, status) {
+				if(status === google.maps.places.PlacesServiceStatus.OK) {
+					placeDetailSearch(results[0].place_id, map);
+					if(insert == "insert") {
+						$("#plcId1").val(results[0].place_id);
+						$("#plcName1").val(results[0].name);
+					}
+				}
+			});
+		}
+		
 		
 		function placeDetailSearch(placeId, map) {
 			var request = {
@@ -848,5 +859,62 @@
 		}
 	
 	</script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+	<script>
+		$(function() {
+			var socket = io.connect('http://127.0.0.1:3000');
+			var members;
+			if(socket !== undefined) {
+				console.log('Socket connected');
+				socket.emit('memberIn', {
+					name:"${ loginUser.userName }",
+					email:"${ loginUser.email }"
+				});
+				
+				socket.on('load', function(data) {
+					members = data;
+					for(var key in data) {
+						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
+						+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
+						$("#memberInArea").append(a);
+					}
+				});
+				
+				socket.on('memberIn', function(data) {
+					members = data;
+					console.log(data);
+					$("#memberInArea").empty();
+					for(var key in data) {
+						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
+						+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
+						$("#memberInArea").append(a);
+					}
+					
+					/* if(data.email == "${ loginUser.email }") {
+						var a = "<p><a class='button is-success' data-tooltip='나' data-variation='mini' data-position='left center'>" 
+						+ data.name.charAt(0) + "</a></p>"
+					}else {
+						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data.email + "(" + data.name + ")' data-variation='mini'" 
+						+ " data-position='left center'>" + data.name.charAt(0) + '</a></p>';
+					}
+					$("#memberInArea").append(a); */
+				});
+				
+				
+				socket.on('memberOut', function(data) {
+					$("#memberInArea").empty();
+					for(var key in data) {
+						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
+						+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
+						$("#memberInArea").append(a);
+					}
+				});
+				
+			}
+		});
+	</script>
+	
+	
 </body>
 </html>
