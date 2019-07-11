@@ -164,9 +164,50 @@
 			        			 } 
 			        	 });	        	
 	        		});
-	        	}
+			 		
+			 		
+			 		
+		 		 	//채팅상태 변화 했을때 
+		 		 	 socket.on('updateChatSatus', function(data){
+		        		  var changeChatId = data._id;
+		        		  
+		        		  $(".MyChatList").each(function(index ,item) {
+		        			  var checkUserID = $(this).children().children().children().children("#chatNum").val();
+			        			 console.log("updateChatId : " + changeChatId + "- checkUserId :" + checkUserID);
+			        			 if (checkUserID == changeChatId){
+			        				$(this).remove();
+
+			        				var output = '';
+					                 output += '<table id = "MyChatTable" class = "MyChatList" style = "width: 100%;">';
+					                 output += '<tr>';
+						     		 output += '<td colspan = "4" class = "chName">';
+						     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data._id +'">';
+						     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+						     		 output += '<label>'+ data.title +'</label></td>'
+						     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
+					     			 output += '</tr>';
+						     		 output += '<tr style=  "border-bottom : 1px solid lightgray;">';
+						     		 output += '<td colspan = "5">';
+						     		 output += '<i class="material-icons" id = "peopleIcon">group</i>';
+						     		 output +=	'&nbsp;&nbsp;&nbsp;<label>('+ data.activityNum + '/' + data.peoplenum +')</label>';
+						     		 output +=	'</td></tr>'
+					                 output += '</table>';
+					                 $(output).appendTo('#listWrap');
+					                 
+					                 console.log(data._id);
+			        				
+			        			 } 
+			        	 });
+		 		 	 
+		        		  
+		        	 });
+			 		
+			 		
+	        	} //if end 
 	        	
-	     });
+	        	
+	        	
+	     }); //end
 	 
 	  </script>
 </body>

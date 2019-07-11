@@ -421,7 +421,7 @@
 	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
 	    	                 output += '<tr>';
 	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
-	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.updateChatId +'">';
+	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ updateChatId +'">';
 	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
 	    		     		 output += '<label>'+ data.title +'</label></td>'
 	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
@@ -457,7 +457,7 @@
 	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
 	    	                 output += '<tr>';
 	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
-	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.updateChatId +'">';
+	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ updateChatId +'">';
 	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
 	    		     		 output += '<label>'+ data.title +'</label></td>'
 	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
@@ -471,11 +471,50 @@
 	    	                 $(output).prependTo('#menu1');
 	        				
 	        			 } 
-	        	 });
-	 		 		
-	 		 		
+	        		 });
 	 		 		
 	 		 	});
+	 		 	
+	 		 	//채팅상태 변화 했을때 
+	 		 	 socket.on('updateChatSatus', function(data){
+	        		  var changeChatId = data._id;
+	        		  var status = data.status;
+	        		  
+	        		  if (status == "모집종료"){
+	        			  $(".AllChatList").each(function(index ,item) {
+			        			 var checkUserID = $(this).children().children().children().children("#chatNum").val();
+			        			 console.log("updateChatId : " + changeChatId + "- checkUserId :" + checkUserID);
+			        			 if (checkUserID == changeChatId){
+			        				$(this).remove();
+			        			
+			        			 } 
+			        	 }); 
+	        		  }else if (status == "모집중"){
+	        			  
+	        			 	 var output = '';
+	    	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
+	    	                 output += '<tr>';
+	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
+	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ changeChatId +'">';
+	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+	    		     		 output += '<label>'+ data.title +'</label></td>'
+	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
+	    	     			 output += '</tr>';
+	    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
+	    		     		 output += '<td colspan = "3">';
+	    		     		 output += '<i class="material-icons" id = "peopleIcon">group</i>';
+	    		     		 output +=	'&nbsp;&nbsp;&nbsp;<label id = "pnum">('+ data.activityNum + '/' + data.peoplenum +')</label>';
+	    		     		 output +=	'</td></tr>'
+	    	                 output += '</table>';
+	    	                 $(output).prependTo('#menu1');
+	        				
+	        			  
+	        		  }
+	        		  
+	        		 
+	     
+	        		  
+	        	 });
 	             
 	             
 	        }); //end 
