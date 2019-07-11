@@ -34,10 +34,40 @@
 	</resultMap>
 	
 	<!-- 신고글 상세보기 -->
-	<!-- <resultMap type="Penalty" id="myPaneltyDetail">
+	<resultMap type="Penalty" id="myPaneltyDetail">
 		<id property="listId" column="LIST_ID"/>
-		<result property="penalityContent" />
-	</resultMap> -->
+		<result property="penaltyContent" column="PENALTY_CONTENT"/>
+		<result property="penaltyDate" column="PENALTY_DATE"/>
+		<result property="penaltyResult" column="PENALTY_RESULT"/>
+		<result property="processDate" column="PROCESS_DATE"/>
+		<result property="penaltyId" column="PENALTY_ID"/>
+		<result property="complainantId" column="COMPLAINANT_ID"/>
+		<result property="list" column="LIST_TYPE"/>
+		<result property="rejectionReson" column="REJECTION_RESON"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="reviewId" column="REVIEW_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="planId" column="PLAN_ID"/>
+		<result property="requestId" column="REQUEST_ID"/>
+		<result property="memberPenalty" column="MEMBER_PENALTY"/>
+		<association property="penaltyType" column="PENALTY_NAME"
+					 javaType="PenaltyType" resultMap="PenaltyTypeResultSet"/>
+		<collection property="attachmentFileList" javaType="java.util.ArrayList"
+					resultMap="attachmentFileList"/>
+	</resultMap>
+	
+	<!-- 첨부파일 리스트 -->
+	<resultMap type="PenaltyAttachment" id="attachmentFileList">
+		<id property="fileId" column="FILE_ID"/>
+		<result property="originName" column="ORIGIN_NAME"/>
+		<result property="changeName" column="CHANGE_NAME"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="uploadDate" column="UPLOAD_DATE"/>
+		<result property="fileType" column="FILE_TYPE"/>
+		<result property="penalityId" column="PENALITY_ID"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+		<result property="boardId" column="BOARD_ID"/>
+	</resultMap>
 	<!-- 신고글 인서트 -->
 	<insert id="insertPenalty" parameterType="Penalty">
 		INSERT INTO PENALTY_LIST
@@ -91,10 +121,11 @@
 	</select>
 	
 	<!-- 나의 신고 상세보기 -->
-	<!-- <select id="selectOnePanelty" resultMap="myPaneltyDetail">
+	<select id="selectOnePanelty" resultMap="myPaneltyDetail">
 		SELECT *
 		FROM PENALTY_LIST PL
+        JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
 		JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)
-		WHERE AF.PENALTY_ID = #{listId}
-	</select> -->
+		WHERE PL.LIST_ID = #{listId}
+	</select>
 </mapper>

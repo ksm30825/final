@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,14 +27,8 @@
 }
 
 .img {
-	display: inline-block;
-	margin-right: 70px;
-	margin-left: 70px;
 	margin-bottom: 30px;
-	width: 150px;
-	height: 150px;
 	border: 1px solid black;
-	width: 150px;
 }
 
 #button {
@@ -50,7 +45,6 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<%-- <jsp:include page="../common/myPageHeader.jsp" /> --%>
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="headerSection">
@@ -70,11 +64,11 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><b>1</b></td>
-							<td>채팅방</td>
-							<td>욕설및 비방</td>
-							<td>2019/07/10</td>
-							<td>처리 완료</td>
+							<td><b>${ p.listId }</b>
+							<td>${ p.list }</td>
+							<td>${ p.penaltyType.penaltyName }</td>
+							<td>${ p.penaltyDate }</td>
+							<td>${ p.penaltyResult }</td>
 						</tr>
 					</tbody>
 				</table>
@@ -86,26 +80,24 @@
 					<article class="media">
 						<div class="media-content">
 							<div class="content">
-								<p>채팅방에서 아무 이유없이 갑자기 욕함</p>
+								<p>${ p.penaltyContent }</p>
 							</div>
 							<h1>첨부사진</h1>
 							<div class="content">
-								<div class="img">
-									<img src="resources/images/logo1.png">
-								</div>
-								<div class="img">
-									<img src="resources/images/logo1.png">
-								</div>
-								<div class="img">
-									<img src="resources/images/logo1.png">
-								</div>
-								<div class="img">
-									<img src="resources/images/logo1.png">
-								</div>
+								<c:forEach var="img" items="${ p.attachmentFileList }">
+									<div class="img">
+										<img src="resources/uploadFiles/${ img.changeName }">
+									</div>
+								</c:forEach>
 							</div>
 							<h1>처리 내용</h1>
 							<div class="content" id="result">
-								<p>증거 불충분</p>
+							<c:if test="${ p.penaltyResult eq '처리대기' }">
+								<p>신고 처리중</p>							
+							</c:if>
+							<c:if test="${ p.penaltyResult ne '처리대기' }">
+								<p>${ p.penaltyResult }</p>
+							</c:if>
 							</div>
 						</div>
 					</article>
@@ -115,7 +107,7 @@
 				<div class="columns">
 					<div class="column">
 						<div class="buttons">
-							<a class="button is-primary back" href="paneltyList.pe"> 돌아가기
+							<a class="button is-primary back" href="paneltyList.pe?memberId=${ loginUser.memberId }"> 돌아가기
 							</a>
 						</div>
 					</div>
