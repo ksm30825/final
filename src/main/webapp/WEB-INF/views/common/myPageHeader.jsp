@@ -120,7 +120,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a href="myInquiryList.mr">
+	        <a href="myInquiryList.mr?memberId=${ loginUser.memberId }">
 	          <span class="icon"><i class="far fa-question-circle"></i></span>
 	          <span>나의 문의</span>
 	        </a>

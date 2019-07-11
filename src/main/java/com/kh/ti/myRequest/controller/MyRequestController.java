@@ -387,16 +387,21 @@ public class MyRequestController {
 
 	// 나의 문의 내역 - 이선우
 	@RequestMapping("myInquiryList.mr")
-	public String selectMyInquiryList() {
+	public String selectMyInquiryList(@RequestParam("memberId")int memberId) {
 
 		return "inquiry/myInquiryList";
 	}
 
-	// 문의하기 - 이선우
-	@RequestMapping("goInquiry.mr")
-	public String insertGoInquiry() {
-
+	// 문의하기 입력 폼 - 이선우
+	@RequestMapping("goInquiryForm.mr")
+	public String goInquiryForm(@RequestParam("memberId")int memberId) {
 		return "inquiry/goInquiry";
+	}
+	
+	// 문의 내용 인서트 - 이선우
+	@RequestMapping("insertInquiry.mr")
+	public String insertInquiry() {
+		return "";
 	}
 
 	// 나의 문의 상세보기 - 이선우

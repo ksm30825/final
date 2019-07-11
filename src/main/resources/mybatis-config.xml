@@ -23,6 +23,8 @@
 	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.PlanPlace" alias="PlanPlace"/>
 	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.Participation" alias="Participation"/>
 	    	<typeAlias type="com.kh.ti.myRequest.model.vo.MyPlan" alias="MyPlan"/>
+	    	<typeAlias type="com.kh.ti.penalty.model.vo.Penalty" alias="Penalty"/>
+	    	<typeAlias type="com.kh.ti.penalty.model.vo.PenaltyAttachment" alias="PenaltyAttachment"/>
 	    <!-- 민지 추가 -->
 			<typeAlias type="com.kh.ti.travel.model.vo.Travel" alias="Travel" />
 			<typeAlias type="com.kh.ti.travel.model.vo.Country" alias="Country" />
@@ -51,6 +53,7 @@
 			<mapper resource="mappers/point-mapper.xml"/>
 	    <!-- 선우 -->
 	    	<mapper resource="mappers/travelRequest-mapper.xml"/>
+	    	<mapper resource="mappers/penalty-mapper.xml"/>
 	    <!-- 민지 추가 -->
 			<mapper resource="mappers/travel-mapper.xml" />
     	<!-- TravelBoard Part (예랑) -->

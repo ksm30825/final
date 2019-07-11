@@ -47,7 +47,6 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<%-- <jsp:include page="../common/myPageHeader.jsp" /> --%>
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="headerSection">
@@ -56,7 +55,7 @@
 				<div class="columns">
 					<div class="column cal">
 						<div class="buttons">
-							<a class="button is-primary is-rounded" href="goInquiry.mr">문의하기</a>
+							<a class="button is-primary is-rounded" href="goInquiryForm.mr?memberId=${ loginUser.memberId }">문의하기</a>
 							<a class="button is-info is-rounded" href="myInquiryList.mr">나의
 								문의 내역</a> <a class="button is-link is-rounded" href="paneltyList.pe">신고내역</a>
 						</div>
