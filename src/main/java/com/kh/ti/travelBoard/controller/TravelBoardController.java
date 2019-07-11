@@ -177,8 +177,6 @@ public class TravelBoardController {
 		ArrayList detailDay = tbs.selectTravelDetailDays(tb);
 		model.addAttribute("detailDay", detailDay);
 		
-		System.out.println("detailDay:" + detailDay);
-		
 		//가계부 정보 조회
 		HashMap trvCost = tbs.selectTravelCost(trvId);
 		model.addAttribute("allCost", trvCost.get("allCost"));

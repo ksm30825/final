@@ -413,9 +413,11 @@
 	
 	<!-- 상세일정 본문내용 조회 -->
 	<select id="selectSchContent" resultMap="trvScheduleResultSet" parameterType="_int">
-		SELECT *
-		FROM TRV_SCH
-		WHERE SCH_ID = #{ schId }
+		SELECT TS.SCH_ID, TS.SCH_TITLE, TS.SCH_NUMBER, TS.START_TIME, TS.END_TIME, TS.IS_TIMESET, TS.SCH_CONTENT, TS.SCH_TRANSP, TS.PLC_ID, TS.PLC_NAME, TS.DAY_ID, TS.LIKEY_ID, TS.SPOT_ID, TD.DAY_NUMBER
+		FROM TRV_SCH TS
+		JOIN TRV_DAY TD ON (TD.DAY_ID = TS.DAY_ID)
+		WHERE TS.SCH_ID = #{ schId }
+		ORDER BY TD.DAY_NUMBER, TS.SCH_NUMBER
 	</select>
 	
 	<!-- 구매리뷰 조회 -->
