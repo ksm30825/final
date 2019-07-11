@@ -80,8 +80,8 @@
 	</c:choose>
 	<fmt:parseNumber var="totalDays" integerOnly="true" value="${ (endDay - startDay + 1) }" />
 	
-	<input type="number" hidden="hidden" id="totalDays" value="${ endDay - startDay + 1 }">
-	<input type="number" hidden="hidden" id="showDays" value="${ showDays }">
+	<input type="number" style="display: none;" id="totalDays" value="${ endDay - startDay + 1 }">
+	<input type="number" style="display: none;" id="showDays" value="${ showDays }">
 
 	<!-- 서브메뉴 본문(일정표) -->
 	<section class="section" id="detailSub">
@@ -137,10 +137,10 @@
 												<div class="panel-heading" align="center" style="margin: 0">
 													<div style="display: table-cell;">
 														<c:if test="${ !empty detailDay[j].dayMemo }">
-															<span style="vertical-align: middle;">${ detailDay[j].dayMemo }</span>&nbsp;
+															<span style="vertical-align: middle; white-space: pre-line;">${ detailDay[j].dayMemo }</span>&nbsp;
 														</c:if>
 														<c:if test="${ empty detailDay[j].dayMemo }">
-															<span style="vertical-align: middle; color: gray;">(제목없음)</span>&nbsp;
+															<span style="vertical-align: middle; color: gray; white-space: pre-line;">(제목없음)</span>&nbsp;
 														</c:if>
 														<!-- 날씨 아이콘 -->
 														<c:choose>
@@ -201,8 +201,7 @@
 															<div class="media-content" style="width: 70%;">
 																<div class="content" style="display: inline-block;">
 																	<c:if test="${ !empty days.plcName }">
-																		<span style="white-space: pre-line;">
-																			<strong class="costAmount"><i class="fas fa-map-marker-alt" style="color: #8e44ad;"></i>&nbsp;${ days.plcName }</strong>
+																		<span style="white-space: pre-line;" id="day${ st.count }Place"><input type="text" value="${ days.plcName }" name="plcName" class = "plcName" style="display: none;"><input type="text" value="${ days.plcId }" name="plcId" class = "plcId" style="display: none;"><strong class="costAmount"><i class="fas fa-map-marker-alt" style="color: #8e44ad;"></i>&nbsp;${ days.plcName }</strong>
 																			<small class="costCurrency"></small>
 																		</span>
 																	</c:if>
@@ -253,10 +252,10 @@
 												<div class="panel-heading" align="center" style="margin: 0">
 													<div style="display: table-cell;">
 														<c:if test="${ !empty detailDay[j].dayMemo }">
-															<span style="vertical-align: middle;">${ detailDay[j].dayMemo }</span>&nbsp;
+															<span style="vertical-align: middle; white-space: pre-line;">${ detailDay[j].dayMemo }</span>&nbsp;
 														</c:if>
 														<c:if test="${ empty detailDay[j].dayMemo }">
-															<span style="vertical-align: middle; color: gray;">(제목없음)</span>&nbsp;
+															<span style="vertical-align: middle; color: gray; white-space: pre-line;">(제목없음)</span>&nbsp;
 														</c:if>
 														<!-- 날씨 아이콘 -->
 														<c:choose>
@@ -359,23 +358,144 @@
             </select>   
             <div id="map"></div>
          </div>
+         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD19cUtWTevnQL9Nh6Nd8BMgPoQs6OWyX0&libraries=places&callback=initMap" async defer></script>
          
-         <script>
-         //지도보기
-         var map;
-           function initMap() {
-             map = new google.maps.Map(document.getElementById('map'), {
-               center: {lat: -33.93979965825738, lng: 151.171365661621},
-               zoom: 13
-             });
-           }
-         </script>
-         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD19cUtWTevnQL9Nh6Nd8BMgPoQs6OWyX0&callback=initMap" async defer></script>
+		<script>
+         
+		//지도보기
+		var map;
+		var service;
+		var infowindow;
+		var markers = [];
+		var placeIds = [];
+		var placeNames = [];
+		
+		function initMap() {
+			
+			/* 첫번째 도시로 맵 초반 로딩 */
+			var sydney = new google.maps.LatLng(-33.867, 151.195);
+			infowindow = new google.maps.InfoWindow();
+			map = new google.maps.Map(document.getElementById('map'), {zoom:13, center:sydney});
+			service = new google.maps.places.PlacesService(map);
+			
+			var bounds = new google.maps.LatLngBounds();
+			var coords = new google.maps.MVCArray();
+			
+			/* 첫째날의 도시 정보 가져오기 */
+			$(".plcName").each(function() {
+				
+				placeNames.push($(this).val());
+			});
+			
+			
+			$(".plcId").each(function() {
+				placeIds.push($(this).val());
+			});
+			
+			if(placeNames[0] != null) {
+				
+				var request = {
+				    query: placeNames[0],
+				    fields: ['name', 'geometry'],
+				};
+				
+				service.findPlaceFromQuery(request, function(results, status) {
+					if(status === google.maps.places.PlacesServiceStatus.OK) {
+						map.setCenter(results[0].geometry.location);
+					}
+				});
+				
+			}else {
+				
+				var cityRequest = { 
+					query:"${ detailTb.trvCities[0].cityNameEn }",
+					fields:['geometry']
+				};
+				
+				service.findPlaceFromQuery(cityRequest, function(results, status) {
+					if(status === google.maps.places.PlacesServiceStatus.OK) {
+						map.setCenter(results[0].geometry.location);
+					}
+				});
+				
+			}
+			
+			var dayPath;
+			placeIds.forEach(function(p, index) {
+				console.log("p"+ p);
+				
+				var request = {
+						placeId:p,
+						fiels:['geometry', 'name']
+				};
+				
+				service.getDetails(request, function(place, status) {
+						
+						var m = new google.maps.Marker({
+							map:map,
+							label: {
+								fontSize:'20px',
+								text:index + 1 + "",
+								color:'#fff'
+							},
+							animation: google.maps.Animation.DROP,
+							title: place.name,
+							position: place.geometry.location
+						});
+						
+						markers.push(m);
+						coords.push(place.geometry.location);
+						
+						dayPath = new google.maps.Polyline({
+						    path:coords,
+						    geodesic: true,
+						    strokeColor: '#FB0303',
+						    strokeOpacity: 1.0,
+						    strokeWeight: 2
+						});
+						
+						dayPath.setMap(map);
+						
+						if(place.geometry.viewport) {
+							bounds.union(place.geometry.viewport);
+						}else { 
+							bounds.extend(m.position);
+						}
+						
+						if(index == 0) {
+							map.setCenter(m.position);
+						}
+						
+						var infowindow = new google.maps.InfoWindow();
+						
+						 google.maps.event.addListener(m, 'click', function() {
+				              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+				                'Place ID: ' + place.place_id + '<br>' +
+				                place.formatted_address + '</div>');
+				              infowindow.open(map, this);
+				            });
+			         
+				});
+				
+				
+				
+				
+			});
+			
+			
+			
+		}
+	
+		
+	</script>
+        
          
       </div>
    </section>
    
 <script>
+	var service;
+	
    function dayMapSelect() {
       var day = $("#mapDaySelect").val();
       console.log(day);
@@ -424,10 +544,8 @@
 		   $(".calendarTable").css("display","none");
 		   $("#calendarTable-day" + nextDay).removeAttr("style");
 	   }
-	   
-	   
    }
-   
+
 </script>
 
 </body>
