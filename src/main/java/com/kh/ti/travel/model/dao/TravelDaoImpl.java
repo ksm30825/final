@@ -22,6 +22,12 @@ import com.kh.ti.travel.model.vo.TrvTag;
 @Repository
 public class TravelDaoImpl implements TravelDao {
 
+
+	@Override
+	public int selectPublicTrvCount(SqlSessionTemplate sqlSession, int memberId) {
+		return sqlSession.selectOne("Travel.selectPublicTrvCount", memberId);
+	}
+	
 	@Override
 	public ArrayList<Travel> selectTrvList(SqlSessionTemplate sqlSession, int memberId) {
 		return (ArrayList)sqlSession.selectList("Travel.selectTrvList", memberId);
@@ -217,7 +223,7 @@ public class TravelDaoImpl implements TravelDao {
 	
 	
 	
-
+//----------------------------------------------------------------------------------------------
 	@Override
 	public int updateSchContent(SqlSessionTemplate sqlSession, TrvSchedule sch) {
 		return sqlSession.update("Travel.updateSchContent", sch);
@@ -271,7 +277,7 @@ public class TravelDaoImpl implements TravelDao {
 	
 	
 	
-
+//-----------------------------------------------------------------------------------------
 	@Override
 	public int updateBudget(SqlSessionTemplate sqlSession, Travel trv) {
 		return sqlSession.update("Travel.updateBudget", trv);
@@ -294,10 +300,9 @@ public class TravelDaoImpl implements TravelDao {
 
 
 
-
 	
 	
-
+//------------------------------------------------------------------------------------------------
 	@Override
 	public ArrayList<HashMap> selectDownloadSch(SqlSessionTemplate sqlSession, int trvId) {
 		return (ArrayList)sqlSession.selectList("Travel.selectDownloadSch", trvId);
@@ -309,7 +314,9 @@ public class TravelDaoImpl implements TravelDao {
 	}
 
 	
+
 	
+//--------------------------------------------------------------------------------------------------
 	@Override
 	public int insertOverrideTrv(SqlSessionTemplate sqlSession, Travel overrideTrv) {
 		return sqlSession.insert("Travel.insertOverrideTrv", overrideTrv);
@@ -322,34 +329,15 @@ public class TravelDaoImpl implements TravelDao {
 
 	
 	
+
 	
 	
 	
-	
-	
-	
-	
 
-
-
-
-
-	@Override
-	public HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public int deleteTrvComp(SqlSessionTemplate sqlSession, Travel trv, int memberId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+//-----------------------------------------------------------------------------------------------
 	@Override
 	public Member selectCompany(SqlSessionTemplate sqlSession, String email) {
-		return sqlSession.selectOne("Travel.selectCompany", email);
+		return sqlSession.selectOne("Travel.selectComp", email);
 	}
 
 	@Override
@@ -357,8 +345,35 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.insert("Travel.insertTrvComp", trvComp);
 	}
 
+	@Override
+	public ArrayList<TrvCompany> selectTrvCompList(SqlSessionTemplate sqlSession, int trvId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectTrvCompList" ,trvId);
+	}
+
+	@Override
+	public int deleteTrvComp(SqlSessionTemplate sqlSession, TrvCompany trvComp) {
+		return sqlSession.delete("Travel.deleteTrvComp", trvComp);
+	}
 
 
+
+	
+	
+	
+	
+
+
+//------------------------------------------------------------------------------------------------
+	@Override
+	public HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Travel> selectSharedTrvList(SqlSessionTemplate sqlSession, int memberId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectSharedTrvList", memberId);
+	}
 
 
 

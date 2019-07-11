@@ -17,6 +17,7 @@
 		<result property="completeDate" column="COMPLETE_DATE" />
 		<result property="status" column="STATUS" />
 		<result property="memberId" column="MEMBER_ID" />
+		<result property="userName" column="USER_NAME" />
 		<result property="trvRef" column="TRV_REF" />
 	</resultMap>
 	<resultMap id="CountryResultSet" type="Country">
@@ -121,9 +122,11 @@
 		<result property="email" column="EMAIL"/>
 		<result property="userName" column="USER_NAME"/>
 	</resultMap>
-	<resultMap id="TrvCompResultSet" type="TrvComp">
+	<resultMap id="TrvCompResultMap" type="TrvComp">
 		<id property="memberId" column="MEMBER_ID" />
 		<id property="trvId" column="TRV_ID" />
+		<result property="email" column="EMAIL" />
+		<result property="userName" column="USER_NAME" />
 	</resultMap>
 
 	<!-- Country & City -->
@@ -190,7 +193,12 @@
 		INSERT INTO TRAVEL
 		VALUES(TRAVEL_SEQ.NEXTVAL, #{trvTitle}, #{startDate}, #{endDate}, #{compNumber}, #{budget}, SYSDATE, SYSDATE, NULL, 'Y', #{memberId}, #{trvRef})
 	</insert>
-
+	<select id="selectPublicTrvCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRAVEL
+		WHERE MEMBER_ID = #{memberId}
+		AND COMPLETE_DATE IS NOT NULL
+	</select>
 	
 	
 	<!-- TrvCity -->
@@ -444,7 +452,7 @@
 	
 	
 	<!-- TrvComp -->
-	<select id="selectCompany" parameterType="java.lang.String" resultMap="MemberResultSet">
+	<select id="selectComp" parameterType="java.lang.String" resultMap="MemberResultSet">
 		SELECT MEMBER_ID, EMAIL, USER_NAME
 		FROM MEMBER
 		WHERE EMAIL = #{email}
@@ -453,7 +461,26 @@
 		INSERT INTO TRV_COMP
 		VALUES(#{memberId}, #{trvId})
 	</insert>
-
+	<select id="selectTrvCompList" parameterType="_int" resultMap="TrvCompResultMap">
+		SELECT COMP.*, M.EMAIL, M.USER_NAME
+		FROM TRV_COMP COMP
+		LEFT JOIN MEMBER M ON (M.MEMBER_ID = COMP.MEMBER_ID)
+		WHERE COMP.TRV_ID = #{trvId}
+	</select>
+	<delete id="deleteTrvComp" parameterType="TrvComp">
+		DELETE FROM TRV_COMP
+		WHERE TRV_ID = #{trvId} AND MEMBER_ID = #{memberId}
+	</delete>
+	<select id="selectSharedTrvList" parameterType="_int" resultMap="TravelResultSet">
+		SELECT T.*, M.USER_NAME
+		FROM TRAVEL T
+		RIGHT JOIN TRV_COMP COMP ON (T.TRV_ID = COMP.TRV_ID)
+		LEFT JOIN MEMBER M ON (M.MEMBER_ID = COMP.MEMBER_ID)
+		WHERE COMP.MEMBER_ID = #{memberId}
+		AND T.COMPLETE_DATE IS NULL
+	</select>
+	
+	
 </mapper>
 
 

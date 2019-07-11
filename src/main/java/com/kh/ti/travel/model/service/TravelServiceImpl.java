@@ -61,6 +61,11 @@ public class TravelServiceImpl implements TravelService {
 	
 //------------travel--------------------------------------------------------------------------
 	@Override
+	public int selectPublicTrvCount(int memberId) {
+		return td.selectPublicTrvCount(sqlSession, memberId);
+	}
+	
+	@Override
 	public ArrayList<Travel> selectTrvList(int memberId) {
 		ArrayList<Travel> trvList = td.selectTrvList(sqlSession, memberId);
 		for(int i = 0; i < trvList.size(); i++) {
@@ -120,7 +125,7 @@ public class TravelServiceImpl implements TravelService {
 		ArrayList<TrvDay> trvDayList = td.selectTrvDayList(sqlSession, trvId);
 		ArrayList<Tag> allTagList = td.selectTagList(sqlSession);
 		ArrayList<TrvTag> trvTagList = td.selectTrvTagList(sqlSession, trvId);
-		
+		ArrayList<TrvCompany> trvCompList = td.selectTrvCompList(sqlSession, trvId);
 		for(int i = 0; i < trvDayList.size(); i++) {
 			int dayId = trvDayList.get(i).getDayId();
 			ArrayList<TrvCost> costList = td.selectCostList(sqlSession, dayId);
@@ -142,6 +147,7 @@ public class TravelServiceImpl implements TravelService {
 		trvMap.put("trvDayList", trvDayList);
 		trvMap.put("allTagList", allTagList);
 		trvMap.put("trvTagList", trvTagList);
+		trvMap.put("trvCompList", trvCompList);
 		return trvMap;
 	}
 
@@ -937,6 +943,28 @@ public class TravelServiceImpl implements TravelService {
 
 //-----------------------------------------------------------------------------------	
 	
+	@Override
+	public int insertTrvCompany(TrvCompany trvComp) {
+		return td.insertTrvCompany(sqlSession, trvComp);
+	}
+
+
+	@Override
+	public Member selectCompany(String email) {
+		return td.selectCompany(sqlSession, email);
+	}
+
+	
+	@Override
+	public int deleteTrvComp(TrvCompany trvComp) {
+		return td.deleteTrvComp(sqlSession, trvComp);
+	}
+
+
+
+
+
+//----------------------------------------------------------------------------------
 
 	@Override
 	public HashMap selectSpotList(Travel trv) {
@@ -946,31 +974,20 @@ public class TravelServiceImpl implements TravelService {
 		return spotMap;
 	}
 
-	
-	
-	
 	@Override
-	public int insertTrvCompany(TrvCompany trvComp) {
-		return td.insertTrvCompany(sqlSession, trvComp);
+	public ArrayList<Travel> selectSharedTrvList(int memberId) {
+		ArrayList<Travel> sharedTrvList = td.selectSharedTrvList(sqlSession, memberId);
+		for(int i = 0; i < sharedTrvList.size(); i++) {
+			int trvId =	sharedTrvList.get(i).getTrvId();
+			ArrayList<TrvCity> trvCityList = td.selectTrvCityList(sqlSession, trvId);
+			sharedTrvList.get(i).setTrvCityList(trvCityList);
+			ArrayList<TrvTag> trvTagList = td.selectTrvTagList(sqlSession, trvId);
+			sharedTrvList.get(i).setTrvTagList(trvTagList);
+			SchFile mainImage = td.selectTrvMainImage(sqlSession, trvId);
+			sharedTrvList.get(i).setMainImage(mainImage);
+		}
+		return sharedTrvList;
 	}
-
-	
-	@Override
-	public int deleteTrvComp(Travel trv, int memberId) {
-		int result = td.deleteTrvComp(sqlSession, trv, memberId);
-		return 0;
-	}
-
-	@Override
-	public Member selectCompany(String email) {
-		return td.selectCompany(sqlSession, email);
-	}
-
-
-
-
-
-
 
 
 

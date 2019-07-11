@@ -112,8 +112,6 @@ public interface TravelService {
 	
 
 
-	int deleteTrvComp(Travel trv, int memberId);
-
 	
 	HashMap selectSpotList(Travel trv);
 
@@ -129,6 +127,12 @@ public interface TravelService {
 	Member selectCompany(String email);
 
 	int insertTrvCompany(TrvCompany trvComp);
+
+	int deleteTrvComp(TrvCompany trvComp);
+
+	ArrayList<Travel> selectSharedTrvList(int memberId);
+
+	int selectPublicTrvCount(int memberId);
 
 
 

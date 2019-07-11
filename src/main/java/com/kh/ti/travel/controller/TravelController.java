@@ -46,6 +46,14 @@ public class TravelController {
 	@Autowired
 	private TravelService ts;
 
+	@RequestMapping("selectPublicTrvCount.trv")
+	public ModelAndView selectPublicTrvCount(int memberId, ModelAndView mv) {
+		int publicTrvCount = ts.selectPublicTrvCount(memberId);
+		mv.addObject("publicTrvCount", publicTrvCount);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	@RequestMapping("showMyTravel.trv")
 	public String showMyTravel(HttpSession session, Model model) {
 		Member loginUser = (Member) session.getAttribute("loginUser");
@@ -59,8 +67,12 @@ public class TravelController {
 				publicTrvList.add(trvList.get(i));
 			}
 		}
+		
+		ArrayList<Travel> sharedTrvList = ts.selectSharedTrvList(loginUser.getMemberId());
+		
 		model.addAttribute("privateTrvList", privateTrvList);
 		model.addAttribute("publicTrvList", publicTrvList);
+		model.addAttribute("sharedTrvList", sharedTrvList);
 		return "travel/myTravel";
 	}
 
@@ -113,6 +125,7 @@ public class TravelController {
 			model.addAttribute("trvDayList", trvMap.get("trvDayList"));
 			model.addAttribute("allTagList", trvMap.get("allTagList"));
 			model.addAttribute("trvTagList", trvMap.get("trvTagList"));
+			model.addAttribute("trvCompList", trvMap.get("trvCompList"));
 			return "travel/travelEditor";
 		} else {
 			model.addAttribute("msg", "일정 정보 불러오기 실패");
@@ -483,11 +496,12 @@ public class TravelController {
 		return mv;
 	}
 	
-	
 	// 동행추가-민지
 	@RequestMapping("insertCompany.trv")
 	public ModelAndView insertTrvCompany(int trvId, int memberId, ModelAndView mv) {
-		TrvCompany trvComp = new TrvCompany(memberId, trvId);
+		TrvCompany trvComp = new TrvCompany();
+		trvComp.setMemberId(memberId);
+		trvComp.setTrvId(trvId);
 		int result = ts.insertTrvCompany(trvComp);
 		
 		mv.setViewName("jsonView");
@@ -495,11 +509,18 @@ public class TravelController {
 	}
 
 	// 여행동행삭제-민지
-	@RequestMapping("deleteComp.trv")
-	public String deleteTrvComp(Travel trv, int memberId) {
-		int result = ts.deleteTrvComp(trv, memberId);
+	@RequestMapping("deleteCompany.trv")
+	public String deleteTrvComp(int trvId, int memberId) {
+		TrvCompany trvComp = new TrvCompany();
+		trvComp.setMemberId(memberId);
+		trvComp.setTrvId(trvId);
+		int result = ts.deleteTrvComp(trvComp);
 		return "";
 	}
+	
+	
+	
+	
 
 	// 인기명소 불러오기-민지
 	@RequestMapping("selectSpotList.trv")

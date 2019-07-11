@@ -53,6 +53,8 @@ public interface TravelDao {
 	
 	int deleteTrvDay(SqlSessionTemplate sqlSession, TrvDay trvDay);
 
+	int completeTravel(SqlSessionTemplate sqlSession, int trvId);
+	
 	int deleteTravel(SqlSessionTemplate sqlSession, int trvId);
 
 	int selectSchCount(SqlSessionTemplate sqlSession, int dayId);
@@ -145,10 +147,6 @@ public interface TravelDao {
 
 	HashMap selectSpotList(SqlSessionTemplate sqlSession, Travel trv, int cityCode);
 
-	int completeTravel(SqlSessionTemplate sqlSession, int trvId);
-
-
-	int deleteTrvComp(SqlSessionTemplate sqlSession, Travel trv, int memberId);
 
 	
 	
@@ -165,6 +163,14 @@ public interface TravelDao {
 	
 	int insertTrvCompany(SqlSessionTemplate sqlSession, TrvCompany trvComp);
 
+	ArrayList<TrvCompany> selectTrvCompList(SqlSessionTemplate sqlSession, int trvId);
+
+
+	int deleteTrvComp(SqlSessionTemplate sqlSession, TrvCompany trvComp);
+
+	ArrayList<Travel> selectSharedTrvList(SqlSessionTemplate sqlSession, int memberId);
+
+	int selectPublicTrvCount(SqlSessionTemplate sqlSession, int memberId);
 
 
 

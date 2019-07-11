@@ -19,6 +19,7 @@ public class Travel implements java.io.Serializable {
 	private Date completeDate;
 	private String status;
 	private int memberId;
+	private String userName;
 	private int[] trvCities;
 	private int[] trvComps;
 	private int[] trvTags;
@@ -30,8 +31,8 @@ public class Travel implements java.io.Serializable {
 	public Travel() {}
 
 	public Travel(int trvId, String trvTitle, Date startDate, Date endDate, int compNumber, int budget, Date openDate,
-			Date modifyDate, Date completeDate, String status, int memberId, int[] trvCities, int[] trvComps,
-			int[] trvTags, int trvRef, ArrayList<TrvCity> trvCityList, ArrayList<TrvTag> trvTagList,
+			Date modifyDate, Date completeDate, String status, int memberId, String userName, int[] trvCities,
+			int[] trvComps, int[] trvTags, int trvRef, ArrayList<TrvCity> trvCityList, ArrayList<TrvTag> trvTagList,
 			SchFile mainImage) {
 		super();
 		this.trvId = trvId;
@@ -45,6 +46,7 @@ public class Travel implements java.io.Serializable {
 		this.completeDate = completeDate;
 		this.status = status;
 		this.memberId = memberId;
+		this.userName = userName;
 		this.trvCities = trvCities;
 		this.trvComps = trvComps;
 		this.trvTags = trvTags;
@@ -142,6 +144,14 @@ public class Travel implements java.io.Serializable {
 		this.memberId = memberId;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public int[] getTrvCities() {
 		return trvCities;
 	}
@@ -203,10 +213,12 @@ public class Travel implements java.io.Serializable {
 		return "Travel [trvId=" + trvId + ", trvTitle=" + trvTitle + ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", compNumber=" + compNumber + ", budget=" + budget + ", openDate=" + openDate + ", modifyDate="
 				+ modifyDate + ", completeDate=" + completeDate + ", status=" + status + ", memberId=" + memberId
-				+ ", trvCities=" + Arrays.toString(trvCities) + ", trvComps=" + Arrays.toString(trvComps) + ", trvTags="
-				+ Arrays.toString(trvTags) + ", trvRef=" + trvRef + ", trvCityList=" + trvCityList + ", trvTagList="
-				+ trvTagList + ", mainImage=" + mainImage + "]";
+				+ ", userName=" + userName + ", trvCities=" + Arrays.toString(trvCities) + ", trvComps="
+				+ Arrays.toString(trvComps) + ", trvTags=" + Arrays.toString(trvTags) + ", trvRef=" + trvRef
+				+ ", trvCityList=" + trvCityList + ", trvTagList=" + trvTagList + ", mainImage=" + mainImage + "]";
 	}
+
+	
 
 	
 	

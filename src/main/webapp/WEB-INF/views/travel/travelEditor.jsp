@@ -156,17 +156,34 @@
 									<hr class="dropdown-divider">
 									<div class="dropdown-item">
 										<table class="table " id="compTable">
-											<tr class="compTr" style="display:none">
-												<td width="10%">
-													<span class="icon">
-														<i class="far fa-user"></i>
-													</span>
-												</td>
-												<td width="70%"></td>
-												<td width="20%">
-													<button class="button is-dark is-small compDeleteBtn">삭제</button>
-												</td>
-											</tr>
+											<tbody>
+												<tr class="compTr" style="display:none">
+													<td width="10%">
+														<span class="icon">
+															<i class="far fa-user"></i>
+														</span>
+														<input type="hidden" value="" name="memberId">
+													</td>
+													<td width="70%"></td>
+													<td width="20%">
+														<button class="button is-dark is-small compDeleteBtn">삭제</button>
+													</td>
+												</tr>
+												<c:forEach var="trvComp" items="${ trvCompList }" varStatus="st">
+													<tr class="compTr">
+														<td width="10%">
+															<span class="icon">
+																<i class="far fa-user"></i>
+															</span>
+															<input type="hidden" value="${ trvComp.memberId }" name="memberId">
+														</td>
+														<td width="70%">${ trvComp.email } (${ trvComp.userName })</td>
+														<td width="20%">
+															<button class="button is-dark is-small compDeleteBtn">삭제</button>
+														</td>
+													</tr>
+												</c:forEach>
+											</tbody>
 										</table>
 									</div>
 									<hr class="dropdown-divider">
@@ -276,20 +293,55 @@
 			
 			//동행추가
 			$("#addCompBtn").click(function() {
-				var memberId = $(this).prev().prev().val();
+				var memberInfo = $("#compSearchResult").text();
+				var memberId = $("#compSearchMemberId").val();
 				var compTr = $(".compTr").eq(0).clone(true);
-				$.ajax({
-					url:"insertCompany.trv",
-					type:"POST",
-					data:{memberId:memberId, trvId:"${ trv.trvId }"},
-					success:function(data) {
-						console.log(data);
-						//compTr.children().eq(1).text(data.)
-					},
-					error:function(err) {
-						alert("err");
+				var exist = false;
+				$(".compTr").each(function() {
+					if(memberId == $(this).find("input[name=memberId]").val()) {
+						alert("이미 동행추가된 멤버입니다."); 
+						exist = true;
+						return;
 					}
 				});
+				if(!exist) {
+					$.ajax({
+						url:"insertCompany.trv",
+						type:"POST",
+						data:{memberId:memberId, trvId:"${ trv.trvId }"},
+						success:function(data) {
+							compTr.children().eq(1).text(memberInfo);
+							compTr.find("input[name=memberId]").val(memberId);
+							compTr.show();
+							$("#compTable").children().append(compTr);
+						},
+						error:function(err) {
+							alert("err");
+						}
+					});
+				}
+			});
+			
+			//동행삭제
+			$(".compDeleteBtn").click(function() {
+				var memberId = $(this).parent().prev().prev().find("input[name=memberId]").val();
+				var answer = window.confirm("해당 멤버를 동행 목록에서 삭제하시겠습니까? '확인' 선택시 이 멤버와는 더이상 일정 공유가 불가합니다.");
+				var compTr = $(this).parent().parent();
+				if(answer) {
+					$.ajax({
+						url:"deleteCompany.trv",
+						type:"POST",
+						data:{memberId:memberId, trvId:"${ trv.trvId }"},
+						success:function(data) {
+							console.log(data);
+							compTr.remove();
+							alert("삭제되었습니다.");
+						}, 
+						error:function(err) {
+							alert("deleteCompany 서버전송 실패");
+						}
+					});
+				}
 			});
 			
 			
