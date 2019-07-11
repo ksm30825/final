@@ -126,6 +126,8 @@ public class TravelController {
 			model.addAttribute("allTagList", trvMap.get("allTagList"));
 			model.addAttribute("trvTagList", trvMap.get("trvTagList"));
 			model.addAttribute("trvCompList", trvMap.get("trvCompList"));
+			model.addAttribute("likeySpotList", trvMap.get("likeySpotList"));
+			model.addAttribute("recommSpotList", trvMap.get("recommSpotList"));
 			return "travel/travelEditor";
 		} else {
 			model.addAttribute("msg", "일정 정보 불러오기 실패");

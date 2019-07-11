@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.spot.model.vo.SpotList;
 import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
 import com.kh.ti.travel.model.vo.SchFile;
@@ -26,6 +27,11 @@ public class TravelDaoImpl implements TravelDao {
 	@Override
 	public int selectPublicTrvCount(SqlSessionTemplate sqlSession, int memberId) {
 		return sqlSession.selectOne("Travel.selectPublicTrvCount", memberId);
+	}
+
+	@Override
+	public ArrayList<Travel> selectSharedTrvList(SqlSessionTemplate sqlSession, int memberId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectSharedTrvList", memberId);
 	}
 	
 	@Override
@@ -370,9 +376,15 @@ public class TravelDaoImpl implements TravelDao {
 		return null;
 	}
 
+
 	@Override
-	public ArrayList<Travel> selectSharedTrvList(SqlSessionTemplate sqlSession, int memberId) {
-		return (ArrayList)sqlSession.selectList("Travel.selectSharedTrvList", memberId);
+	public ArrayList<HashMap> selectLikeySpotList(SqlSessionTemplate sqlSession, Travel trv) {
+		return (ArrayList)sqlSession.selectList("Travel.selectLikeySpotList", trv);
+	}
+
+	@Override
+	public ArrayList<HashMap> selectRecommSpotList(SqlSessionTemplate sqlSession, Travel trv) {
+		return (ArrayList)sqlSession.selectList("Travel.selectRecommSpotList", trv);
 	}
 
 

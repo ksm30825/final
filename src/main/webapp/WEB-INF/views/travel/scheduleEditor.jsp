@@ -300,89 +300,83 @@
 							</div>
 							<!-- <label class="panel-block"><input type="checkbox">선택</label> -->
 							<ul id="likeList" class="connectedSortable menu-list" >
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>좋아요 1</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>좋아요 2</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>좋아요 3</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>좋아요 4</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>좋아요 5</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn1"><i class="fas fa-reply"></i></span>	
-									</div>
-								</li>
+								<c:forEach var="likeySpot" items="${ likeySpotList }" varStatus="st">
+									<li class="panel-block" style="background:white">
+										<div class="media-left">
+											<a><span class="icon is-small" style="color:red">
+								        			<i class="far fa-heart"></i>
+								        	</span></a>
+										</div>
+										<div class="media-content">
+											<div class="content">
+												<p>
+													<strong class="spotNameKo">${ likeySpot.get("spotNameKo") }</strong>
+													<span class="icon is-small" style="color:orange"> <i class="fas fa-eye"></i></span>
+													<small>${ likeySpot.get("spotCount") }</small>
+													<span class="icon is-small" style="color:red"> <i class="fa fa-heart"> </i> </span>
+													<small>${ likeySpot.get("likeCount") }</small>
+												</p>
+												<em><small class="cityName">${ likeySpot.get("cityNameKo") }</small></em>
+												<em><small><strong class="spotType">${ likeySpot.get("plcTypeName") }</strong></small></em>
+												<small>
+													<a style="color: purple" class="spotPlc"> 
+														<input type="hidden" value="" name="plcId">
+														<span class="icon is-small" style="color: purple">
+															<i class="fas fa-map-marker-alt"></i>
+														</span> 
+														<span class="plcName">${ likeySpot.get("spotAddress") }</span>
+													</a>
+												</small>
+											</div>
+										</div>
+										<div class="media-right">
+											<a class="button is-small is-link spotInsertBtn"
+											data-tooltip="일정에 추가" data-variation="mini" data-position="left center">
+												<i class="fas fa-calendar-plus"></i>
+											</a>
+										</div>
+									</li>
+								</c:forEach>
 							</ul>
 							
 							<ul id="recommList" class="connectedSortable menu-list" style="display:none">
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>추천 1</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>추천 2</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>추천 3</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>추천 4</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
-									</div>
-								</li>
-								<li class="ui-state-highlight panel-block">
-									<div class="media-content">
-										<p>추천 5</p>
-									</div>
-									<div class="media-right">
-										<span class="icon backBtn2"><i class="fas fa-reply"></i></span>
-									</div>
-								</li>
+								<c:forEach var="recommSpot" items="${ recommSpotList }" varStatus="st">
+									<li class="panel-block" style="background:white">
+										<div class="media-left">
+											<a><span class="icon is-small" style="color:skyblue">
+								        			<i class="far fa-thumbs-up"></i>
+								        	</span></a>
+										</div>
+										<div class="media-content">
+											<div class="content">
+												<p>
+													<strong class="spotNameKo">${ recommSpot.get("spotNameKo") }</strong>
+													<span class="icon is-small" style="color:orange"> <i class="fas fa-eye"></i></span>
+													<small>${ recommSpot.get("spotCount") }</small>
+													<span class="icon is-small" style="color:red"> <i class="fa fa-heart"> </i> </span>
+													<small>${ recommSpot.get("likeCount") }</small>
+												</p>
+												<em><small class="cityName">${ recommSpot.get("cityNameKo") }</small></em>
+												<em><small><strong class="spotType">${ recommSpot.get("plcTypeName") }</strong></small></em>
+												<small>
+													<a style="color: purple" class="spotPlc"> 
+														<input type="hidden" value="" name="plcId">
+														<span class="icon is-small" style="color: purple">
+															<i class="fas fa-map-marker-alt"></i>
+														</span> 
+														<span class="plcName">${ recommSpot.get("spotAddress") }</span>
+													</a>
+												</small>
+											</div>
+										</div>
+										<div class="media-right">
+											<a class="button is-small is-link spotInsertBtn"
+											data-tooltip="일정에 추가" data-variation="mini" data-position="left center">
+												<i class="fas fa-calendar-plus"></i>
+											</a>
+										</div>
+									</li>
+								</c:forEach>
 							</ul>
 							
 							<div class="panel-block">
@@ -668,10 +662,10 @@
 				}
 			});
 			
-			
+			/* 
 			$("#likeList, #recommList").sortable({
 				connectWith : ".dayList"
-			});
+			}); */
 			$('.ui.rating').rating('disable');
 			
 				
@@ -859,6 +853,14 @@
 				$('#newScheduleModal').toggleClass('is-active');
 			});
 			
+			//좋아요장소 insert
+			$(".spotInsertBtn").click(function() {
+				var plcName = $(this).parent().prev().find(".plcName").text();
+				placeTextSearch(plcName, map, "insert");
+				//$("#plcName1").val(plcName);
+				$("#newScheduleModal").toggleClass('is-active');
+			});
+			
 			//장소select
 			$(".schPlc").click(function() {
 				var plcId = $(this).children("input[name=plcId]").val();
@@ -866,6 +868,11 @@
 				
 			});
 			
+			//좋아요장소 select
+			$(".spotPlc").click(function() {
+				var plcName = $(this).children(".plcName").text();
+				placeTextSearch(plcName, map);
+			});
 			
 			
 			//여행테마 선택

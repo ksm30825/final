@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ti.common.CommonUtils;
 import com.kh.ti.member.model.vo.Member;
+import com.kh.ti.spot.model.vo.SpotList;
 import com.kh.ti.travel.model.dao.TravelDao;
 import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
@@ -123,9 +124,6 @@ public class TravelServiceImpl implements TravelService {
 		Travel trv = td.selectTravel(sqlSession, trvId);
 		ArrayList<TrvCity> trvCityList = td.selectTrvCityList(sqlSession, trvId);
 		ArrayList<TrvDay> trvDayList = td.selectTrvDayList(sqlSession, trvId);
-		ArrayList<Tag> allTagList = td.selectTagList(sqlSession);
-		ArrayList<TrvTag> trvTagList = td.selectTrvTagList(sqlSession, trvId);
-		ArrayList<TrvCompany> trvCompList = td.selectTrvCompList(sqlSession, trvId);
 		for(int i = 0; i < trvDayList.size(); i++) {
 			int dayId = trvDayList.get(i).getDayId();
 			ArrayList<TrvCost> costList = td.selectCostList(sqlSession, dayId);
@@ -142,12 +140,20 @@ public class TravelServiceImpl implements TravelService {
 			}
 			trvDayList.get(i).setSchList(schList);
 		}
+		
+		ArrayList<Tag> allTagList = td.selectTagList(sqlSession);
+		ArrayList<TrvTag> trvTagList = td.selectTrvTagList(sqlSession, trvId);
+		ArrayList<TrvCompany> trvCompList = td.selectTrvCompList(sqlSession, trvId);
+		ArrayList<HashMap> likeySpotList = td.selectLikeySpotList(sqlSession, trv);
+		ArrayList<HashMap> recommSpotList = td.selectRecommSpotList(sqlSession, trv);
 		trvMap.put("trv", trv);
 		trvMap.put("trvCityList", trvCityList);
 		trvMap.put("trvDayList", trvDayList);
 		trvMap.put("allTagList", allTagList);
 		trvMap.put("trvTagList", trvTagList);
 		trvMap.put("trvCompList", trvCompList);
+		trvMap.put("likeySpotList", likeySpotList);
+		trvMap.put("recommSpotList", recommSpotList);
 		return trvMap;
 	}
 

@@ -128,7 +128,19 @@
 		<result property="email" column="EMAIL" />
 		<result property="userName" column="USER_NAME" />
 	</resultMap>
-
+	<resultMap id="SpotResultMap" type="java.util.HashMap">
+		<result property="spotId" column="SPOT_ID"/>
+ 		<result property="spotNameKo" column="SPOT_NAME_KO"/>
+ 		<result property="spotNameEn" column="SPOT_NAME_EN"/>
+ 		<result property="spotAddress" column="SPOT_ADDRESS"/>
+ 		<result property="spotCount" column="SPOT_COUNT"/>
+ 		<result property="plcTypeName" column="PLCTYPE_NAME"/>
+ 		<result property="cityNameKo" column="CITY_NAME_KO" />
+ 		<result property="likeCount" column="LIKECOUNT" javaType="int"/>
+	</resultMap>
+	
+	
+	
 	<!-- Country & City -->
 	<select id="selectCity" parameterType="_int" resultMap="CityResultSet">
 		SELECT *
@@ -478,6 +490,40 @@
 		LEFT JOIN MEMBER M ON (M.MEMBER_ID = COMP.MEMBER_ID)
 		WHERE COMP.MEMBER_ID = #{memberId}
 		AND T.COMPLETE_DATE IS NULL
+	</select>
+	
+	
+	
+	<!-- LikeySpot -->
+	<select id="selectLikeySpotList" parameterType="Travel" resultMap="SpotResultMap">
+		SELECT SP.SPOT_ID, SP.SPOT_NAME_KO, SP.SPOT_NAME_EN, SP.SPOT_ADDRESS, SP.SPOT_COUNT, PT.PLCTYPE_NAME,
+		CT.CITY_NAME_KO, LC.LIKECOUNT
+		FROM LIKEY LK
+		LEFT JOIN SPOTLIST SP ON (LK.SPOT_ID = SP.SPOT_ID)
+		LEFT JOIN PLACE_TYPE PT ON (PT.PLCTYPE_ID = SP.PLCTYPE_ID)
+		LEFT JOIN CITY CT ON (CT.CITY_ID = SP.CITY_ID)
+		LEFT JOIN (SELECT COUNT(*) LIKECOUNT, SPOT_ID
+		 	  	   FROM LIKEY
+			 	   GROUP BY SPOT_ID) LC ON (LC.SPOT_ID = SP.SPOT_ID)
+		WHERE LK.MEMBER_ID = #{memberId}
+		AND LK.LIKEY_TYPE = 'SPOT' AND TRV_ID IS NULL
+		AND SP.SPOT_STATUS = 'Y'
+		AND SP.CITY_ID IN (SELECT CITY_ID FROM TRV_CITY WHERE TRV_ID = #{trvId})
+	</select>
+	<select id="selectRecommSpotList" parameterType="Travel" resultMap="SpotResultMap">
+		SELECT *
+		FROM (SELECT SP.SPOT_ID, SP.SPOT_NAME_KO, SP.SPOT_NAME_EN, SP.SPOT_ADDRESS, SP.SPOT_COUNT, PT.PLCTYPE_NAME,
+		CT.CITY_NAME_KO, LC.LIKECOUNT
+		FROM SPOTLIST SP
+		LEFT JOIN PLACE_TYPE PT ON (PT.PLCTYPE_ID = SP.PLCTYPE_ID)
+		LEFT JOIN CITY CT ON (CT.CITY_ID = SP.CITY_ID)
+		LEFT JOIN (SELECT COUNT(*) LIKECOUNT, SPOT_ID
+		 	  	   FROM LIKEY
+			 	   GROUP BY SPOT_ID) LC ON (LC.SPOT_ID = SP.SPOT_ID)
+		WHERE SP.SPOT_STATUS = 'Y'
+		AND SP.CITY_ID IN (SELECT CITY_ID FROM TRV_CITY WHERE TRV_ID = #{trvId})
+		ORDER BY LIKECOUNT DESC) ORDERED
+		<![CDATA[WHERE ROWNUM <= 15 ]]>
 	</select>
 	
 	
