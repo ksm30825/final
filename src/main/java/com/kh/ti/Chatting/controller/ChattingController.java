@@ -99,13 +99,14 @@ public class ChattingController {
 	     String birthStr = userInfo.getBirthday();
 	     
 	     if (birthStr != null) {
-	    	 int century = Integer.parseInt(birthStr.substring(0, 1));
+	    	 //birthStr = birthStr.substring(0,4);
 	    	 
-		     if(century == 0) {
-		      birthStr = "20" + birthStr;
-		     } else {
-		      birthStr = "19" + birthStr;
-		     }
+	    	 /*
+			 * int century = Integer.parseInt(birthStr.substring(0, 1));
+			 * 
+			 * if(century == 0) { birthStr = "20" + birthStr; } else { birthStr = "19" +
+			 * birthStr; }
+			 */
 		     
 		     //System.out.println("birthdAy :" + birthStr);
 		     
@@ -123,7 +124,7 @@ public class ChattingController {
 			      factor = -1;
 			     }
 			     
-			     int age =   today.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + factor;
+			     int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + factor;
 			     
 			     userInfo.setAge(age);
 			} catch (ParseException e) {

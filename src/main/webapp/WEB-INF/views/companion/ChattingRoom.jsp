@@ -99,6 +99,14 @@
     #chatStatusTable {
     	width : 100%;	   
    	}
+   	
+   	#bathSpan {
+    float: right;
+    background: #fd5c5c;
+    border-radius: 3px;
+    padding: 3px;
+    color: white;
+	}
 
     
 	
@@ -291,13 +299,16 @@
 	        	       success : function(userInfo) {
 	        	    	   
 	        	    	   var output = "";
-	        	    	   output += '<table id = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
+	        	    	   output += '<table id = "chatpeopleTable" class = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
 	    	        	   output += '<tr><td colspan = "2">';
 	    	        	   output += '<input type = "hidden" value = "'+ userInfo.memberId +'" name = "userId" id = "userId">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.age +'" name = "userAge" id = "userAge">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.gender +'" name = "usergender" id = "usergender">';
-	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label>';				
+	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label>';	
+	    				   if (data.level == 1){
+	    					   output += '<span id = "bathSpan">방장</span>';		
+	    				   }
 	    				   output += '</tr><tr><td>';
 	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
 	    				   output += '<p id = "good">0</p>';
@@ -326,14 +337,17 @@
 	        		   }
 	        		   
 	        		   $("#Firebtn").hide();
+	        		   
 	        		   if (data.level == 2){
 	        			   $("#setting").hide();
 	        			   $("#Firebtn").hide();
+	        			   $("#bathSpan").hide();
 	        		   }else {
 	        			   $("#outbtn").attr("disabled" , "disabled");
 	        			   $("#checkModel").show();
 	        			   $("#setting").show();
 	        			   $("#Firebtn").show();
+	        			   $("#bathSpan").show();
 	 	        	   }
 	        		 
 	        		 
@@ -408,6 +422,7 @@
 	                
 	                if (data.userName != null){
                 		output += data.userName;
+                		
                 	}
 	                
 	                output += '</strong> ';
@@ -469,27 +484,28 @@
 	  	  		 output += '</table>';
 	        	  
 	  	  		 $(output).appendTo('#RoomInfoDIV');
-	  	  		 
-	  	  		 var chatStatus = data.status;
+	  	  		
+	  	  	    var chatStatus = data.status;
+	  	  	 	var temp = "";
 	  	  		 $("#Recruitingicon").text(data.status); 
 	  	  		 $("#chatStatusLabel").text(chatStatus);
-	  	  		 if (data.status == "여행중"){
-	  	  		 	$("#Recruitingicon").style("color" , "yellow");
-	  	  		 }else if (data.status == "모집완료"){
-	  	  			$("#Recruitingicon").style("color" , "green");
-	  	  			var temp = "다시 모집을 하시겠습니까?";
+	  	  		 if (chatStatus == "여행중"){
+	  	  		 	$("#Recruitingicon").css("color" , "yellow");
+	  	  		 }else if (chatStatus == "모집종료"){
+	  	  			$("#Recruitingicon").css("background","green");
+	  	  			temp = "다시 모집을 하시겠습니까?";
 	  	  			$("#chatSatusDetail").text(temp);
 	  	  			$("#changeBtn").text("모집하기");
-	  	  		 }else if (data.status == "여행준비중"){
-	  	  			$("#Recruitingicon").style("color" , "pink");
-	  	  		 }else if (data.status == "여행종료"){
-	  	  			$("#Recruitingicon").style("color" , "blue");
-	  	  		 }else {
-	  	  			var temp = "모집종료를 하시겠습니까?";
+	  	  		 }else if (chatStatus == "여행준비중"){
+	  	  			$("#Recruitingicon").css("background" , "pink");
+	  	  		 }else if (chatStatus == "여행종료"){
+	  	  			$("#Recruitingicon").css("background" , "blue");
+	  	  		 }else if (chatStatus == "모집중"){
+	  	  			temp = "모집종료를 하시겠습니까?";
 	  	  			$("#chatSatusDetail").text(temp);
 	  	  			$("#changeBtn").text("모집종료");
+	  	  			$("#Recruitingicon").css("background" , "red");
 	  	  		 }
-	  	  		 
 	  	  		 
 	        	 
 
@@ -600,13 +616,13 @@
 		               }  
 	 			  }
 		       	
-		       	  
 		       	  var muserId = data.userId;
 		       	  $(".chatpeopleTable").each(function(index ,item) {
 	        			 var checkUserID = $(this).children().children().children().children("#userId").val();
 	        			 console.log("muserId : " + muserId + "- checkUserId :" + checkUserID);
 	        			 if (checkUserID == muserId){
-	        				$(this).remove();
+	        				 var outTable = $(this);
+	        				 outTable.remove();
 	        			 } 
 	        	 });
 		       	  
@@ -727,9 +743,84 @@
        			   $("#setting").show();
        			   $("#Firebtn").show();
     			 }
+    			 
+    			 $(".chatpeopleTable").remove();
+    			 
+    			 //채팅Manager 값 가져오기
+    		     socket.emit('preChatManager' , {chatId : chatId , div : "처음"});
     		  });
+	          
+	          //모집종료 및 채팅상태 바꾸기
+	          $("#changeBtn").click(function(){
+	        	  var status = $("#chatStatusLabel").text();
+	        	  
+	        	  console.log("채팅방 상태 :" + status);
+	        	  
+	        	  socket.emit('updateChatSatus' , {chatId : chatId , status : status});
+	        	  
+	        	  socket.on('updateChatSatus', function(data){
+	        		  var changeChatId = data._id;
+	        		  
+	        		 var chatStatus = data.status;
+	        		 
+	        		 console.log("상태 :" + chatStatus);
+	        		 
+	        		 var temp = "";
+	 	  	  		 $("#Recruitingicon").text(data.status); 
+	 	  	  		 $("#chatStatusLabel").text(chatStatus);
+	 	  	  		 if (chatStatus == "여행중"){
+	 	  	  		 	$("#Recruitingicon").css("color" , "yellow");
+	 	  	  		 }else if (chatStatus == "모집종료"){
+	 	  	  			$("#Recruitingicon").css("background","green");
+	 	  	  			temp = "다시 모집을 하시겠습니까?";
+	 	  	  			$("#chatSatusDetail").text(temp);
+	 	  	  			$("#changeBtn").text("모집하기");
+	 	  	  		 }else if (chatStatus == "여행준비중"){
+	 	  	  			$("#Recruitingicon").css("background" , "pink");
+	 	  	  		 }else if (chatStatus == "여행종료"){
+	 	  	  			$("#Recruitingicon").css("background" , "blue");
+	 	  	  		 }else if (chatStatus == "모집중"){
+	 	  	  			temp = "모집종료를 하시겠습니까?";
+	 	  	  			$("#Recruitingicon").css("background" , "red");
+	 	  	  			$("#chatSatusDetail").text(temp);
+	 	  	  			$("#changeBtn").text("모집종료");
+	 	  	  		 }
+	 	  	  		 
+	 	  	  		document.getElementById('statusModal').style.display='none';
+	        		  
+	        	  });
+	        	  
+	        	  
+	          });
 	         
-	           
+	          socket.on('updateChatttingSatus', function(data){
+        		 var changeChatId = data._id;
+        		  
+        		 var chatStatus = data.status;
+        		 console.log("상태 :" + chatStatus);
+        		 
+        		 var temp = "";
+ 	  	  		 $("#Recruitingicon").text(data.status); 
+ 	  	  		 $("#chatStatusLabel").text(chatStatus);
+ 	  	  		 if (chatStatus == "여행중"){
+ 	  	  		 	$("#Recruitingicon").css("color" , "yellow");
+ 	  	  		 }else if (chatStatus == "모집종료"){
+ 	  	  			$("#Recruitingicon").css("background","green");
+ 	  	  			temp = "다시 모집을 하시겠습니까?";
+ 	  	  			$("#chatSatusDetail").text(temp);
+ 	  	  			$("#changeBtn").text("모집하기");
+ 	  	  		 }else if (chatStatus == "여행준비중"){
+ 	  	  			$("#Recruitingicon").css("background" , "pink");
+ 	  	  		 }else if (chatStatus == "여행종료"){
+ 	  	  			$("#Recruitingicon").css("background" , "blue");
+ 	  	  		 }else if (chatStatus == "모집중"){
+ 	  	  			$("#Recruitingicon").css("background" , "red");
+ 	  	  			temp = "모집종료를 하시겠습니까?";
+ 	  	  			$("#chatSatusDetail").text(temp);
+ 	  	  			$("#changeBtn").text("모집종료");
+ 	  	  		 }
+        		  
+        	  });
 	           
 	           
 		}); //end
@@ -769,6 +860,8 @@
  	 			age = "미정";
  	 		}
  	 		
+ 	 		
+ 	 		
  	 		console.log("userId :" + userid + "- login" + loginUser );
  	 		
  	 		if (loginUser == userid ){
@@ -781,6 +874,8 @@
  	 		
  	 		$("#reputid").text(ulabel);
  	 		$("#reputinfor").text(age + " (" + gender + ") ");
+ 	 		
+ 	 		age == "";
  	 		
 			document.getElementById('reputInfo').style.display='block';
  	 		
