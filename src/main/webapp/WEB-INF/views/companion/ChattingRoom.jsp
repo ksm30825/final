@@ -107,6 +107,19 @@
     padding: 3px;
     color: white;
 	}
+	
+	.penaltybtn{
+		background : none;
+		border : none;
+		float : right;
+	}
+	
+	
+	.reputbtn{
+		background : none;
+		float : right;
+		border : none;
+	}
 
     
 	
@@ -157,6 +170,7 @@
 	 </div>
 	</div>
 	
+	<!-- content  -->
 	<div class="w3-teal">
 	  <button id = "returnBtn" onclick = "location.href = '${contextPath}/enterRoom.ch'"><i class="material-icons" >keyboard_arrow_left</i></button>
 	  <button class="w3-button w3-teal w3-xlarge w3-right" id = "menubtn" onclick="openRightMenu()">&#9776;</button>
@@ -170,6 +184,7 @@
 		<button type="button" class="btn btn-primary" id = "sendbtn">전송</button>
 	</div>
 	
+	<!--여기서 부터 모달창   -->
 	<!-- 나가기 모달창 -->
 	 <div id="id01" class="w3-modal">
 	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
@@ -192,7 +207,7 @@
 	    </div>
   	</div>
   	
-  	<!-- 상태 변화 하는 설정 모달 창   -->
+  	 <!-- 상태 변화 하는 설정 모달 창   -->
   	 <div id="statusModal" class="w3-modal">
 	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
 	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
@@ -255,6 +270,36 @@
 	      <footer class="w3-container w3-teal" style = "background : #f09eda !important; height: 50px;">
 	       	 <button id = "Firebtn" class="w3-button w3-black" style = "height: 50px;  float : left; background-color: #f09eda !important;">강퇴하기</button>
 	       	 <button id = "declarBtn" class="w3-button w3-black" style = "height: 50px; float : right; background-color: #f09eda !important;">신고하기</button>
+	      </footer>
+	    </div>
+  	</div>
+  	
+  	 <!-- 상태 변화 하는 설정 모달 창   -->
+  	 <div id="reputModal" class="w3-modal">
+	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
+	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
+	        <span onclick="document.getElementById('reputModal').style.display='none'" 
+	        class="w3-button w3-display-topright">&times;</span>
+	        <h4 align="center">여행이 종료되었습니다.</h4>
+	      </header>
+	      <div class="w3-container" id = "statusContent" align = "center">
+	      	<!-- <label style = "text-align : left;">즐거운 여행을 하셨습니까?<br> 같이 여행간 동행자의 평판 관리를 해주세요</label> -->	      	 
+	      	<div class="w3-content w3-display-container">
+			  <!-- <img class="mySlides" src="img_snowtops.jpg" style="width:100%">
+			  <img class="mySlides" src="img_lights.jpg" style="width:100%">
+			  <img class="mySlides" src="img_mountains.jpg" style="width:100%">
+			  <img class="mySlides" src="img_forest.jpg" style="width:100%"> -->
+			  <
+			
+			  <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+			  <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+			</div>
+	      </div>
+	      <br>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
+	       	 <button id = "AddchangeBtn" class="w3-button w3-black" 
+	       	 style = "float : left; background-color: #f09eda !important;height : 50px;">설정 더보기</button>
+	       	 <button id = "changeBtn" class="w3-button w3-black" style = "float : right;height : 50px; background-color: #f09eda !important;"></button>
 	      </footer>
 	    </div>
   	</div>
@@ -426,9 +471,17 @@
                 	}
 	                
 	                output += '</strong> ';
-		            output += data.message;
-		            output += '</div>';
+  		            output += data.message;
+  		            
 	                
+	                if (data.sep == "나감"){
+	                	output += "<input type = 'hidden' value = '"+data.userId+"' id = 'outUserId'>"
+	                	output += "<button class = 'penaltybtn' id = 'chatoutbtn'> 신고 </button>";
+				        output += "<button class = 'reputbtn'> 평판관리 </button>";
+	                }
+	                
+	                output += '</div>';
+	              
 	                $(output).appendTo('#chat_box');
 	                
 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
@@ -490,16 +543,15 @@
 	  	  		 $("#Recruitingicon").text(data.status); 
 	  	  		 $("#chatStatusLabel").text(chatStatus);
 	  	  		 if (chatStatus == "여행중"){
-	  	  		 	$("#Recruitingicon").css("color" , "yellow");
+	  	  		 	$("#Recruitingicon").css("background" , "orange");
 	  	  		 }else if (chatStatus == "모집종료"){
 	  	  			$("#Recruitingicon").css("background","green");
 	  	  			temp = "다시 모집을 하시겠습니까?";
 	  	  			$("#chatSatusDetail").text(temp);
 	  	  			$("#changeBtn").text("모집하기");
-	  	  		 }else if (chatStatus == "여행준비중"){
-	  	  			$("#Recruitingicon").css("background" , "pink");
 	  	  		 }else if (chatStatus == "여행종료"){
-	  	  			$("#Recruitingicon").css("background" , "blue");
+	  	  			$("#Recruitingicon").css("background" , "pink");
+	  	  			document.getElementById('reputModal').style.display='block';
 	  	  		 }else if (chatStatus == "모집중"){
 	  	  			temp = "모집종료를 하시겠습니까?";
 	  	  			$("#chatSatusDetail").text(temp);
@@ -539,6 +591,8 @@
 	    	        	   output += '<tr><td colspan = "2">';
 	    	        	   output += '<input type = "hidden" value = "'+ userInfo.memberId +'" name = "userId" id = "userId">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.userName +'" name = "username" id = "username">';
+	    				   output += '<input type = "hidden" value = "'+ userInfo.age +'" name = "userAge" id = "userAge">';
+	    				   output += '<input type = "hidden" value = "'+ userInfo.gender +'" name = "usergender" id = "usergender">';
 	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label></td>';					
 	    				   output += '</tr><tr><td>';
 	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
@@ -598,8 +652,9 @@
 	 				  if (mchatId == chatId){
 		 	                output += '<div class="alert alert-info" id = "msg">'; 
 				            output += data.message;
-				            output += "<button> 신고 </button>";
-				            output += "<button> 평판관리 </button>";
+				        	output += "<input type = 'hidden' value = '"+data.userId+"' id = 'outUserId'>"
+		                	output += "<button class = 'penaltybtn' id = 'chatoutbtn'> 신고 </button>";
+					        output += "<button class = 'reputbtn'> 평판관리 </button>";
 				            output += '</div>';
 				            $(output).appendTo('#chat_box');
 				            
@@ -677,7 +732,7 @@
 	          
 	          //신고하기 버튼 클릭시 
 	          $("#declarBtn").click(function(){
-	        	 location.href = "${contextPath}/declaration.ch?num=" + chatId;  
+	        	 location.href = "${contextPath}/declaration.ch?num=" + chatId + "&id=" + $("#selectUserId").val();  
 	          });
 	          
 	          
@@ -769,16 +824,14 @@
 	 	  	  		 $("#Recruitingicon").text(data.status); 
 	 	  	  		 $("#chatStatusLabel").text(chatStatus);
 	 	  	  		 if (chatStatus == "여행중"){
-	 	  	  		 	$("#Recruitingicon").css("color" , "yellow");
+	 	  	  		 	$("#Recruitingicon").css("background" , "orange");
 	 	  	  		 }else if (chatStatus == "모집종료"){
 	 	  	  			$("#Recruitingicon").css("background","green");
 	 	  	  			temp = "다시 모집을 하시겠습니까?";
 	 	  	  			$("#chatSatusDetail").text(temp);
 	 	  	  			$("#changeBtn").text("모집하기");
-	 	  	  		 }else if (chatStatus == "여행준비중"){
-	 	  	  			$("#Recruitingicon").css("background" , "pink");
 	 	  	  		 }else if (chatStatus == "여행종료"){
-	 	  	  			$("#Recruitingicon").css("background" , "blue");
+	 	  	  			$("#Recruitingicon").css("background" , "pink");
 	 	  	  		 }else if (chatStatus == "모집중"){
 	 	  	  			temp = "모집종료를 하시겠습니까?";
 	 	  	  			$("#Recruitingicon").css("background" , "red");
@@ -803,16 +856,14 @@
  	  	  		 $("#Recruitingicon").text(data.status); 
  	  	  		 $("#chatStatusLabel").text(chatStatus);
  	  	  		 if (chatStatus == "여행중"){
- 	  	  		 	$("#Recruitingicon").css("color" , "yellow");
+ 	  	  		 	$("#Recruitingicon").css("background" , "orange");
  	  	  		 }else if (chatStatus == "모집종료"){
  	  	  			$("#Recruitingicon").css("background","green");
  	  	  			temp = "다시 모집을 하시겠습니까?";
  	  	  			$("#chatSatusDetail").text(temp);
  	  	  			$("#changeBtn").text("모집하기");
- 	  	  		 }else if (chatStatus == "여행준비중"){
- 	  	  			$("#Recruitingicon").css("background" , "pink");
  	  	  		 }else if (chatStatus == "여행종료"){
- 	  	  			$("#Recruitingicon").css("background" , "blue");
+ 	  	  			$("#Recruitingicon").css("background" , "pink");
  	  	  		 }else if (chatStatus == "모집중"){
  	  	  			$("#Recruitingicon").css("background" , "red");
  	  	  			temp = "모집종료를 하시겠습니까?";
@@ -821,6 +872,13 @@
  	  	  		 }
         		  
         	  });
+	          
+	          
+	          $(document).on("click" , "#chatoutbtn", function(){
+	        	  var outUser = $(this).parent().children("#outUserId").val();
+	        	  
+	        	  location.href = "${contextPath}/declaration.ch?num=" + chatId + "&id=" + outUser;  
+	          });
 	           
 	           
 		}); //end
@@ -889,6 +947,25 @@
 			    x[i].style.display = "none";  
 			  }
 			  document.getElementById(ItemName).style.display = "block";  
+		}
+		
+		//평판관리
+		var slideIndex = 1;
+		showDivs(slideIndex);
+		
+		function plusDivs(n) {
+		  showDivs(slideIndex += n);
+		}
+		
+		function showDivs(n) {
+		  var i;
+		  var x = document.getElementsByClassName("mySlides");
+		  if (n > x.length) {slideIndex = 1}
+		  if (n < 1) {slideIndex = x.length}
+		  for (i = 0; i < x.length; i++) {
+		    x[i].style.display = "none";  
+		  }
+		  x[slideIndex-1].style.display = "block";  
 		}
 	
 	

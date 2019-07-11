@@ -41,7 +41,9 @@
 	<!-- 신고글 인서트 -->
 	<insert id="insertPenalty" parameterType="Penalty">
 		INSERT INTO PENALTY_LIST
-		VALUES(PENALTY_LIST_SEQ.NEXTVAL, #{penaltyContent}, SYSDATE, '처리대기', NULL, #{penaltyId}, #{complainantId}, #{list}, NULL,
+		VALUES(PENALTY_LIST_SEQ.NEXTVAL, 
+			#{penaltyContent}
+		, SYSDATE, '처리대기', NULL, #{penaltyId}, #{complainantId}, #{list}, NULL,
 		<choose>
 			<when test="trvId != 0">
 				#{trvId}, NULL, NULL, NULL, NULL,

@@ -80,10 +80,13 @@ public class ChattingController {
 	@RequestMapping("/declaration.ch")
 	public String showDeclarationChatting(HttpServletRequest request) {
 		String chatid = (String)request.getParameter("num");
+		String penaityMember = (String)request.getParameter("id");
 		
 		//System.out.println("chatId :" + chatid);
+		System.out.println("신고 :" + penaityMember);
 		
 		request.setAttribute("chatId", chatid);
+		request.setAttribute("penMember", penaityMember);
 		
 		return "companion/DeclarationChatting";
 	}

@@ -9,10 +9,21 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/declarationChatting.css">
+<style>
+	#penaltyMember{
+		color: #555;
+	    background-color: #fff;
+	    background-image: none;
+	    border: 1px solid #ccc;
+	    width: 95%;
+	    padding: 5px;
+	    line-height: 1.5;
+	    border-radius: 5%;
+	}
+</style>
 </head>
 <body>
 	<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
-	<input type = "hidden" value = "${chatId}" id = "ReChatID">
 	<input type = "hidden" value = "${loginUser.userName}" id = "UserName">
 	<div class = "wrap">
 		<div class = "header">
@@ -22,35 +33,41 @@
 			 </div>
 		</div>
 		<div class = "content">
-			<form class="md-form">
+			<form id = "penaltyForm" class="md-form" action="insertPanelty.pe" method="post" enctype="multipart/form-data"> 
+				<input type = "hidden" value = "${chatId}" id = "ReChatID" name = "chatId"> 
 				<table id = "declarationTable">
 					<tr>
 						<td><label>신고자</label></td>
-						<td><input type = "text" value = "${loginUser.userName}" name = "reporter" id = "reporter" readonly> </td>
+						<td><input type = "text" value = "${loginUser.userName}"  id = "reporter" readonly>
+						<input type = "hidden" value = "${loginUser.memberId }" name="complainantId" ></td>
 					</tr>
 					<tr>
 						<td><label>신고 대상자</label></td>
 						<td>
-							<select>
+							<!-- <select id = "penaltyMember">
 								<option>선택하세요</option>
-							</select>
+							</select> -->
+
+							<input type = "text" id = "penaltyMember" readonly> 
 						</td>
 					</tr>
 					<tr>
 						<td><label>신고 사유</label></td>
 						<td>
-							<select id = "Selectreson">
+							<select id = "Selectreson" name="penaltyId" >
 								<option>선택하세요</option>
-								<option>저작권 침해 및 명의 도용</option>
-								<option>욕설 및 비방</option>
-								<option>광고 및 음란물 등 부적절한 게시글</option>
-								<option value = "etc">기타</option>
+								<option value = "21">욕설 및 비방</option>
+								<option value = "22">광고 및 음란물 등 부적절한 게시글</option>
+								<option value = "23">저작권 침해 및 명의 도용</option>
+								<option value = "30">기타</option>
 							</select>
 						</td>
 					</tr>
 					<tr id = "etcTr">
 						<td colspan = "2">
-							<textarea  placeholder = "신고 사유를 작성해주세요" id = "declarationDetail"></textarea>
+							<textarea  placeholder = "신고 사유를 작성해주세요" id = "declarationDetail" name="penaltyContent"></textarea>
+							<input type = "hidden" name="list" value = "채팅">
+							<input type = "hidden" id = "listType" name="listType" value = "${penMember}" >
 						</td>
 					</tr>
 				</table>
@@ -59,7 +76,7 @@
 					<div id = "fileDiv">
 						<div class="filebox"> 
 							<input class="upload-name" value="파일선택"
-							 disabled="disabled" name = "file_0" > 
+							 disabled="disabled" name="attachmentFile" multiple="multiple" > 
 							 <label for="ex_filename_0">업로드</label> 
 							 <input type="file" id="ex_filename_0"
 							  class="upload-hidden"> 
@@ -95,13 +112,30 @@
 	            
 	           
 	           $("#Selectreson").change(function(){
-	        	  if($(this).val() == "etc"){
+	        	  if($(this).val() == "30"){
 	        		  $("#etcTr").show();
 	        	  }else {
 	        		  $("#etcTr").hide();
 	        	  }
 	           });
-
+	            
+	            var PenaluserId = $("#listType").val();
+	            
+	            console.log("penality :" + PenaluserId );
+	            
+	            $.ajax({
+	        		   url : "${contextPath}/memberInfo.ch",
+	        		   data : {userId :PenaluserId },
+	        	       success : function(userInfo) {
+	        	    	   
+	        	    	   $("#penaltyMember").val(userInfo.userName);
+	    		  	
+	        	       },
+	        	       error : function(){
+	        	    	   console.log("에러발생");
+	        	       }
+	        	 });
+ 
 
 	        });
 	         
@@ -115,7 +149,7 @@
 	        	var str = "<div class= 'filebox'>";
 	        	str += "<input class='upload-name' value='파일선택' disabled='disabled' />";
 	        	str +=  "<label for='ex_filename_"+(g_count)+"' style = 'margin-left : 5px;'>업로드</label>" ;
-				str += "<input type='file' id='ex_filename_"+(g_count)+"' class='upload-hidden' name = 'file_"+(g_count)+"'>"; 
+				str += "<input type='file' id='ex_filename_"+(g_count)+"' class='upload-hidden' name= 'attachmentFile' multiple='multiple'>"; 
 				str += "<a href= '#this'  name='delete' class='btn' id = 'delete' style = 'margin-left : 10px;' >삭제하기</a>";
 			   	str +=  "</div>";
 	        	
@@ -168,6 +202,10 @@
 	    	   $("#returnBtn").click(function(){
 	    		   location.href = "${contextPath}/enterChatting.ch?num="+ chatId;
 	    	   });
+	    	   
+	    	   $("#submitbtn").click(function(){
+	    			$("#penaltyForm").submit();   
+	    	   })
 	    	   
 		 	});
 	        

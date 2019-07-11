@@ -110,15 +110,30 @@ public class PenaltyController {
 				break;
 			}
 			
+			if ( p.getPenaltyContent().equals("")) {
+				p.setPenaltyContent("신고사유참고");
+			}
+			
 			System.out.println("신고내용 : " + p.getPenaltyContent());
 			System.out.println("신고종류 코드 : " + p.getPenaltyId());
 			System.out.println("신고자 : " + p.getComplainantId());
 			System.out.println("구분 : " + p.getList());
 			System.out.println(p);
 			
+			
+			
 			int result = ps.insertPenalty(p, attachmentFileList);
-			int memberId= p.getComplainantId();
-			return "redirect:paneltyList.pe?memberId=" + memberId;
+
+			
+			if (p.getList().equals("채팅")) {
+				String chatId = request.getParameter("chatId");
+				
+				return "redirect:enterChatting.ch?num=" + chatId;
+			}else {
+				return "redirect:paneltyList.pe";
+			}
+			
+	
 		}
 	
 	// 신고 내역 - 이선우
