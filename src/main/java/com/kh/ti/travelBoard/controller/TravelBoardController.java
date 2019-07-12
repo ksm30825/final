@@ -293,13 +293,6 @@ public class TravelBoardController {
 		return mv;
 	}
 	
-	//여행일정 상세 / 일정표 / 날짜별 지도 보기 - 예랑
-	@RequestMapping("dayMapSelect.tb")
-	public String dayMapSelect() {
-		
-		return "travelBoard/travelDetail";
-	}
-	
 	//여행일정 상세 / 가계부 / 가계부 다운로드 - 예랑
 	@RequestMapping("costDownload.tb")
 	public String costDownload() {
@@ -417,12 +410,6 @@ public class TravelBoardController {
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		
 		return "travelBoard/myLikeyTravelList";
-	}
-	
-	//지우기
-	@RequestMapping("showMapTest.tb")
-	public String showMapTest() {
-		return "travelBoard/mapTest";
 	}
 	
 }

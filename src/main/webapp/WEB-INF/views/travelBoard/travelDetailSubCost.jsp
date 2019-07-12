@@ -49,7 +49,7 @@
 		background: rgb(178, 214, 237, 0.55);
 		padding: 1em;
 		text-align: center !important;
-		font-size: 1.2em;
+		font-size: 1em;
 	}
 	#costTable td {
 		padding: 1em;
@@ -114,10 +114,15 @@
 					<div align="left" class="title is-4">
 					<span id="costTitle">전체예산</span>
 					<span id="budget">
-					<i class="far fa-money-bill-alt"></i>
-					<span id="allCost"> ${ detailTb.budget }</span>원 = 
-					<i class="fas fa-money-bill-alt"></i>
-					   000,000AUD
+						<i class="far fa-money-bill-alt"></i>
+						<input type="number" id="travelBudget" value="${ detailTb.budget }" style="display: none;">
+					<span id="allCost"><fmt:formatNumber value="${ detailTb.budget }" groupingUsed="true" /></span>
+					&nbsp;KRW = <i class="fas fa-money-bill-alt"></i>
+					<input type="number" id="travelBudgetLocal" value="" style="display: none;">
+					<span id="allCostLocal">
+					   	
+					</span>
+					&nbsp;${ detailTb.trvCities[0].currencyUnit }
 					</span>
 					</div>
 					   
@@ -139,41 +144,29 @@
 								<c:when test="${ st.count <= showDays }">
 									<c:set var="check" value="false" />
 									
-									<fmt:parseNumber var="roomCharge" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="trafficCharge" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="foodCharge" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="shoppingCharge" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="sightseeingCharge" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="etcCharge" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="totalCost" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="sightseeingCharge" integerOnly="true" value="${ 0 }" />
-									<fmt:parseNumber var="balance" integerOnly="true" value="${ detailTb.budget }" />
+									<fmt:parseNumber var="roomCharge" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="trafficCharge" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="foodCharge" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="shoppingCharge" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="sightseeingCharge" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="etcCharge" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="totalCost" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="sightseeingCharge" integerOnly="true" value="${ 0 }" pattern="000,000,000.00" />
+									<fmt:parseNumber var="balance" integerOnly="true" value="${ detailTb.budget }" pattern="000,000,000.00" />
 									
 									<c:forEach var="j" begin="0" end="${ totalDays }" step="1">
 										<c:if test="${ st.count == allCost[j].dayNumber }">
-											<!-- <p>결제전 볼수있음</p> -->
-											<tr class="costTable" id="cost${ st.count }" style="display: none;">
-												<td>${ allCost[j].roomCharge }</td>
-												<td>${ allCost[j].trafficCharge }</td>
-												<td>${ allCost[j].foodCharge }</td>
-												<td>${ allCost[j].shoppingCharge }</td>
-												<td>${ allCost[j].sightseeingCharge }</td>
-												<td>${ allCost[j].etcCharge }</td>
-												<td>${ allCost[j].totalCost }</td>
-												<td>${ balance - allCost[j].totalCost }</td>
-											</tr>
 											<c:set var="check" value="true" />
 										</c:if>
-										<fmt:parseNumber var="balance" integerOnly="true" value="${ balance - allCost[j].totalCost }" />
+										<fmt:parseNumber var="balance" integerOnly="true" value="${ balance - allCost[j].totalCost }" pattern="000,000,000.00" />
 										
-										<fmt:parseNumber var="roomCharge" integerOnly="true" value="${ roomCharge + allCost[j].roomCharge }" />
-										<fmt:parseNumber var="trafficCharge" integerOnly="true" value="${ trafficCharge + allCost[j].trafficCharge }" />
-										<fmt:parseNumber var="foodCharge" integerOnly="true" value="${ foodCharge + allCost[j].foodCharge }" />
-										<fmt:parseNumber var="shoppingCharge" integerOnly="true" value="${ shoppingCharge + allCost[j].shoppingCharge }" />
-										<fmt:parseNumber var="sightseeingCharge" integerOnly="true" value="${ sightseeingCharge + allCost[j].sightseeingCharge }" />
-										<fmt:parseNumber var="etcCharge" integerOnly="true" value="${ etcCharge + allCost[j].etcCharge }" />
-										<fmt:parseNumber var="totalCost" integerOnly="true" value="${ totalCost + allCost[j].totalCost }" />
-										
+										<fmt:parseNumber var="roomCharge" integerOnly="true" value="${ roomCharge + allCost[j].roomCharge }" pattern="000,000,000.00" />
+										<fmt:parseNumber var="trafficCharge" integerOnly="true" value="${ trafficCharge + allCost[j].trafficCharge }" pattern="000,000,000.00"/>
+										<fmt:parseNumber var="foodCharge" integerOnly="true" value="${ foodCharge + allCost[j].foodCharge }" pattern="000,000,000.00"/>
+										<fmt:parseNumber var="shoppingCharge" integerOnly="true" value="${ shoppingCharge + allCost[j].shoppingCharge }" pattern="000,000,000.00"/>
+										<fmt:parseNumber var="sightseeingCharge" integerOnly="true" value="${ sightseeingCharge + allCost[j].sightseeingCharge }" pattern="000,000,000.00"/>
+										<fmt:parseNumber var="etcCharge" integerOnly="true" value="${ etcCharge + allCost[j].etcCharge }" pattern="000,000,000.00"/>
+										<fmt:parseNumber var="totalCost" integerOnly="true" value="${ totalCost + allCost[j].totalCost }" pattern="000,000,000.00"/>
 									</c:forEach>
 									
 								</c:when>
@@ -201,15 +194,25 @@
 							</c:choose>
 						</c:forEach>
 						
-						<tr id="allCostTable" style="">
-							<td>${ roomCharge }</td>
-							<td>${ trafficCharge }</td>
-							<td>${ foodCharge }</td>
-							<td>${ shoppingCharge }</td>
-							<td>${ sightseeingCharge }</td>
-							<td>${ etcCharge }</td>
-							<td>${ totalCost }</td>
-							<td>${ detailTb.budget - totalCost }</td>
+						<tr id="allCostTableKrw" class="allCostTable" style="">
+							<td><span>0</span>&nbsp;원</td>
+							<td><span>0</span>&nbsp;원</td>
+							<td><span>0</span>&nbsp;원</td>
+							<td><span>0</span>&nbsp;원</td>
+							<td><span>0</span>&nbsp;원</td>
+							<td><span>0</span>&nbsp;원</td>
+							<td><span>0</span>&nbsp;원</td>
+							<td><span>0</span>&nbsp;원</td>
+						</tr>
+						<tr id="allCostTableLocal" class="allCostTable" style="">
+							<td><span>${ roomCharge }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
+							<td><span>${ trafficCharge }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
+							<td><span>${ foodCharge }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
+							<td><span>${ shoppingCharge }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
+							<td><span>${ sightseeingCharge }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
+							<td><span>${ etcCharge }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
+							<td><span>${ totalCost }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
+							<td><span>${ detailTb.budget - totalCost }</span>&nbsp;${ detailTb.trvCities[0].currencyUnit }</td>
 						</tr>
 						
 					</table>
@@ -228,7 +231,7 @@
 					<c:forEach var="j" begin="0" end="${ fn:length(allCost) }" step="1">
 					<c:if test="${ st.count == allCost[j].dayNumber && fn:length(allCost[j].trvCost) > 0}">
 							<%-- <p>DAY ${ st.count } 결제 안해도 볼 수 있음(정보 있음)</p> --%>
-							
+							 
 							<div class="column detailCostArea" style="padding: 10.5px 0; display: none;" id="detailCostTable${ st.count }">
 								<nav class="panel costPanel">
 									<div class="panel-heading" align="center"
@@ -433,14 +436,105 @@
 		</div>
 	</section>
 <script>
+
+	var budgetLocal = 1;
+	var amount = Number($("#travelBudget").val());
+	
+	//전체환율 계산
+	$(document).ready(function(){
+		var rate = 1;
+		// execute the conversion using the "convert" endpoint:
+		$.ajax({
+			url:'http://data.fixer.io/api/latest?access_key=efce45cabfbb54177c7899aff7d466f4',
+		    dataType: 'jsonp',
+		    success: function(json) {
+				var krw = json.rates.KRW;
+				var local = json.rates.${ detailTb.trvCities[0].currencyUnit };
+				
+				var numberBudgetLocal = 0;
+				
+				rate = Math.round((krw / local) * 1000) / 1000;
+				budgetLocal = Math.round((amount / rate) * 100) / 100;
+				numberBudgetLocal = budgetLocal;
+				budgetLocal = budgetLocal.toString();
+
+				var str = budgetLocal.substring(0, budgetLocal.indexOf('.'));
+				var index = budgetLocal.substring(budgetLocal.indexOf('.'), budgetLocal.indexOf('.') + 3);
+				
+				budgetLocal = comma(str) + index;
+				
+				//전체예산 넣기
+				$("#allCostLocal").append(budgetLocal);
+				$("#travelBudgetLocal").val(budgetLocal);
+				
+		        //전체보기의 각 예산 넣기
+		        var i = 0;
+		        var totalLocal = 0;
+		        var budget = $("#travelBudget").val();
+		        var total = 0;
+		        var balance = 0;
+		        var balanceLocal = 0;
+		        $("#allCostTableLocal > td > span").each(function() {
+		        	var cost = Number($(this).text());
+		        	if(i < 6) {
+		        		totalLocal += cost;
+		        	}
+		        	cost = Math.round((cost * rate) / 100) * 100;
+		        	if(i < 6) {
+		        		total += cost;
+		        	}
+		        	cost = comma(cost);
+		        	$("#allCostTableKrw > td > span").eq(i).text(cost);
+		        	if(i == 7) {
+		        		balance = budget - total;
+		        		
+		        		balance = comma(balance);
+		        		
+		        		$("#allCostTableKrw > td > span").eq(i).text(balance);
+		        		//
+		        		balanceLocal = numberBudgetLocal - totalLocal;
+		        		balanceLocal = balanceLocal.toString();
+		        		
+		        		var balanceLocalStr = balanceLocal.substring(0, balanceLocal.indexOf('.'));
+						var balanceLocalIndex = balanceLocal.substring(balanceLocal.indexOf('.'), balanceLocal.indexOf('.') + 3);
+						
+						balanceLocal = comma(balanceLocalStr) + balanceLocalIndex;
+						
+						$("#allCostTableLocal > td > span").eq(i).text(balanceLocal);
+		        	}
+		        	i++;
+		        })
+		        
+		    }
+		});
+		
+	});
+	
+	//금액 콤마 찍기
+	function comma(num){
+	    var len, point, str; 
+	       
+	    num = num + ""; 
+	    point = num.length % 3 ;
+	    len = num.length; 
+	   
+	    str = num.substring(0, point); 
+	    while (point < len) { 
+	        if (str != "") str += ","; 
+	        str += num.substring(point, point + 3); 
+	        point += 3; 
+	    } 
+	     
+	    return str;
+	 
+	}
+
 	function allCost() {
-		$("#allCostTable").removeAttr("style");
+		$(".allCostTable").removeAttr("style");
 		$(".costTable").css("display","none");
 		$(".nextBtnArea").css("visibility","hidden");
 		$("#budget").removeAttr("style");
-		
-		$("#costTitle").text("전체예산");
-		
+		$(".detailCostArea").hide();
 	}
 	
 	function dayCost(day, text) {
@@ -454,20 +548,19 @@
 		}else if(text == 'right') {
 			nextDay = Number(Number(day) + 1);
 		}else {
-			$("#allCostTable").css("display","none");
 			$(".nextBtnArea").removeAttr("style");
-			$("#budget").css("display","none");
 		}
 		
-		console.log("next : " + nextDay);
+		var total = 0;
+		var balance = 0;
 		
 		if(nextDay != 0 && nextDay <= totalDay) {
 			
 			$(".costTable").css("display","none");
 			$(".detailCostArea").css("display","none");
-			$("#cost" + nextDay).removeAttr("style");
+			$("#cost" + nextDay + "Krw").removeAttr("style");
+			$("#cost" + nextDay + "Local").removeAttr("style");
 			$("#detailCostTable" + nextDay).removeAttr("style");
-			$("#costTitle").text("DAY " + nextDay);
 			
 			$("#costDayNum").val(nextDay);
 		}
