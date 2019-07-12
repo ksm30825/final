@@ -111,9 +111,12 @@ public interface PointDao {
 	int getAdProceedsListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
 	//관리자 - 수익금 조회
 	ArrayList<Proceeds> selectAdProceedsList(SqlSessionTemplate sqlSession, PageInfo adProceedsPi, SearchPoint sp);
-	
-	
-	
+	//명소리뷰코드로 명소코드 가져오기
+	int selectSpotId(SqlSessionTemplate sqlSession, int spotReviewId);
+	//관리자 - 환급 내역 리스트 카운트
+	int getAdRebateListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
+	//관리자 - 환급 내역 조회
+	ArrayList<Proceeds> selectAdRebateList(SqlSessionTemplate sqlSession, PageInfo adRebatePi, SearchPoint sp);
 	
 	
 }

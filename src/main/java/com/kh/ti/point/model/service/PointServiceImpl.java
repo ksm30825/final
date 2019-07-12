@@ -260,6 +260,21 @@ public class PointServiceImpl implements PointService{
 	public ArrayList<Proceeds> selectAdProceedsList(PageInfo adProceedsPi, SearchPoint sp) {
 		return pd.selectAdProceedsList(sqlSession, adProceedsPi, sp);
 	}
+	//명소리뷰코드로 명소코드 가져오기
+	@Override
+	public int selectSpotId(int spotReviewId) {
+		return pd.selectSpotId(sqlSession, spotReviewId);
+	}
+	//관리자 - 환급 내역 리스트 카운트
+	@Override
+	public int getAdRebateListCount(SearchPoint sp) {
+		return pd.getAdRebateListCount(sqlSession, sp);
+	}
+	//관리자 - 환급 내역 조회
+	@Override
+	public ArrayList<Proceeds> selectAdRebateList(PageInfo adRebatePi, SearchPoint sp) {
+		return pd.selectAdRebateList(sqlSession, adRebatePi, sp);
+	}
 
 	
 
