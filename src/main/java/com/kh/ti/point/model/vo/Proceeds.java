@@ -3,11 +3,15 @@ package com.kh.ti.point.model.vo;
 import java.io.Serializable;
 import java.sql.Date;
 
+import com.kh.ti.travel.model.vo.Travel;
+import com.kh.ti.travelRequest.model.vo.Participation;
+import com.kh.ti.travelRequest.model.vo.TravelRequest;
+import com.kh.ti.travelRequest.model.vo.TravelRequestPlan;
+
 public class Proceeds implements Serializable {
 	//수익금 발생 내역
 	private int proceedsId;		//수익금발생코드	
 	private int proceeds;		//수익발생액
-	private int accumulateProceeds; //누적수익금
 	private Date proceedsDate;	//수익발생일
 	private int proceedsType;	//발생타입	-10:일정판매, 20:설계판매
 	private int memberId;		//회원코드
@@ -16,23 +20,20 @@ public class Proceeds implements Serializable {
 	private String month;		//검색월
 	
 	private String userName;
-	private String email;
-	private String trvTitle;
-	private int planId;
-	private String planTitle;
 	
-	private int usePoint;
-	private int requestId;
+	private Travel travel;
+	private TravelRequest travelRequest;
+	private TravelRequestPlan travelRequestPlan;
+	private Participation participation;
 	
 	public Proceeds() {}
 
-	public Proceeds(int proceedsId, int proceeds, int accumulateProceeds, Date proceedsDate, int proceedsType,
-			int memberId, int trvId, int ptcpId, String month, String userName, String email, String trvTitle,
-			int planId, String planTitle) {
+	public Proceeds(int proceedsId, int proceeds, Date proceedsDate, int proceedsType, int memberId, int trvId,
+			int ptcpId, String month, String userName, Travel travel, TravelRequest travelRequest,
+			TravelRequestPlan travelRequestPlan, Participation participation) {
 		super();
 		this.proceedsId = proceedsId;
 		this.proceeds = proceeds;
-		this.accumulateProceeds = accumulateProceeds;
 		this.proceedsDate = proceedsDate;
 		this.proceedsType = proceedsType;
 		this.memberId = memberId;
@@ -40,10 +41,10 @@ public class Proceeds implements Serializable {
 		this.ptcpId = ptcpId;
 		this.month = month;
 		this.userName = userName;
-		this.email = email;
-		this.trvTitle = trvTitle;
-		this.planId = planId;
-		this.planTitle = planTitle;
+		this.travel = travel;
+		this.travelRequest = travelRequest;
+		this.travelRequestPlan = travelRequestPlan;
+		this.participation = participation;
 	}
 
 	public int getProceedsId() {
@@ -52,10 +53,6 @@ public class Proceeds implements Serializable {
 
 	public int getProceeds() {
 		return proceeds;
-	}
-
-	public int getAccumulateProceeds() {
-		return accumulateProceeds;
 	}
 
 	public Date getProceedsDate() {
@@ -86,20 +83,20 @@ public class Proceeds implements Serializable {
 		return userName;
 	}
 
-	public String getEmail() {
-		return email;
+	public Travel getTravel() {
+		return travel;
 	}
 
-	public String getTrvTitle() {
-		return trvTitle;
+	public TravelRequest getTravelRequest() {
+		return travelRequest;
 	}
 
-	public int getPlanId() {
-		return planId;
+	public TravelRequestPlan getTravelRequestPlan() {
+		return travelRequestPlan;
 	}
 
-	public String getPlanTitle() {
-		return planTitle;
+	public Participation getParticipation() {
+		return participation;
 	}
 
 	public void setProceedsId(int proceedsId) {
@@ -108,10 +105,6 @@ public class Proceeds implements Serializable {
 
 	public void setProceeds(int proceeds) {
 		this.proceeds = proceeds;
-	}
-
-	public void setAccumulateProceeds(int accumulateProceeds) {
-		this.accumulateProceeds = accumulateProceeds;
 	}
 
 	public void setProceedsDate(Date proceedsDate) {
@@ -142,29 +135,28 @@ public class Proceeds implements Serializable {
 		this.userName = userName;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setTravel(Travel travel) {
+		this.travel = travel;
 	}
 
-	public void setTrvTitle(String trvTitle) {
-		this.trvTitle = trvTitle;
+	public void setTravelRequest(TravelRequest travelRequest) {
+		this.travelRequest = travelRequest;
 	}
 
-	public void setPlanId(int planId) {
-		this.planId = planId;
+	public void setTravelRequestPlan(TravelRequestPlan travelRequestPlan) {
+		this.travelRequestPlan = travelRequestPlan;
 	}
 
-	public void setPlanTitle(String planTitle) {
-		this.planTitle = planTitle;
+	public void setParticipation(Participation participation) {
+		this.participation = participation;
 	}
 
 	@Override
 	public String toString() {
-		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", accumulateProceeds="
-				+ accumulateProceeds + ", proceedsDate=" + proceedsDate + ", proceedsType=" + proceedsType
-				+ ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId=" + ptcpId + ", month=" + month
-				+ ", userName=" + userName + ", email=" + email + ", trvTitle=" + trvTitle + ", planId=" + planId
-				+ ", planTitle=" + planTitle + "]";
+		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", proceedsDate=" + proceedsDate
+				+ ", proceedsType=" + proceedsType + ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId="
+				+ ptcpId + ", month=" + month + ", userName=" + userName + ", travel=" + travel + ", travelRequest="
+				+ travelRequest + ", travelRequestPlan=" + travelRequestPlan + ", participation=" + participation + "]";
 	}
 	
 }

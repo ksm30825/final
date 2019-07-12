@@ -40,14 +40,16 @@
 					<div style="width:100%;font-size:25px;color:#209cee;">수익금 내역</div>
 		         <div style="width:100%;height:100%;">
 		         	<div>
-		         		<div class="field has-addons" style="width:320px;float:right;">
-							<p class="control" data-tooltip="검색">
-								<a class="button is-primary" style="width:40px;height:20px;">
-									<i class='fas fa-search' style='font-size:15px'></i>
-								</a>
-							</p>
+		         		<div class="field has-addons" style="float:right;">
 							<p class="control">
-								<input class="input is-primary" type="text" placeholder="회원ID를 검색하세요" style="width:150px;height:20px;">
+								<input type="checkbox" style="display:inline-block;float:left;" id="searchNameCheck" name="searchNameCheck">
+								<p style="width:100px;display:inline-block;"><label for="searchNameCheck">이름 검색하기</label></p>
+								<input class="input" type="text" placeholder="회원 이름을 검색하세요" style="width:150px;height:20px;display:none" id="nameArea">
+							</p>
+							<p class="control" id="search" style="margin-left:1%;display:inline-block;float:right;">
+								<a class="button is-primary" style="width:60px;height:20px;">
+									<i class='fas fa-search' style='font-size:15px'></i>검색
+								</a>
 							</p>
 							<a class="button is-primary is-outlined" style="width:120px;height:20px;margin-left:2%;" href="allAdRebate.po">환급내역 보러가기</a>
 						</div>
@@ -55,105 +57,78 @@
 		         	<div style="width:100%;height:25px;"></div>
 		         </div>
 		         <div style="width:100%;height:100%;" id="aPointArea">
-					<table id="aPointTB" class="table is-narrow"align="center"style="width:100%;height:100%;" >
+					<table id="aProceedsTB" class="table is-narrow" align="center"style="width:100%;height:100%;" >
 						<thead>
 							<tr style="background:#ccccff;">
 								<th width="3%"> No. </th>
-								<th width="15%"> 아이디 </th>
-								<th width="15%"> 닉네임 </th>
+								<th width="15%"> 이름 </th>
+								<th width="15%"> 이메일 </th>
 								<th width="20%"> 수익금 </th>
 								<th width="20%"> 수익발생일 </th>
 								<th width="20%"> 수익발생글 </th>
 							</tr>
 						</thead>
-						<tbody id="aPointTBody">
-							<tr>
-								<td> 1 </td>
-								<td> user01 </td>
-								<td> skdafj </td>
-								<td> 32,100 </td>
-								<td> 19.06.10 </td>
-								<td>
-									<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
-								</td>
-							</tr>
-							<tr>
-								<td> 1 </td>
-								<td> user01 </td>
-								<td> skdafj </td>
-								<td> 32,100 </td>
-								<td> 19.06.10 </td>
-								<td>
-									<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
-								</td>
-							</tr>
-							<tr>
-								<td> 1 </td>
-								<td> user01 </td>
-								<td> skdafj </td>
-								<td> 32,100 </td>
-								<td> 19.06.10 </td>
-								<td>
-									<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
-								</td>
-							</tr>
-							<tr>
-								<td> 1 </td>
-								<td> user01 </td>
-								<td> skdafj </td>
-								<td> 32,100 </td>
-								<td> 19.06.10 </td>
-								<td>
-									<a class="button is-primary is-outlined" style="width:70px;height:20px;"> 보러가기 </a>
-								</td>
-							</tr>
+						<tbody id="aProceedsTBody">
+							
 						</tbody>
 					</table>
 		         </div>
 					
-					<div align="center" class="pagingBtn" style="margin-top:3%;">
-		    		<button class="pageingBtn"> << </button>
-		    		<button class="pageingBtn"> < </button>
-		    		<button class="pageingBtn"> 1 </button>
-		    		<button class="pageingBtn"> 2 </button>
-		    		<button class="pageingBtn"> > </button>
-		    		<button class="pageingBtn"> >> </button>
+				<div align="center" class="pagingBtn" style="margin-top:3%;">
+		    		
 				</div>
-				</div>
-			</section>
-			<section class="section" id="modal">
-				<div class="modal" id="myModal">
-					<div class="modal-background"></div>
-					<div class="modal-card">
-						<header class="modal-card-head">
-							<p class="modal-card-title">환불 하시겠습니까?</p>
-							<button class="delete" id="del"></button>
-						</header>
-						<section class="modal-card-body">
-							<textarea placeholder="환불사유를 입력해주세요" cols="85" rows="15" style="resize:none;"></textarea>
-						</section>
-						<footer class="modal-card-foot">
-							<div style="margin-left:auto;margin-right:auto;">
-								<a class="button is-success" style="border-radius:5px; height:25px;width:60px;"> 예 </a>
-								<a class="button is-danger" style="border-radius:5px; height:25px;"> 아니요 </a>
-							</div>
-						</footer>
-					</div>
 				</div>
 			</section>
 		</div>
 	</div>
 	<script type="text/javascript">
 		$(function() {
-			$('.modal-background, .modal-close').click(function() {
-				$(this).parent().removeClass('is-active');
-			});
-			$("#del").click(function(){
-				$(this).parent().parent().parent().removeClass('is-active');
-			});
 			$(".apointPro").parent().addClass('is-active');
 			$(".apointPro").children().css({"color":"#209cee"});
+			
+			var currentPage = 1;
+			//전체 리스트 출력으로 가는 함수
+			total(currentPage);
+			
 		});
+		function total(currentPage){
+			var condition = 99;
+			$.ajax({
+				url:"adProceeds.po",
+				type:"post",
+				data:{currentPage:currentPage, condition:condition},
+				success:function(data){
+					makeTable(data.adProceedsList, data.adProceedsPi);
+				},
+				error:function(data){
+					console.log('error');
+				}
+			});
+		};
+		function makeTable(adProceedsList, adProceedsPi){
+			console.log(adProceedsList);
+			//console.log(adProceedsPi);
+			
+			var len = adProceedsList.length;
+			//console.log(len);
+			$("#aProceedsTBody").empty();
+			
+			for(var i=0 ; i<len ; i++){
+				var list = adProceedsList[i];
+				//console.log(list);
+				var pi = adProceedsPi;
+				//console.log(pi);
+				
+				var $tr = $("<tr>"); 
+				
+				var $noTd = $("<td>").text(i+1);
+				
+				//var $nameTr = $("<td>").text(list.);
+				
+				$tr.append($noTd);
+				$("#aProceedsTBody").append($tr);
+			}
+		};
 	</script>
 </body>
 </html>

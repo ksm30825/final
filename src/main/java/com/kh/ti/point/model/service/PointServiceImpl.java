@@ -250,7 +250,16 @@ public class PointServiceImpl implements PointService{
 	public int selectOnePoint(int memberId) {
 		return pd.selectOnePoint(sqlSession, memberId);
 	}
-	//설계자 이름 찾기, 설계번호 찾기
+	//관리자 - 수익금 리스트 카운트
+	@Override
+	public int getAdProceedsListCount(SearchPoint sp) {
+		return pd.getAdProceedsListCount(sqlSession, sp);
+	}
+	//관리자 - 수익금 조회
+	@Override
+	public ArrayList<Proceeds> selectAdProceedsList(PageInfo adProceedsPi, SearchPoint sp) {
+		return pd.selectAdProceedsList(sqlSession, adProceedsPi, sp);
+	}
 
 	
 

@@ -327,7 +327,7 @@ public class PointController {
 		
 		//System.out.println("memberID : " + memberId);
 		//System.out.println("boardCode : " + boardCode);
-		return "redirect:/selectTravel.trv?trvId="+boardCode;//-------------------------------------------------------------------------------
+		return "redirect:/travelDetailForm.tb?trvId="+boardCode;//-------------------------------------------------------------------------------
 	}
 	@RequestMapping("/oneBoardRequest.po")
 	public String selectOneBoardRequest(String mid, String bid, HttpServletRequest request) {
@@ -338,7 +338,7 @@ public class PointController {
 		String userName = loginUser.getUserName();
 		System.out.println("userName : " + userName);
 		
-		return "redirect:/requestDetail.tr?reqId="+bid+"&userName="+userName;//-------------------------------------------------------------------------------
+		return "redirect:/myRequestList.mr?memberId="+memberId;//-------------------------------------------------------------------------------
 	}
 	//포인트 자동 인서트!!
 	//10:일정작성, 20:일정리뷰, 30:여행지리뷰
@@ -878,17 +878,20 @@ public class PointController {
 		SearchPoint sp = new SearchPoint();
 		sp.setCondition(condition);
 		
-//		int adProceedsListCount = ps.getAdProceedsListCount(sp);
-//		
-//		int adProceedsCurrentPage = currentPage;
-//		
-//		PageInfo adProceedsPi = Pagination.getPageInfo(adProceedsCurrentPage, adProceedsListCount);
-//		
-//		ArrayList<Payment> adProceedsList = ps.selectAdProceedsList(adProceedsPi, sp);
+		System.out.println("sp : " + sp);
+		int adProceedsListCount = ps.getAdProceedsListCount(sp);
+		System.out.println("adProceedsListCount : " + adProceedsListCount);
+		
+		int adProceedsCurrentPage = currentPage;
+		
+		PageInfo adProceedsPi = Pagination.getPageInfo(adProceedsCurrentPage, adProceedsListCount);
+		
+		ArrayList<Proceeds> adProceedsList = ps.selectAdProceedsList(adProceedsPi, sp);
+		System.out.println("adProceedsList : " + adProceedsList);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
-//		hmap.put("adPointList", adProceedsList);
-//		hmap.put("adPointPi", adProceedsPi);
+		hmap.put("adProceedsList", adProceedsList);
+		hmap.put("adProceedsPi", adProceedsPi);
 		
 		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
