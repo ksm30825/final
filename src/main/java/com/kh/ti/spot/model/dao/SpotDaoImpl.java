@@ -86,8 +86,17 @@ public class SpotDaoImpl implements SpotDao {
 		return (ArrayList) sqlSession.selectList("Spot.selectSpotReviews", spotId);
 	}
 
+	//리뷰 등록(spot reviews) 현재 시퀀스 조회 - 세령
+	@Override
+	public int getSpotReviewIdCurrval(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Spot.spotReviewSeqCurrval");
+	}
 
-	
-	
+	//명소 사진 조회 - 세령
+	@Override
+	public ArrayList<SpotFile> selectSpotFile(SqlSessionTemplate sqlSession, int spotId) {
+		return (ArrayList) sqlSession.selectList("Spot.selectSpotFile", spotId);
+	}
+
 
 }

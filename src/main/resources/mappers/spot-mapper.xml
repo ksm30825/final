@@ -209,4 +209,16 @@
 		WHERE SPOT_ID = #{ spotId }
 		ORDER BY REVIEW_DATE DESC
 	</select>
+	
+	<!-- spot reviews의 현재 시퀀스 조회 세령 -->
+	<select id="spotReviewSeqCurrval" resultType="_int">
+		SELECT SPOT_REVIEWS_SEQ.CURRVAL FROM DUAL
+	</select>
+	
+	<!-- 명소 사진 조회 세령 -->
+	<select id="selectSpotFile" parameterType="_int" resultMap="spotFileResultSet">
+		SELECT *
+		FROM SPOT_FILE
+		WHERE SPOT_ID = #{ spotId }
+	</select>
  </mapper>

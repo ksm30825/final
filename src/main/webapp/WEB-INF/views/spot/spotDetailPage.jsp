@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +41,11 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" /> <br><br>
-  
+  <c:if test="${ !empty msg && msg eq '' && msg eq ' '}">
+  	<script>
+  		alert("${ msg }");
+  	</script>
+  </c:if>
   <!-- content Area -->
   <div class="columns">
   	<div class="column">
@@ -59,7 +64,7 @@
 				<!-- header -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<img src="resources/images/main.jpg" style="margin-right:10px; width:45%; height:300px;">
+						<img src="${ spotFile[0].filePath }" style="margin-right:10px; width:45%; height:300px;">
 						
 						<!-- text area -->
 						<div class="field" style="width: 55%;">
@@ -99,9 +104,9 @@
 				<!-- header sub pic area -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<c:forEach var="i" begin="1" end="4" step="1">
+						<c:forEach var="spotImg" items="${ spotFile }">
 							<div class="field">
-								<img class="image" src="resources/images/main.jpg">
+								<img class="image" src="${ spotImg.filePath }"  style="width: 300px; height: 180px;">
 							</div>
 						</c:forEach>
 					</div>
@@ -170,16 +175,25 @@
 				
 				<hr style="border: 0.5px solid gray;">
 				
+				<!-- 리뷰 평균 구하기 -->
+				<c:set var="sum" value=""/>
+				<c:forEach var="grade" items="${ spotReviews }">
+					<c:set var="sum" value="${ sum + grade.grade }"/>
+				</c:forEach>
+				<c:set var="length" value="${ fn:length(spotReviews) }"/>	
+				<fmt:formatNumber var="avg" value="${ sum / length }" pattern=".0"/>
+				<!-- end 리뷰 평균 구하기 -->
+				
 				<!-- reviews area -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<h3 style="color: purple;"><strong style="color: black;">리뷰</strong>&nbsp; &nbsp;( ${ fn:length(spotReviews) } )</h3>
+						<h3 style="color: purple;"><strong style="color: black;">리뷰</strong>&nbsp; &nbsp;( ${ length } )</h3>
 						<div class="field is-horizontal">
 							<div class="field-body">
 								<div class="field is-grouped" style="justify-content: flex-end;">
 									<i class="fas fa-smile" style="color: red; font-size: 30px;"></i> &nbsp; &nbsp;
 									<div class="field">
-										<h2 style="color: red; font-size: 25px;">AVG </h2> &nbsp; &nbsp;
+										<h2 style="color: red; font-size: 25px;">${ avg } </h2> &nbsp; &nbsp;
 									</div>
 								</div>
 							</div>
@@ -236,19 +250,7 @@
 				
 					<div class="field is-horizontal">
 						<div class="field-body">
-							<label class="label" style="width: 80%;"> 익명의 사용자 </label>
-							<c:if test="${ loginUser.memberId eq reviews['memberId'] }">
-								<div class="field" align="right">
-									<a href="#" style="color: #666699;">수정</a> &nbsp; &nbsp;
-									<a href="#" style="color: #666699;">삭제</a> 
-								</div>
-							</c:if>
-						</div>
-					</div>
-					
-					<div class="field is-horizontal">
-						<div class="field-body">
-							<div class="field" style="width: 15%;" align="center">	
+							<div class="field" style="width: 15%; padding-top: 10px;" align="center">	
 								<c:choose>
 									<c:when test="${ reviews['grade'] eq 1 }"> 
 										<i class="fas fa-laugh" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i>
@@ -273,7 +275,20 @@
 								</c:choose>
 							</div>
 							<!-- text area -->
-							<div class="field" style="width: 60%;">
+							<div class="field" style="width: 85%;">
+										
+								<div class="field is-horizontal">
+									<div class="field-body">
+										<label class="label" style="width: 80%;" > ${ reviews['userName'] } </label>
+										<c:if test="${ loginUser.memberId eq reviews['memberId'] }">
+											<div class="field" align="right">
+												<a href="#" style="color: #666699;">수정</a> &nbsp; &nbsp;
+												<a href="#" style="color: #666699;">삭제</a> 
+											</div>
+										</c:if>
+									</div>
+								</div>
+								
 					           <div class="control">
 					             <textarea class="textarea" readonly> ${ reviews['reviewContent'] } </textarea>
 					           </div>
@@ -331,6 +346,7 @@
   			} //end switch
   			
   			$("#gradeIcon").attr("class", classVar);
+  			
   		});
   	});
   </script> <!-- end script -->

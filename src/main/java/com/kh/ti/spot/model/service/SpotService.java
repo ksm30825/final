@@ -35,5 +35,7 @@ public interface SpotService {
 
 	ArrayList<HashMap> selectSpotReviews(int spotId);
 
+	ArrayList<SpotFile> selectSpotFile(int spotId);
+
 
 }

@@ -136,19 +136,33 @@ public class SpotController {
 		City city = ss.selectCityOne(spotId);
 		SpotList spotList = ss.selectSpotListOne(spotId);
 		ArrayList<HashMap> spotReviews = ss.selectSpotReviews(spotId);
+		ArrayList<SpotFile> spotFile = ss.selectSpotFile(spotId);
 		
 		model.addAttribute("city", city);
 		model.addAttribute("spotList", spotList);
 		model.addAttribute("spotReviews", spotReviews);
+		model.addAttribute("spotFile", spotFile);
 		
 		return "spot/spotDetailPage";
 	}
 	
 	//사용자명소리뷰등록용메소드
 	@RequestMapping("insertSpotReview.sp")
-	public String insertSpotReview(@ModelAttribute SpotReviews spotReviews) {
-		int result = ss.insertSpotReviews(spotReviews);
-		return "redirect:selectSpotDetailInfo.sp?spotId=" + spotReviews.getSpotId();
+	public String insertSpotReview(@ModelAttribute SpotReviews spotReviews, Model model) {
+		int spotReviewId = ss.insertSpotReviews(spotReviews);
+		String path = "";
+		if(spotReviewId > 0) {
+			//포인트 적립 메소드로 전송
+			path = "redirect:pointReserve.po?" +
+					"memberId=" + spotReviews.getMemberId() + 
+					"&code=" + spotReviewId + 
+					"&reserveType=30&rPoint=10";	
+		} else {
+			//에러 메세지 전송
+			model.addAttribute("msg", "댓글 등록에 실패했습니다.");
+			path = "redirect:selectSpotDetailInfo.sp?spotId=" + spotReviews.getSpotId();
+		}
+		return path;
 	}
 	
 	//관리자명소리뷰전체조회용메소드
@@ -172,6 +186,7 @@ public class SpotController {
 	//명소좋아요추가용메소드
 	@RequestMapping("insertLikeySpot.sp")
 	public void insertLikeySpot(@RequestParam("spotId") int spotId, HttpServletResponse response, HttpServletRequest request) {
+		response.setCharacterEncoding("UTF-8");
 		Likey likey = new Likey();
 		Member loginUser = (Member) request.getSession().getAttribute("loginUser");
 		likey.setMemberId(loginUser.getMemberId());

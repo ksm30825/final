@@ -37,4 +37,9 @@ public interface SpotDao {
 
 	ArrayList<HashMap> selectSpotReviews(SqlSessionTemplate sqlSession, int spotId);
 
+	int getSpotReviewIdCurrval(SqlSessionTemplate sqlSession);
+
+	ArrayList<SpotFile> selectSpotFile(SqlSessionTemplate sqlSession, int spotId);
+
+
 }

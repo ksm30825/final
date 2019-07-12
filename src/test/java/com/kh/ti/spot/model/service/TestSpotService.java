@@ -127,14 +127,23 @@ public class TestSpotService {
 	@Ignore
 	@Test
 	public void insertSpotReviewsTest() {
-		ss.insertSpotReviews(spotReviews);
+		int result = ss.insertSpotReviews(spotReviews);
 		log.info("명소 리뷰 등록에 성공!");
+		log.info("현재 시퀀스 : " + result);
 	}
 	
+	@Ignore
 	@Test
 	public void selectSpotReviews() {
 		ArrayList<HashMap> spotReviews = ss.selectSpotReviews(1);
 		log.info("명소 리뷰 조회 성공!" + spotReviews.size());
 		log.info(spotReviews.toString());
+	}
+	
+	@Test
+	public void selectSpotFileTest() {
+		ArrayList<SpotFile> spotFile = ss.selectSpotFile(1);
+		log.info("명소 파일 조회 성공!" + spotFile.size());
+		log.info(spotFile.toString());
 	}
 }
