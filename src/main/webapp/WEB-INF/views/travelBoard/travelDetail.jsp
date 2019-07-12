@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -129,7 +128,12 @@
 								<i class="fas fa-plane"></i>
 							</span>
 							<span>&nbsp; ${ detailTb.trvTitle }</span>
-							<span id="bell" data-tooltip="이 글 신고하기"><i class="fas fa-bell" onclick="penalty()"></i></span>
+							<c:if test="${ !empty loginUser.memberId }">
+								<span id="bell" data-tooltip="이 글 신고하기"><i class="fas fa-bell" onclick="travelPenaltyModal()"></i></span>
+							</c:if>
+							<c:if test="${ empty loginUser.memberId }">
+								<span id="bell" data-tooltip="신고하려면 로그인하셔야 합니다."><i class="fas fa-bell" onclick="loginInfo()"></i></span>
+							</c:if>
 						</h3>
 						
 						<h5 class="subtitle is-5">
@@ -554,6 +558,92 @@
 		</div>
 	</section>
 	
+	<!-- 일정신고 모달 -->
+	<!-- style="display: none;" -->
+	<section class="section" id="travelPanaltySection" >
+		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" >
+		<div class="modal" id="travelPanaltyModal">
+		    <div class="modal-background"></div>
+		    <div class="modal-card">
+		    
+				<header class="modal-card-head">
+					<p class="modal-card-title"><i class="fas fa-exclamation-triangle"></i>&nbsp;일정 신고</p>
+					<button class="cancel delete"></button>
+				</header>
+			
+				<section class="modal-card-body" align="center">
+					<input value="${ detailTb.trvId }" id="trvId" style="display: none;">
+					<p>해당 일정글을 신고하시겠습니까?<br>
+					허위 신고 시 불이익이 있을 수 있습니다.</p>
+					<hr style="border: 1px solid lightgray; margin-top: 0.5em;">
+					<select id="travelPanalty" style="width: 60%;">
+							<option value="11">부적절 게시물</option>
+							<option value="12">욕설 및 비방</option>
+							<option value="13">저작권 침해 및 명의 도용</option>
+							<option value="30">기타</option>
+					</select>
+					<br>
+					<textarea id="travelPanaltyContent" rows="5" placeholder="신고 사유를 작성해주세요." style="width: 60%; resize: none; margin-top: 0.5em;"></textarea>
+					<br>
+					<div style="display: inline-block; margin-top: 0.5em;">
+						<div class="field" align="center" align="center">
+							<div class="file has-name">
+								<label class="file-label">
+									<input class="file-input" type="file" name="attachmentFile" multiple="multiple" id="panaltyImg1">
+									<span class="file-cta">
+										<span class="file-icon"> <i class="fa fa-upload"></i></span>
+										<span class="file-label"> Choose a file… </span>
+									</span>
+									<span class="file-name" id="file1" style="width: 250px;"><span style="color: gray;">신고용 사진을 첨부해주세요.</span></span>
+								</label>
+							</div>
+						</div>
+					</div>
+					
+				</section>
+			
+				<footer class="modal-card-foot" style="justify-content: center">
+					<a class="button is-primary" id="travelPanaltySubmit">일정신고</a>
+					<a class="button cancel">닫기</a>
+				</footer>
+		    </div>
+		</div>
+		</form>
+	</section>
+	
+	<!-- 리뷰신고 모달 -->
+	<section class="section" id="travelBuySection" style="display: none;">
+		<div class="modal" id="travelBuyModal">
+		    <div class="modal-background"></div>
+		    <div class="modal-card">
+		    
+				<header class="modal-card-head">
+					<p class="modal-card-title"><i class="fas fa-exclamation-triangle"></i>&nbsp;일정 구매 안내</p>
+					<button class="cancel delete"></button>
+				</header>
+			
+				<section class="modal-card-body" align="center">
+					
+					<p>
+						해당 일정글을 구매하시겠습니까?<br>
+						현재 보유 포인트 : ${ loginUser.userPoint }P <br>
+						일정 결제 포인트 : ${ (endDay - startDay + 1) * 100 }P
+					</p>
+					<hr style="border: 1px solid lightgray;">
+					<p>
+						결제 후 잔액 포인트 : ${ loginUser.userPoint - ((endDay - startDay + 1) * 100) }P
+					</p>
+				</section>
+			
+				<footer class="modal-card-foot" style="justify-content: center">
+					<a class="button is-primary" id="travelBuy">일정구매</a>
+					<a class="button cancel">닫기</a>
+				</footer>
+			
+		    </div>
+		</div>
+	</section>
+	
 
 <script>
 	function loginInfo() {
@@ -575,21 +665,71 @@
 	function linkCopy() {
 	    alert("현재 주소 복사하기");
 	}
-	function penalty() {
-		var answer = confirm("이 글을 신고하시겠습니까?");
+	
+	function travelPenaltyModal() {
 		
-		if(answer) {
+		$("#travelPanaltySection").removeAttr('style');
+		$('#travelPanaltyModal').toggleClass('is-active').removeAttr('style');
+		
+		$(".cancel").click(function(){
+			$('#travelPanaltyModal').removeClass('is-active');
+			$("#travelPanaltySection").css("display","none");
+	    });
+	}
+	
+	//파일 업로드 시 해당 파일이름으로 칸 바꾸기
+	$("#panaltyImg1").click(function() {
+		var fileTarget = $(this);
+		
+		fileTarget.on('change', function(){
+			// 값이 변경되면
+			if(window.FileReader){
+				// modern browser
+				var filename = $(this)[0].files[0].name; } else {
+					// old IE
+					var filename = $(this).val().split('/').pop().split('\\').pop();
+					// 파일명만 추출
+					}
+			// 추출한 파일명 삽입
+			$("#file1").text(filename); });
+	});
+	
+	//일정 신고 버튼을 눌렀을 때
+	$("#travelPanaltySubmit").click(function() {
+		
+		var memberId = $("#loginId").val();
+		var penaltyId = $("#travelPanalty").val();
+		var penaltyContent = $("#travelPanaltyContent").val();
+		console.log(memberId);
+		console.log(penaltyId);
+		console.log(penaltyContent);
+		
+		/* <option value="11">부적절 게시물</option>
+		<option value="12">욕설 및 비방</option>
+		<option value="13">저작권 침해 및 명의 도용</option>
+		<option value="30">기타</option> */
+		
+		/* var penaltyContent = 신고내용 받아오기; */
+		/* var listType = 일정이면 trvId, 리뷰면 reviewId */
+		/* var list = 일정이면 일정글, 리뷰면 리뷰 */
+		
+		/* $("#travelPanaltySubmit").click(function() {
+			alert("폼 보내기");
+			//location.href="travelDelete.tb?trvId=" + ${ detailTb.trvId };
+		}) */
+		
+		/* if(answer) {
 			var num = "게시판 번호";
 			
 			$.ajax({
-				url : "insertPenalty.pe",
-				data : {type : "일정", num : num, reason : "사유", page : "현재 페이지 정보"},
+				url : "insertPanelty.pe",
+				data : {complainantId : memberId, penaltyId : penaltyContent : penaltyContent, listType : listType, list : list},
 				success : function(data) {
 					alert("해당 글을 신고하였습니다.");
 				}
 			});
-		}
-	}
+		} */
+	});
 	
 	function travelLikeyInsert() {
 		var trvId = ${ detailTb.trvId };
@@ -634,6 +774,7 @@
 		alert("여행지 정보로 연결");
 	});
 	
+	//일정 삭제
 	function travelDelete() {
 		
 		$("#modal").removeAttr('style');
@@ -650,6 +791,7 @@
 	    });
 	}
 	
+	//일정구매
 	function travelBuy() {
 		
 		$("#travelBuySection").removeAttr('style');
@@ -683,7 +825,7 @@
 	    });
 	}
 	
-	//상세일정
+	//상세일정 본문내용
 	$(".editor").each(function() {
 		var container = $(this).get(0);
 		var schId = $(this).children("input[name=schId]").val();
@@ -706,7 +848,8 @@
 			}
 		});
 	});
-
+	
+	//상세일정 펼치기
 	$(".card-header-icon").click(function() {
 		var dayNumber = $(this).children("input[name=dayNum]").val();
 		var div = 'day' + dayNumber + 'Content';
