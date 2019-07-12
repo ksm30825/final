@@ -120,8 +120,61 @@
 		float : right;
 		border : none;
 	}
+	
+	.reputForm{
+		float : left;
+	}
+	
+	.reputForm td{
+		padding : 5px;
+	}
+	
+	.switch {
+	width: 100%;
+    height: 50px;
+    text-align: center;
+    background: #00bc9c;
+    transition: all 0.2s ease;
+    border-radius: 25px;
+	}
+	
+	
+  	.switch label {
+	    cursor: pointer;
+	    color: rgba(0,0,0,0.2);
+	    width: 60px;
+	    line-height: 50px;
+	    transition: all 0.2s ease;
+	 }
+	 
+	#reputGoodLabel{
+	    margin-left : 20%;
+	    height: 20px;
+	    float : left;
+	}
+	  
+	#reputBadLabel {
+	   margin-right : 20%;
+	    float : right;
+	 } 
+	  
+	
 
-    
+	#reputContent{
+		 margin: 0px;
+	    width: 339px;
+	    height: 186px;
+		resize : none;
+	}
+	
+	
+	
+	.reputDetailTable td{
+		padding : 10px;
+	}
+	
+
+ 
 	
 </style>
 <body>
@@ -259,7 +312,6 @@
 				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Bad')">싫어요</button>
 				</div>
 				<div id="Like" class="w3-container item">
-				 	<h4 align = "center">아직 정보가 없습니다.</h4>
 				</div>
 				<div id="Bad" class="w3-container item" style="display:none">
 				  	<h4 align = "center">아직 정보가 없습니다.</h4>
@@ -280,26 +332,26 @@
 	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
 	        <span onclick="document.getElementById('reputModal').style.display='none'" 
 	        class="w3-button w3-display-topright">&times;</span>
-	        <h4 align="center">여행이 종료되었습니다.</h4>
+	        <h4 align="center">여행 종료</h4>
 	      </header>
 	      <div class="w3-container" id = "statusContent" align = "center">
+	      	 
 	      	<!-- <label style = "text-align : left;">즐거운 여행을 하셨습니까?<br> 같이 여행간 동행자의 평판 관리를 해주세요</label> -->	      	 
-	      	<div class="w3-content w3-display-container">
-			  <!-- <img class="mySlides" src="img_snowtops.jpg" style="width:100%">
-			  <img class="mySlides" src="img_lights.jpg" style="width:100%">
-			  <img class="mySlides" src="img_mountains.jpg" style="width:100%">
-			  <img class="mySlides" src="img_forest.jpg" style="width:100%"> -->
-			  <
-			
-			  <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-			  <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+	      	<div id = "reputChatInfor">
+	      	
 			</div>
-	      </div>
+			<hr>
+	      	<div class="w3-content w3-display-container" id = "reputSendForm"></div>
+			  <br>		
+	     	</div>
+	     	<label style = "color:red;font-size : 12px; margin-left : 10px;">한번이라도 평판관리 참여시 해당창은 더이상 나오지 않습니다. </label>
 	      <br>
 	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
-	       	 <button id = "AddchangeBtn" class="w3-button w3-black" 
-	       	 style = "float : left; background-color: #f09eda !important;height : 50px;">설정 더보기</button>
-	       	 <button id = "changeBtn" class="w3-button w3-black" style = "float : right;height : 50px; background-color: #f09eda !important;"></button>
+	       	 <button id = "prebtn" class="w3-button w3-black" 
+	       	 style = "float : left; background-color: #f09eda !important;height : 50px;" onclick="plusDivs(-1)">이전으로</button>
+	       	 <button id = "nextbtn" class="w3-button w3-black" style = "float : right;height : 50px; background-color: #f09eda !important;" 
+	       	  onclick="plusDivs(+1)">건너뛰기</button>
+	       	 <button  id = "submitbtn" class="w3-button w3-black" style = "float : right;height : 50px; background-color: #f09eda !important;">제출하기</button>
 	      </footer>
 	    </div>
   	</div>
@@ -319,7 +371,7 @@
 		
 		
 		$(document).ready(function() { //start
-			
+	
 			var userId = ${ loginUser.memberId };
 			var userName = $("#UserName").val();
 			var chatId = $("#ReChatID").val();
@@ -335,14 +387,18 @@
 	       
 		   
 	       //채팅Manager 값 가져오기
+	       var  count = 0;
+	       var goodcnt = 0;
+		   var badcnt = 0;
+	      
 	       socket.on('preChatManager', function(data){
 	        	   console.log(data);
-	      
+	        	   
+	        
 	        	   $.ajax({
 	        		   url : "${contextPath}/memberInfo.ch",
 	        		   data : {userId : data.user},
 	        	       success : function(userInfo) {
-	        	    	   
 	        	    	   var output = "";
 	        	    	   output += '<table id = "chatpeopleTable" class = "chatpeopleTable" style = "border-bottom : 1px solid lightgray;">';
 	    	        	   output += '<tr><td colspan = "2">';
@@ -354,22 +410,71 @@
 	    				   if (data.level == 1){
 	    					   output += '<span id = "bathSpan">방장</span>';		
 	    				   }
-	    				   output += '</tr><tr><td>';
-	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
-	    				   output += '<p id = "good">0</p>';
-	    				   output += '</td>';
-	    				   output += '<td>';
-	    				   output += '<i id = "badicon" class="material-icons">thumb_down_alt</i>';
-	    				   output += '<p id = "bad">0</p>';
-	    				   output +=  '</td>';
-	    				   output += '</tr>';	  		
-	    		  		   output += '</table>';
+	    				   output += '</tr>';
+	    		  		   output += '</table>'; 
+	    		  		   
+	    		  		   
 	    		  		   $(output).appendTo("#MemberInfoDiv");
+	    		  		   
+	    		  		   
+	    		  		   //if (userId != userInfo.memberId){
+	    		  			 if (userInfo.gender == "M"){
+		    		 	 			gender = "남";
+		    		 	 		}else {
+		    		 	 			gender = "여";
+		    		 	 		}
+		    		 	 		
+		    		 	 		var age;
+		    		 	 		if (userInfo.age != 0){
+		    		 	 			var temp = userInfo.age / 10;
+		    		 	 			
+		    		 	 			temp = Math.floor(temp);
+		    		 	 			
+		    		 	 			age = temp + "0 대";
+		    		 	 			
+		    		 	 		}else {
+		    		 	 			age = "미정";
+		    		 	 		}
+		    		  		   
+		    		 	 	   var reputModelput = "";
+		    		 	 	   
+		    		 	 	   if (count == 0){
+		    		 	 		 reputModelput +=  '<div class = "mySlides" style = "display:block;"">'; 
+		    		 	 	   }else {
+		    		 	 		 reputModelput +=  '<div class = "mySlides" style = "display:none;">'; 
+		    		 	 	   }
+		    		 	 	   
+		    		  		  	
+		    		  		   reputModelput +=  '<table class = "reputForm">';
+		    		  		   reputModelput +=  '<tr>';
+		    		  		   reputModelput += '<td>동행자</td>';
+		    		  		   reputModelput += '<td colspan = "3">';
+		    		  		   reputModelput += '<input type = "hidden" value = "'+ userInfo.memberId +'" name = "reputUserId" id = "reputUserId">';
+		    		  		   reputModelput += '<label>'+userInfo.userName+'</label>('+userInfo.email+')</td></tr><tr>';
+		    		  		   reputModelput += '<td>성별</td><td><label>'+gender+'</label></td>';
+		    		  		   reputModelput += '<td>나이 </td><td><label>'+age+'</label></td></tr><tr>';
+		    		  		   reputModelput += '<td colspan = "4"><label>평판</label></td></tr><tr>';
+		    		  		   reputModelput += '<td colspan = "4"><input type="radio" name="rdo" id="reputGood'+count+'" class = "reputGood" style = "display:none;" value = "good" checked>';
+		    		  		   reputModelput += '<input type="radio" name="rdo" id="reputBad'+count+'" class = "reputBad" style = "display:none;" value = "bad">';
+		    		  	  	   reputModelput += '<div class="switch" id = "reputSwitch"><label for="reputGood'+count+'" id = "reputGoodLabel">좋아요</label><label for="reputBad'+count+'" id = "reputBadLabel">싫어요</label></div>';
+		    		  	  	   reputModelput +=	'</td></tr><tr><td colspan = "4">';
+		    		  	  	   reputModelput += '<textarea placeholder = "상세내용을 작성해주세요" id = "reputContent"></textarea>';
+		    		  	  	   reputModelput += '</td></tr></table></div>';	
+		    		  	  	   
+		    		  	  	   $(reputModelput).appendTo("#reputSendForm");
+					 			
+			    		  	  count++;
+	    		  		  // }
+	    		  		  
+	    		  		   
 	        	       },
 	        	       error : function(){
 	        	    	   console.log("에러발생");
 	        	       }
 	        	   });
+	        	   
+	        	  
+	        	  
 	        	   
 	        	   if (userId == data.user){
 	        		   var enterDate = data.enter_date
@@ -517,7 +622,19 @@
 	        	  var ey = formattedEndDate.getFullYear();
 
 				 var endDate = ey + "/" + em  + '/' + ed;
-
+				 
+				 var reputout = "";
+				 reputout += '<input type = "hidden" id = "reputPlace" value = "'+data.place+'">';
+				 reputout += '<input type = "hidden" id = "reputStart" value = "'+ startDate +'">'
+				 reputout += '<input type = "hidden" id = "reputEnd" value = "'+ endDate +'">'
+				 reputout += '<br><p style = "text-align : left;"><b>';
+				 reputout += startDate +'~' + endDate  + '</b><br>의 모든 여행일정이 종료되었습니다.<br>';
+				 reputout += '여행은 즐거웠나요?<br>함께간 동행자들에 대해서 익명으로 작성해주세요 <br>';
+				 reputout +=  '저희 홈페이지 동행자 찾기에 많은 도움이 됩니다.<br>';
+				 reputout +=  '사실적인 솔직한 후기를 작성해주세요 <br></p>';
+				 
+			     $(reputout).appendTo('#reputChatInfor');
+			    
 	        	 var output = "";
 	        	  
 	        	 output += '<table id = "Chattinginfor">';
@@ -550,14 +667,17 @@
 	  	  			$("#chatSatusDetail").text(temp);
 	  	  			$("#changeBtn").text("모집하기");
 	  	  		 }else if (chatStatus == "여행종료"){
-	  	  			$("#Recruitingicon").css("background" , "pink");
+	  	  			$("#Recruitingicon").css("background" , "#aa65a8");
 	  	  			document.getElementById('reputModal').style.display='block';
+	  	  		 	
 	  	  		 }else if (chatStatus == "모집중"){
 	  	  			temp = "모집종료를 하시겠습니까?";
 	  	  			$("#chatSatusDetail").text(temp);
 	  	  			$("#changeBtn").text("모집종료");
 	  	  			$("#Recruitingicon").css("background" , "red");
 	  	  		 }
+	  	  		 
+	  	  		 
 	  	  		 
 	        	 
 
@@ -831,7 +951,7 @@
 	 	  	  			$("#chatSatusDetail").text(temp);
 	 	  	  			$("#changeBtn").text("모집하기");
 	 	  	  		 }else if (chatStatus == "여행종료"){
-	 	  	  			$("#Recruitingicon").css("background" , "pink");
+	 	  	  			$("#Recruitingicon").css("background" , "#aa65a8");
 	 	  	  		 }else if (chatStatus == "모집중"){
 	 	  	  			temp = "모집종료를 하시겠습니까?";
 	 	  	  			$("#Recruitingicon").css("background" , "red");
@@ -863,13 +983,13 @@
  	  	  			$("#chatSatusDetail").text(temp);
  	  	  			$("#changeBtn").text("모집하기");
  	  	  		 }else if (chatStatus == "여행종료"){
- 	  	  			$("#Recruitingicon").css("background" , "pink");
+ 	  	  			$("#Recruitingicon").css("background" , "#aa65a8");
  	  	  		 }else if (chatStatus == "모집중"){
  	  	  			$("#Recruitingicon").css("background" , "red");
  	  	  			temp = "모집종료를 하시겠습니까?";
  	  	  			$("#chatSatusDetail").text(temp);
  	  	  			$("#changeBtn").text("모집종료");
- 	  	  		 }
+c 	  	  		 }
         		  
         	  });
 	          
@@ -879,65 +999,161 @@
 	        	  
 	        	  location.href = "${contextPath}/declaration.ch?num=" + chatId + "&id=" + outUser;  
 	          });
+	          
+	          //평판 제출
+	          $("#submitbtn").click(function(){
+	        	  $(".mySlides").each(function(index ,item) {
+	        		  var reputSubtmDiv = $(this);
+	        		  
+	        		  if (reputSubtmDiv.css("display") == "block"){
+	        			  var reputUserId = $(this).children().children().children().children().children("#reputUserId").val();
+	        			  var rdo = $(this).children().children().children().children().children("input[name=rdo]:checked").val();
+	        			  var reputContent = $(this).children().children().children().children().children("#reputContent").val();
+	        			  var place = $("#reputPlace").val();
+	        			  var start = $("#reputStart").val();
+	        			  var end = $("#reputEnd").val();
+	        			  console.log("reputContent :" + reputContent); 
+	        			  
+	        			  if (rdo != ""){
+	        				  if (reputContent != ""){
+	        					  socket.emit('CreateChatReput', {chatId : chatId , userId : userId , reputUserId : reputUserId , level : rdo , content : reputContent , place : place , start : start , end : end});
+	    	        		  	  
+	    	        			  socket.on('CreateChatReput' , function(){
+	    	        				  reputSubtmDiv.remove();
+	    	        				  plusDivs(+1);
+	    	        			  });
+	        				  }
+	        			  }
+	        	  
+	        		  
+					  }
+	        	  });
+	          });
+	          
+	        //참여중인 사용자 리스트 클릭시 
+	  		$(document).on("click","#chatpeopleTable tr",function(){
+	  		 
+				var loginUser = $("#loginId").val();
+				
+	 	 		var userid = $(this).parent().children().children().children("#userId").val();
+	 	 		var user = $(this).parent().children().children().children("#username").val();
+	 	 		var ulabel = $(this).parent().children().children().children("#chUserInfo").html();
+	 	 		var gender = $(this).parent().children().children().children("#usergender").val();
+	 	 		var userAge = $(this).parent().children().children().children("#userAge").val();
+	 	 		
+	 	 		
+	 	 		$("#selectUserId").val(userid);
+	 	 		$("#selectUserName").val(user);
+	 	 		
+	 	 		console.log("user :" + ulabel);
+	 	 		
+	 	 		
+	 	 		if (gender == "M"){
+	 	 			gender = "남";
+	 	 		}else {
+	 	 			gender = "여";
+	 	 		}
+	 	 		
+	 	 		var age;
+	 	 		if (userAge != 0){
+	 	 			var temp = userAge / 10;
+	 	 			
+	 	 			temp = Math.floor(temp);
+	 	 			
+	 	 			age = temp + "0 대";
+	 	 			
+	 	 		}else {
+	 	 			age = "미정";
+	 	 		}
+	 	 		
+	 	 		
+	 	 		
+	 	 		console.log("userId :" + userid + "- login" + loginUser );
+	 	 		
+	 	 		if (loginUser == userid ){
+	 	 		   document.getElementById('declarBtn').disabled = true;
+	 	 		   document.getElementById('Firebtn').disabled = true;
+	 	 		}else {
+	 	 			document.getElementById('declarBtn').disabled = false;
+	  	 		   document.getElementById('Firebtn').disabled = false;
+	 	 		}
+	 	 		
+	 	 		$("#reputid").text(ulabel);
+	 	 		$("#reputinfor").text(age + " (" + gender + ") ");
+	 	 		
+	 	 		age == "";
+	 	 		
+	 	 	   socket.emit('preReputInfo', {userId : userid});
+	 	 
+	 	 	   $("#Like").empty();
+	 	 		
+	 	 		
+	 	 		
+				document.getElementById('reputInfo').style.display='block';
+	 	 		
+	 	 	}); 
+	     	
+	        
+		 	   socket.on('preReputInfo', function(data){
+	 		  	   var goodcnt = 0;
+	 		  	   var badcnt = 0;
+	 		  	   
+				   console.log("상태 :" + data.reLevel);
+				   
+				   //if (data.PutUser == userid){
+					   if (data.reLevel == "good"){
+							 
+							  var temp = "";
+							  temp += '<table id = "goodTable" class = "reputDetailTable">';
+						  	  temp += '<tr><td><b>'+data.rePlace+'여행</b></td>';
+						  	  temp += '<td>'+data.reStart + '~' + data.reEnd +'</td></tr>';
+						  	  temp += '<tr><td colspan = "2">';
+						  	  temp += '<p>';
+						  	  temp += data.reContent;
+						  	  temp += '</p></td></tr></table>';
+						  	  
+						  	  console.log("??????" + temp);
+						  	  
+						  	  $(temp).appendTo("#Like");
+						  	  
+						 }else {
+							 
+						 }
+				   
+				   //}
+					  
+			  });
+
 	           
 	           
 		}); //end
 		
-		//참여중인 사용자 리스트 클릭시 
-		$(document).on("click","#chatpeopleTable tr",function(){
-			var loginUser = $("#loginId").val();
-			
- 	 		var userid = $(this).parent().children().children().children("#userId").val();
- 	 		var user = $(this).parent().children().children().children("#username").val();
- 	 		var ulabel = $(this).parent().children().children().children("#chUserInfo").html();
- 	 		var gender = $(this).parent().children().children().children("#usergender").val();
- 	 		var userAge = $(this).parent().children().children().children("#userAge").val();
- 	 		
- 	 		
- 	 		$("#selectUserId").val(userid);
- 	 		$("#selectUserName").val(user);
- 	 		
- 	 		console.log("user :" + ulabel);
- 	 		
- 	 		
- 	 		if (gender == "M"){
- 	 			gender = "남";
- 	 		}else {
- 	 			gender = "여";
- 	 		}
- 	 		
- 	 		var age;
- 	 		if (userAge != 0){
- 	 			var temp = userAge / 10;
- 	 			
- 	 			temp = Math.floor(temp);
- 	 			
- 	 			age = temp + "0 대";
- 	 			
- 	 		}else {
- 	 			age = "미정";
- 	 		}
- 	 		
- 	 		
- 	 		
- 	 		console.log("userId :" + userid + "- login" + loginUser );
- 	 		
- 	 		if (loginUser == userid ){
- 	 		   document.getElementById('declarBtn').disabled = true;
- 	 		   document.getElementById('Firebtn').disabled = true;
- 	 		}else {
- 	 			document.getElementById('declarBtn').disabled = false;
-  	 		   document.getElementById('Firebtn').disabled = false;
- 	 		}
- 	 		
- 	 		$("#reputid").text(ulabel);
- 	 		$("#reputinfor").text(age + " (" + gender + ") ");
- 	 		
- 	 		age == "";
- 	 		
-			document.getElementById('reputInfo').style.display='block';
- 	 		
- 	 	}); 
+	     //라디오버튼 클릭 
+	     //좋아요
+        $(document).on("click", ".reputGood" , function(){
+          var swith = $(this).parent().children("#reputSwitch");
+      	  var goodlabel =  $(this).parent().children().children("#reputGoodLabel");
+      	  var badlabel = $(this).parent().children().children("#reputBadLabel");
+      	  
+      	  swith.css("background-color", "#8282f6");
+      	  goodlabel.css({"color" : "white"});
+      	  badlabel.css({"color" : "lightgray" });
+      	  
+        });
+        
+		//싫어요
+		$(document).on("click", ".reputBad" , function(){
+			var swith = $(this).parent().children("#reputSwitch");
+			var goodlabel =  $(this).parent().children().children("#reputGoodLabel");
+      	  	var badlabel = $(this).parent().children().children("#reputBadLabel");
+      	  
+	      	  swith.css("background-color", "#f46363");
+	      	  goodlabel.css({  "color" : "lightgray"});
+	      	  badlabel.css({"color" : "white" });
+        });
+		
+		
+	
 		
 		//Tab탭 좋아요 싫어요 
 		function openItem(ItemName) {
@@ -960,12 +1176,15 @@
 		function showDivs(n) {
 		  var i;
 		  var x = document.getElementsByClassName("mySlides");
-		  if (n > x.length) {slideIndex = 1}
-		  if (n < 1) {slideIndex = x.length}
-		  for (i = 0; i < x.length; i++) {
-		    x[i].style.display = "none";  
+		  if (x.length > 0){
+			  if (n > x.length) {slideIndex = 1}
+			  if (n < 1) {slideIndex = x.length}
+			  for (i = 0; i < x.length; i++) {
+			    x[i].style.display = "none";  
+			  }
+			  x[slideIndex-1].style.display = "block";  
 		  }
-		  x[slideIndex-1].style.display = "block";  
+		 
 		}
 	
 	
