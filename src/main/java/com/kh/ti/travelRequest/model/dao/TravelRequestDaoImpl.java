@@ -46,8 +46,8 @@ public class TravelRequestDaoImpl implements TravelRequestDao{
 
 	//선택한 설계글 상세보기 - 선우
 	@Override
-	public ArrayList<TravelRequestPlan> selectOneRequestPlan(SqlSessionTemplate sqlSession, int code) {
-		return (ArrayList) sqlSession.selectList("TravelRequest.selectOneRequestPlan", code);
+	public ArrayList<TravelRequestPlan> selectOneRequestPlan(SqlSessionTemplate sqlSession, int ptcpId) {
+		return (ArrayList) sqlSession.selectList("TravelRequest.selectOneRequestPlan", ptcpId);
 	}
 
 }

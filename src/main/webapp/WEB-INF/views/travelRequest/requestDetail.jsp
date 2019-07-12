@@ -76,7 +76,7 @@
 						<tr>
 							<td id="reqId"><b>${ tr.requestId }</b></td>
 							<td>${ tr.requestTitle }</td>
-							<td id="userName">${ loginUser.userName }</td>
+							<td id="userName">${ userName }</td>
 							<td>
 								<input type="hidden" id="uPoint" value="${ tr.requestPrice }">
 								<fmt:formatNumber value="${ tr.requestPrice }" groupingUsed="true"/>원
@@ -108,7 +108,7 @@
 				<h1 class="title">설계글</h1>
 				<hr>
 				<c:if test="${ loginUser.userName eq userName }">
-				<c:forEach var="plan" items="${ tr.planList }">
+				<c:forEach var="plan" items="${ tr.planList }" varStatus="st">
 				<c:if test="${ plan.planTitle != null}">
 					<div class="columns">
 						<div class="column">
@@ -123,6 +123,7 @@
 									<div class="media">
 										<div class="media-left"></div>
 										<div class="media-content">
+										<input type="hidden" value="${ tr.participationList.get(st.index).ptcpId }" id="ptcpId">
 											<p class="title is-4">제목 : ${ plan.planTitle }</p><br>
 											<p class="subtitle is-6">설계자 : ${ plan.userName }</p>
 											<input type="hidden" value="${ plan.planId }">
@@ -156,16 +157,20 @@
 		$(".request").click(function() {
 			//useType : 10:일정구매, 20:설계의뢰
 			var code;	//설계글 코드
+			var ptcpId;	//참여글 코드
 			var uPoint = $("#uPoint").val(); //의뢰 가격
 			var reqId = $("#reqId").text();
 			var userName = $("#userName").text();
 			$(this).each(function() {
 				code = $(this).find("input").val();
+				ptcpId = $(this).find("#ptcpId").val();
 				console.log(code);
 				console.log(uPoint);
+				console.log(ptcpId);
 			});
-			
-			location = "requestPlan.tr?code=" + code +"&useType=" + 20 + "&uPoint=" + uPoint + "&reqId=" + reqId + "&userName=" + userName;
+			console.log("참여번호 : " + ptcpId);
+			//location = "requestPlan.tr?code=" + code +"&useType=" + 20 + "&uPoint=" + uPoint + "&reqId=" + reqId + "&userName=" + userName;
+			location = "requestPlan.tr?ptcpId=" + ptcpId;
 		});
 	});
 	function start() {

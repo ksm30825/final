@@ -117,7 +117,7 @@
 				</table>
 			</section>
 			<div class="buttons">
-				<a class="button is-success is-rounded" href="insertNotice.ad">작성하기</a>
+				<a class="button is-success is-rounded" href="insertNoticeForm.ad">작성하기</a>
 			</div>
 			<section class="section" id="pagination">
 				<nav class="pagination is-rounded" role="navigation"

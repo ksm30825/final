@@ -59,12 +59,12 @@ th, td {
 	<jsp:include page="../common/mainNav.jsp" />
 	<div class="columns">
 		<div class="column">
-		<input type="hidden" value="${ code }" id="code">
+		<%-- <input type="hidden" value="${ code }" id="code">
 		<input type="hidden" value="${ uPoint }" id="uPoint">
 		<input type="hidden" value="${ useType }" id="useType">
 		<input type="hidden" value="${ reqId }" id="reqId">
 		<input type="hidden" value="${ userName }" id="userName">
-		<input type="hidden" value="${ loginUser.memberId }" id="memberId">
+		<input type="hidden" value="${ loginUser.memberId }" id="memberId"> --%>
 			<section class="section" id="form">
 				<h1 class="title">일정</h1>
 				<hr>
@@ -307,9 +307,9 @@ th, td {
 		</c:if>
 	}
 	function ok() {
-		<c:if test="${ loginUser.userPoint < uPoint}">
+		<c:if test="${ loginUser.userPoint < trp.get(0).reqList.get(0).requestPrice }">
 			alert("내 포인트 : " + '${ loginUser.userPoint }원' + 
-				  "\n의뢰가격 : " + '${ uPoint }원' + 
+				  "\n의뢰가격 : " + '${ trp.get(0).reqList.get(0).requestPrice }원' + 
 				  "\n보유 포인트가 부족합니다.");
 			return false;
 		</c:if>
@@ -317,20 +317,18 @@ th, td {
 		var result = confirm("정말로 채택하시겠습니까?");
 		console.log(result);
 		if(result == true) {
-			var planId = "${ code }";
-			var useType = $("#useType").val();
-			var uPoint = $("#uPoint").val();
-			var code = $("#reqId").val();
-			var userName = $("#userName").val();
-			var memberId = $("#memberId").val();
+			var memberId = "${ loginUser.memberId }";
+			var code = "${ trp.get(0).reqList.get(0).requestId }";
+			var planId = "${ trp.get(0).planId }";
+			var useType = 20;
+			var uPoint = "${ trp.get(0).reqList.get(0).requestPrice }";
+			console.log("의뢰자 번호 : " + memberId);
+			console.log("의뢰번호 : " + code);
+			console.log("설계번호 : " + planId);
+			console.log("사용 타입 : " + useType);
+			console.log("의뢰 가격 : " + uPoint)
 			
-			console.log(planId);
-			console.log(code);
-			console.log(useType);
-			console.log(uPoint);
-			console.log(reqId);
-			console.log(userName);
-			
+			//memberId : 유저번호(로그인유저), planId : 설계번호, code : 의뢰번호, useType : 20 uPoint : 의뢰 가격
 			location = "updateRequest.mr?memberId=" + memberId + "&planId=" + planId + "&code=" + code + "&useType=" + useType + "&uPoint=" + uPoint;
 		} else {
 			location = location;

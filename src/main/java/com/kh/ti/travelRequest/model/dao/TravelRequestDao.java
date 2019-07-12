@@ -18,6 +18,6 @@ public interface TravelRequestDao {
 
 	TravelRequest selectOneRequest(SqlSessionTemplate sqlSession, int reqNum);
 
-	ArrayList<TravelRequestPlan> selectOneRequestPlan(SqlSessionTemplate sqlSession, int code);
+	ArrayList<TravelRequestPlan> selectOneRequestPlan(SqlSessionTemplate sqlSession, int ptcpId);
 
 }

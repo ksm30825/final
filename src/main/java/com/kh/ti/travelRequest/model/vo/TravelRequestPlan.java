@@ -23,12 +23,13 @@ public class TravelRequestPlan implements Serializable{
 	private int etcCharge;	//기타비
 	private String chooseStatus;	//채택상태
 	private ArrayList<PlanDay> dayList;	//일정들
+	private ArrayList<TravelRequest> reqList;
 	
 	public TravelRequestPlan() {}
 
 	public TravelRequestPlan(int planId, int ptcpId, String planTitle, int memberId, String userName, String planRef,
 			int trvId, String planContent, Date modifyDate, Date enrollDate, int roomCharge, int trafficCharge,
-			int etcCharge, String chooseStatus, ArrayList<PlanDay> dayList) {
+			int etcCharge, String chooseStatus, ArrayList<PlanDay> dayList, ArrayList<TravelRequest> reqList) {
 		super();
 		this.planId = planId;
 		this.ptcpId = ptcpId;
@@ -45,6 +46,7 @@ public class TravelRequestPlan implements Serializable{
 		this.etcCharge = etcCharge;
 		this.chooseStatus = chooseStatus;
 		this.dayList = dayList;
+		this.reqList = reqList;
 	}
 
 	public int getPlanId() {
@@ -167,12 +169,20 @@ public class TravelRequestPlan implements Serializable{
 		this.dayList = dayList;
 	}
 
+	public ArrayList<TravelRequest> getReqList() {
+		return reqList;
+	}
+
+	public void setReqList(ArrayList<TravelRequest> reqList) {
+		this.reqList = reqList;
+	}
+
 	@Override
 	public String toString() {
 		return "TravelRequestPlan [planId=" + planId + ", ptcpId=" + ptcpId + ", planTitle=" + planTitle + ", memberId="
 				+ memberId + ", userName=" + userName + ", planRef=" + planRef + ", trvId=" + trvId + ", planContent="
 				+ planContent + ", modifyDate=" + modifyDate + ", enrollDate=" + enrollDate + ", roomCharge="
 				+ roomCharge + ", trafficCharge=" + trafficCharge + ", etcCharge=" + etcCharge + ", chooseStatus="
-				+ chooseStatus + ", dayList=" + dayList + "]";
+				+ chooseStatus + ", dayList=" + dayList + ", reqList=" + reqList + "]";
 	}
 }
