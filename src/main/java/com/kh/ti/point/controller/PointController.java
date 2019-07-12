@@ -110,6 +110,7 @@ public class PointController {
 		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
 		model.addAttribute("usPayList", usPayList);
 		model.addAttribute("usPi",usPi);
+		//-------------------------------------------------------------------------------------------ptcpId찾아서 넘겨주기
 		
 		return "point/pointMain";
 	}
@@ -271,6 +272,8 @@ public class PointController {
 		model.addAttribute("rePayList", rePayList);
 		model.addAttribute("rePayList",rePayList);
 		
+		//-------------------------------------------------------------------------------------------ptcpId찾아서 넘겨주기
+		
 		return "point/pointMain";		
 	}
 	//포인트 지급 월 검색 내역 테이블--수민
@@ -329,16 +332,15 @@ public class PointController {
 		//System.out.println("boardCode : " + boardCode);
 		return "redirect:/travelDetailForm.tb?trvId="+boardCode;//-------------------------------------------------------------------------------
 	}
+	//관리자 수익금 페이지에서 해당 글 상세보기 (의뢰)
+	@RequestMapping("/oneBoard.po")
+	public String adOneBoard(@RequestParam("bid") int bid) {
+		return "redirect:/travelDetailForm.tb?trvId="+bid;
+	}
 	@RequestMapping("/oneBoardRequest.po")
-	public String selectOneBoardRequest(String mid, String bid, HttpServletRequest request) {
-		int memberId = Integer.parseInt(mid);
-		int boardCode = Integer.parseInt(bid);
+	public String selectOneBoardRequest(@RequestParam("bid") int bid) {
 		
-		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		String userName = loginUser.getUserName();
-		System.out.println("userName : " + userName);
-		
-		return "redirect:/myRequestList.mr?memberId="+memberId;//-------------------------------------------------------------------------------
+		return "redirect:requestPlan.tr?ptcpId="+bid;
 	}
 	//포인트 자동 인서트!!
 	//10:일정작성, 20:일정리뷰, 30:여행지리뷰
@@ -360,24 +362,28 @@ public class PointController {
 		rp.setReserveDate(reserveDate);
 		rp.setMemberId(memberId);
 		rp.setReserveType(reserveType);
-		
+		int spotId=0;
 		switch(reserveType) {
 		case 10 : rp.setTrvId(code); break;
 		case 20 : rp.setReviewId(code);	break;
-		case 30 : rp.setSpotReviewId(code);	break;
+		case 30 : rp.setSpotReviewId(code);	
+			spotId = ps.selectSpotId(rp.getSpotReviewId());
+			break;
 		}
 		
 		////System.out.println("처리전 rp : " + rp);
-		int result = ps.insertReservePoint(rp);
+		int result = ps.insertReservePoint(rp);//포인트 insert
 		////System.out.println("result : " + result);
 		
-		int updateUserPoint = ps.updateUserPointAuto(rp);
+		int updateUserPoint = ps.updateUserPointAuto(rp);//userPoint 증가
+		
+		
 		
 		if(result>0 && updateUserPoint>0) {
 			switch(reserveType) {
-			case 10 : return "redirect:/showMyTravel.trv"; 
+			case 10 : return "redirect:/showMyTravel.trv";
 			case 20 : int trvId = ps.selectOneTrv(rp); return "redirect:/travelDetailForm.tb?trvId="+trvId; 
-			case 30 : return "redirect:/showMyTravel.trv?"; 
+			case 30 : return "redirect:/showMyTravel.trv?"; //세령이 매핑주소로 넘기기
 			}
 		}
 		return "common/errorPage";
@@ -896,10 +902,29 @@ public class PointController {
 		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	//수익금 회원 검색 내역 테이블--수민
-	@RequestMapping("/oneMemberAdProceeds.po")
-	public ModelAndView adSearchOneMemberProceeds(String userName, ModelAndView mv) {
+	@RequestMapping("/searchAdProceeds.po")
+	public ResponseEntity adSearchOneMemberProceeds(@RequestParam("userName") String userName, 
+			@RequestParam("condition") int condition, @RequestParam("currentPage") int currentPage) {
+		SearchPoint sp = new SearchPoint();
+		sp.setCondition(condition);
+		sp.setUserName(userName);
 		
-		return mv;
+		System.out.println("sp : " + sp);
+		int adProceedsListCount = ps.getAdProceedsListCount(sp);
+		System.out.println("adProceedsListCount : " + adProceedsListCount);
+		
+		int adProceedsCurrentPage = currentPage;
+		
+		PageInfo adProceedsPi = Pagination.getPageInfo(adProceedsCurrentPage, adProceedsListCount);
+		
+		ArrayList<Proceeds> adProceedsList = ps.selectAdProceedsList(adProceedsPi, sp);
+		System.out.println("adProceedsList : " + adProceedsList);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adProceedsList", adProceedsList);
+		hmap.put("adProceedsPi", adProceedsPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	//수익금 발생 게시글 조회--수민
 	@RequestMapping("/oneBoardAdProceeds.po")
@@ -911,14 +936,37 @@ public class PointController {
 	
 	
 	
-	//수익금 환급 내역 전체 조회--수민
+	//수익금 환급 내역 이동--수민
 	@RequestMapping("/toAdRebateView.po")
 	public String adSelectAllRebate() {
 		
 		return "admin/adminPoint/aRebate";
 	}
+	//수익금 환급 내역 조회
+	@RequestMapping("/adRebate.po")
+	public ResponseEntity adSelectAllRebate(@RequestParam("currentPage") int currentPage, @RequestParam("condition") int condition) {
+		SearchPoint sp = new SearchPoint();
+		sp.setCondition(condition);
+		
+		System.out.println("sp : " + sp);
+		int adRebateListCount = ps.getAdRebateListCount(sp);
+		System.out.println("adProceedsListCount : " + adRebateListCount);
+		
+		int adRebateCurrentPage = currentPage;
+		
+		PageInfo adRebatePi = Pagination.getPageInfo(adRebateCurrentPage, adRebateListCount);
+		
+		ArrayList<Proceeds> adRebateList = ps.selectAdRebateList(adRebatePi, sp);
+		System.out.println("adRebateList : " + adRebateList);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("adRebateList", adRebateList);
+		hmap.put("adRebatePi", adRebatePi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
+	}
 	//수익금 환급 회원 검색 조회--수민
-	@RequestMapping("/oneMemberAdRebate.po")
+	@RequestMapping("/searchAdRebate.po")
 	public ModelAndView adSelectOneMemberRebate(String userName, ModelAndView mv) {
 		
 		return mv;

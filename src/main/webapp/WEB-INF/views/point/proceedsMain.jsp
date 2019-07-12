@@ -422,7 +422,7 @@
 					//console.log(payAmount);
 					//console.log(proceeds);
 					
-					if(payAmount >= proceeds){
+					if(payAmount > proceeds){
 						$('#myModal').removeClass('is-active');
     					$('#modalHeader2').text('현재 총 수익금이 모자릅니다.');
     					$("#myModal2").toggleClass('is-active');
@@ -443,8 +443,8 @@
 	    					$("#myModal2").toggleClass('is-active');
 	    					$("#okay").click(function(){
 	    						$('#myModal2').removeClass('is-active');
+		    					location.href="rebateProceeds.po?memberId="+memberId+"&payAmount="+payAmount;
 	    					});
-	    					location.href="rebateProceeds.po?memberId="+memberId+"&payAmount="+payAmount;
 						}
     				}
 				}

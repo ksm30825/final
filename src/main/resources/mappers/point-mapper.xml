@@ -104,28 +104,44 @@
 		<result property="trvId" column="TRV_ID"/>
 		<result property="ptcpId" column="PTCP_ID"/>
 		<result property="userName" column="USER_NAME"/>
+		<result property="email" column="EMAIL"/>
 		
 		<association property="travel" resultMap="trvMemberResult" columnPrefix="T_"></association>
 		<association property="travelRequest" resultMap="trvRequestResult" columnPrefix="TRVR_"></association>
 		<association property="travelRequestPlan" resultMap="trvPlanResult" columnPrefix="TRVP_"></association>
 	</resultMap>
+	<resultMap type="Rebate" id="rebateMemberResultSet">
+		<id property="proceedsId" column="PROCEEDS_ID"/>
+		<result property="applyDate" column="PROCEEDS"/>
+		<result property="payAmount" column="PROCEEDS_DATE"/>
+		<result property="memberId" column="PROCEEDS_TYPE"/>
+		<result property="payDate" column="MEMBER_ID"/>
+		<result property="rebateStatus" column="TRV_ID"/>
+		<association property="member" resultMap="memberResult" columnPrefix="M_"></association>
+	</resultMap>
 	<resultMap type="Travel" id="trvMemberResult">
 		<id property="trvId" column="TRV_ID"/>
 		<result property="trvTitle" column="TRV_TITLE" />
 		<result property="memberId" column="MEMBER_ID" />
-		<result property="userName" column="USER_NAME" />
 	</resultMap>
 	<resultMap type="TravelRequest" id="trvRequestResult">
 		<id property="requestId" column="REQUEST_ID"/>
 		<result property="requestTitle" column="REQUEST_TITLE"/>
-		<result property="userName" column="USER_NAME"/>
 	</resultMap>
 	<resultMap type="TravelRequestPlan" id="trvPlanResult">
 		<id property="planId" column="PLAN_ID"/>
 		<result property="ptcpId" column="PTCP_ID"/>
 		<result property="planTitle" column="PLAN_TITLE"/>
 		<result property="memberId" column="MEMBER_ID"/>
+	</resultMap>
+	<resultMap type="Member" id="memberResult">
+		<id property="memberId" column="MEMBER_ID"/>
+		<result property="email" column="EMAIL"/>
 		<result property="userName" column="USER_NAME"/>
+		<result property="accCode" column="ACC_CODE"/>
+		<result property="accNumber" column="ACC_NUMBER"/>
+		<result property="userPoint" column="USER_POINT"/>
+		<result property="userProceeds" column="USER_PROCEEDS"/>
 	</resultMap>
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
@@ -598,7 +614,7 @@
 	<select id="getAdProceedsListCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM (
-			SELECT <choose><when test="condition != 99">USER_NAME, </when></choose>
+			SELECT USER_NAME, EMAIL,  
 			    T.MEMBER_ID AS T_MEMBER_ID, 
 			    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
 			    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
@@ -622,7 +638,7 @@
 	</select>
 	<!-- 관리자 - 수익금 조회 -->
 	<select id="selectAdProceedsList" resultMap="PointPlanRequestParticipationMemberTrvResultSet">
-		SELECT <choose><when test="condition != 99">USER_NAME, </when></choose>
+		SELECT USER_NAME, EMAIL, 
 		    T.MEMBER_ID AS T_MEMBER_ID, 
 		    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
 		    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
@@ -640,6 +656,112 @@
 		<choose>
 			<when test="condition != 99">
 				WHERE USER_NAME LIKE '%'||#{userName}||'%'
+			</when>
+		</choose>
+	</select>
+	<!-- 명소리뷰코드로 명소코드 가져오기 -->
+	<select id="selectSpotId" resultType="_int">
+		SELECT SPOT_ID
+		FROM SPOT_REVIEWS
+		WHERE SPOT_REVIEW_ID=1
+	</select>
+	<!-- 관리자 - 환급 내역 리스트 카운트 -->
+	<select id="getAdRebateListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT  REBATE_ID, APPLY_DATE, PAY_AMOUNT, R.MEMBER_ID, PAY_DATE, REBATE_STATUS, 
+			EMAIL AS M_EMAIL, USER_NAME AS M_USER_NAME, ACC_CODE AS M_ACC_CODE, ACC_NUMBER AS M_ACC_NUMBER, USER_PROCEEDS AS M_USER_PROCEEDS, USER_POINT AS M_USER_POINT
+			FROM REBATE R
+			JOIN MEMBER M ON(R.MEMBER_ID=M.MEMBER_ID)
+			<choose>
+				<when test="condition != 99">
+					WHERE
+					<choose>
+						<when test="condition == 40 or condition == 50 or condition == 60 or condition == 70">
+							REBATE_STATUS = #{rebateStatus}
+							<choose>
+								<when test="condition == 60 or condition == 70">
+									AND USER_NAME LIKE '%'||#{userName}||'%'
+									<choose>
+										<when test="condition == 70">
+											AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+										</when>
+									</choose>
+								</when>
+								<when test="condition == 40 or condition == 50">
+									<choose>
+										<when test="condition == 50">
+											AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+										</when>
+									</choose>
+								</when>
+							</choose>
+						</when>
+						<when test="condition == 10 or condition == 20 or condition == 30">
+							<choose>
+								<when test="condition == 10 or condition ==30">
+									USER_NAME LIKE '%'||#{userName}||'%'
+									<choose>
+										<when test="condition == 30">
+											AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+										</when>
+									</choose>
+								</when>
+								<when test="condition == 20">
+									APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+								</when>
+							</choose>
+						</when>
+					</choose>
+				</when>
+			</choose>
+		)
+	</select>
+	<!-- 관리자 - 환급 내역 조회 -->
+	<select id="selectAdRebateList" resultMap="rebateMemberResultSet">
+		SELECT  REBATE_ID, APPLY_DATE, PAY_AMOUNT, R.MEMBER_ID, PAY_DATE, REBATE_STATUS, EMAIL AS M_EMAIL, USER_NAME AS M_USER_NAME, ACC_CODE AS M_ACC_CODE, ACC_NUMBER AS M_ACC_NUMBER, USER_PROCEEDS AS M_USER_PROCEEDS, USER_POINT AS M_USER_POINT
+		FROM REBATE R
+		JOIN MEMBER M ON(R.MEMBER_ID=M.MEMBER_ID)
+		<choose>
+			<when test="condition != 99">
+				WHERE
+				<choose>
+					<when test="condition == 40 or condition == 50 or condition == 60 or condition == 70">
+						REBATE_STATUS = #{rebateStatus}
+						<choose>
+							<when test="condition == 60 or condition == 70">
+								AND USER_NAME LIKE '%'||#{userName}||'%'
+								<choose>
+									<when test="condition == 70">
+										AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+									</when>
+								</choose>
+							</when>
+							<when test="condition == 40 or condition == 50">
+								<choose>
+									<when test="condition == 50">
+										AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+									</when>
+								</choose>
+							</when>
+						</choose>
+					</when>
+					<when test="condition == 10 or condition == 20 or condition == 30">
+						<choose>
+							<when test="condition == 10 or condition ==30">
+								USER_NAME LIKE '%'||#{userName}||'%'
+								<choose>
+									<when test="condition == 30">
+										AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+									</when>
+								</choose>
+							</when>
+							<when test="condition == 20">
+								APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+							</when>
+						</choose>
+					</when>
+				</choose>
 			</when>
 		</choose>
 	</select>

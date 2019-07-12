@@ -318,9 +318,25 @@ public class PointDaoImpl implements PointDao{
 		ArrayList<Proceeds> adProceedsList = (ArrayList)sqlSession.selectList("Payment.selectAdProceedsList", sp, rowBounds);
 		return adProceedsList;
 	}
-	
-	
-	
+	//명소리뷰코드로 명소코드 가져오기
+	@Override
+	public int selectSpotId(SqlSessionTemplate sqlSession, int spotReviewId) {
+		return sqlSession.selectOne("Payment.selectSpotId", spotReviewId);
+	}
+	//관리자 - 환급 내역 리스트 카운트
+	@Override
+	public int getAdRebateListCount(SqlSessionTemplate sqlSession, SearchPoint sp) {
+		return sqlSession.selectOne("Payment.getAdRebateListCount", sp);
+	}
+	//관리자 - 환급 내역 조회
+	@Override
+	public ArrayList<Proceeds> selectAdRebateList(SqlSessionTemplate sqlSession, PageInfo adRebatePi, SearchPoint sp) {
+		int offset = (adRebatePi.getCurrentPage() - 1) * adRebatePi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, adRebatePi.getLimit());
+		
+		ArrayList<Proceeds> adRebateList = (ArrayList)sqlSession.selectList("Payment.selectAdRebateList", sp, rowBounds);
+		return adRebateList;
+	}
 	
 	
 	

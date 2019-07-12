@@ -20,6 +20,7 @@ public class Proceeds implements Serializable {
 	private String month;		//검색월
 	
 	private String userName;
+	private String email;
 	
 	private Travel travel;
 	private TravelRequest travelRequest;
@@ -29,7 +30,7 @@ public class Proceeds implements Serializable {
 	public Proceeds() {}
 
 	public Proceeds(int proceedsId, int proceeds, Date proceedsDate, int proceedsType, int memberId, int trvId,
-			int ptcpId, String month, String userName, Travel travel, TravelRequest travelRequest,
+			int ptcpId, String month, String userName, String email, Travel travel, TravelRequest travelRequest,
 			TravelRequestPlan travelRequestPlan, Participation participation) {
 		super();
 		this.proceedsId = proceedsId;
@@ -41,6 +42,7 @@ public class Proceeds implements Serializable {
 		this.ptcpId = ptcpId;
 		this.month = month;
 		this.userName = userName;
+		this.email = email;
 		this.travel = travel;
 		this.travelRequest = travelRequest;
 		this.travelRequestPlan = travelRequestPlan;
@@ -81,6 +83,10 @@ public class Proceeds implements Serializable {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 
 	public Travel getTravel() {
@@ -135,6 +141,10 @@ public class Proceeds implements Serializable {
 		this.userName = userName;
 	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public void setTravel(Travel travel) {
 		this.travel = travel;
 	}
@@ -155,8 +165,9 @@ public class Proceeds implements Serializable {
 	public String toString() {
 		return "Proceeds [proceedsId=" + proceedsId + ", proceeds=" + proceeds + ", proceedsDate=" + proceedsDate
 				+ ", proceedsType=" + proceedsType + ", memberId=" + memberId + ", trvId=" + trvId + ", ptcpId="
-				+ ptcpId + ", month=" + month + ", userName=" + userName + ", travel=" + travel + ", travelRequest="
-				+ travelRequest + ", travelRequestPlan=" + travelRequestPlan + ", participation=" + participation + "]";
+				+ ptcpId + ", month=" + month + ", userName=" + userName + ", email=" + email + ", travel=" + travel
+				+ ", travelRequest=" + travelRequest + ", travelRequestPlan=" + travelRequestPlan + ", participation="
+				+ participation + "]";
 	}
-	
+
 }

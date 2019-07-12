@@ -3,6 +3,8 @@ package com.kh.ti.point.model.vo;
 import java.io.Serializable;
 import java.sql.Date;
 
+import com.kh.ti.member.model.vo.Member;
+
 public class Rebate implements Serializable {
 	//환급내역
 	private int rebateId;		//환급코드
@@ -12,9 +14,11 @@ public class Rebate implements Serializable {
 	private Date payDate;		//환급지급일
 	private int rebateStatus;	//상태	-10:대기, 20:지급대기 ,30:지급완료
 	private String month;
+	
+	private Member member;
 	public Rebate() {}
 	public Rebate(int rebateId, Date applyDate, int payAmount, int memberId, Date payDate, int rebateStatus,
-			String month) {
+			String month, Member member) {
 		super();
 		this.rebateId = rebateId;
 		this.applyDate = applyDate;
@@ -23,6 +27,7 @@ public class Rebate implements Serializable {
 		this.payDate = payDate;
 		this.rebateStatus = rebateStatus;
 		this.month = month;
+		this.member = member;
 	}
 	public int getRebateId() {
 		return rebateId;
@@ -45,6 +50,9 @@ public class Rebate implements Serializable {
 	public String getMonth() {
 		return month;
 	}
+	public Member getMember() {
+		return member;
+	}
 	public void setRebateId(int rebateId) {
 		this.rebateId = rebateId;
 	}
@@ -66,10 +74,15 @@ public class Rebate implements Serializable {
 	public void setMonth(String month) {
 		this.month = month;
 	}
+	public void setMember(Member member) {
+		this.member = member;
+	}
 	@Override
 	public String toString() {
 		return "Rebate [rebateId=" + rebateId + ", applyDate=" + applyDate + ", payAmount=" + payAmount + ", memberId="
-				+ memberId + ", payDate=" + payDate + ", rebateStatus=" + rebateStatus + ", month=" + month + "]";
+				+ memberId + ", payDate=" + payDate + ", rebateStatus=" + rebateStatus + ", month=" + month
+				+ ", member=" + member + "]";
 	}
+
 	
 }
