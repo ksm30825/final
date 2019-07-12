@@ -17,7 +17,101 @@
 <script src="resources/js/semantic.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+<script>
+	var socket = io.connect('http://127.0.0.1:4000');
+			
+	if(socket !== undefined) {
+		console.log('Socket connected');
+				
+		socket.emit('memberIn', {
+			name:"${ loginUser.userName }",
+			email:"${ loginUser.email }",
+			room:"${ trv.trvId }"
+		});
+				
+		socket.on('updateMemberList', function(data) {
+			$("#memberInArea").empty();
+			for(var key in data) {
+				var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
+					+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
+				$("#memberInArea").append(a);
+			}
+		});
+		
+		socket.on('insertTag', function(tagId, tagName) {
+			$(".themes").each(function() {
+				if($(this).children().val() == tagId) {
+					$(this).removeClass('is-white').addClass('is-link');
+				}
+			});
+			$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
+					+ tagName + '</a><a class="tag is-delete tagDelete"></a><input type="hidden" value="' + tagId + '"></div></div>'));
+		
+			$(".tagDelete").click(function() {
+				var name = $(this).prev().text();
+				var id = parseInt($(this).next().val());
+				var trvTag = $(this).parent().parent();
+				$.ajax({
+					url:"deleteTrvTag.trv",
+					data:{tagId:id, trvId:"${ trv.trvId }"},
+					type:"post",
+					success:function(data) {
+						trvTag.remove();
+						$(".themes").each(function() {
+							if($(this).children().val() == id) {
+								$(this).removeClass('is-link').addClass('is-white');
+							}
+						});
+						
+						//socket tagDelete
+						socket.emit('deleteTag', {
+							tagId:id,
+							tagName:name,
+							room:'${ trv.trvId }'
+						});
+					},
+					error:function(data) {
+						//alert("서버전송 실패");
+					}
+				});
+				
+			});
+		
+		});
+		
+		socket.on('deleteTag', function(tagId, tagName) {
+			$(".themes").each(function() {
+				if($(this).children().val() == tagId) {
+					$(this).removeClass('is-link').addClass('is-white');
+				}
+			});
+			$("#myTagArea .tags.has-addons").each(function() {
+				if($(this).children().last().val() == tagId) {
+					$(this).parent().remove();
+				}
+			});
+		});
+		
+		socket.on('updateSchedule', function(dayId) {
+			$.ajax({
+				url:"selectSchList.trv",
+				type:"POST",
+				data:{dayId:dayId},
+				success:function(data) {
+					for(var key in data) {
+						console.log(data[key]);
+					}
+				},
+				error:function(err) {
+					alert("err");
+				}
+			});
+		});
+				
+				
+	}
+</script>
 <style>
 	body {
 		overflow-x:visible !important;
@@ -860,60 +954,7 @@
 	
 	</script>
 	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
-	<script>
-		$(function() {
-			var socket = io.connect('http://127.0.0.1:3000');
-			var members;
-			if(socket !== undefined) {
-				console.log('Socket connected');
-				socket.emit('memberIn', {
-					name:"${ loginUser.userName }",
-					email:"${ loginUser.email }"
-				});
-				
-				socket.on('load', function(data) {
-					members = data;
-					for(var key in data) {
-						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
-						+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
-						$("#memberInArea").append(a);
-					}
-				});
-				
-				socket.on('memberIn', function(data) {
-					members = data;
-					console.log(data);
-					$("#memberInArea").empty();
-					for(var key in data) {
-						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
-						+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
-						$("#memberInArea").append(a);
-					}
-					
-					/* if(data.email == "${ loginUser.email }") {
-						var a = "<p><a class='button is-success' data-tooltip='나' data-variation='mini' data-position='left center'>" 
-						+ data.name.charAt(0) + "</a></p>"
-					}else {
-						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data.email + "(" + data.name + ")' data-variation='mini'" 
-						+ " data-position='left center'>" + data.name.charAt(0) + '</a></p>';
-					}
-					$("#memberInArea").append(a); */
-				});
-				
-				
-				socket.on('memberOut', function(data) {
-					$("#memberInArea").empty();
-					for(var key in data) {
-						var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
-						+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
-						$("#memberInArea").append(a);
-					}
-				});
-				
-			}
-		});
-	</script>
+	
 	
 	
 </body>

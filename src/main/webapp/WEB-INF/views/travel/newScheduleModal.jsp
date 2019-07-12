@@ -205,7 +205,42 @@
         		}else if(startTime1.val() > endTime1.val()) {
         			alert('시작시간과 종료시간을 다시 확인하세요');
         		}else {
+        			/* var form = $("#newSchForm").serialize();
+        			var day
+        			$.ajax({
+        				url:"insertSch.trv",
+        				type:"POST",
+        				data:form,
+        				success:function(data) {
+        					var schId = data.trvSch.schId;
+        					var dayNumber = data.dayNumber;
+        					var schNumber = data.trvSch.schNumber;
+        					
+        					$("")
+        					
+        					
+        					if(data.trvCost != null) {
+        						
+        						
+        						
+        					}
+        				},
+        				error:function(err) {
+        					alert("err");
+        				}
+        			}); */
         			$("#newSchForm").submit();
+        			/* var title1 =  $("#schTitle1");
+        			var dayId1 = $("#dayId1");
+        			var isTimeset1 = $("#isTimeset1");
+        			var startTime1 = $("#startTime1");
+        			var endTime1 = $("#endTime1");
+        			var costAmount1 = $("#costAmount1");
+        			var transp1 = $("#schTransp1"); */
+        			socket.emit('insertSchedule', {
+        				dayId:dayId1.val(),
+        				room:"${ trv.trvId }"
+        			});
         		}
         	});
 		});

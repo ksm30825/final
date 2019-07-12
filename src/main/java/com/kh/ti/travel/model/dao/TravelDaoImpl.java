@@ -133,7 +133,12 @@ public class TravelDaoImpl implements TravelDao {
 	public int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch) {
 		return sqlSession.insert("Travel.insertSch", sch);
 	}
-		
+	
+	@Override
+	public int selectDayNumber(SqlSessionTemplate sqlSession, int dayId) {
+		return sqlSession.selectOne("Travel.selectDayNumber", dayId);
+	}
+	
 	@Override
 	public int selectSchId(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("Travel.selectSchId");
@@ -199,7 +204,6 @@ public class TravelDaoImpl implements TravelDao {
 	public int updateTrvDayWeather(SqlSessionTemplate sqlSession, TrvDay trvDay) {
 		return sqlSession.update("Travel.updateTrvDayWeather", trvDay);
 	}
-
 
 	
 	
@@ -386,6 +390,8 @@ public class TravelDaoImpl implements TravelDao {
 	public ArrayList<HashMap> selectRecommSpotList(SqlSessionTemplate sqlSession, Travel trv) {
 		return (ArrayList)sqlSession.selectList("Travel.selectRecommSpotList", trv);
 	}
+
+
 
 
 

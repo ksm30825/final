@@ -320,9 +320,12 @@ public class TravelServiceImpl implements TravelService {
 			int result2 = td.insertSchCost(sqlSession, cost);
 		}
 		
-		return result;
+		return schId;
 	}
-
+	@Override
+	public int selectDayNumber(int dayId) {
+		return td.selectDayNumber(sqlSession, dayId);
+	}
 
 	@Override
 	public int updateTrvSchedule(TrvSchedule sch, TrvCost cost) {
@@ -994,6 +997,8 @@ public class TravelServiceImpl implements TravelService {
 		}
 		return sharedTrvList;
 	}
+
+
 
 
 
