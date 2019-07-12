@@ -68,7 +68,7 @@ public class PenaltyController {
 				
 				PenaltyAttachment pe = new PenaltyAttachment();
 				pe.setOriginName(originFileName);
-				pe.setChangeName(changeName);
+				pe.setChangeName(changeName + ext);
 				pe.setFilePath(filePath);
 				pe.setFileType("신고");
 				attachmentFileList.add(pe);
@@ -123,14 +123,14 @@ public class PenaltyController {
 			
 			
 			int result = ps.insertPenalty(p, attachmentFileList);
-
+			int memberId = p.getComplainantId();
 			
 			if (p.getList().equals("채팅")) {
 				String chatId = request.getParameter("chatId");
 				
 				return "redirect:enterChatting.ch?num=" + chatId;
 			}else {
-				return "redirect:paneltyList.pe";
+				return "redirect:paneltyList.pe?memberId=" + memberId;
 			}
 			
 	
@@ -165,13 +165,14 @@ public class PenaltyController {
 
 	// 신고 내역상세보기 - 이선우
 	@RequestMapping("paneltyDetail.pe")
-	public String selectPenaltyDetail(@RequestParam("listId")int listId) {
+	public String selectPenaltyDetail(@RequestParam("listId")int listId, Model model) {
 		System.out.println("신고 번호 : " + listId);
 		
 		Penalty p = ps.selectOnePenalty(listId);
 		System.out.println("조회 결과 : " + p);
 		
 		if(p != null) {
+			model.addAttribute("p", p);
 			return "panelty/paneltyDetail";			
 		} else {
 			return "common/errorPage";
