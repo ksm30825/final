@@ -107,7 +107,7 @@
 		overflow-y:scroll;
 	}
 </style>
-<body>
+<body id="schBody">
 	<div id="myNav" class="overlay">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay-content">
@@ -902,6 +902,13 @@
 							$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
 									+ tagName + '</a><a class="tag is-delete tagDelete"></a><input type="hidden" value="' + tagId + '"></div></div>'));
 							
+							//socket tagInsert
+							socket.emit('insertTag', {
+								tagId:tagId,
+								tagName:tagName,
+								room:'${ trv.trvId }'
+							});
+							
 							$(".tagDelete").click(function() {
 								var name = $(this).prev().text();
 								var id = parseInt($(this).next().val());
@@ -916,6 +923,13 @@
 											if($(this).children().val() == id) {
 												$(this).removeClass('is-link').addClass('is-white');
 											}
+										});
+										
+										//socket tagDelete
+										socket.emit('deleteTag', {
+											tagId:id,
+											tagName:name,
+											room:'${ trv.trvId }'
 										});
 									},
 									error:function(data) {
@@ -945,6 +959,14 @@
 									$(this).parent().remove();
 								}
 							});
+							
+							//socket tagDelete
+							socket.emit('deleteTag', {
+								tagId:tagId,
+								tagName:tagName,
+								room:'${ trv.trvId }'
+							});
+							
 						},
 						error:function(data) {
 							alert("서버전송 실패");
@@ -968,6 +990,13 @@
 							if($(this).children().val() == tagId) {
 								$(this).removeClass('is-link').addClass('is-white');
 							}
+						});
+						
+						//socket tagDelete
+						socket.emit('deleteTag', {
+							tagId:tagId,
+							tagName:tagName,
+							room:'${ trv.trvId }'
 						});
 					},
 					error:function(data) {

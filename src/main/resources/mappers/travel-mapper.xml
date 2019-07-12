@@ -266,7 +266,11 @@
 	<select id="selectTrvDayId" resultType="_int">
 		SELECT TRV_DAY_SEQ.CURRVAL FROM DUAL
 	</select>
-	
+	<select id="selectDayNumber" parameterType="_int">
+		SELECT DAY_NUMBER
+		FROM TRV_DAY
+		WHERE DAY_ID = #{dayId}
+	</select>
 	
 	
 	<!-- sch -->

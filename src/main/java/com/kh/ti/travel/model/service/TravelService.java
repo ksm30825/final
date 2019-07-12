@@ -42,6 +42,7 @@ public interface TravelService {
 
 	int deleteTravel(int trvId);
 	
+	int selectDayNumber(int dayId);
 	
 
 	int selectSchNumber(ArrayList<TrvSchedule> schList, String startTime);

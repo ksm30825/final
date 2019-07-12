@@ -65,6 +65,8 @@ public interface TravelDao {
 	ArrayList<TrvSchedule> selectSchList(SqlSessionTemplate sqlSession, int dayId);
 
 	int insertTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);	
+
+	int selectDayNumber(SqlSessionTemplate sqlSession, int dayId);
 	
 	int selectSchId(SqlSessionTemplate sqlSession);
 

@@ -203,6 +203,7 @@ public class TravelController {
 
 	}
 
+
 	// 상세일정업데이트-민지
 	@RequestMapping("updateSch.trv")
 	public String updateTrvSchedule(TrvSchedule sch, TrvCost cost, int trvId, Model model) {
@@ -270,13 +271,6 @@ public class TravelController {
 			model.addAttribute("msg", "일정 삭제 실패");
 			return "common/errorPage";
 		}
-	}
-
-	// 상세일정조회 - 민지
-	@RequestMapping("selectSch.trv")
-	public ModelAndView selectSchedule(int schId, ModelAndView mv) {
-
-		return mv;
 	}
 
 	// 여행테마추가-민지
@@ -519,6 +513,34 @@ public class TravelController {
 		int result = ts.deleteTrvComp(trvComp);
 		return "";
 	}
+	
+	
+
+	
+	
+	
+
+	//상세일정리스트조회 - 민지
+	@RequestMapping("selectSchList.trv")
+	public ModelAndView selectSchedule(int dayId, ModelAndView mv) {
+		ArrayList<TrvSchedule> schList = ts.selectSchList(dayId);
+		
+		mv.addObject("schList", schList);
+		mv.setViewName("jsonView");
+		return mv;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
