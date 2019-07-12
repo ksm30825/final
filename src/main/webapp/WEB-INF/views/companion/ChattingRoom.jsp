@@ -160,21 +160,30 @@
 	  
 	
 
-	#reputContent{
+	#reputContent , #reputOneContent{
 		 margin: 0px;
 	    width: 339px;
 	    height: 186px;
 		resize : none;
 	}
 	
-	
+	.reputDetailTable{
+		width: 100%;
+	}
 	
 	.reputDetailTable td{
 		padding : 10px;
 	}
 	
+		
+	#goodicon, #badicon{
+		font-size : 20px;
+		padding : 0 ;
+		float : right ; 
+	}
+	
 
- 
+    
 	
 </style>
 <body>
@@ -273,8 +282,7 @@
 	   		<table id = "chatStatusTable">
 	   			<tr>
 	   				<td><b>채팅방 상태 </b></td>
-	   				<td id = "chatStatusLabel" style = "text-align : right;">
-	   				</td>
+	   				<td id = "chatStatusLabel" style = "text-align : right;"></td>
 	   			</tr>
 	   			<tr>
 	   				<td colspan = "2" id = "chatSatusDetail"></td>
@@ -308,13 +316,14 @@
     			<br>
     			<label id = "reputinfor">20대 (여)</label>
     			<div class="w3-bar w3-black">
-				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Like')">좋아요</button>
-				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Bad')">싫어요</button>
+				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Like')" >좋아요 <span id = "goodCount"></span></button>
+				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Bad')">싫어요 <span id = "badCount"></span></button>
 				</div>
 				<div id="Like" class="w3-container item">
+					
 				</div>
 				<div id="Bad" class="w3-container item" style="display:none">
-				  	<h4 align = "center">아직 정보가 없습니다.</h4>
+				
 				</div>			
     		</div>
 	      </div>
@@ -352,6 +361,68 @@
 	       	 <button id = "nextbtn" class="w3-button w3-black" style = "float : right;height : 50px; background-color: #f09eda !important;" 
 	       	  onclick="plusDivs(+1)">건너뛰기</button>
 	       	 <button  id = "submitbtn" class="w3-button w3-black" style = "float : right;height : 50px; background-color: #f09eda !important;">제출하기</button>
+	      </footer>
+	    </div>
+  	</div>
+  	
+  	<!--한개의 평판관리 모달창  -->
+  	 <div id="reputOneModal" class="w3-modal">
+	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
+	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
+	        <span onclick="document.getElementById('reputOneModal').style.display='none'" 
+	        class="w3-button w3-display-topright">&times;</span>
+	        <h4 align="center" >평판관리</h4>
+	      </header>
+	      <div class="w3-container">
+	      	<br>
+	        	<table>
+	        		<tr>
+	        			<td>
+	        				<input type = "hidden" id = "PutUserId">
+	        				<div align = "center">
+	        					<label id = "putUser"></label>님의 평판을 작성해주세요
+	        				</div>
+	        			</td>
+	        		</tr>
+	        		<tr>
+	        			<td>
+	        				   <input type="radio" name="rdo" id="reputOneGood" class = "reputGood" style = "display:none;" value = "good" checked>
+		    		  		   <input type="radio" name="rdo" id="reputOneBad" class = "reputBad" style = "display:none;" value = "bad">
+		    		  	  	   <div class="switch" id = "reputSwitch">
+		    		  	  	   <label for="reputOneGood" id = "reputGoodLabel">좋아요</label>
+		    		  	  	   <label for="reputOneBad" id = "reputBadLabel">싫어요</label>
+		    		  	  	   </div>
+		    		  	 </td>
+	        		</tr>
+	        		<tr>
+	        			<td>
+	        				<textarea placeholder = "상세내용을 작성해주세요" id = "reputOneContent"></textarea>
+	        			</td>
+	        		</tr>
+	        	</table>
+	        <br>
+	      </div>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
+	       	 <button id = "ReputOneSubmit" class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">제출하기</button>
+	      </footer>
+	    </div>
+  	</div>
+  	
+  	<div id="ReputAlready" class="w3-modal">
+	    <div class="w3-modal-content w3-animate-bottom w3-card-4" >
+	      <header class="w3-container w3-teal" style = "background : #f09eda !important;" >
+	        <span onclick="document.getElementById('ReputAlready').style.display='none'" 
+	        class="w3-button w3-display-topright">&times;</span>
+	        <h4 align="left" >평판관리</h4>
+	      </header>
+	      <div class="w3-container">
+	      	<br>
+	        	<label>이미 평판관리 이력이 있습니다.</label>
+	        <br>
+	      </div>
+	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
+	       	 <button id = "close" onclick="document.getElementById('ReputAlready').style.display='none'" 
+	       	  class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;">확인</button>
 	      </footer>
 	    </div>
   	</div>
@@ -417,7 +488,7 @@
 	    		  		   $(output).appendTo("#MemberInfoDiv");
 	    		  		   
 	    		  		   
-	    		  		   //if (userId != userInfo.memberId){
+	    		  		   if (userId != userInfo.memberId){
 	    		  			 if (userInfo.gender == "M"){
 		    		 	 			gender = "남";
 		    		 	 		}else {
@@ -464,7 +535,7 @@
 		    		  	  	   $(reputModelput).appendTo("#reputSendForm");
 					 			
 			    		  	  count++;
-	    		  		  // }
+	    		  		   }
 	    		  		  
 	    		  		   
 	        	       },
@@ -582,7 +653,7 @@
 	                if (data.sep == "나감"){
 	                	output += "<input type = 'hidden' value = '"+data.userId+"' id = 'outUserId'>"
 	                	output += "<button class = 'penaltybtn' id = 'chatoutbtn'> 신고 </button>";
-				        output += "<button class = 'reputbtn'> 평판관리 </button>";
+				        output += "<button class = 'reputbtn' id = 'messagereputBtn'> 평판관리 </button>";
 	                }
 	                
 	                output += '</div>';
@@ -668,7 +739,10 @@
 	  	  			$("#changeBtn").text("모집하기");
 	  	  		 }else if (chatStatus == "여행종료"){
 	  	  			$("#Recruitingicon").css("background" , "#aa65a8");
-	  	  			document.getElementById('reputModal').style.display='block';
+	  	  			//document.getElementById('reputModal').style.display='block';
+	  	  			
+	  	  			 //설문조사 이력이 있을경우 모달창 없애기 
+	  			 	 socket.emit('selectReputhistory' , {chatId : chatId , userId : userId});
 	  	  		 	
 	  	  		 }else if (chatStatus == "모집중"){
 	  	  			temp = "모집종료를 하시겠습니까?";
@@ -989,7 +1063,7 @@
  	  	  			temp = "모집종료를 하시겠습니까?";
  	  	  			$("#chatSatusDetail").text(temp);
  	  	  			$("#changeBtn").text("모집종료");
-c 	  	  		 }
+ 	  	  		 }
         		  
         	  });
 	          
@@ -1030,6 +1104,8 @@ c 	  	  		 }
 	        	  });
 	          });
 	          
+	       var goodcnt = 0;
+		  	var badcnt = 0;
 	        //참여중인 사용자 리스트 클릭시 
 	  		$(document).on("click","#chatpeopleTable tr",function(){
 	  		 
@@ -1086,44 +1162,129 @@ c 	  	  		 }
 	 	 	   socket.emit('preReputInfo', {userId : userid});
 	 	 
 	 	 	   $("#Like").empty();
-	 	 		
-	 	 		
+	 	 	   $("#Bad").empty();
+	 	 	   $("#goodCount").text(0);
+			   $("#badCount").text(0);
+			   goodcnt = 0;
+			   badcnt = 0;
+
 	 	 		
 				document.getElementById('reputInfo').style.display='block';
 	 	 		
 	 	 	}); 
 	     	
-	        
-		 	   socket.on('preReputInfo', function(data){
-	 		  	   var goodcnt = 0;
-	 		  	   var badcnt = 0;
-	 		  	   
-				   console.log("상태 :" + data.reLevel);
-				   
-				   //if (data.PutUser == userid){
+	  	    //평판 관리 이력
+		 	 socket.on('preReputInfo', function(data){
+		 		if (data != null){
+		 			  console.log("상태 :" + data.reLevel);
+					   
 					   if (data.reLevel == "good"){
 							 
 							  var temp = "";
 							  temp += '<table id = "goodTable" class = "reputDetailTable">';
 						  	  temp += '<tr><td><b>'+data.rePlace+'여행</b></td>';
-						  	  temp += '<td>'+data.reStart + '~' + data.reEnd +'</td></tr>';
+						  	  temp += '<td>'+data.reStart + '~' + data.reEnd +'<i id = "goodicon" class="material-icons">thumb_up_alt</i></td></tr>';
 						  	  temp += '<tr><td colspan = "2">';
 						  	  temp += '<p>';
 						  	  temp += data.reContent;
 						  	  temp += '</p></td></tr></table>';
 						  	  
-						  	  console.log("??????" + temp);
 						  	  
 						  	  $(temp).appendTo("#Like");
 						  	  
+						  	  goodcnt++; 
 						 }else {
-							 
+							  var temp = "";
+							  temp += '<table id = "goodTable" class = "reputDetailTable">';
+						  	  temp += '<tr><td><b>'+data.rePlace+'여행</b></td>';
+						  	  temp += '<td>'+data.reStart + '~' + data.reEnd +'<i id = "badicon" class="material-icons">thumb_down_alt</i></td></tr>';
+						  	  temp += '<tr><td colspan = "2">';
+						  	  temp += '<p>';
+						  	  temp += data.reContent;
+						  	  temp += '</p></td></tr></table>';
+						  	  
+						  	  
+						  	  $(temp).appendTo("#Bad");
+							  
+						  	  badcnt++; 
 						 }
 				   
-				   //}
+					
+					   $("#goodCount").text(goodcnt);
+					   $("#badCount").text(badcnt);
+		 		}else {
+		 			var temp = "<label>조회결과가 없습니다.</label>";
+		 			$(temp).appendTo("#Like");
+		 			$(temp).appendTo("#Bad");
+		 		}
+				 
+						
 					  
 			  });
-
+		 	 
+		 	
+			  //평판이력 조사 내여 - 이력없을 시 모달 창 나오게
+		 	 socket.on('selectReputhistory', function(data){
+		 		 var status = data.status;
+		 		 var reputChat = data.chatId;
+		 		 var reputUser = data.userId;
+		 		 
+		 		 console.log("상태 / 채팅방 / 유저" +status + "/" +reputChat + "/" +  reputUser);
+		 		 if (status == "이력있음"){
+				 		document.getElementById('reputModal').style.display='none';
+		 		 }else {
+			 			document.getElementById('reputModal').style.display='block';
+		 		 }
+		 		 
+		 	 });
+			  
+			  //메세지에서 평판관리 클릭시 
+			  $(document).on("click" , "#messagereputBtn" , function(){
+				  var outUser = $(this).parent().children("#outUserId").val();
+				  
+				  $("#PutUserId").val(outUser);
+				  $.ajax({
+	        		   url : "${contextPath}/memberInfo.ch",
+	        		   data : {userId : outUser},
+	        	       success : function(userInfo) {
+	        	    	   $("#putUser").text(userInfo.userName);
+	        	       },
+	        	       error : function(){
+	        	    	   console.log("에러발생");
+	        	       }
+	        	   });
+				  
+				  document.getElementById('reputOneModal').style.display='block';
+			  });
+			  
+			  //한개의 평판과닐 제출
+			  $("#ReputOneSubmit").click(function(){
+				  var reputUserId = $("#PutUserId").val();
+    			  var rdo = $("input[name=rdo]:checked").val();
+    			  var reputContent = $("#reputOneContent").val();
+    			  var place = $("#reputPlace").val();
+    			  var start = $("#reputStart").val();
+    			  var end = $("#reputEnd").val();
+    			  console.log("reputContent :" + reputContent); 
+    			  
+    			  if (rdo != ""){
+    				  if (reputContent != ""){
+    					  socket.emit('CreateChatReput', {chatId : chatId , userId : userId , reputUserId : reputUserId , level : rdo , content : reputContent , place : place , start : start , end : end});
+	        		  	  
+	        			  socket.on('CreateChatReput' , function(){
+	        				  document.getElementById('reputOneModal').style.display='none';
+	        			  });
+	        			  
+	        			  socket.on('alreadyReputhistory', function(){
+	        				
+	        				  document.getElementById('reputOneModal').style.display='none';
+	        				  
+	        				  document.getElementById('ReputAlready').style.display='block';
+	        			  })
+    				  }
+    			  }
+    			  
+			  });
 	           
 	           
 		}); //end

@@ -102,16 +102,7 @@ public class ChattingController {
 	     String birthStr = userInfo.getBirthday();
 	     
 	     if (birthStr != null) {
-	    	 //birthStr = birthStr.substring(0,4);
-	    	 
-	    	 /*
-			 * int century = Integer.parseInt(birthStr.substring(0, 1));
-			 * 
-			 * if(century == 0) { birthStr = "20" + birthStr; } else { birthStr = "19" +
-			 * birthStr; }
-			 */
-		     
-		     //System.out.println("birthdAy :" + birthStr);
+	    	
 		     
 		     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.KOREAN);
 		     Date birthDay;
@@ -138,7 +129,7 @@ public class ChattingController {
 		    
 	     }
 
-	     System.out.println("detailDay : " + userInfo);
+	     //System.out.println("detailDay : " + userInfo);
 	      
 	     return new ResponseEntity<Member>(userInfo, HttpStatus.OK);
 	   }
