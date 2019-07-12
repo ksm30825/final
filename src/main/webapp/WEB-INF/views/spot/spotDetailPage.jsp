@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,29 +39,7 @@
 </style>
 </head>
 <body>
-	<!-- nav area -->
-	<nav class="navbar is-info" style="background-color: white; border-bottom: 2px solid skyblue;">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="selectSpotInfoUser.sp">
-        <i class="fas fa-chevron-circle-left" style="font-size: 40px; color: skyblue;"></i>
-      </a>
-      <div class="navbar-burger burger" data-target="navMenuExample4">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-    <div id="navMenuExample4" class="navbar-menu">
-      <div class="navbar-start">
-      </div>
-      <div class="navbar-end">
-        <a class="navbar-item" href="showIndex.me" style="color: skyblue; font-weight:bold; font-size:18px;">
-          <strong>TRAVEL INTERFACE</strong> &nbsp; &nbsp; &nbsp;
-          <i class="far fa-paper-plane" style="color: skyblue; font-size:40px;"></i>
-        </a>
-      </div>
-    </div>
-  </nav> <!-- end nav area -->
+	<jsp:include page="../common/mainNav.jsp" /> <br><br>
   
   <!-- content Area -->
   <div class="columns">
@@ -68,7 +47,10 @@
   		
   		<!-- title -->
 			<section class="section">
-				<h1 class="title" style="color:gray;"><b style="color:black;">COUNTY Name(KO)</b> COUNTY Name(EN)</h1>
+				<h1 class="title" style="color:gray;">
+					<i class="fas fa-chevron-circle-left" style="font-size: 40px; color: skyblue;"></i>
+					<b style="color:black;">${ city.cityNameKo }</b> ${ city.cityNameEn }
+				</h1>
 			</section> <!-- end title -->
 			
 			<!-- content -->
@@ -86,7 +68,7 @@
 								<!-- <i class="far fa-star" style="font-size: 35px; color: yellow;"  onclick="clickStar(this);"></i> -->
 							</div>
 							<div class="field">
-								<h3 class="title"><b>SPOT_NAME</b></h3>
+								<h3 class="title"><b>${ spotList.spotNameKo }</b></h3>
 							</div>
 							
 							<hr>
@@ -95,7 +77,7 @@
 								<div class="field-body">
 									<div class="field is-grouped">
 										<i class="fas fa-map-marker-alt" style="color: purple; font-size: 20px;"></i> &nbsp;&nbsp;
-										<label class="label">SPOT_ADDRESS</label> &nbsp;&nbsp;
+										<label class="label" style="width: 80%; color: gray;">${ spotList.spotAddress }</label> &nbsp;&nbsp;
 										<a href="#">google 지도</a>
 									</div>
 								</div>
@@ -104,11 +86,7 @@
 							<hr>
 							
 							<div class="field">
-								<p class="control">
-									용감하고 굳세게 살 수 있는 것이다 석가는 무엇을 위하여 설산에서 고행을 하였으며 예수는 무엇을 위하여 광야에서
-									불어 보내는 것은 청춘의 끓는 피다 청춘의 피가 뜨거운지라 인간의 동산에는 사랑의 풀이 돋고 이상의 꽃이 피고 희망의 놀이 뜨고 열락의 새가 운다사랑의 풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다
-									얼음 속에서 불러 내는 것이 따뜻한 봄바람이다 인생에 따뜻한 봄바람을 불어 보내는 것은 청춘의 끓는 피다 청춘의 피가 뜨거운지라 인간의 동산에는 사랑의 풀이 돋고 이상의 꽃이 피고 희망의
-								</p>
+								<p class="control"> ${ spotList.spotContent }</p>
 							</div>
 							
 						</div> <!-- end text area -->
@@ -139,7 +117,7 @@
 								<label class="label">상세주소</label>
 							</div>
 							<div class="field spotInfo">
-								<label class="label">SPOT_DETAIL_ADDRESS</label>
+								<label class="label" style="width: 80%;">${ spotList.spotAddress }</label>
 							</div>
 						</div>
 					</div>
@@ -150,7 +128,7 @@
 								<label class="label">연락처 </label>
 							</div>
 							<div class="field spotInfo">
-								<label class="label">SPOT_PHONE_NUMBER</label>
+								<label class="label" style="width: 80%;">${ spotList.spotPhone }</label>
 							</div>
 						</div>
 					</div>
@@ -161,7 +139,7 @@
 								<label class="label">웹사이트</label>
 							</div>
 							<div class="field spotInfo">
-								<label class="label">SPOT_WEB_ADDRESS</label>
+								<label class="label" style="width: 80%;">${ spotList.webAddress }</label>
 							</div>
 						</div>
 					</div>
@@ -172,7 +150,7 @@
 								<label class="label">영업시간</label>
 							</div>
 							<div class="field">
-								<label class="label spotInfo">SPOT_OPEN_HOURS</label>
+								<label class="label spotInfo" style="width: 80%;">${ spotList.openingHours }</label>
 							</div>
 						</div>
 					</div>
@@ -195,7 +173,7 @@
 				<!-- reviews area -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<h3 style="color: purple;"><strong style="color: black;">리뷰</strong>&nbsp; &nbsp; REVIEW_COUNT</h3>
+						<h3 style="color: purple;"><strong style="color: black;">리뷰</strong>&nbsp; &nbsp;( ${ fn:length(spotReviews) } )</h3>
 						<div class="field is-horizontal">
 							<div class="field-body">
 								<div class="field is-grouped" style="justify-content: flex-end;">
@@ -207,18 +185,103 @@
 							</div>
 						</div>
 					</div> <!-- end header -->
-					
-					<!-- insert review area -->
-					<div class="field" style="border: 0.3px solid gray; padding:10px;">
-						<div class="field is-horizontal">
-							<div class="field-body">
-								<div class="field">
-									<label class="label">USER_EMIAL</label>
-								</div>
-							</div>
-						</div>
-					</div> <!--  end insert review area -->
 				</div> <!-- end reviews area -->
+					
+			<!-- insert review area -->
+			<form action="insertSpotReview.sp" method="post">
+				<div class="field" style="border: 0.3px solid gray; padding:10px;">
+					<c:if test="${ !empty loginUser }">
+						<input type="hidden" value="${ loginUser.memberId }" name="memberId">
+						<input type="hidden" value="${ spotList.spotId }" name="spotId">
+						<label class="label">${ loginUser.userName }</label>
+					</c:if>
+					<c:if test="${ empty loginUser }">
+						<label class="label" style="width: 100%;">익명의 사용자</label>
+					</c:if>
+					<div class="field is-horizontal">
+						<div class="field-body">
+							<div class="field" style="width: 15%;">		
+								<div class="field" align="center">
+										<i class="fas fa-grin-hearts" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i>
+						          </div>				
+								<span class="select" style="margin-top: 10px; width: 100%;">
+						            <select name="grade" style="width: 100%;" id="gradeOption">
+						              <option value="5" selected>꼭 가봐야 해요!(5)</option>
+						              <option value="4">꽤 가볼만해요(4)</option>
+						              <option value="3">가볼만해요(3)</option>
+						              <option value="2">아쉬워요(2)</option>
+						              <option value="1">별로예요(1)</option>
+						            </select>
+						          </span>					          
+							</div>
+							
+							<!-- text area -->
+							<div class="field" style="width: 60%;">
+					           <div class="control">
+					             <textarea class="textarea" placeholder="댓글을 남겨주세요." id="reviewContent" name="reviewContent"></textarea>
+					           </div>
+					        </div> <!--  end text area -->
+					        
+					        <div class="field buttons" style="width: 5%;">
+					        	<button class="button is-info is-outlined" style="width: 100%; height: 100%;" onclick="return insertReview();"> 등록하기 </button>
+					        </div>
+						</div>
+					</div>					
+				</div> <!--  end insert review area -->
+			</form>
+			
+			<!-- review list -->
+			<c:forEach var="reviews" items="${ spotReviews }">
+				<div class="field" style="border: 0.3px solid gray; padding:10px; background-color: #f7e6ff; margin-top: 10px;">
+				
+					<div class="field is-horizontal">
+						<div class="field-body">
+							<label class="label" style="width: 80%;"> 익명의 사용자 </label>
+							<c:if test="${ loginUser.memberId eq reviews['memberId'] }">
+								<div class="field" align="right">
+									<a href="#" style="color: #666699;">수정</a> &nbsp; &nbsp;
+									<a href="#" style="color: #666699;">삭제</a> 
+								</div>
+							</c:if>
+						</div>
+					</div>
+					
+					<div class="field is-horizontal">
+						<div class="field-body">
+							<div class="field" style="width: 15%;" align="center">	
+								<c:choose>
+									<c:when test="${ reviews['grade'] eq 1 }"> 
+										<i class="fas fa-laugh" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i>
+										<label class="label" style="width: 100%;">별로예요</label>
+									 </c:when>
+									<c:when test="${ reviews['grade'] eq 2 }"> 
+										<i class="fas fa-grin-beam-sweat" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i> 
+										<label class="label" style="width: 100%;">아쉬워요</label>
+									</c:when>
+									<c:when test="${ reviews['grade'] eq 3 }"> 
+										<i class="fas fa-grin-beam" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i>
+										<label class="label" style="width: 100%;">가볼만해요</label> 
+									</c:when>
+									<c:when test="${ reviews['grade'] eq 4 }"> 
+										<i class="fas fa-grin-squint" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i> 
+										<label class="label" style="width: 100%;">꽤 가볼만 해요</label>
+									</c:when>
+									<c:when test="${ reviews['grade'] eq 5 }"> 
+										<i class="fas fa-grin-hearts" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i> 
+										<label class="label" style="width: 100%;">꼭 가봐야 해요!</label>
+									</c:when>
+								</c:choose>
+							</div>
+							<!-- text area -->
+							<div class="field" style="width: 60%;">
+					           <div class="control">
+					             <textarea class="textarea" readonly> ${ reviews['reviewContent'] } </textarea>
+					           </div>
+					        </div> <!--  end text area -->					       
+						</div> <!-- end field-body -->
+					</div> <!-- end is-horizontal -->
+				</div> 
+			</c:forEach><!-- end review list -->
 				
 			</section> <!-- end content -->
 			
@@ -234,13 +297,41 @@
   		$(star).addClass("fas fa-star");
   	} //end func
   	
+  	function insertReview(){
+  		if('${ loginUser}' != null && '${ loginUser}' != "" && '${ loginUser}' != " "){ //로그인 되어 있을 때
+  			if($("#reviewContent").val() != null && $("#reviewContent").val() != "" && $("#reviewContent").val() != " "){
+  				return true
+  			} else {
+  				alert("리뷰 내용을 입력해 주세요");
+  				return false;
+  			}
+  		} else { //로그인 되지 않았을 때
+  			alert("로그인 후 리뷰 등록이 가능합니다.");
+  			return false;
+  		}
+  	} //end func
+  	
   	$(function(){
   		$('.toggle.example .rating')
 	  	  .rating({
 	  	    initialRating: 2,
 	  	    maxRating: 4
-	  	  })
-	  	;
+	  	  });
+  		
+  		$("#gradeOption").change(function(){
+  			console.log($("#gradeOption option:selected").val());
+  			var value = $("#gradeOption option:selected").val();
+  			var classVar = "";
+  			switch(value){
+	  			case "1" : classVar = "fas fa-laugh"; break;
+	  			case "2" : classVar = "fas fa-grin-beam-sweat"; break;
+	  			case "3" : classVar = "fas fa-grin-beam"; break;
+	  			case "4" : classVar = "fas fa-grin-squint"; break;
+	  			case "5" : classVar = "fas fa-grin-hearts"; break;
+  			} //end switch
+  			
+  			$("#gradeIcon").attr("class", classVar);
+  		});
   	});
   </script> <!-- end script -->
 </body>

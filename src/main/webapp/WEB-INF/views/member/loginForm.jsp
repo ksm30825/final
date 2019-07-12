@@ -150,7 +150,7 @@
 				      <div class="field">
 				        <label class="label colWhite">* 비밀번호</label>
 				        <p class="control has-icons-left has-icons-right">
-				          <input class="input is-success" type="password" placeholder="password" name="password">
+				          <input class="input is-success" type="password" placeholder="password" name="password" id="password1">
 				          <span class="icon is-small is-left">
 				            <i class="fa fa-lock"></i>
 				          </span>
@@ -162,7 +162,7 @@
 				      <div class="field">
 				        <label class="label colWhite">* 비밀번호 확인</label>
 				        <p class="control has-icons-left has-icons-right">
-				          <input class="input is-success" type="password" placeholder="password check" name="password2">
+				          <input class="input is-success" type="password" placeholder="password check" name="password2" id="password2">
 				          <span class="icon is-small is-left">
 				            <i class="fa fa-lock"></i>
 				          </span>
@@ -170,13 +170,21 @@
 				            <i class="fa fa-lock"></i>
 				          </span>
 				        </p>
-				        <p class="help is-success">비밀번호가 일치합니다.</p>
+				        <p id="confirmResult" class="help is-danger" style="margin-left:10px; padding-top:6px;">비밀번호 불일치</p>
 				      </div>
 				      <div class="field">
 				      	<label class="label colWhite">* 휴대폰 인증</label>
 				      	<div class="field has-addons" style="width:100%;">
-					          <input class="input" type="tel" placeholder="phone number" name="phone">
-					          <a class="button">본인 인증</a>
+					          <input class="input" type="tel" placeholder="-를 빼고 입력해주세요" name="phone" id="userPhoneNumber">
+					          <a class="button" onclick="sendMessage();">본인 인증</a>
+				      	</div>
+				      	<p id="confirmPhoneResult" class="help is-success" style="margin-left:10px;"></p>
+				      </div>
+				      <div class="field" id="confirmNumberArea">
+				      	<label class="label colWhite">* 인증번호 입력</label>
+				      	<div class="field has-addons" style="width:100%;">
+					          <input class="input" type="text" placeholder="발송된 인증번호를 입력하세요" id="confirmNumber">
+					          <a class="button" onclick="checkSms();">인증 하기</a>
 				      	</div>
 				      </div>
 				      <div class="field is-horizontal">
@@ -220,6 +228,7 @@
 		
 	<!-- script -->
 	<script>
+		var sendConfirmNum = "000000";
 		$(function(){
 			$("#email").click(function(){
 				$(this).select();
@@ -233,6 +242,23 @@
 			$("#kakaoLogin").click(function(){
 				$("#kakao-login-btn").click();
 				return false;
+			});
+			$("#confirmNumberArea").hide();
+			
+			//비밀번호 일치여부 확인
+			//비밀번호 일치여부 감지
+			$("#password2").on("change paste keyup", function(){
+				if($("#password1").val() == $("#password2").val()){
+					$("#confirmResult").removeClass();
+					$("#confirmResult").addClass("help is-success");
+					$("#confirmResult").text("비밀번호 일치");
+					$("#submitBtn").attr("disabled", false);
+				} else {
+					$("#confirmResult").removeClass();
+					$("#confirmResult").addClass("help is-danger");
+					$("#confirmResult").text("비밀번호 불일치");
+					$("#submitBtn").attr("disabled", true);
+				}
 			});
 		});
 		//로그인 화면 보여주기용 함수
@@ -289,7 +315,43 @@
 		      console.log(JSON.stringify(error));
 	        }
 		 });
-
+		
+		//휴대폰 인증하기
+		function sendMessage(){
+			var phone = $("#userPhoneNumber").val();
+			 $.ajax({
+		          url: "sendSms.me",
+		          data: {
+		            receiver: phone
+		          },
+		          type: "post",
+		          success: function(result) {
+		            if (result != null || result != "") {
+		              alert("인증번호를 발송했습니다.");
+		              $("#confirmNumberArea").show();
+		              sendConfirmNum = result;
+		            } else {
+		              alert("인증번호를 발송하지 못했습니다. 휴대전화번호를 확인해 주세요.");
+		            } //end if
+		          } //end success
+		          
+		      });//end ajax
+		} //end func
+		
+		function checkSms(){
+			var inputNum = $("#confirmNumber").val();
+			if(sendConfirmNum == inputNum){
+				//alert("인증이 완료 되었습니다.");
+				$("#confirmNumberArea").hide();
+				$("#confirmPhoneResult").text("인증 완료!");
+			} else {
+				alert("인증번호를 다시 확인해 주세요.");
+				$("#confirmNumber").css({
+					"border" : "1px solid red",
+					"color" : "red"
+				});
+			}
+		}
 	</script>
 	<!-- end script -->
 </body>

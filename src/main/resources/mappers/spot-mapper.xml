@@ -62,9 +62,6 @@
  		<result property="cityId" column="CITY_ID"/>
  		<result property="spotStatus" column="SPOT_STATUS"/>
  		<result property="placeId" column="PLACE_ID"/>
- 		<collection property="cityList" javaType="java.util.ArrayList" resultMap="cityResultSetSpot"/>
- 		<collection property="countryList" javaType="java.util.ArrayList" resultMap="countryResultSetSpot"/>
- 		<collection property="sFileList" javaType="java.util.ArrayList" resultMap="spotFileResultSet"/>
   	</resultMap>
   	
   	<!-- 여행지 도시 와 사진을 가지고 오기 위한 hashmap 세령-->
@@ -105,6 +102,29 @@
 		<result property="picStatus" column="PIC_STATUS"/>
 		<result property="fileLevel" column="FILE_LEVEL"/>
 	</resultMap>
+	
+	<!-- 명소 리뷰 맵 세령 -->
+	<resultMap type="com.kh.ti.spot.model.vo.SpotReviews" id="spotReviewsResultSet">
+	 	<id property="spotReviewId" column="SPOT_REVIEW_ID"/>
+	 	<result property="reviewContent" column="REVIEW_CONTENT"/>
+		<result property="reviewDate" column="REVIEW_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>
+		<result property="delDate" column="DEL_DATE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="spotId" column="SPOT_ID"/>
+		<result property="grade" column="GRADE"/>
+	</resultMap>
+	
+	  	<!-- 여행지 도시 와 사진을 가지고 오기 위한 hashmap 세령-->
+	  	<resultMap type="java.util.HashMap" id="spotReviewListResultSet">
+	  		<id property="spotReviewId" column="SPOT_REVIEW_ID"/>
+		 	<result property="reviewContent" column="REVIEW_CONTENT"/>
+			<result property="reviewDate" column="REVIEW_DATE"/>
+			<result property="memberId" column="MEMBER_ID"/>
+			<result property="spotId" column="SPOT_ID"/>
+			<result property="grade" column="GRADE"/>
+			<result property="userName" column="USER_NAME"/>
+	  	</resultMap>
   	
   	<!-- 여행지 상세(명소 조회용) 세령 -->
   	<select id="selectSpotList" resultMap="spotListAllResultSet" parameterType="_int">
@@ -161,5 +181,32 @@
 	<select id="selectCityFile" parameterType="_int" resultMap="spotFileResultSet">
 		SELECT * FROM SPOT_FILE
 		WHERE CITY_ID = #{ cityId }
+	</select>
+	
+	<!-- SPOT ID로 도시 조회 세령 -->
+	<select id="selectCityOne" parameterType="_int" resultMap="cityResultSetSpot">
+		SELECT *
+		FROM CITY
+		WHERE CITY_ID = (SELECT CITY_ID FROM SPOTLIST WHERE SPOT_ID = #{ spotId } )
+	</select>
+	
+	<!-- spot info 조회 세령 -->
+	<select id="selectSpotListOne" parameterType="_int" resultMap="spotResultSet">
+		SELECT * FROM SPOTLIST
+		WHERE SPOT_ID = #{ spotId }
+	</select>
+	
+	<!-- 명소 리뷰 등록 세령 -->
+	<insert id="insertSpotReviews" parameterType="SpotReviews">
+		INSERT INTO SPOT_REVIEWS
+		VALUES (SPOT_REVIEWS_SEQ.NEXTVAL, #{ reviewContent }, SYSDATE, NULL, NULL, #{ memberId }, #{ spotId }, #{ grade })
+	</insert>
+	
+	<!-- 명소 리뷰 조회 세령 -->
+	<select id="selectSpotReviews" parameterType="_int" resultMap="spotReviewListResultSet">
+		SELECT SPOT_REVIEW_ID, REVIEW_CONTENT, REVIEW_DATE, SR.MEMBER_ID, SPOT_ID, GRADE, USER_NAME
+		FROM SPOT_REVIEWS SR JOIN MEMBER M ON (SR.MEMBER_ID = M.MEMBER_ID)
+		WHERE SPOT_ID = #{ spotId }
+		ORDER BY REVIEW_DATE DESC
 	</select>
  </mapper>
