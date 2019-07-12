@@ -16,6 +16,7 @@ public interface TravelRequestService {
 
 	TravelRequest selectOneRequest(int reqNum);
 
-	ArrayList<TravelRequestPlan> selectOneRequestPlan(int code);
+	//ArrayList<TravelRequestPlan> selectOneRequestPlan(int code);
 
+	ArrayList<TravelRequestPlan> selectOneRequestPlan(int ptcpId);
 }

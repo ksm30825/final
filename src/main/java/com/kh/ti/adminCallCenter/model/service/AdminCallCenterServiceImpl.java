@@ -1,5 +1,8 @@
 package com.kh.ti.adminCallCenter.model.service;
 
-public class AdminCallCenterServiceImpl {
+import org.springframework.stereotype.Service;
+
+@Service
+public class AdminCallCenterServiceImpl implements AdminCallCenterService{
 
 }

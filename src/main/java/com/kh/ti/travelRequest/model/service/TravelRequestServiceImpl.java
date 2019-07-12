@@ -47,9 +47,15 @@ public class TravelRequestServiceImpl implements TravelRequestService{
 	}
 
 	//선택한 설계글 상세보기
+//	@Override
+//	public ArrayList<TravelRequestPlan> selectOneRequestPlan(int code) {
+//		return trd.selectOneRequestPlan(sqlSession, code);
+//	}
+	
+	//선택한 설계글 상세보기
 	@Override
-	public ArrayList<TravelRequestPlan> selectOneRequestPlan(int code) {
-		return trd.selectOneRequestPlan(sqlSession, code);
+	public ArrayList<TravelRequestPlan> selectOneRequestPlan(int ptcpId) {
+		return trd.selectOneRequestPlan(sqlSession, ptcpId);
 	}
 
 }

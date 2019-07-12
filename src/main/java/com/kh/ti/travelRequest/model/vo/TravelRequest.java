@@ -16,12 +16,13 @@ public class TravelRequest implements Serializable{
 	private Date chooseDate;	//채택날짜
 	private int trvCost;	//예산
 	private ArrayList<TravelRequestPlan> planList;	//설계글 목록
+	private ArrayList<Participation> participationList;	//참여글 목록
 	
 	public TravelRequest() {}
 
 	public TravelRequest(int requestId, String requestTitle, String requestContent, Date endDate, int requestPrice,
 			int memberId, String userName, String chooseStatus, Date chooseDate, int trvCost,
-			ArrayList<TravelRequestPlan> planList) {
+			ArrayList<TravelRequestPlan> planList, ArrayList<Participation> participationList) {
 		super();
 		this.requestId = requestId;
 		this.requestTitle = requestTitle;
@@ -34,6 +35,7 @@ public class TravelRequest implements Serializable{
 		this.chooseDate = chooseDate;
 		this.trvCost = trvCost;
 		this.planList = planList;
+		this.participationList = participationList;
 	}
 
 	public int getRequestId() {
@@ -124,11 +126,19 @@ public class TravelRequest implements Serializable{
 		this.planList = planList;
 	}
 
+	public ArrayList<Participation> getParticipationList() {
+		return participationList;
+	}
+
+	public void setParticipationList(ArrayList<Participation> participationList) {
+		this.participationList = participationList;
+	}
+
 	@Override
 	public String toString() {
 		return "TravelRequest [requestId=" + requestId + ", requestTitle=" + requestTitle + ", requestContent="
 				+ requestContent + ", endDate=" + endDate + ", requestPrice=" + requestPrice + ", memberId=" + memberId
 				+ ", userName=" + userName + ", chooseStatus=" + chooseStatus + ", chooseDate=" + chooseDate
-				+ ", trvCost=" + trvCost + ", planList=" + planList + "]";
+				+ ", trvCost=" + trvCost + ", planList=" + planList + ", participationList=" + participationList + "]";
 	}
 }
