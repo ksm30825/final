@@ -101,10 +101,13 @@ public interface PointService {
 	Proceeds selectMemberIdRequest(Refund updatedRefund);
 	//관리자 - 판 사람의 userProceeds 차감
 	int updateUserProceedsRefund(Proceeds proceeds);
-	//판매자의 참여번호를 조회해와야 함
+	//포인트 사용시 판매자의 참여번호를 조회해와야 함
 	int selectOnePtcp(int requestId);
-	//차감된 userPoint 찾기
+	//포인트 사용시 차감된 userPoint 찾기
 	int selectOnePoint(int mid);
-	//설계자 이름 찾기, 설계번호 찾기
+	//관리자 - 수익금  리스트 카운트
+	int getAdProceedsListCount(SearchPoint sp);
+	//관리자 - 수익금 조회
+	ArrayList<Proceeds> selectAdProceedsList(PageInfo adProceedsPi, SearchPoint sp);
 
 }

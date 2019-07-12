@@ -44,7 +44,6 @@
 	<resultMap type="Proceeds" id="proceedsResultSet">
 		<id property="proceedsId" column="PROCEEDS_ID"/>
 		<result property="proceeds" column="PROCEEDS"/>
-		<result property="accumulateProceeds" column="ACCUMULATE_PROCEEDS"/>
 		<result property="proceedsDate" column="PROCEEDS_DATE"/>
 		<result property="proceedsType" column="PROCEEDS_TYPE"/>
 		<result property="memberId" column="MEMBER_ID"/>
@@ -96,15 +95,38 @@
 		<result property="planId" column="PLAN_ID"/>
 		<result property="planTitle" column="PLAN_TITLE"/>
 	</resultMap>
-	<!-- <resultMap type="SearchPoint" id="spResultSet">
-		<id property="refundId" column="REFUND_ID"/>
+	<resultMap type="Proceeds" id="PointPlanRequestParticipationMemberTrvResultSet">
+		<id property="proceedsId" column="PROCEEDS_ID"/>
+		<result property="proceeds" column="PROCEEDS"/>
+		<result property="proceedsDate" column="PROCEEDS_DATE"/>
+		<result property="proceedsType" column="PROCEEDS_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+		<result property="userName" column="USER_NAME"/>
 		
-		<result property="refundReason" column="REFUND_REASON"/>
-		<result property="applyDate" column="APPLY_DATE"/>
-		<result property="processedDate" column="PROCESSED_DATE"/>
-		<result property="refundStatus" column="REFUND_STATUS"/>
-		<result property="pointId" column="POINT_ID"/>
-	</resultMap> -->
+		<association property="travel" resultMap="trvMemberResult" columnPrefix="T_"></association>
+		<association property="travelRequest" resultMap="trvRequestResult" columnPrefix="TRVR_"></association>
+		<association property="travelRequestPlan" resultMap="trvPlanResult" columnPrefix="TRVP_"></association>
+	</resultMap>
+	<resultMap type="Travel" id="trvMemberResult">
+		<id property="trvId" column="TRV_ID"/>
+		<result property="trvTitle" column="TRV_TITLE" />
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="userName" column="USER_NAME" />
+	</resultMap>
+	<resultMap type="TravelRequest" id="trvRequestResult">
+		<id property="requestId" column="REQUEST_ID"/>
+		<result property="requestTitle" column="REQUEST_TITLE"/>
+		<result property="userName" column="USER_NAME"/>
+	</resultMap>
+	<resultMap type="TravelRequestPlan" id="trvPlanResult">
+		<id property="planId" column="PLAN_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+	</resultMap>
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
 		INSERT INTO PAYMENT
@@ -266,7 +288,7 @@
 	<insert id="insertReceiverProceeds" parameterType="Proceeds">
 		INSERT INTO PROCEEDS
 		VALUES(
-			PROCEEDS_SEQ.NEXTVAL, #{proceeds}, #{accumulateProceeds}, SYSDATE, #{proceedsType}, #{memberId},
+			PROCEEDS_SEQ.NEXTVAL, #{proceeds}, SYSDATE, #{proceedsType}, #{memberId},
 			<choose>
 				<when test="trvId != 0">#{trvId}, null</when>
 				<when test="ptcpId != 0">null, #{ptcpId}</when>
@@ -294,7 +316,7 @@
 	<select id="getProceedsListCount" parameterType="Proceeds" resultType="_int">
 		SELECT COUNT(*)
 		FROM (
-			SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.ACCUMULATE_PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
+			SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
 			FROM PROCEEDS P1
 			WHERE MEMBER_ID=#{memberId}
 			<choose>
@@ -310,7 +332,7 @@
 	</select>
 	<!-- 수익금 달성내역 가져오기 -->
 	<select id="selectAllProceeds" parameterType="Proceeds" resultMap="proceedsResultSet">
-		SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.ACCUMULATE_PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
+		SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
 		FROM PROCEEDS P1
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
@@ -572,6 +594,53 @@
 		FROM MEMBER
 		WHERE MEMBER_ID=#{memberId}
 	</select>
-	<!-- 환불 내역 검색 리스트 카운트 -->
-	
+	<!-- 관리자 - 수익금 전체 리스트 카운트 -->
+	<select id="getAdProceedsListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT <choose><when test="condition != 99">USER_NAME, </when></choose>
+			    T.MEMBER_ID AS T_MEMBER_ID, 
+			    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
+			    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
+			    PRO.PROCEEDS_ID, PRO.PROCEEDS, PROCEEDS, PRO.PROCEEDS_DATE, PRO.PROCEEDS_TYPE, 
+			    T.TRV_ID AS T_TRV_ID, T.TRV_TITLE AS T_TRV_TITLE, 
+			    P.PTCP_ID AS TRVP_PTCP_ID, 
+			    TRVP.PLAN_ID TRVP_PLAN_ID, TRVP.PLAN_TITLE AS TRVP_PLAN_TITLE, 
+			    TRVR.REQUEST_ID AS TRVR_REQUEST_ID, TRVR.REQUEST_TITLE AS TRVR_REQUEST_TITLE
+			    FROM PROCEEDS PRO 
+			LEFT JOIN TRAVEL T ON(PRO.TRV_ID=T.TRV_ID)
+			LEFT JOIN PARTICIPATION P ON(PRO.PTCP_ID=P.PTCP_ID)
+			LEFT JOIN TRV_REQUEST TRVR ON(P.REQUEST_ID=TRVR.REQUEST_ID)
+			LEFT JOIN TRV_PLAN TRVP ON(P.PLAN_ID=TRVP.PLAN_ID)
+			LEFT JOIN MEMBER M ON(PRO.MEMBER_ID=M.MEMBER_ID)
+			<choose>
+				<when test="condition != 99">
+					WHERE USER_NAME LIKE '%'||#{userName}||'%'
+				</when>
+			</choose>
+		)
+	</select>
+	<!-- 관리자 - 수익금 조회 -->
+	<select id="selectAdProceedsList" resultMap="PointPlanRequestParticipationMemberTrvResultSet">
+		SELECT <choose><when test="condition != 99">USER_NAME, </when></choose>
+		    T.MEMBER_ID AS T_MEMBER_ID, 
+		    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
+		    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
+		    PRO.PROCEEDS_ID, PRO.PROCEEDS, PROCEEDS, PRO.PROCEEDS_DATE, PRO.PROCEEDS_TYPE, 
+		    T.TRV_ID AS T_TRV_ID, T.TRV_TITLE AS T_TRV_TITLE, 
+		    P.PTCP_ID AS TRVP_PTCP_ID, 
+		    TRVP.PLAN_ID TRVP_PLAN_ID, TRVP.PLAN_TITLE AS TRVP_PLAN_TITLE, 
+		    TRVR.REQUEST_ID AS TRVR_REQUEST_ID, TRVR.REQUEST_TITLE AS TRVR_REQUEST_TITLE
+		    FROM PROCEEDS PRO 
+		LEFT JOIN TRAVEL T ON(PRO.TRV_ID=T.TRV_ID)
+		LEFT JOIN PARTICIPATION P ON(PRO.PTCP_ID=P.PTCP_ID)
+		LEFT JOIN TRV_REQUEST TRVR ON(P.REQUEST_ID=TRVR.REQUEST_ID)
+		LEFT JOIN TRV_PLAN TRVP ON(P.PLAN_ID=TRVP.PLAN_ID)
+		LEFT JOIN MEMBER M ON(PRO.MEMBER_ID=M.MEMBER_ID)
+		<choose>
+			<when test="condition != 99">
+				WHERE USER_NAME LIKE '%'||#{userName}||'%'
+			</when>
+		</choose>
+	</select>
 </mapper>

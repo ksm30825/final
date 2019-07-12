@@ -44,7 +44,7 @@
 								<p class="control">
 									<input type="checkbox" style="display:inline-block;float:left;" id="searchNameCheck" name="searchNameCheck">
 									<p style="width:100px;display:inline-block;"><label for="searchNameCheck">이름 검색하기</label></p>
-									<input class="input" type="text" placeholder="회원ID를 검색하세요" style="width:150px;height:20px;display:none" id="nameArea">
+									<input class="input" type="text" placeholder="회원 이름을 검색하세요" style="width:150px;height:20px;display:none" id="nameArea">
 								</p>
 								<div class="select is-small is-primary" style="display:inline-block;float:right;margin-left:2%;">
 						            <select name="refundSelect" id="refundSelect"style="height:20px;">

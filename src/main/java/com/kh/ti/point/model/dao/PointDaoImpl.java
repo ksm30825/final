@@ -303,8 +303,21 @@ public class PointDaoImpl implements PointDao{
 	public int selectOnePoint(SqlSessionTemplate sqlSession, int memberId) {
 		return sqlSession.selectOne("Payment.selectOnePoint", memberId);
 	}
-	//설계자 이름 찾기, 설계번호 찾기
-	
+	//관리자 - 수익금 리스트 카운트
+	@Override
+	public int getAdProceedsListCount(SqlSessionTemplate sqlSession, SearchPoint sp) {
+		return sqlSession.selectOne("Payment.getAdProceedsListCount", sp);
+	}
+	//관리자 - 수익금 조회
+	@Override
+	public ArrayList<Proceeds> selectAdProceedsList(SqlSessionTemplate sqlSession, PageInfo adProceedsPi,
+			SearchPoint sp) {
+		int offset = (adProceedsPi.getCurrentPage() - 1) * adProceedsPi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, adProceedsPi.getLimit());
+		
+		ArrayList<Proceeds> adProceedsList = (ArrayList)sqlSession.selectList("Payment.selectAdProceedsList", sp, rowBounds);
+		return adProceedsList;
+	}
 	
 	
 	
