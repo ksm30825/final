@@ -91,14 +91,7 @@
 	      <li>
 	      	<a class="button is-info is-outlined">
 	      		<span class="icon"> <i class="fas fa-plane-departure"></i> </span>
-	      		관광
-	      	 </a>
-	      </li>
-	      
-	      <li>
-	      	<a class="button is-info is-outlined">
-	      		<span class="icon"> <i class="fas fa-store"></i> </span>
-	      		맛집
+	      		가볼만한 곳
 	      	 </a>
 	      </li>
 	      
@@ -128,16 +121,16 @@
 			 		<div class="field" style="border:0.5px solid gray; padding:10px;" class="listItem">
 						<article class="media">
 						    <figure class="media-left">
-						      <p class="image">
-						        <img src="${ cityInfo.filePath }" style="width:400px; height:20%;">
+						      <p class="image" style="width: 280px; height: 180px; overflow: hidden">
+						        <img src="${ cityInfo.filePath }" style="width: 280px; height: auto;">
 						      </p>
 						    </figure>
-		    				<div class="media-content">
+		    				<div class="media-content" style="padding: 10px;" onclick="detailSpot('${ cityInfo.spotId }');">
 		      					<div class="content">
 							        <p>
-							          <strong>${ cityInfo.spotNameKo}</strong> <br>
-							          ${ cityInfo.spotAddress } &nbsp;&nbsp;&nbsp; <a href="#">google 지도</a>
-							          <br> ${ cityInfo.spotContent } 
+							          <strong style="font-size: 20px;">${ cityInfo.spotNameKo }</strong> <br>
+							          <strong style="color: gray;">${ cityInfo.spotAddress }</strong> &nbsp;&nbsp;&nbsp; <a href="#">google 지도</a>
+							          <br><br> ${ cityInfo.spotContent } 
 							        </p>
 		      					</div>
 		        			</div>
@@ -170,14 +163,12 @@
 	
 	<script>
 		$(function(){
-			/* console.log('${ fn:length(spotList) }');
-			console.log('${ spotList[0].spotNameKo}');
-			console.log('${ spotList[0].sFileList[0].fileId}'); */
 			
 		});
 		
+		//명소 좋아요 추가
 		function likeySpot(spotId){
-			if('${ empty SessionScope.loginUser }' == null){
+			if('${ loginUser }' == null || '${ loginUser }' == "" || '${ loginUser }' == " "){
 				alert ("회원가입이 필요한 서비스 입니다.");
 			} else {
 				$.ajax({
@@ -191,12 +182,16 @@
 						alert(data);
 					}
 				}); //end ajax
-			} //end if
+			} //end if 
 		} //end func
 		
 		function changeImg(srcVal, divArea){
 			$("#bigImgArea").attr("src", srcVal);
 		} //end func
+		
+		function detailSpot(spotId){
+			location.href = "selectSpotDetailInfo.sp?spotId=" + spotId;
+		}
 	</script>
 </body>
 </html>

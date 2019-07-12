@@ -10,6 +10,8 @@ import com.kh.ti.spot.model.vo.Likey;
 import com.kh.ti.spot.model.vo.SpotCityList;
 import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
+import com.kh.ti.spot.model.vo.SpotReviews;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
 
 @Repository
@@ -58,6 +60,30 @@ public class SpotDaoImpl implements SpotDao {
 	@Override
 	public ArrayList<SpotFile> selectCityFile(SqlSessionTemplate sqlSession, int cityId) {
 		return (ArrayList) sqlSession.selectList("Spot.selectCityFile", cityId);
+	}
+
+	//spot id로 city 조회 - 세령
+	@Override
+	public City selectCityOne(SqlSessionTemplate sqlSession, int spotId) {
+		return sqlSession.selectOne("Spot.selectCityOne", spotId);
+	}
+	
+	//spot info 조회 - 세령
+	@Override
+	public SpotList selectSpotListOne(SqlSessionTemplate sqlSession, int spotId) {
+		return sqlSession.selectOne("Spot.selectSpotListOne", spotId);
+	}
+
+	//명소 리뷰 등록 - 세령
+	@Override
+	public int insertSpotReviews(SqlSessionTemplate sqlSession, SpotReviews spotReviews) {
+		return sqlSession.insert("Spot.insertSpotReviews", spotReviews);
+	}
+
+	//명소 리뷰 조회 - 세령
+	@Override
+	public ArrayList<HashMap> selectSpotReviews(SqlSessionTemplate sqlSession, int spotId) {
+		return (ArrayList) sqlSession.selectList("Spot.selectSpotReviews", spotId);
 	}
 
 

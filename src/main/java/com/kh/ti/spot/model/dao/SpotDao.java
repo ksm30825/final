@@ -9,6 +9,8 @@ import com.kh.ti.spot.model.vo.Likey;
 import com.kh.ti.spot.model.vo.SpotCityList;
 import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
+import com.kh.ti.spot.model.vo.SpotReviews;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
 
 public interface SpotDao {
@@ -26,5 +28,13 @@ public interface SpotDao {
 	Country selectCountryOneInfo(SqlSessionTemplate sqlSession, int cityId);
 
 	ArrayList<SpotFile> selectCityFile(SqlSessionTemplate sqlSession, int cityId);
+
+	City selectCityOne(SqlSessionTemplate sqlSession, int spotId);
+
+	SpotList selectSpotListOne(SqlSessionTemplate sqlSession, int spotId);
+
+	int insertSpotReviews(SqlSessionTemplate sqlSession, SpotReviews spotReviews);
+
+	ArrayList<HashMap> selectSpotReviews(SqlSessionTemplate sqlSession, int spotId);
 
 }

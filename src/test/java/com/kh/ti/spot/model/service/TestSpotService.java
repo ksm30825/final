@@ -18,6 +18,8 @@ import com.kh.ti.member.model.service.MemberServiceTest;
 import com.kh.ti.spot.model.vo.Likey;
 import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
+import com.kh.ti.spot.model.vo.SpotReviews;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,22 +35,29 @@ public class TestSpotService {
 	private SpotService ss;
 	
 	Likey likey;
+	SpotReviews spotReviews;
 	
 	@Before
 	public void setup() {
 		likey = new Likey();
 		likey.setMemberId(1);
 		likey.setSpotId(2);
+		
+		spotReviews = new SpotReviews();
+		spotReviews.setGrade(5);
+		spotReviews.setMemberId(7);
+		spotReviews.setReviewContent("장관이구요~ 신이주신 선물이네요~");
+		spotReviews.setSpotId(1);
 		System.out.println("셋팅 완료!");
 	}
 	
 	@Ignore
 	@Test
 	public void selectSpotListTest() {
-		ArrayList<SpotList> spotList = ss.selectSpotList(11);
+		ArrayList<HashMap> spotList = ss.selectSpotList(11);
 		log.info("여행시 - 도시 상세보기를 위한 명소 조회 성공! size : " + spotList.size());
 		for(int i = 0; i < spotList.size(); i++) {
-			log.info(spotList.get(i).toString());
+			log.info(spotList.toString());
 		}
 	}
 	
@@ -91,10 +100,41 @@ public class TestSpotService {
 		log.info(country.toString());
 	}
 	
+	@Ignore
 	@Test
 	public void selectCityFileTest() {
 		ArrayList<SpotFile> spotFile = ss.selectCityFile(11);
 		log.info("도시 파일 조회 성공! spotFile size : " + spotFile.size());
 		log.info(spotFile.toString());
+	}
+	
+	@Ignore
+	@Test
+	public void selectCityOne() {
+		City city = ss.selectCityOne(1);
+		log.info("spot id로 도시 조회 성공!");
+		log.info(city.toString());
+	}
+	
+	@Ignore
+	@Test
+	public void selectSpotListOneTest() {
+		SpotList spotList = ss.selectSpotListOne(1);
+		log.info("spot info 조회 성공!");
+		log.info(spotList.toString());
+	}
+	
+	@Ignore
+	@Test
+	public void insertSpotReviewsTest() {
+		ss.insertSpotReviews(spotReviews);
+		log.info("명소 리뷰 등록에 성공!");
+	}
+	
+	@Test
+	public void selectSpotReviews() {
+		ArrayList<HashMap> spotReviews = ss.selectSpotReviews(1);
+		log.info("명소 리뷰 조회 성공!" + spotReviews.size());
+		log.info(spotReviews.toString());
 	}
 }

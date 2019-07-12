@@ -11,6 +11,8 @@ import com.kh.ti.spot.model.dao.SpotDao;
 import com.kh.ti.spot.model.vo.Likey;
 import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
+import com.kh.ti.spot.model.vo.SpotReviews;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
 
 @Service
@@ -64,6 +66,30 @@ public class SpotServiceImpl implements SpotService{
 	@Override
 	public ArrayList<SpotFile> selectCityFile(int cityId) {
 		return sd.selectCityFile(sqlSession, cityId);
+	}
+
+	//spot id로 city 조회 - 세령
+	@Override
+	public City selectCityOne(int spotId) {
+		return sd.selectCityOne(sqlSession, spotId);
+	}
+
+	//spot info 조회 - 세령
+	@Override
+	public SpotList selectSpotListOne(int spotId) {
+		return sd.selectSpotListOne(sqlSession, spotId);
+	}
+
+	//명소 리뷰 등록 - 세령
+	@Override
+	public int insertSpotReviews(SpotReviews spotReviews) {
+		return sd.insertSpotReviews(sqlSession, spotReviews);
+	}
+
+	//명소 리뷰 조회 - 세령
+	@Override
+	public ArrayList<HashMap> selectSpotReviews(int spotId) {
+		return sd.selectSpotReviews(sqlSession, spotId);
 	}
 
 

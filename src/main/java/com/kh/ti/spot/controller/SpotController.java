@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,6 +19,8 @@ import com.kh.ti.spot.model.service.SpotService;
 import com.kh.ti.spot.model.vo.Likey;
 import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
+import com.kh.ti.spot.model.vo.SpotReviews;
+import com.kh.ti.travel.model.vo.City;
 import com.kh.ti.travel.model.vo.Country;
 
 @Controller
@@ -101,12 +104,6 @@ public class SpotController {
 	//사용자여행지전체조회용메소드 --세령
 	@RequestMapping("selectAllSpotUser.sp")
 	public String selectAllSpotFromUser(Model model) {
-		/*
-		 * ArrayList<SpotCityList> cityNameList = ss.selectCityNames();
-		 * ArrayList<SpotCityList> cityList = ss.selectCityList();
-		 * model.addAttribute("cityNameList", cityNameList);
-		 * model.addAttribute("cityList", cityList);
-		 */
 		ArrayList<Country> countryList = ss.selectCountryList();
 		ArrayList<HashMap> cityMap = ss.selectCityMap();
 		model.addAttribute("countryList", countryList);
@@ -135,14 +132,23 @@ public class SpotController {
 	
 	//명소상세보기용메소드
 	@RequestMapping("selectSpotDetailInfo.sp")
-	public String selectSpotDetailInfo() {
+	public String selectSpotDetailInfo(@RequestParam("spotId") int spotId, Model model) {
+		City city = ss.selectCityOne(spotId);
+		SpotList spotList = ss.selectSpotListOne(spotId);
+		ArrayList<HashMap> spotReviews = ss.selectSpotReviews(spotId);
+		
+		model.addAttribute("city", city);
+		model.addAttribute("spotList", spotList);
+		model.addAttribute("spotReviews", spotReviews);
+		
 		return "spot/spotDetailPage";
 	}
 	
 	//사용자명소리뷰등록용메소드
 	@RequestMapping("insertSpotReview.sp")
-	public String insertSpotReview() {
-		return null;
+	public String insertSpotReview(@ModelAttribute SpotReviews spotReviews) {
+		int result = ss.insertSpotReviews(spotReviews);
+		return "redirect:selectSpotDetailInfo.sp?spotId=" + spotReviews.getSpotId();
 	}
 	
 	//관리자명소리뷰전체조회용메소드

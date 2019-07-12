@@ -24,9 +24,6 @@ public class SpotList implements Serializable{
 	private int cityId;
 	private String spotStatus;
 	private int plcTypeId;
-	private ArrayList<City> cityList;
-	private ArrayList<Country> countryList;
-	private ArrayList<SpotFile> sFileList;
 	
 	public SpotList() {
 		// TODO Auto-generated constructor stub
@@ -34,8 +31,7 @@ public class SpotList implements Serializable{
 
 	public SpotList(int spotId, String spotNameKo, String spotNameEn, String spotContent, String spotAddress,
 			String openingHours, String spotPhone, String webAddress, Date enrollDate, Date modifyDate, Date delDate,
-			Date recoveryDate, int spotCount, int cityId, String spotStatus, int plcTypeId, ArrayList<City> cityList,
-			ArrayList<Country> countryList, ArrayList<SpotFile> sFileList) {
+			Date recoveryDate, int spotCount, int cityId, String spotStatus, int plcTypeId) {
 		super();
 		this.spotId = spotId;
 		this.spotNameKo = spotNameKo;
@@ -53,9 +49,6 @@ public class SpotList implements Serializable{
 		this.cityId = cityId;
 		this.spotStatus = spotStatus;
 		this.plcTypeId = plcTypeId;
-		this.cityList = cityList;
-		this.countryList = countryList;
-		this.sFileList = sFileList;
 	}
 
 	@Override
@@ -65,8 +58,7 @@ public class SpotList implements Serializable{
 				+ ", spotPhone=" + spotPhone + ", webAddress=" + webAddress + ", enrollDate=" + enrollDate
 				+ ", modifyDate=" + modifyDate + ", delDate=" + delDate + ", recoveryDate=" + recoveryDate
 				+ ", spotCount=" + spotCount + ", cityId=" + cityId + ", spotStatus=" + spotStatus + ", plcTypeId="
-				+ plcTypeId + ", cityList=" + cityList + ", countryList=" + countryList + ", sFileList=" + sFileList
-				+ "]";
+				+ plcTypeId + "]";
 	}
 
 	public int getSpotId() {
@@ -196,31 +188,7 @@ public class SpotList implements Serializable{
 	public void setPlcTypeId(int plcTypeId) {
 		this.plcTypeId = plcTypeId;
 	}
-
-	public ArrayList<City> getCityList() {
-		return cityList;
-	}
-
-	public void setCityList(ArrayList<City> cityList) {
-		this.cityList = cityList;
-	}
-
-	public ArrayList<Country> getCountryList() {
-		return countryList;
-	}
-
-	public void setCountryList(ArrayList<Country> countryList) {
-		this.countryList = countryList;
-	}
-
-	public ArrayList<SpotFile> getsFileList() {
-		return sFileList;
-	}
-
-	public void setsFileList(ArrayList<SpotFile> sFileList) {
-		this.sFileList = sFileList;
-	}
-
+	
 	
 	
 }
