@@ -214,6 +214,13 @@
 	        	  var pnum = data.peoplenum;
 	        	  
 	        	  $("#peopleNum").val(pnum); $("#txtDetail").val(data.detail);
+	        	  
+	        	  if (data.status == "여행종료"){
+	        		  $("#chatTitle").attr("readonly", "true");
+		        	  $("#chatPlace").attr("readonly", "true");
+		        	  $("#trStartDate").attr("readonly", "true"); $("#trEndDate").attr("readonly", "true");
+		        	  $("#peopleNum").attr("readonly", "true"); $("#txtDetail").attr("readonly", "true");
+	        	  }
 	        	 	   
 		 		});
 	           
@@ -323,7 +330,6 @@
 		    		  socket.emit('giveAbbot', {chatId : chatId, changebath : changebath , nowbath : $("#nowBath").val() });
 		    		  
 		    		  socket.on('giveAbbot', function(data){
-		    			  console.log("?????????????");
 		    			  location.href = "${contextPath}/enterChatting.ch?num="+ chatId;
 		    		  });
 		    	  }
