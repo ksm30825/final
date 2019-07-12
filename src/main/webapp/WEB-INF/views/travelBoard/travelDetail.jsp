@@ -291,6 +291,7 @@
 				<c:choose>
 				<c:when test="${ st.count <= showDays }">
 					<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
+					
 						<c:if test="${ st.count == detailDay[j].dayNumber }">
 							<div id="day${ detailDay[j].dayNumber }-sch" class="dayTitle" style="padding: 1em; background-color: #AFDCF5; margin-top: 1em; display: flex;">
 								<div class="column is-10" style="justify-content: flex-start;">
@@ -341,9 +342,8 @@
 								</div>
 							</div>
 							
-							<div id="day${ detailDay[j].dayNumber }Content" style="border: 1px solid #AFDCF5; border-top: none; display: none;">
-								
-								<c:if test="${ fn:length(detailDay[j].trvSchedule) > 0 }">
+							<div id="day${ detailDay[j].dayNumber }Content" class="dayContentAll" style="border: 1px solid #AFDCF5; border-top: none; display: none;">
+								<c:if test="${ fn:length(detailDay[j].trvSchedule) > 0 && st.count == detailDay[j].dayNumber}">
 									<c:forEach var="sch" items="${ detailDay[j].trvSchedule }" varStatus="status">
 										<div class="contentTitle" style="background: #e1f4ff">
 										<div class="column is-1" align="center" style="justify-content: flex-start; display: inline-block; vertical-align: middle;">
@@ -370,7 +370,7 @@
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<div id="day${ st.count }-sch" class="dayTitle" style="padding: 1em; background-color: #AFDCF5; margin-top: 1em; display: flex;">
+					<div id="day${ st.count }-sch" class="dayTitle" style="padding: 1em; background-color: #AFDCF5; margin-top: 1em; display: none;">
 						<div class="column is-10" style="justify-content: flex-start;">
 							<span class="title is-3">DAY ${ st.count }</span>&nbsp; <span class="schTitle title is-5" style="vertical-align: middle;">${ detailDay[st.count-1].dayMemo }</span>
 							<br>
@@ -426,7 +426,7 @@
 		</div>	<!-- class="column is-9" -->
 		
 		<!-- 갤러리 영역! -->
-		<div class="column is-9" id="gallaryArea">
+		<div class="column is-9" id="gallaryArea" style="display: none;">
 			<section class="section">
 				<!-- 타이틀 영역 -->
 				<c:forEach var="i" begin="1" end="${ totalDays }" step="1" varStatus="st">
@@ -434,7 +434,7 @@
 					<c:forEach var="j" begin="0" end="${ fn:length(detailDay) }" step="1">
 						<c:if test="${ st.count == detailDay[j].dayNumber }">
 							<div class="gallay" id="gallary-day${ st.count }">
-							<div id="day${ detailDay[j].dayNumber }-sch" class="dayTitle" style="padding: 1em; background-color: #155173; margin-top: 1em; display: flex;">
+							<div id="day${ detailDay[j].dayNumber }-sch" class="gallaryTitle" style="padding: 1em; background-color: #155173; margin-top: 1em; display: flex;">
 								<div class="column is-10" style="justify-content: flex-start;">
 									<span class="title is-3" style="color: white;">DAY ${ st.count }</span>&nbsp; <span class="schTitle title is-5" style="color: white; vertical-align: middle;">${ detailDay[j].dayMemo }</span>
 									<br>
@@ -697,7 +697,9 @@
 			data : {schId : schId},
 			type : "post",
 			success : function(data) {
-				quill.setContents(JSON.parse(data.schContent));
+				if(data.schId == schId) {
+					quill.setContents(JSON.parse(data.schContent));
+				}
 			},
 			error : function(data) {
 				console.log("접속실패");
@@ -721,7 +723,6 @@
 		var menu = $(this).text();
 		$(".dayList").removeClass("is-active");
 		$(this).addClass("is-active");
-		
 		
 	})
 	
@@ -747,7 +748,9 @@
 		menu = menu.toLowerCase();
 		
 		$(".dayTitle").hide();
+		$(".dayContentAll").hide();
 		$("#" + menu + "-sch").show();
+		
 	});
 	
 	
@@ -761,6 +764,8 @@
 		
 		$(".gallay").show();
 	});
+	
+	//각 일자별 갤러리 상세보기
 	$("#gallaryMenu>li>ul>li").children('a').click(function() {
 		
 		$("#gallaryArea").show();
