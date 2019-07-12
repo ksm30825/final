@@ -83,13 +83,24 @@ public class SpotServiceImpl implements SpotService{
 	//명소 리뷰 등록 - 세령
 	@Override
 	public int insertSpotReviews(SpotReviews spotReviews) {
-		return sd.insertSpotReviews(sqlSession, spotReviews);
+		int result = sd.insertSpotReviews(sqlSession, spotReviews);
+		int spotReviewIdCurrval = 0;
+		if(result > 0) {
+			spotReviewIdCurrval = sd.getSpotReviewIdCurrval(sqlSession);
+		}
+		return spotReviewIdCurrval;
 	}
 
 	//명소 리뷰 조회 - 세령
 	@Override
 	public ArrayList<HashMap> selectSpotReviews(int spotId) {
 		return sd.selectSpotReviews(sqlSession, spotId);
+	}
+
+	//명소 사진 조회 - 세령
+	@Override
+	public ArrayList<SpotFile> selectSpotFile(int spotId) {
+		return sd.selectSpotFile(sqlSession, spotId);
 	}
 
 

@@ -160,10 +160,31 @@
 			</section> <!-- end list area -->
 		</div> <!-- end column -->
 	</div> <!-- end columns -->
-	
+<!-- 	<p>var imgURL = "http://openweathermap.org/img/w/" + resp.weather[0].icon + ".png";
+		 $("html컴포넌트").attr("src", imgURL);
+		</p> -->
 	<script>
 		$(function(){
-			
+			var city
+	        $.ajax({
+	            url: "http://api.openweathermap.org/data/2.5/weather?id=1835841&lang=ko"+"&appid="+"ae0fb7b78db51eda5b256e2d45f056a7",
+	            dataType: "json",
+	            type: "GET",
+	            async: "false",
+	            success: function(resp) {
+	                console.log(resp);
+	                console.log("현재온도 : "+ (resp.main.temp- 273.15) );
+	                console.log("현재습도 : "+ resp.main.humidity);
+	                console.log("날씨 : "+ resp.weather[0].main );
+	                console.log("상세날씨설명 : "+ resp.weather[0].description );
+	                console.log("날씨 이미지 : "+ resp.weather[0].icon );
+	                console.log("바람   : "+ resp.wind.speed );
+	                console.log("나라   : "+ resp.sys.country );
+	                console.log("도시이름  : "+ resp.name );
+	                console.log("구름  : "+ (resp.clouds.all) +"%" );                 
+	            }
+	        });
+
 		});
 		
 		//명소 좋아요 추가

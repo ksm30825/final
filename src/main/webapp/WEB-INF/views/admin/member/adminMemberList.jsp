@@ -82,7 +82,8 @@
 					        </div>
 					        <div class="buttons">
 					        	<a class="button is-rounded" style="background-color:yellow; border-color:yellow;">게시글 내역</a>
-					        	<a class="button is-info is-rounded">결제 내역</a>
+					        	<a class="button is-info is-rounded"
+					        		onclick="forwardPointPage();">결제 내역</a>
 					        	<a class="button is-danger is-rounded">신고 내역</a>
 					        	<a class="button is-link is-rounded">문의 내역</a>
 					        </div>
@@ -109,7 +110,7 @@
 						<!-- member list -->
 						<tbody>
 							<c:forEach var="member" items="${ mList }">
-								<tr>
+								<tr onclick="trClick(this);">
 									<td>${ member.memberId }</td>
 									<td>${ member.userName }</td>
 									<td>${ member.email }</td>
@@ -186,6 +187,8 @@
 	
 	<!-- script -->
 	<script>
+	
+		var userNameTr = "";
 		//검색 조회용 함수
 		$(function(){		
 			$("#conditionBtn").click(function(){
@@ -195,6 +198,24 @@
 								 "&conditionValue=" + conditionValue;
 			});
 		});
+		
+		//tr 클릭시 사용자 정보 저장
+		function trClick(tr){
+			userNameTr = $(tr).children().eq(1).text();
+			console.log(userNameTr);
+		}
+		
+		//사용자 결제내역 페이지로 이동
+		function forwardPointPage(){
+			if(userNameTr != null && userNameTr != "" && userNameTr != " "){
+				location.href = "seacrchAdPay.po?" +
+				"userName=" + userNameTr + 
+				"&startDate=1999-01-01&endDate=2030-12-30" +
+				"&condition=10&currentPage=1";
+			} else {
+				alert("먼저 회원을 선택해 주세요.")
+			}			
+		}
 	</script>
 </body>
 </html>
