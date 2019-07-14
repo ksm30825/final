@@ -559,9 +559,8 @@
 	</section>
 	
 	<!-- 일정신고 모달 -->
-	<!-- style="display: none;" -->
 	<section class="section" id="travelPanaltySection" >
-		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" >
+		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" id="trvPanelty" onSubmit="return false;">
 		<div class="modal" id="travelPanaltyModal">
 		    <div class="modal-background"></div>
 		    <div class="modal-card">
@@ -572,18 +571,21 @@
 				</header>
 			
 				<section class="modal-card-body" align="center">
+					<input type="hidden" value="${ loginUser.memberId }" name="complainantId">
+					<input value="일정글" name="list" style="display: none;">
+					<input type="hidden" value="${ loginUser.memberId }" name="listType" style="display: none;">
 					<input value="${ detailTb.trvId }" id="trvId" style="display: none;">
 					<p>해당 일정글을 신고하시겠습니까?<br>
 					허위 신고 시 불이익이 있을 수 있습니다.</p>
 					<hr style="border: 1px solid lightgray; margin-top: 0.5em;">
-					<select id="travelPanalty" style="width: 60%;">
+					<select name="penaltyId" id="travelPanalty" style="width: 60%;">
 							<option value="11">부적절 게시물</option>
 							<option value="12">욕설 및 비방</option>
 							<option value="13">저작권 침해 및 명의 도용</option>
 							<option value="30">기타</option>
 					</select>
 					<br>
-					<textarea id="travelPanaltyContent" rows="5" placeholder="신고 사유를 작성해주세요." style="width: 60%; resize: none; margin-top: 0.5em;"></textarea>
+					<textarea id="travelPanaltyContent" name="penaltyContent" rows="5" placeholder="신고 사유를 작성해주세요." style="width: 60%; resize: none; margin-top: 0.5em;" value=""></textarea>
 					<br>
 					<div style="display: inline-block; margin-top: 0.5em;">
 						<div class="field" align="center" align="center">
@@ -611,40 +613,6 @@
 		</form>
 	</section>
 	
-	<!-- 리뷰신고 모달 -->
-	<section class="section" id="travelBuySection" style="display: none;">
-		<div class="modal" id="travelBuyModal">
-		    <div class="modal-background"></div>
-		    <div class="modal-card">
-		    
-				<header class="modal-card-head">
-					<p class="modal-card-title"><i class="fas fa-exclamation-triangle"></i>&nbsp;일정 구매 안내</p>
-					<button class="cancel delete"></button>
-				</header>
-			
-				<section class="modal-card-body" align="center">
-					
-					<p>
-						해당 일정글을 구매하시겠습니까?<br>
-						현재 보유 포인트 : ${ loginUser.userPoint }P <br>
-						일정 결제 포인트 : ${ (endDay - startDay + 1) * 100 }P
-					</p>
-					<hr style="border: 1px solid lightgray;">
-					<p>
-						결제 후 잔액 포인트 : ${ loginUser.userPoint - ((endDay - startDay + 1) * 100) }P
-					</p>
-				</section>
-			
-				<footer class="modal-card-foot" style="justify-content: center">
-					<a class="button is-primary" id="travelBuy">일정구매</a>
-					<a class="button cancel">닫기</a>
-				</footer>
-			
-		    </div>
-		</div>
-	</section>
-	
-
 <script>
 	function loginInfo() {
 		alert("로그인이 필요한 서비스입니다.");
@@ -697,38 +665,33 @@
 	//일정 신고 버튼을 눌렀을 때
 	$("#travelPanaltySubmit").click(function() {
 		
+		var trvId = '${ detailTb.trvId }';
 		var memberId = $("#loginId").val();
 		var penaltyId = $("#travelPanalty").val();
 		var penaltyContent = $("#travelPanaltyContent").val();
+		var file = $("#file1").text();
 		console.log(memberId);
 		console.log(penaltyId);
 		console.log(penaltyContent);
+		console.log(file);
 		
-		/* <option value="11">부적절 게시물</option>
-		<option value="12">욕설 및 비방</option>
-		<option value="13">저작권 침해 및 명의 도용</option>
-		<option value="30">기타</option> */
+		var check = false;
 		
-		/* var penaltyContent = 신고내용 받아오기; */
-		/* var listType = 일정이면 trvId, 리뷰면 reviewId */
-		/* var list = 일정이면 일정글, 리뷰면 리뷰 */
+		if(penaltyContent.length <= 0){
+			alert("신고 사유를 반드시 작성해주세요");
+			check = false;
+		}
+		if(file == '신고용 사진을 첨부해주세요.') {
+			alert("신고 첨부파일을 반드시 첨부해주세요");
+			check = false;
+		}
+		if(penaltyContent.length > 0 && file != '신고용 사진을 첨부해주세요.'){
+			check = true;
+			if(check) {
+				$("#trvPanelty").submit();
+			}
+		}
 		
-		/* $("#travelPanaltySubmit").click(function() {
-			alert("폼 보내기");
-			//location.href="travelDelete.tb?trvId=" + ${ detailTb.trvId };
-		}) */
-		
-		/* if(answer) {
-			var num = "게시판 번호";
-			
-			$.ajax({
-				url : "insertPanelty.pe",
-				data : {complainantId : memberId, penaltyId : penaltyContent : penaltyContent, listType : listType, list : list},
-				success : function(data) {
-					alert("해당 글을 신고하였습니다.");
-				}
-			});
-		} */
 	});
 	
 	function travelLikeyInsert() {

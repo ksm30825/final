@@ -50,6 +50,10 @@
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TourReview" alias="TourReview"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelCost" alias="TravelCost"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.Gallary" alias="Gallary"/>
+		<!-- Statistics Part (예랑) -->
+			<typeAlias type="com.kh.ti.statistics.model.vo.UserStatistics" alias="UserStatistics"/>
+			<typeAlias type="com.kh.ti.statistics.model.vo.TravelStatistics" alias="TravelStatistics"/>
+			<typeAlias type="com.kh.ti.statistics.model.vo.RevenueStatistics" alias="RevenueStatistics"/>
 	</typeAliases>
 	<mappers>
 		<!-- 세령 -->
@@ -65,6 +69,7 @@
 			<mapper resource="mappers/travel-mapper.xml" />
     	<!-- TravelBoard Part (예랑) -->
 			<mapper resource="mappers/travelBoard-mapper.xml"/>
+			<mapper resource="mappers/statistics-mapper.xml"/>
 		<!-- 지원  채팅  -->
 			<mapper resource="mappers/chatting-mapper.xml"/>
 	</mappers>

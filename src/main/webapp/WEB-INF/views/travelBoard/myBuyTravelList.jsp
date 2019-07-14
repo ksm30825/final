@@ -31,41 +31,6 @@
 			<section class="section" id="headerSection">
 				<jsp:include page="../common/myPageHeader.jsp" />
 			</section>
-			
-			<!-- <section class="section" style="padding-top: 0;">
-				<div class="field has-addons">
-					<p class="control is-expanded">
-						<span class="select is-fullwidth">
-							<select name="country" id="travelCountry">
-								<option value="Argentina">Argentina</option>
-								<option value="Bolivia">Bolivia</option>
-								<option value="Brazil">Brazil</option>
-								<option value="Chile">Chile</option>
-								<option value="Colombia">Colombia</option>
-								<option value="Ecuador">Ecuador</option>
-								<option value="Guyana">Guyana</option>
-								<option value="Paraguay">Paraguay</option>
-								<option value="Peru">Peru</option>
-								<option value="Suriname">Suriname</option>
-								<option value="Uruguay">Uruguay</option>
-								<option value="Venezuela">Venezuela</option>
-							</select>
-						</span>
-					</p>
-					<p class="control">
-						<input class="input" type="text" placeholder="제목을 입력하세요">
-					</p>
-					<p class="control">
-					 	<button class="button is-primary" id="myBuyTravelSearch">검색</button>
-					</p>
-				</div>
-			</section> -->
-			
-		<section class="section" id="bredcrumbSection" style="padding-top:0; padding-bottom:0">
-				<div class="title is-3" style="padding-left:10px">
-					<i class="fas fa-map"></i>&nbsp;<span>나라별 분류 아직 안함</span>
-				</div>
-		</section>
 		
 		<div class="column">
 			<section class="section">

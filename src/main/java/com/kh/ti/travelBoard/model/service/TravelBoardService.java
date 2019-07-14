@@ -1,7 +1,11 @@
 package com.kh.ti.travelBoard.model.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.UsePoint;
@@ -47,6 +51,10 @@ public interface TravelBoardService {
 	TrvBoardSch selectSchContent(int schId);
 
 	ArrayList travelDetailGallery(TrvDaySchedule sch);
+
+	TravelBoard selectMyCount(int memberId);
+
+	void costDownload(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 
 }
