@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import com.kh.ti.point.model.vo.Refund;
+
 public class TravelRequest implements Serializable{
 	private int requestId;	//의뢰번호
 	private String requestTitle;	//제목
@@ -17,12 +19,13 @@ public class TravelRequest implements Serializable{
 	private int trvCost;	//예산
 	private ArrayList<TravelRequestPlan> planList;	//설계글 목록
 	private ArrayList<Participation> participationList;	//참여글 목록
+	private Refund refund;
 	
 	public TravelRequest() {}
 
 	public TravelRequest(int requestId, String requestTitle, String requestContent, Date endDate, int requestPrice,
 			int memberId, String userName, String chooseStatus, Date chooseDate, int trvCost,
-			ArrayList<TravelRequestPlan> planList, ArrayList<Participation> participationList) {
+			ArrayList<TravelRequestPlan> planList, ArrayList<Participation> participationList, Refund refund) {
 		super();
 		this.requestId = requestId;
 		this.requestTitle = requestTitle;
@@ -36,6 +39,7 @@ public class TravelRequest implements Serializable{
 		this.trvCost = trvCost;
 		this.planList = planList;
 		this.participationList = participationList;
+		this.refund = refund;
 	}
 
 	public int getRequestId() {
@@ -134,11 +138,20 @@ public class TravelRequest implements Serializable{
 		this.participationList = participationList;
 	}
 
+	public Refund getRefund() {
+		return refund;
+	}
+
+	public void setRefund(Refund refund) {
+		this.refund = refund;
+	}
+
 	@Override
 	public String toString() {
 		return "TravelRequest [requestId=" + requestId + ", requestTitle=" + requestTitle + ", requestContent="
 				+ requestContent + ", endDate=" + endDate + ", requestPrice=" + requestPrice + ", memberId=" + memberId
 				+ ", userName=" + userName + ", chooseStatus=" + chooseStatus + ", chooseDate=" + chooseDate
-				+ ", trvCost=" + trvCost + ", planList=" + planList + ", participationList=" + participationList + "]";
+				+ ", trvCost=" + trvCost + ", planList=" + planList + ", participationList=" + participationList
+				+ ", refund=" + refund + "]";
 	}
 }

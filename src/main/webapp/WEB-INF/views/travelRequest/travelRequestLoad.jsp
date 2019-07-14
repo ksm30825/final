@@ -93,6 +93,10 @@ th, td {
 #loadTable {
 	width:100% !important;
 }
+
+.hidden {
+	display:none;
+}
 </style>
 </head>
 <body>
@@ -108,7 +112,7 @@ th, td {
 			<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
 			<input type="hidden" value="${ reqId }" name="requestId">
 			<input type="hidden" value="${ loginUser.memberId }" name="memberId">
-			<input type="text" value="${ loginUser.userName }" name="userName">
+			<input type="hidden" value="${ loginUser.userName }" name="userName">
 				<h1 class="title">일정작성</h1>
 				<hr>
 				<div class="columns">
@@ -381,7 +385,7 @@ th, td {
 		var choose = Math.floor(count/3);
 		console.log(choose);
 		console.log(count);
-		if(count <= 3) {
+		if(count <= 2) {
 			$("#choose").append("하이라이트 일정 선택 불가");
 			$("#chooseBody").append("<tr id='chooseTr'>");
 			for(var i = 1; i <= count; i++) {

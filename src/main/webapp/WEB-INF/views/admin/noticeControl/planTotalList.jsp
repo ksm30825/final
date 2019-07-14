@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +12,7 @@
 .table {
 	margin-right: auto;
 	margin-left: auto;
-	width: 80%;
+	width: 100%;
 }
 
 .table th {
@@ -45,7 +44,11 @@
 }
 
 .pagination-list {
-	margin-left: 40%;
+	margin-left: 40% !important;
+}
+
+.date {
+	height: 36px;
 }
 
 textarea {
@@ -55,9 +58,8 @@ textarea {
 	text-align: center;
 }
 
-.modal-card {
-	width: 400px !important;
-	height: 800px !important;
+#okModal td {
+	border: 1px solid black !important;
 }
 
 #null {
@@ -69,97 +71,42 @@ textarea {
 </style>
 </head>
 <body>
-	<jsp:include page="../common/mainNav.jsp" />
+	<jsp:include page="../../common/adminMainNav.jsp" />
 	<div class="columns">
 		<div class="column">
-			<section class="section" id="headerSection">
-				<jsp:include page="../common/myPageHeader.jsp" />
-				<hr>
-				<div class="columns">
-					<div class="column cal">
-						<div class="buttons">
-							<a class="button is-primary is-rounded" onclick="myRequest();">나의
-								의뢰</a> <a class="button is-info is-rounded" onclick="myPlan();">나의
-								설계</a> <a class="button is-link is-rounded" onclick="beforePlan();">미리작성</a>
-						</div>
-					</div>
-					<!-- <div class="column">
-						<div class="field">
-							<p class="control">
-								<span class="select"> <select>
-										<option>설계 참여중</option>
-										<option>설계 미참여</option>
-								</select>
-								</span> &nbsp; &nbsp; &nbsp; <span class="select"> <select>
-										<option>채택</option>
-										<option>미채택</option>
-								</select>
-								</span>
-							</p>
-						</div>
-					</div> -->
-					<!-- <div class="column">
-						<div class="field is-grouped">
-							<p class="control">
-								<a class="button is-info"> 조회 </a>
-							</p>
-						</div>
-					</div> -->
-				</div>
-			</section>
-			<!-- <section class="section" id="button"> -->
-			<!-- </section> -->
 			<section class="section" id="table">
+			<br><br>
+				<h1 class="title" style="text-align: center;">게시판</h1>
+				<div class="field">
+					<a class="button is-primary is-rounded" href="reqTotalList.ad">여행 의뢰</a> &nbsp; &nbsp;
+					<a class="button is-success is-rounded" href="planTotalList.ad">의뢰 설계</a> &nbsp; &nbsp;
+					<a class="button is-info is-rounded" href="trvTotalList.ad">여행 일정</a> &nbsp; &nbsp;
+					<a class="button is-link is-rounded" href="reviewTotalList.ad">리뷰</a> &nbsp;&nbsp;
+				</div>
+				<br>
 				<hr>
 				<table class="table">
 					<thead>
 						<tr>
-							<th>설계번호</th>
-							<th>의뢰번호</th>
+							<th>참여 번호</th>
+							<th>구분</th>
 							<th>제목</th>
-							<th>마감일</th>
-							<th>의뢰인</th>
-							<th>의뢰가격</th>
-							<th>채택상태</th>
-							<th>신고하기</th>
+							<th>작성일</th>
+							<th>작성자</th>
+							<th>여부</th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:if test="${ list.size() > 0 }">
-							<c:forEach var="pList" items="${ list }">
-								<c:if test="${ pList.chooseStatus eq 'D' }">
-									<tr style="background:lightgray;">
-										<td class="first"><b>${ pList.planId }</b></td>
-										<td class="first">${ pList.reqId }</td>
-										<td class="first">${ pList.planTitle }</td>
-										<td class="first">${ pList.endDate }</td>
-										<td class="first">${ pList.reqName }</td>
-										<td class="first"><fmt:formatNumber value="${ pList.reqPrice }" groupingUsed="true"/>원</td>
-										<td class="first">관리자에 의해 삭제</td>
-										<td class="report first">
-											<i class="far fa-bell"></i>
-										</td>
-									</tr>
-								</c:if>
-								<c:if test="${ pList.chooseStatus ne 'D' }">
-									<tr>
-										<td class="second"><b>${ pList.planId }</b></td>
-										<td class="second">${ pList.reqId }</td>
-										<td class="second">${ pList.planTitle }</td>
-										<td class="second">${ pList.endDate }</td>
-										<td class="second">${ pList.reqName }</td>
-										<td class="second"><fmt:formatNumber value="${ pList.reqPrice }" groupingUsed="true"/>원</td>
-										<c:if test="${ pList.chooseStatus eq 'Y' }">
-											<td class="second">채택완료</td>
-										</c:if>
-										<c:if test="${ pList.chooseStatus eq 'N' }">
-											<td class="second">미채택</td>
-										</c:if>
-										<td class="report second">
-											<i class="far fa-bell"></i>
-										</td>
-									</tr>
-								</c:if>
+							<c:forEach var="plan" items="${ list }">
+								<tr>
+									<td><b>${ plan.ptcpId }</b></td>
+									<td>여행 설계</td>
+									<td>${ plan.planTitle }</td>
+									<td>${ plan.enrollDate }</td>
+									<td>${ plan.userName }</td>
+									<td class="no"><a class="button is-danger is-rounded">삭제하기</a></td>
+								</tr>
 							</c:forEach>
 						</c:if>
 					</tbody>
@@ -180,7 +127,7 @@ textarea {
 				<li><a class="pagination-previous">이전</a></li>
 			</c:if>
 			<c:if test="${ pi.currentPage > 1 }">
-				<c:url var="previous" value="myPlanList.mr?memberId=${ loginUser.memberId }">
+				<c:url var="previous" value="planTotalList.ad">
 					<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
 				</c:url>
 				<li><a class="pagination-previous" href="${ previous }">이전</a></li>
@@ -193,7 +140,7 @@ textarea {
 					<li><a class="pagination-link" aria-label="Goto page 1">${ p }</a></li>
 				</c:if>
 				<c:if test="${ p ne pi.currentPage }">
-					<c:url var="number" value="myPlanList.mr?memberId=${ loginUser.memberId }">
+					<c:url var="number" value="planTotalList.ad">
 						<c:param name="currentPage" value="${ p }"/>
 					</c:url>
 					<li><a class="pagination-link" aria-label="Goto page 1" href="${ number }">${ p }</a></li>
@@ -206,7 +153,7 @@ textarea {
 				<li><a class="pagination-next">다음</a></li>
 			</c:if>
 			<c:if test="${ pi.currentPage < pi.maxPage }">
-				<c:url var="next" value="myPlanList.mr?memberId=${ loginUser.memberId }">
+				<c:url var="next" value="planTotalList.ad">
 					<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
 				</c:url>
 				<li><a class="pagination-next" href="${ next }">다음</a></li>
@@ -217,52 +164,50 @@ textarea {
 	</section>
 		</div>
 	</div>
-	
-	<!-- 의뢰인 신고하기 -->
-	<form action="insertPanelty.pe" method="post" enctype="multipart/form-data">
+	<!-- 신고하기 모달 -->
 	<div class="modal" id="reportModal">
 		<div class="modal-background"></div>
 		<div class="modal-card">
 			<header class="modal-card-head">
-				<p class="modal-card-title">신고하기</p>
+				<p class="modal-card-title">삭제하기</p>
 			</header>
 			<section class="modal-card-body">
-			<input type="hidden" value="${ loginUser.memberId }" name="complainantId">
 				<div class="column">
-					<h1>신고 종류</h1>
+					<h1 class="title">삭제 종류</h1>
 					<hr>
 					<div class="field">
 						<p class="control">
-							<span class="select"> <select name="penaltyId">
-									<option value="11">부적절 게시물</option>
-									<option value="12">욕설 및 비방</option>
-									<option value="13">저작권 침해 및 명의 도용</option>
-									<option value="30">기타</option>
+							<span class="select"> <select>
+									<option>부적절 게시물</option>
+									<option>욕설 및 비방</option>
+									<option>저작권 침해 및 명의 도용</option>
+									<option>기타</option>
 							</select>
 							</span>
 						</p>
 					</div>
 				</div>
 				<section class="section" id="box">
-					<h1>신고사유</h1>
-					<textarea name="list" readonly>의뢰글</textarea>
-					<textarea id="panelty" name="listType" readonly></textarea>
+					<h1 class="title">삭제 사유</h1>
+					<h1>
+						<b>작성자 : user01</b>
+					</h1>
 					<hr>
 					<div class="box">
 						<article class="media">
 							<div class="media-content">
 								<div class="content">
-									<textarea placeholder="신고사유를 입력하세요" rows="5" name="penaltyContent"></textarea>
+									<textarea placeholder="삭제사유를 입력하세요" rows="5"></textarea>
 								</div>
 							</div>
 						</article>
 					</div>
-					<h1>첨부파일</h1>
+					<h1 class="title">첨부파일</h1>
 					<hr>
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
+								type="file" name="resume"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -273,7 +218,7 @@ textarea {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
+								type="file" name="resume"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -284,7 +229,7 @@ textarea {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
+								type="file" name="resume"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -295,7 +240,7 @@ textarea {
 					<div class="field">
 						<div class="file has-name">
 							<label class="file-label"> <input class="file-input"
-								type="file" name="attachmentFile" multiple="multiple"> <span class="file-cta">
+								type="file" name="resume"> <span class="file-cta">
 									<span class="file-icon"> <i class="fa fa-upload"></i>
 								</span> <span class="file-label"> Choose a file… </span>
 							</span> <span class="file-name"> Screen Shot 2017-07-29 at
@@ -306,45 +251,33 @@ textarea {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<button type="submit" class="button is-primary">신고</button>
-				<button class="button" onclick="cancel();">취소</button>
+				<a type="submit" class="button is-primary" href="noticeControlList.ad">삭제</a>
+				<a class="button" href="noticeControlList.ad">취소</a>
 			</footer>
 		</div>
 	</div>
-	</form>
 </body>
 <script>
 	$(function() {
-		var menu = $(".myPageMenu li").eq(3);
-        menu.addClass('is-active');
-        menu.siblings().removeClass('is-active');
-        
-		$(".table").find("td").not(".first").mouseenter(function() {
+		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",
 				"cursor" : "pointer",
 				"color" : "white"
 			});
-		});
-		$(".table").find("td").not(".first").mouseout(function() {
+		}).mouseout(function() {
 			$(this).parents("tr").css({
 				"background" : "white",
 				"color" : "black"
 			});
 		});
-		$(".first").click(function() {
-			alert("관리자에 의해 삭제되었습니다.");
-		});
 
-		$(".far").parent().siblings().not(".first").click(function() {
-			var planId = $(this).parents().children("td").eq(0).text();
-			var reqId = $(this).parents().children("td").eq(1).text();
-			console.log("설계번호 : " + planId);
-			console.log("의뢰번호 : " + reqId);
-			location = "loadRequetPlan.mr?reqId=" + reqId + "&planId=" + planId;
+		$(".is-danger").parent().siblings().click(function() {
+			var ptcpId = $(this).parents().children("td").eq(0).text()
+			console.log(ptcpId);
+			location = "requestPlan.tr?ptcpId=" + ptcpId;
 		});
 		
-		/* 모달띄우기 */
 		$('.modal-background, .modal-close').click(function() {
 	   		$('html').removeClass('is-clipped');
 	    	$(this).parent().removeClass('is-active');
@@ -376,39 +309,16 @@ textarea {
 		   });
 		}
 	});
-
-	function myRequest() {
-		location = "myRequestList.mr?memberId=${ loginUser.memberId }";
-	}
-	function myPlan() {
-		location = "myPlanList.mr?memberId=${ loginUser.memberId }";
-	}
-	function cancel() {
-		location = location;
-	}
-	function beforePlan() {
-		location = "beforePlan.mr?memberId=${ loginUser.memberId}";
-	}
 	
-	$(document).on("click",".report", function(){
-		var code = $(this).parent().find("td").eq(1).text();
-		console.log($(this).parent().find("td").eq(1).text());
-		$.ajax({
-			url:"selectPanelty.pe",
-			data:{code:code},
-			success:function(data) {
-				console.log(data);
-				
-				var $code = $("#panelty").text(data);
-				
-				$("#panelty").append($code);
-				
-				$('#reportModal').toggleClass('is-active');
-			},
-			error:function() {
-				alert("실패");
-			}
-		});
+	$(document).on("click",".no", function(){
+		var ptcpId = $(this).parent().find("td").eq(0).text();
+		console.log(ptcpId);
+		
+		var result = confirm("참여번호 : " + ptcpId + "\n"
+							 + "해당글을 정말 삭제하시겠습니까?");
+		if(result) {
+			location = "planDelete.ad?ptcpId=" + ptcpId;
+		}
 	});
 </script>
 </html>

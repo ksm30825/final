@@ -3,6 +3,8 @@ package com.kh.ti.myRequest.model.vo;
 import java.io.Serializable;
 import java.sql.Date;
 
+import com.kh.ti.member.model.vo.Member;
+
 public class Inquiry implements Serializable{
 	private int inquiryId;		//문의번호
 	private Date inquiryDate;	//문의일
@@ -13,11 +15,12 @@ public class Inquiry implements Serializable{
 	private String inquiryContent;	//문의내용
 	private String inquiryType;	//문의종류
 	private String inquiryTitle;	//문의제목
+	private Member member;
 	
 	public Inquiry() {}
 
 	public Inquiry(int inquiryId, Date inquiryDate, Date replyDate, String replyStatus, String replyContent,
-			int memberId, String inquiryContent, String inquiryType, String inquiryTitle) {
+			int memberId, String inquiryContent, String inquiryType, String inquiryTitle, Member member) {
 		super();
 		this.inquiryId = inquiryId;
 		this.inquiryDate = inquiryDate;
@@ -28,6 +31,7 @@ public class Inquiry implements Serializable{
 		this.inquiryContent = inquiryContent;
 		this.inquiryType = inquiryType;
 		this.inquiryTitle = inquiryTitle;
+		this.member = member;
 	}
 
 	public int getInquiryId() {
@@ -102,11 +106,19 @@ public class Inquiry implements Serializable{
 		this.inquiryTitle = inquiryTitle;
 	}
 
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
 	@Override
 	public String toString() {
 		return "Inquiry [inquiryId=" + inquiryId + ", inquiryDate=" + inquiryDate + ", replyDate=" + replyDate
 				+ ", replyStatus=" + replyStatus + ", replyContent=" + replyContent + ", memberId=" + memberId
 				+ ", inquiryContent=" + inquiryContent + ", inquiryType=" + inquiryType + ", inquiryTitle="
-				+ inquiryTitle + "]";
+				+ inquiryTitle + ", member=" + member + "]";
 	}
 }

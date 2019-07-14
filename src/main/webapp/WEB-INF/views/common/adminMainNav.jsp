@@ -47,7 +47,7 @@
             <div class="navbar-item has-dropdown is-hoverable">
                <a class="navbar-link " href="#"> <strong>게시판관리</strong> </a>
                <div class="navbar-dropdown ">
-                  <a class="navbar-item subnav" href="noticeControlList.ad"> 게시판 </a> 
+                  <a class="navbar-item subnav" href="reqTotalList.ad"> 게시판 </a> 
                   <a class="navbar-item subnav" href="selectAllSpotAdmin.sp"> 여행지 </a> <!-- href 경로 추가 : 세령 -->
                </div>
             </div>

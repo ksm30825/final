@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,11 +68,11 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><b>1</b></td>
-							<td>사이트 이용약관</td>
-							<td>2019/07/10</td>
+							<td><b>${ b.boardId }</b></td>
+							<td>${ b.boardTitle }</td>
+							<td>${ b.enrollDate }</td>
 							<td>관리자</td>
-							<td>100</td>
+							<td>${ b.boardCount }</td>
 						</tr>
 					</tbody>
 				</table>
@@ -80,24 +81,19 @@
 				<div class="box">
 					<article class="media">
 						<div class="media-content">
+							<c:if test="${ b.attachmentFileList.get(0).fileId ne 0 }">
 							<h1 class="title">공지 사진</h1>
 							<div class="content">
-								<div class="img">
-									<img src="resources/images/logo1.png">
-								</div>
-								<div class="img">
-									<img src="resources/images/logo1.png">
-								</div>
+								<c:forEach var="img" items="${ b.attachmentFileList }">
+									<div class="img">
+										<img src="resources/uploadFiles/${ img.changeName }">
+									</div>
+								</c:forEach>
 							</div>
+							</c:if>
 							<h1 class="title">공지 내용</h1>
 							<div class="content">
-								<p>있는 웅대한 얼마나 것이다. 설산에서 같이, 관현악이며, 낙원을 맺어, 보는 사람은 인간은 방지하는
-									봄바람이다. 수 장식하는 눈이 안고, 청춘의 싸인 싹이 피다. 천지는 예가 그들의 가치를 피부가 방지하는
-									황금시대를 열매를 무한한 끓는다. 구하지 커다란 위하여 안고, 따뜻한 듣는다. 고행을 발휘하기 몸이 꽃 곳으로
-									위하여서. 얼마나 용기가 구하지 힘있다. 위하여 그들은 바이며, 온갖 무한한 없으면, 때까지 이상 구하지
-									부패뿐이다. 얼마나 심장은 우리의 얼음이 못할 그들은 오아이스도 뜨고, 힘차게 있는가? 보는 곧 원질이 일월과
-									동력은 더운지라 맺어, 청춘의 속잎나고, 봄바람이다. 없으면 할지라도 없는 생명을 기쁘며, 고동을 뜨거운지라,
-									피어나는 뭇 있는가?</p>
+								<p>${ b.boardContent }</p>
 							</div>
 						</div>
 					</article>
@@ -120,7 +116,7 @@
 		location = "adminNoticeList.ad"
 	});
 	$(".is-primary").click(function() {
-		location = "updateNotice.ad"
+		location = "updateNoticeForm.ad?boardId=${ b.boardId }"
 	});
 </script>
 </html>

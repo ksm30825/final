@@ -344,7 +344,7 @@ th, td {
 		var choose = Math.floor(count/3);
 		console.log(choose);
 		console.log(count);
-		if(count <= 3) {
+		if(count < 1) {
 			$("#choose").append("하이라이트 일정 선택 불가");
 			$("#chooseBody").append("<tr id='chooseTr'>");
 			for(var i = 1; i <= count; i++) {
