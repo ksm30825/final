@@ -12,7 +12,7 @@ public class Rebate implements Serializable {
 	private int payAmount;		//환급신청액
 	private int memberId;		//회원코드
 	private Date payDate;		//환급지급일
-	private int rebateStatus;	//상태	-10:대기, 20:지급대기 ,30:지급완료
+	private int rebateStatus;	//상태	-10:미지급, 20:지급완료
 	private String month;
 	
 	private Member member;

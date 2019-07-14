@@ -1,6 +1,7 @@
 package com.kh.ti.point.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -337,9 +338,25 @@ public class PointDaoImpl implements PointDao{
 		ArrayList<Proceeds> adRebateList = (ArrayList)sqlSession.selectList("Payment.selectAdRebateList", sp, rowBounds);
 		return adRebateList;
 	}
-	
-	
-	
-	
-	
+	//관리자 - 환급 상태 1개변경
+	@Override
+	public int updateAdRebate(SqlSessionTemplate sqlSession, int refundId) {
+		return sqlSession.update("Payment.updateAdRebate", refundId);
+	}
+	//관리자 - 환급 상태 여러개변경
+	@Override
+	public int updateAdRebates(SqlSessionTemplate sqlSession, int refundId) {
+		return sqlSession.update("Payment.updateAdRebates", refundId);
+	}
+	//관리자 - 미지급 내역 다운로드
+	@Override
+	public ArrayList<HashMap> downRebates(SqlSessionTemplate sqlSession, int rebateStatus) {
+		return (ArrayList)sqlSession.selectList("Payment.downRebates", rebateStatus);
+	}
+	//일정리뷰 코드 이용하여 trvId조회
+	@Override
+	public int selectTrvId(SqlSessionTemplate sqlSession, int reviewId) {
+		return sqlSession.selectOne("Payment.selectTrvId", reviewId);
+
+	}
 }
