@@ -83,6 +83,8 @@ public interface TravelDao {
 	TrvSchedule selectTrvSchedule(SqlSessionTemplate sqlSession, int schId);
 
 	int updateTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch);
+
+	ArrayList<TrvCost> selectDayCostList(SqlSessionTemplate sqlSession, int dayId);
 	
 	int deleteSchTime(SqlSessionTemplate sqlSession, TrvSchedule sch);
 
@@ -94,7 +96,6 @@ public interface TravelDao {
 
 	int updateTrvDayWeather(SqlSessionTemplate sqlSession, TrvDay trvDay);
 
-	int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch);
 	
 	
 
@@ -123,7 +124,7 @@ public interface TravelDao {
 
 	int updateSchFileLevel(SqlSessionTemplate sqlSession, int fileId);
 
-	int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file);
+	int deleteSchFile(SqlSessionTemplate sqlSession, int fileId);
 	
 	SchFile selectTrvMainImage(SqlSessionTemplate sqlSession, int trvId);
 
@@ -178,7 +179,6 @@ public interface TravelDao {
 	ArrayList<HashMap> selectLikeySpotList(SqlSessionTemplate sqlSession, Travel trv);
 
 	ArrayList<HashMap> selectRecommSpotList(SqlSessionTemplate sqlSession, Travel trv);
-
 
 
 

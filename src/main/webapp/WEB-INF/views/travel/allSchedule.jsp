@@ -139,7 +139,7 @@
 														<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 													</c:if>
 													<small class="schTransp">${ sch.schTransp }</small>
-													<small class="schPlc">
+													<small>
 														<c:if test="${ sch.plcId ne null }" >
 															<a style="color:purple" class="schPlcAll">
 																<input type="hidden" value="${ sch.plcId }" name="plcId"> 
@@ -150,7 +150,7 @@
 														 	</a>
 														</c:if>
 														<c:if test="${ sch.plcId eq null }" >
-															<a style="color:purple" class="schPlcName">
+															<a style="color:purple" class="schPlc">
 																(장소 정보 없음)
 															</a>
 														</c:if>
@@ -196,19 +196,6 @@
 			});
 			
 			$("#downSchBtn").click(function() {
-				/* $.ajax({
-					url:"downloadSch.trv",
-					type:"POST",
-					data:{trvId:"${ trv.trvId }"},
-					success:function(data) {
-						alert("파일이 다운로드됩니다.");
-						console.log(data);
-					},
-					error:function(err) {
-						alert("err");
-					}
-						
-				}); */
 				location.href="downloadSch.trv?trvId=${ trv.trvId }";
 			});
 		});

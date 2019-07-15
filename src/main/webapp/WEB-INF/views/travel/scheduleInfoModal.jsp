@@ -17,7 +17,7 @@
 				<button class="delete" aria-label="close"></button>
 			</header>
 			<section class="modal-card-body">
-				<form action="updateSch.trv" method="post" id="schUpdateForm">
+				<form action="" method="post" id="schUpdateForm">
 					<div class="field">
 						<p class="control">
 							<input type="hidden" value="${ trv.trvId }" name="trvId">
@@ -163,55 +163,90 @@
 		var costAmount2 = $("#costAmount2");
 		var transp2 = $("#schTransp2");
 		$(function() {
-			
 			$("#currency2").children().each(function() {
 				if($(this).text() == $(this).siblings().text()) {
 					$(this).remove();
 				}
 			});
-			
-			
-			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
-        		$('html').removeClass('is-clipped');
-        	    $(this).parents(".modal").removeClass('is-active');
-        	   	title2.val('');
-        	   	dayId2.children().eq(0).prop("selected", true);
-        	   	isTimeset2.prop("checked", false);
-        	   	startTime2.val('');
-        	   	endTime2.val('');
-        	   	costAmount2.val(0);
-        	   	transp2.val('');
-        		
-        	});
-			
-			$("#isTimeset2").click(function() {
-				if($(this).prop("checked")) {
-					startTime2.val('');
-	        		endTime2.val('');
-				}
-			});
-			
-			$("#costAmount2").change(function() {
-				console.log($(this).val());
-				if($(this).val() == "") {
-					$(this).val(0);
-				}
-			});
-
-        	$("#submitSchBtn2").click(function() {
-        		console.log("start : " + startTime2);
-        		console.log("end : " + endTime2);
-        		if(title2.val() == '') {
-        			alert("일정제목을 입력해주세요.");
-        		}else if(!isTimeset2.prop("checked") && (startTime2.val() == '' || endTime2.val() == '')) {
-        			alert('시간을 지정하지 않으시려면 시간미지정 박스에 체크해주세요.');
-        		}else if(startTime2.val() > endTime2.val()) {
-        			alert('시작시간과 종료시간을 다시 확인하세요');
-        		}else {
-        			$("#schUpdateForm").submit();
-        		}
-        	});
 		});
+		$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
+			clearSchInfoModal();       		
+       	});
+		
+		$("#isTimeset2").click(function() {
+			if($(this).prop("checked")) {
+				startTime2.val('');
+        		endTime2.val('');
+			}
+		});
+		
+		$("#costAmount2").change(function() {
+			console.log($(this).val());
+			if($(this).val() == "") {
+				$(this).val(0);
+			}
+		});
+
+		//일정수정제출버튼 클릭시 db update, list update, socket emit
+       	$("#submitSchBtn2").click(function() {
+       		if(title2.val() == '') {
+       			alert("일정제목을 입력해주세요.");
+       		}else if(!isTimeset2.prop("checked") && (startTime2.val() == '' || endTime2.val() == '')) {
+       			alert('시간을 지정하지 않으시려면 시간미지정 박스에 체크해주세요.');
+       		}else if(startTime2.val() > endTime2.val()) {
+       			alert('시작시간과 종료시간을 다시 확인하세요');
+       		}else {
+       			var form = $("#schUpdateForm").serialize();
+    			var day
+    			$.ajax({
+    				url:"updateSch.trv",
+    				type:"POST",
+    				data:form,
+    				success:function(data) {
+    					console.log(data.changeDayNumber);
+    					console.log(data.changeSchList);
+    					console.log(data.changeCostList);
+    					updateSchList(data.originDayNumber, data.originSchList);
+    					updateCostList(data.originDayNumber, data.originCostList);
+    					
+    					
+    					if(data.changeDayNumber != undefined) {
+    						updateSchList(data.changeDayNumber, data.changeSchList);
+    						updateCostList(data.changeDayNumber, data.changeCostList);
+    					}
+
+    					clearSchInfoModal();
+    					
+    					//상세일정 수정시 socket
+    					socket.emit('updateSchedule', {
+	        				originDayNumber:data.originDayNumber,
+	        				originSchList:data.originSchList,
+	        				originCostList:data.originCostList,
+	        				changeDayNumber:data.changeDayNumber,
+	        				changeSchList:data.changeSchList,
+	        				changeCostList:data.changeCostList,
+	        				room:"${ trv.trvId }"
+	        			});
+    				},
+    				error:function(err) {
+    					alert("err");
+    				}
+    			});
+       		}
+       	});
+		
+		
+		function clearSchInfoModal() {
+			$('html').removeClass('is-clipped');
+    	    $("#scheduleInfoModal").removeClass('is-active');
+    	   	title2.val('');
+    	   	dayId2.children().eq(0).prop("selected", true);
+    	   	isTimeset2.prop("checked", false);
+    	   	startTime2.val('');
+    	   	endTime2.val('');
+    	   	costAmount2.val(0);
+    	   	transp2.val('');
+		}
 	</script>
 </body>
 </html>

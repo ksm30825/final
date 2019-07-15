@@ -139,7 +139,7 @@
 											<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 										</c:if>
 										<small class="schTransp">${ sch.schTransp }</small>
-										<small class="schPlc">
+										<small>
 											<c:if test="${ sch.plcId ne null }" >
 												<a style="color:purple" class="schPlc">
 													<input type="hidden" value="${ sch.plcId }" name="plcId"> 
@@ -150,7 +150,7 @@
 												</a>
 											</c:if>
 											<c:if test="${ sch.plcId eq null }" >
-												<a style="color:purple" class="schPlcName">
+												<a style="color:purple" class="schPlc">
 													(장소 정보 없음)
 												</a>
 											</c:if>
@@ -159,7 +159,7 @@
 								</div>
 								<div class="media-right" style="width: 10%">
 									<input type="hidden" value="${ sch.schId }" name="schId">
-									<button class="delete schDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
+									<button class="delete schDeleteBtn" aria-label="close" data-toolptip="일정 삭제"></button>
 									<br><br>	
 									<span class="icon schInfoBtn" data-tooltip="일정 정보 수정" data-variation="mini"
 										data-position="left center">
@@ -234,7 +234,7 @@
 														<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 													</c:if>
 													<small class="schTransp">${ sch.schTransp }</small>
-													<small class="schPlc">
+													<small>
 														<c:if test="${ sch.plcId ne null }" >
 															<a style="color:purple" class="schPlc">
 																<input type="hidden" value="${ sch.plcId }" name="plcId"> 
@@ -245,16 +245,16 @@
 														 	</a>
 														</c:if>
 														<c:if test="${ sch.plcId eq null }" >
-															<a style="color:purple" class="schPlcName">
+															<a style="color:purple" class="schPlc">
 																(장소 정보 없음)
 															</a>
 														</c:if>
 													</small>
 												</div>
 											</div>
-											<div class="media-right" style="width:10%">
+											<div class="media-right schEditArea" style="width:10%" >
 												<input type="hidden" value="${ sch.schId }" name="schId">
-												<button class="delete schDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
+												<button class="delete schDeleteBtn" aria-label="close" data-toolptip="일정 삭제"></button>
 												<br><br>	
 												<span class="icon schInfoBtn" data-tooltip="일정 정보 수정" data-variation="mini"
 													data-position="left center">
@@ -505,13 +505,14 @@
 	<jsp:include page="scheduleInfoModal.jsp" />
 
 	<script>
+		var start;
+		var startArr;
+		var startDayId;
 		$(function() {
+			$('.ui.rating').rating('disable');
+			//setEvents();
 			$("#day1").show();
 			
-			
-			var start;
-			var startArr;
-			var startDayId;
 			$(".dayList").sortable({
 				connectWith:".dayList",
 				start:function(event, ui) {
@@ -537,42 +538,14 @@
 								type:"post",
 								data:{dayId:changeDayId},
 								success:function(data) {
-									var schList = data.updList;
-									console.log(schList);
-									ul.children().each(function(index) {
-										var startTime = schList[index].startTime;
-										var endTime = schList[index].endTime;
-										$(this).find(".schTime").text(startTime + " - " + endTime);
+									updateSchList(dayNumber, data.updList);
+									
+									//드래그 위아래 socket
+									socket.emit('reorderSchListInADay', {
+										dayNumber:dayNumber,
+										schList:data.updList,
+										room:"${ trv.trvId }"
 									});
-									
-									//상세보기
-									for(var i = 0; i < schList.length; i++) {
-										var schId = schList[i].schId;
-										var dayArea = $("#day" + dayNumber + "Area");
-										dayArea.append($("#sch" + schId + "CardSection"));
-									}
-									
-									//overlay, list
-									var list = ul.children().clone(true);
-									if(ul.attr("id") == "day" + dayNumber + "List") {
-										$("#day" + dayNumber + "ListOver").empty();
-										$("#day" + dayNumber + "ListOver").append(list);
-									}else {
-										$("#day" + dayNumber + "List").empty();
-										$("#day" + dayNumber + "List").append(list);
-									}
-									var list2 = list.clone(true);
-									list2.find(".media-right").empty();
-									$("#day" + dayNumber + "ListAll").empty();
-									$("#day" + dayNumber + "ListAll").append(list2);
-									
-									
-									//마커
-									var places = [];
-									$("#day" + dayNumber).find("input[name=plcId]").each(function() {
-										places.push($(this).val());
-									});
-									showRoute(places, map);
 									
 								},
 								error:function(data) {
@@ -617,39 +590,23 @@
 							type:"post",
 							data:{schId:schId, dayId:changeDayId},
 							success:function(data) {
-								var schList = data.updList;
-								ul.children().each(function(index) {
-									var startTime = schList[index].startTime;
-									var endTime = schList[index].endTime;
-									$(this).find(".schTime").text(startTime + " - " + endTime);
-								});
-									
-								//상세보기
-								for(var i = 0; i < schList.length; i++) {
-									var schId = schList[i].schId;
-									var dayArea = $("#day" + dayNumber + "Area");
-									dayArea.append($("#sch" + schId + "CardSection"));
-								}
 								
-								//가계부
+								updateSchList(data.originDayNumber, data.originSchList);
+								updateSchList(data.changeDayNumber, data.changeSchList);
+								
 								if(data.costId != undefined) {
-									var costList = $("#day" + dayNumber + "CostList"); 
+									var costList = $("#day" + data.changeDayNumber + "CostList"); 
 									costList.append($("#cost_" + data.costId));
 								}
-									
-								//overlay, list
-								var list = ul.children().clone(true);
-								if(ul.attr("id") == "day" + dayNumber + "List") {
-									$("#day" + dayNumber + "ListOver").empty();
-									$("#day" + dayNumber + "ListOver").append(list);
-								}else {
-									$("#day" + dayNumber + "List").empty();
-									$("#day" + dayNumber + "List").append(list);
-								}
-								var list2 = list.clone(true);
-								list2.find(".media-right").empty();
-								$("#day" + dayNumber + "ListAll").empty();
-								$("#day" + dayNumber + "ListAll").append(list2);
+
+								socket.emit('reorderSchListBetweenDays', {
+									originDayNumber:data.originDayNumber,
+									originSchList:data.originSchList,
+									changeDayNumber:data.changeDayNumber,
+									changeSchList:data.changeSchList,
+									costId:data.costId,
+									room:"${ trv.trvId }"
+								});
 								
 									
 							},
@@ -662,219 +619,6 @@
 				}
 			});
 			
-			/* 
-			$("#likeList, #recommList").sortable({
-				connectWith : ".dayList"
-			}); */
-			$('.ui.rating').rating('disable');
-			
-				
-			
-			
-			//좋아요/추천 장소탭
-			$(".placeTab").find("li").click(function() {
-				$(this).addClass("is-active");
-				$(this).siblings().removeClass("is-active");
-				var text = $(this).children().children().eq(1).text();
-				if(text == '추천장소') {
-					$("#recommList").show();
-					$("#likeList").hide();
-				}else {
-					$("#likeList").show();
-					$("#recommList").hide();
-				}
-			});
-			
-			
-			//day-1
-			$(".dayLeftBtn").click(function() {
-				
-				var nav = $(this).parents("nav");
-				if(!nav.is("#day1")) {
-					nav.hide();
-					nav.prev().show();
-					var places = [];
-					nav.prev().find("input[name=plcId]").each(function() {
-						places.push($(this).val());
-					});
-					showRoute(places, map);				
-				}
-				
-			});
-			
-			//day+1
-			$(".dayRightBtn").click(function() {
-				
-				var nav = $(this).parents("nav");
-				if(!nav.is("#day${ trvDayList.size() }")) {
-					nav.hide();
-					nav.next().show();
-					var places = [];
-					nav.next().find("input[name=plcId]").each(function() {
-						places.push($(this).val());
-					});
-					showRoute(places, map);				
-					
-				}
-				
-			});
-			
-			//새일정
-			$(".newSchBtn").click(function() {
-				var dayId = $(this).parent().prev().prev().find("input[name=dayId]").val();
-				$("#dayId1").children().each(function() {
-					if($(this).val() == dayId) {
-						$(this).prop("selected", true);
-					}
-				});
-				$('#newScheduleModal').toggleClass('is-active');
-			});
-		
-			
-			//일정 수정
-			$(".schInfoBtn").click(function() {
-				var schId = $(this).siblings().eq(0).val();
-				var li = $(this).parent().parent();
-				var dayId = li.parent().prev().find("input[name=dayId]").val();
-				var schTitle = li.find(".schTitle").text();
-				var plcId = li.find("input[name=plcId]").val();
-				var plcName = li.find(".plcName").text();
-				
-				var schTransp = li.find(".schTransp").text();
-				var schTime = li.find(".schTime").text();
-				var index = schTime.indexOf("-");
-				var startTime = "";
-				var endTime = "";
-				if(schTime != " - ") {
-					startTime = schTime.substring(0, index - 1);
-					endTime = schTime.substring(index + 2);
-				}
-				var costTypeStr = li.find(".costType").text().substring();
-				var costType = costTypeStr.substring(0, costTypeStr.indexOf(":") - 1);
-				var costAmount = li.find(".costAmount").text();
-				var costCurrency = li.find(".costCurrency").text();
-				var currency = costCurrency.substring(1, costCurrency.length - 3);
-				
-				
-				var modal = $("#scheduleInfoModal");
-				modal.find("#schId2").val(schId);
-				modal.find("#schTitle2").val(schTitle);
-				modal.find("#plcId2").val(plcId);
-				modal.find("#plcName2").val(plcName);
-				modal.find("#dayId2").children().each(function() {
-					if($(this).val() == dayId) {
-						$(this).prop("selected", true);
-					}
-				});
-				
-				if(startTime == "" && endTime == "") {
-					modal.find("#isTimeset2").prop("checked", true);
-					modal.find("#startTime2").val("");
-					modal.find("#endTime2").val("");
-				}else {
-					modal.find("#isTimeset2").prop("checked", false);
-					modal.find("#startTime2").val(startTime);
-					modal.find("#endTime2").val(endTime);
-				}
-				
-				modal.find("#costType2").children().each(function() {
-					if($(this).text() == costType) {
-						$(this).prop("selected", true);
-					}
-				});
-				
-				
-				if(costAmount == "") {
-					modal.find("#costAmount2").val(0);
-				}else {
-					modal.find("#costAmount2").val(parseFloat(costAmount));
-				}
-				modal.find("#currency2").children().each(function() {
-					if($(this).text() == currency) {
-						$(this).prop("selected", true);
-					}
-				});
-				modal.find("#schTransp2").val(schTransp);
-				
-				modal.toggleClass('is-active');
-			});
-			
-			//일정 삭제
-			$(".schDeleteBtn").click(function() {
-				var schId = $(this).prev().val();
-				var answer = window.confirm("일정을 삭제하시겠습니까? ");
-				if(answer) {
-					$(this).parents("li").remove();
-					location.href="deleteSch.trv?schId=" + schId + "&trvId=${ trv.trvId }";
-				}
-			});
-			
-			
-			
-			//좋아요/추천일정 되돌리기
-			$(".backBtn1").click(function() {
-				if(!$(this).parents("ul").is("#likeList")) {
-					$(this).parents("li").appendTo($("#likeList"));
-				}
-			});
-			$(".backBtn2").click(function() {
-				if(!$(this).parents("ul").is("#recommList")) {
-					$(this).parents("li").appendTo($("#recommList"));
-				}
-			});
-			
-			
-			//지도 타입검색
-			$("#placeType").change(function() {
-				var type = $(this).children("option:selected").text();
-				$("#placeList").empty();
-				
-				switch(type) {
-				case '식당': type = 'restaurant'; break;
-				case '카페': type = 'cafe'; break;
-				case '바': type = 'bar'; break;
-				case '쇼핑몰': type = 'shopping_mall'; break;
-				case '공원': type = 'park'; break;
-				case '박물관': type = 'museum'; break;
-				case '호텔' : type = 'hotel'; break;
-				case '장소찾기':return;
-				}
-				placeTypeSearch(type, map);
-			});
-			
-
-			//장소insert
-			$("#placeInsertBtn").click(function() {
-				var plcId = $("#placeId").val();
-				console.log(plcId);
-				var placeName = $("#placeName").text();
-				$("#plcId1").val(plcId);
-				$("#plcName1").val(placeName);
-				$('#newScheduleModal').toggleClass('is-active');
-			});
-			
-			//좋아요장소 insert
-			$(".spotInsertBtn").click(function() {
-				var plcName = $(this).parent().prev().find(".plcName").text();
-				placeTextSearch(plcName, map, "insert");
-				//$("#plcName1").val(plcName);
-				$("#newScheduleModal").toggleClass('is-active');
-			});
-			
-			//장소select
-			$(".schPlc").click(function() {
-				var plcId = $(this).children("input[name=plcId]").val();
-				placeDetailSearch(plcId, map);
-				
-			});
-			
-			//좋아요장소 select
-			$(".spotPlc").click(function() {
-				var plcName = $(this).children(".plcName").text();
-				placeTextSearch(plcName, map);
-			});
-			
-			
 			//여행테마 선택
 			$(".themes").each(function() {
 				var tag = $(this);
@@ -886,109 +630,169 @@
 					}
 				});
 			});
+
+		});
+		
+		
+		//지도 타입검색
+		$("#placeType").change(function() {
+			var type = $(this).children("option:selected").text();
+			$("#placeList").empty();
 			
-			$(".themes").click(function() {
-				var tag = $(this);
-				var tagName = $(this).text();
-				var tagId = $(this).children().val();
-				if(tag.is(".is-white")) {
-					$.ajax({
-						url:"insertTrvTag.trv",
-						data:{tagId:tagId, trvId:"${ trv.trvId }"},
-						type:"post",
-						success:function(data) {
-							console.log(data);
-							tag.removeClass('is-white').addClass('is-link');
-							$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
-									+ tagName + '</a><a class="tag is-delete tagDelete"></a><input type="hidden" value="' + tagId + '"></div></div>'));
-							
-							//socket tagInsert
-							socket.emit('insertTag', {
-								tagId:tagId,
-								tagName:tagName,
-								room:'${ trv.trvId }'
-							});
-							
-							$(".tagDelete").click(function() {
-								var name = $(this).prev().text();
-								var id = parseInt($(this).next().val());
-								var trvTag = $(this).parent().parent();
-								$.ajax({
-									url:"deleteTrvTag.trv",
-									data:{tagId:id, trvId:"${ trv.trvId }"},
-									type:"post",
-									success:function(data) {
-										trvTag.remove();
-										$(".themes").each(function() {
-											if($(this).children().val() == id) {
-												$(this).removeClass('is-link').addClass('is-white');
-											}
-										});
-										
-										//socket tagDelete
-										socket.emit('deleteTag', {
-											tagId:id,
-											tagName:name,
-											room:'${ trv.trvId }'
-										});
-									},
-									error:function(data) {
-										//alert("서버전송 실패");
-									}
-								});
-								
-							});
-						},
-						error:function(data) {
-							alert("여행테마 insert 서버전송 실패");
-						}
-					});
-					
-					
-					
-				}else {
-					$.ajax({
-						url:"deleteTrvTag.trv",
-						data:{tagId:tagId, trvId:"${ trv.trvId }"},
-						type:"post",
-						success:function(data) {
-							console.log(data);
-							tag.removeClass('is-link').addClass('is-white');
-							$("#myTagArea .tags.has-addons").each(function() {
-								if($(this).children().last().val() == tagId) {
-									$(this).parent().remove();
-								}
-							});
-							
-							//socket tagDelete
-							socket.emit('deleteTag', {
-								tagId:tagId,
-								tagName:tagName,
-								room:'${ trv.trvId }'
-							});
-							
-						},
-						error:function(data) {
-							alert("서버전송 실패");
-						}
-					});
+			switch(type) {
+			case '식당': type = 'restaurant'; break;
+			case '카페': type = 'cafe'; break;
+			case '바': type = 'bar'; break;
+			case '쇼핑몰': type = 'shopping_mall'; break;
+			case '공원': type = 'park'; break;
+			case '박물관': type = 'museum'; break;
+			case '호텔' : type = 'hotel'; break;
+			case '장소찾기':return;
+			}
+			placeTypeSearch(type, map);
+		});
+		
+		//장소insert
+		$(document).on('click', '#placeInsertBtn', function() {
+			var plcId = $("#placeId").val();
+			console.log(plcId);
+			var placeName = $("#placeName").text();
+			$("#plcId1").val(plcId);
+			$("#plcName1").val(placeName);
+			$('#newScheduleModal').toggleClass('is-active');
+		});
+		
+		
+		//좋아요장소 insert
+		$(document).on('click', '.spotInsertBtn', function() {
+			var plcName = $(this).parent().prev().find(".plcName").text();
+			placeTextSearch(plcName, map, "insert");
+			//$("#plcName1").val(plcName);
+			$("#newScheduleModal").toggleClass('is-active');
+		});
+		
+		//장소select
+		$(document).on('click', '.schPlc', function() {
+			var plcId = $(this).children("input[name=plcId]").val();
+			placeDetailSearch(plcId, map);
+			
+		});
+		
+		//좋아요장소 select
+		$(document).on('click', '.spotPlc', function() {
+			var plcName = $(this).children(".plcName").text();
+			placeTextSearch(plcName, map);
+		});
+		
+		
+		
+		//좋아요/추천 장소탭
+		$(".placeTab").find("li").click(function() {
+			$(this).addClass("is-active");
+			$(this).siblings().removeClass("is-active");
+			var text = $(this).children().children().eq(1).text();
+			if(text == '추천장소') {
+				$("#recommList").show();
+				$("#likeList").hide();
+			}else {
+				$("#likeList").show();
+				$("#recommList").hide();
+			}
+		});
+		
+		
+		//day-1
+		$(".dayLeftBtn").click(function() {
+			
+			var nav = $(this).parents("nav");
+			if(!nav.is("#day1")) {
+				nav.hide();
+				nav.prev().show();
+				var places = [];
+				nav.prev().find("input[name=plcId]").each(function() {
+					places.push($(this).val());
+				});
+				showRoute(places, map);				
+			}
+			
+		});
+		
+		
+		//day+1
+		$(".dayRightBtn").click(function() {
+			
+			var nav = $(this).parents("nav");
+			if(!nav.is("#day${ trvDayList.size() }")) {
+				nav.hide();
+				nav.next().show();
+				var places = [];
+				nav.next().find("input[name=plcId]").each(function() {
+					places.push($(this).val());
+				});
+				showRoute(places, map);				
+				
+			}
+			
+		});
+		
+		
+		
+		//새일정
+		$(".newSchBtn").click(function() {
+			var dayId = $(this).parent().prev().prev().find("input[name=dayId]").val();
+			$("#dayId1").children().each(function() {
+				if($(this).val() == dayId) {
+					$(this).prop("selected", true);
 				}
 			});
-			
-			$(".tagDelete").click(function() {
-				var tagName = $(this).prev().text();
-				var tagId = parseInt($(this).next().val());
-				var trvTag = $(this).parent().parent();
+			$('#newScheduleModal').toggleClass('is-active');
+		});
+		
+		
+		
+		
+		
+		//여행테마 추가,제거
+		$(document).on('click', '.themes', function() {
+			var tag = $(this);
+			var tagName = $(this).text();
+			var tagId = $(this).children().val();
+			if(tag.is(".is-white")) {
+				$.ajax({
+					url:"insertTrvTag.trv",
+					data:{tagId:tagId, trvId:"${ trv.trvId }"},
+					type:"post",
+					success:function(data) {
+						console.log(data);
+						tag.removeClass('is-white').addClass('is-link');
+						$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
+								+ tagName + '</a><a class="tag is-delete tagDelete"></a><input type="hidden" value="' + tagId + '"></div></div>'));
+						
+						//socket tagInsert
+						socket.emit('insertTag', {
+							tagId:tagId,
+							tagName:tagName,
+							room:'${ trv.trvId }'
+						});
+					},
+					error:function(err) {
+						alert("err");
+					}
+				});
+				
+				
+				
+			}else {
 				$.ajax({
 					url:"deleteTrvTag.trv",
 					data:{tagId:tagId, trvId:"${ trv.trvId }"},
 					type:"post",
 					success:function(data) {
 						console.log(data);
-						trvTag.remove();
-						$(".themes").each(function() {
-							if($(this).children().val() == tagId) {
-								$(this).removeClass('is-link').addClass('is-white');
+						tag.removeClass('is-link').addClass('is-white');
+						$("#myTagArea .tags.has-addons").each(function() {
+							if($(this).children().last().val() == tagId) {
+								$(this).parent().remove();
 							}
 						});
 						
@@ -998,17 +802,435 @@
 							tagName:tagName,
 							room:'${ trv.trvId }'
 						});
+						
 					},
-					error:function(data) {
-						alert("deleteTrvTag.trv 서버전송 실패");
+					error:function(err) {
+						alert("err");
 					}
 				});
-				
+			}
+		});
+		
+		$(document).on('click', '.tagDelete', function() {
+			var tagName = $(this).prev().text();
+			var tagId = parseInt($(this).next().val());
+			var trvTag = $(this).parent().parent();
+			$.ajax({
+				url:"deleteTrvTag.trv",
+				data:{tagId:tagId, trvId:"${ trv.trvId }"},
+				type:"post",
+				success:function(data) {
+					console.log(data);
+					trvTag.remove();
+					$(".themes").each(function() {
+						if($(this).children().val() == tagId) {
+							$(this).removeClass('is-link').addClass('is-white');
+						}
+					});
+					
+					//socket tagDelete
+					socket.emit('deleteTag', {
+						tagId:tagId,
+						tagName:tagName,
+						room:'${ trv.trvId }'
+					});
+				},
+				error:function(err) {
+					alert("err");
+				}
 			});
-
+			
 		});
 		
 		
+		//일정 수정
+		$(document).on('click', '.schInfoBtn', function() {
+			showSchInfoModal($(this));
+		});
+		
+		//일정 삭제
+		$(document).on('click', '.schDeleteBtn', function() {
+			deleteSch($(this));
+		});
+		
+		
+		//일정 수정버튼 클릭시 수정모달구성
+		function showSchInfoModal(schInfoBtn) {
+			var schId = schInfoBtn.siblings().eq(0).val();
+			var li = schInfoBtn.parent().parent();
+			var dayId = li.parent().prev().find("input[name=dayId]").val();
+			var schTitle = li.find(".schTitle").text();
+			var plcId = li.find("input[name=plcId]").val();
+			var plcName = li.find(".plcName").text();
+			
+			var schTransp = li.find(".schTransp").text();
+			var schTime = li.find(".schTime").text();
+			var index = schTime.indexOf("-");
+			var startTime = "";
+			var endTime = "";
+			if(schTime != " - ") {
+				startTime = schTime.substring(0, index - 1);
+				endTime = schTime.substring(index + 2);
+			}
+			var costTypeStr = li.find(".costType").text().substring();
+			var costType = costTypeStr.substring(0, costTypeStr.indexOf(":") - 1);
+			var costAmount = li.find(".costAmount").text();
+			var costCurrency = li.find(".costCurrency").text();
+			var currency = costCurrency.substring(1, costCurrency.length - 3);
+			
+			
+			var modal = $("#scheduleInfoModal");
+			modal.find("#schId2").val(schId);
+			modal.find("#schTitle2").val(schTitle);
+			modal.find("#plcId2").val(plcId);
+			modal.find("#plcName2").val(plcName);
+			modal.find("#dayId2").children().each(function() {
+				if($(this).val() == dayId) {
+					$(this).prop("selected", true);
+				}
+			});
+			
+			if(startTime == "" && endTime == "") {
+				modal.find("#isTimeset2").prop("checked", true);
+				modal.find("#startTime2").val("");
+				modal.find("#endTime2").val("");
+			}else {
+				modal.find("#isTimeset2").prop("checked", false);
+				modal.find("#startTime2").val(startTime);
+				modal.find("#endTime2").val(endTime);
+			}
+			
+			modal.find("#costType2").children().each(function() {
+				if($(this).text() == costType) {
+					$(this).prop("selected", true);
+				}
+			});
+			
+			
+			if(costAmount == "") {
+				modal.find("#costAmount2").val(0);
+			}else {
+				modal.find("#costAmount2").val(parseFloat(costAmount));
+			}
+			modal.find("#currency2").children().each(function() {
+				if($(this).text() == currency) {
+					$(this).prop("selected", true);
+				}
+			});
+			modal.find("#schTransp2").val(schTransp);
+			
+			modal.toggleClass('is-active');
+		}
+		
+		//일정삭제버튼 클릭시 db에서 삭제, listupdate, socket emit
+		function deleteSch(deleteBtn) {
+			var schId = deleteBtn.prev().val();
+			var answer = window.confirm("일정을 삭제하시겠습니까? ");
+			if(answer) {
+				
+				$.ajax({
+					url:"deleteSch.trv",
+					type:"POST",
+					data:{schId:schId, trvId:"${ trv.trvId }"},
+					success:function(data) {
+						updateSchList(data.dayNumber, data.schList);
+						if(data.costId != undefined) {
+							deleteCost(data.costId);
+						}
+						var places = [];
+						$("#day" + data.dayNumber).find("input[name=plcId]").each(function() {
+							places.push($(this).val());
+						});
+						showRoute(places, map);
+						
+						//일정삭제 socket
+						socket.emit('deleteSchedule', {
+							costId:data.costId, 
+							dayNumber:data.dayNumber, 
+							schList:data.schList,
+							room:"${ trv.trvId }"
+						});
+					},
+					error:function(err) {
+						alert("err");
+					}
+				});
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		//--------------------------------------------------------------------------------------------------
+		
+		//일정리스트 update
+		function updateSchList(dayNumber, schList) {
+			var li = '';
+			var section = '';
+			
+			for(var key in schList) {
+				var sch = schList[key];
+				console.log(sch);
+				
+				li += '<li class="panel-block sch' + sch.schId + 'Block" style="background: white" id="sch_' + sch.schId + '">'
+				 	   + '<div class="media-left" style="width:20%">'
+				 	   + '<p class="schTime">' + sch.startTime + '-' + sch.endTime + '</p>'
+				 	   + '<input type="hidden" value="' + sch.schNumber + '" name="schNumber"></div>'
+				 	   + '<div class="media-content" style="width: 70%"><div class="content">'
+				 	   + '<p><strong class="schTitle">' + sch.schTitle + '</strong></p>';
+				if(sch.trvCost != null) {
+					li += '<small class="costType">' + sch.trvCost.costType + ': </small>'
+				 	   + '<small ><strong class="costAmount">' + sch.trvCost.costAmount + '</strong></small>'
+				 	   + '<small class="costCurrency">(' + sch.trvCost.currency + ') /</small>';
+				}
+				li += '<small class="schTransp">' + sch.schTransp + '</small>';
+				
+				if(sch.plcId != "") {
+					li += '<small><a style="color:purple" class="schPlc">'
+						+ '<input type="hidden" value="' + sch.plcId + '" name="plcId">'
+						+ '<span class="icon is-small" style="color:purple">' 
+						+ '<i class="fas fa-map-marker-alt"></i></span>'
+						+ '<span class="plcName">' + sch.plcName + '</span></a></small></div></div>';
+				}else {
+					li += '<small><a style="color:purple" class="schPlc">(장소 정보 없음)</a></small></div></div>';
+				}
+				
+				li += '<div class="media-right schEditArea" style="width: 10%">'
+					+ '<input type="hidden" value="' + sch.schId + '" name="schId">'
+					+ '<button class="delete schDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>'
+					+ '<br><br>'
+					+ '<span class="icon schInfoBtn" data-tooltip="일정 정보 수정" data-variation="mini" data-position="left center">'
+					+ '<i class="fas fa-edit"></i>'
+					+ '</span>'
+				  	+ '</div></li>';
+				
+				//상세글
+				section += '<section class="section" id="sch' + sch.schId + 'CardSection">'
+							+ '<div class="card">'
+							+ '<header class="card-header">'
+							+ '<p class="icon is-large" style="color:#8e44ad; margin:5px">'
+							+ '<i class="fas fa-2x fa-bookmark"></i></p>'
+							+ '<div class="card-header-title" style="display:block">'
+							+ '<input type="hidden" value="' + sch.schId + '" name="schId">'
+							+ '<p><strong>' +  sch.schTitle + '</strong></p>'
+							+ '<p class="help schCost">';
+				if(sch.trvCost != null) {
+					section += '<small class="costType">' + sch.trvCost.costType + '</small> :'
+							+ '<strong class="costAmount">' + sch.trvCost.costAmount + '</strong>'
+							+ '(<small class="costCurrency">' + sch.trvCost.currency + '</small>) /';
+				}
+							
+				section += '&nbsp;&nbsp;&nbsp;<small class="schTransp">' + sch.schTransp + '</small></p>'
+							+ '<small><a style="color: purple">'
+							+ '<span class="icon is-small" style="color: purple">'
+							+ '<i class="fas fa-map-marker-alt"></i></span>'; 
+				if(sch.plcName != "") {
+					section += sch.plcName;
+				}else {
+					section += '(장소 정보 없음)';
+				}
+				section += '</a></small></div><a class="card-header-icon">'
+						+ '<span class="icon detailShowBtn"><i class="fa fa-angle-down"></i></span>'
+						+ '</a></header>'
+						+ '<div class="card-content" style="display:none">'
+						+ '<div class="content editor"></div></div>'
+						+ '<footer class="card-footer" style="display:none">'
+						+ '<a class="card-footer-item saveBtn" style="background:mediumpurple;color:white">Save</a>'
+						+ '<a class="card-footer-item editBtn" style="background:skyblue;color:white">Edit</a>'
+						+ '<a class="card-footer-item removeBtn" style="background:lightgray;color:white">Delete</a>'
+						+ '</footer></div></section>';
+			
+				
+			
+			}
+			
+			
+			$("#day" + dayNumber + "List").empty().append(li);
+			$("#day" + dayNumber + "ListOver").empty().append(li);
+			$("#day" + dayNumber + "ListAll").empty().append(li); 
+			$("#day" + dayNumber + "ListAll").find(".media-right").empty();
+			$("#day" + dayNumber + "Area").empty().append(section);
+			
+			
+			var places = [];
+			$("#day" + dayNumber).find("input[name=plcId]").each(function() {
+				places.push($(this).val());
+			});
+			showRoute(places, map);
+		}
+		
+		
+		//가계부추가
+		function insertNewCost(cost) {
+			var dayId = cost.dayId;
+			var type = cost.costType;
+			var ul = $("#day" + dayId + "Cost").find(".costList");
+			var costli = $("#day" + dayId + "Cost").find("li").eq(0).clone(true);
+			
+			switch(type) {
+			case '숙박':costli.children().eq(0).children().each(function() { 
+						if(!$(this).is(".accomm")) {
+							$(this).remove();
+						} 
+					});break;
+			case '교통':costli.children().eq(0).children().each(function() { 
+						if(!$(this).is(".transp")) {
+							$(this).remove();
+						} 
+					});break;
+			case '식비':costli.children().eq(0).children().each(function() { 
+						if(!$(this).is(".food")) {
+							$(this).remove();
+						} 
+					});break;
+			case '쇼핑':costli.children().eq(0).children().each(function() { 
+						if(!$(this).is(".shopping")) {
+							$(this).remove();
+						} 
+					});break;
+			case '관광':costli.children().eq(0).children().each(function() { 
+						if(!$(this).is(".tour")) {
+							$(this).remove();
+						} 
+					});break;
+			case '기타':costli.children().eq(0).children().each(function() { 
+						if(!$(this).is(".etc")) {
+							$(this).remove();
+						} 
+					});break;
+			}
+			
+			costli.find(".costAmount").text(cost.costAmount);
+			costli.find(".costCurrency").text(cost.currency);
+			costli.find(".costContent").text(cost.costContent);
+			costli.find("input[name=costId]").val(cost.costId);
+			costli.css("display", "flex");
+			costli.attr("id", "cost_" + cost.costId);
+			ul.append(costli);
+			updateSummary();
+		}
+		
+		//가계부list update
+		function updateCostList(dayNumber, costList) {
+			var ul = $("#day" + dayNumber + "CostList");
+			ul.children().filter(":gt(0)").remove();
+			for(var key in costList) {
+				var cost = costList[key];
+				var dayId = cost.dayId;
+				var type = cost.costType;
+				var costli = ul.children().eq(0).clone(true);
+				
+				switch(type) {
+				case '숙박':costli.children().eq(0).children().each(function() { 
+							if(!$(this).is(".accomm")) {
+								$(this).remove();
+							} 
+						});break;
+				case '교통':costli.children().eq(0).children().each(function() { 
+							if(!$(this).is(".transp")) {
+								$(this).remove();
+							} 
+						});break;
+				case '식비':costli.children().eq(0).children().each(function() { 
+							if(!$(this).is(".food")) {
+								$(this).remove();
+							} 
+						});break;
+				case '쇼핑':costli.children().eq(0).children().each(function() { 
+							if(!$(this).is(".shopping")) {
+								$(this).remove();
+							} 
+						});break;
+				case '관광':costli.children().eq(0).children().each(function() { 
+							if(!$(this).is(".tour")) {
+								$(this).remove();
+							} 
+						});break;
+				case '기타':costli.children().eq(0).children().each(function() { 
+							if(!$(this).is(".etc")) {
+								$(this).remove();
+							} 
+						});break;
+				}
+				
+				costli.find(".costAmount").text(cost.costAmount);
+				costli.find(".costCurrency").text(cost.currency);
+				costli.find(".costContent").text(cost.costContent);
+				costli.find("input[name=costId]").val(cost.costId);
+				costli.css("display", "flex");
+				costli.attr("id", "cost_" + cost.costId);
+				ul.append(costli);
+				
+			}
+			updateSummary();
+		}
+		
+		//가계부삭제
+		function deleteCost(costId) {
+			$("#cost_" + costId).remove();
+			updateSummary();
+		}
+		
+		//가계부수정
+		function updateCost(cost) {
+			var dayId = cost.dayId;
+			var type = cost.costType;
+			
+			
+    	   	var li = $("#cost_" + cost.costId);
+			
+			switch(type) {
+			case '숙박': if(!li.children().eq(0).children().is(".accomm")) {
+							li.children().eq(0).children().remove();
+							li.children().eq(0).append($('<span class="icon costType accomm"><i class="fas fa-bed"></i></span>'));
+						};break;
+			case '교통':if(!li.children().eq(0).children().is(".transp")) {
+							li.children().eq(0).children().remove();
+							li.children().eq(0).append($('<span class="icon costType transp"><i class="fas fa-taxi"></i></span>'));
+						};break;
+			case '식비':if(!li.children().eq(0).children().is(".food")) {
+							li.children().eq(0).children().remove();
+							li.children().eq(0).append($('<span class="icon costType food"><i class="fas fa-utensils"></i></span>'));
+						};break;
+			case '쇼핑':if(!li.children().eq(0).children().is(".shopping")) {
+							li.children().eq(0).children().remove();
+							li.children().eq(0).append($('<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>'));
+						};break;
+			case '관광':if(!li.children().eq(0).children().is(".tour")) {
+							li.children().eq(0).children().remove();
+							li.children().eq(0).append($('<span class="icon costType tour"><i class="fas fa-tripadvisor"></i></span>'));
+						};break;
+			case '기타':if(!li.children().eq(0).children().is(".etc")) {
+							li.children().eq(0).children().remove();
+							li.children().eq(0).append($('<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>'));
+						};break;
+			}
+			
+			li.find(".costAmount").text(cost.costAmount);
+			li.find(".costCurrency").text(cost.currency);
+			li.find(".costContent").text(cost.costContent);
+			
+			var ul = li.parent();
+			
+			if(ul.parent().attr("id") != "day" + dayId + "Cost") {
+				$("#day" + dayId + "Cost").find(".costList").append(li);
+			}        					
+			
+			updateSummary();
+			
+			if(cost.schId != 0) {
+				var schId = cost.schId;
+				$(".sch" + schId + "Block").find(".costType").text(type + " : ");
+				$(".sch" + schId + "Block").find(".costAmount").text(parseFloat(cost.costAmount));
+				$(".sch" + schId + "Block").find(".costCurrency").text("(" + cost.currency + ") /");
+				$("#sch" + schId + "CardSection").find(".costType").text(type);
+				$("#sch" + schId + "CardSection").find(".costAmount").text(parseFloat(cost.costAmount));
+				$("#sch" + schId + "CardSection").find(".costCurrency").text(cost.currency);
+			}
+		}
 		
 		//curtain menu open
 		function openNav() {

@@ -112,24 +112,24 @@
 							</c:forEach>
 						</c:forEach>
 						<tr>
-							<td id="accommCostWon"></td>
-							<td id="transpCostWon"></td>
-							<td id="foodCostWon"></td>
-							<td id="shoppingCostWon"></td>
-							<td id="tourCostWon"></td>
-							<td id="etcCostWon"></td>
-							<td id="totalCostWon" style="background:#C3AFF8"></td>
-							<td id="balanceWon" style="background:skyblue"></td>
+							<td><input id="accommCostWon" readOnly style="width:100%"></td>
+							<td><input id="transpCostWon" readOnly style="width:100%"></td>
+							<td><input id="foodCostWon" readOnly style="width:100%"></td>
+							<td><input id="shoppingCostWon" readOnly style="width:100%"></td>
+							<td><input id="tourCostWon" readOnly style="width:100%"></td>
+							<td><input id="etcCostWon" readOnly style="width:100%"></td>
+							<td style="background:#C3AFF8"><input id="totalCostWon" readOnly style="width:100%"></td>
+							<td style="background:skyblue"><input id="balanceWon" readOnly style="width:100%"></td>
 						</tr>
 						<tr>
-							<td id="accommCostLocal"></td>
-							<td id="transpCostLocal"></td>
-							<td id="foodCostLocal"></td>
-							<td id="shoppingCostLocal"></td>
-							<td id="tourCostLocal"></td>
-							<td id="etcCostLocal"></td>
-							<td id="totalCostLocal" style="background:#C3AFF8"></td>
-							<td id="balanceLocal" style="background:skyblue"></td>
+							<td><input id="accommCostLocal" readOnly style="width:100%"></td>
+							<td><input id="transpCostLocal" readOnly style="width:100%"></td>
+							<td><input id="foodCostLocal" readOnly style="width:100%"></td>
+							<td><input id="shoppingCostLocal" readOnly style="width:100%"></td>
+							<td><input id="tourCostLocal" readOnly style="width:100%"></td>
+							<td><input id="etcCostLocal" readOnly style="width:100%"></td>
+							<td style="background:#C3AFF8"><input id="totalCostLocal" readOnly style="width:100%"></td>
+							<td style="background:skyblue"><input id="balanceLocal" readOnly style="width:100%"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -157,7 +157,7 @@
 										value="${ trvDay.dayMemo }">
 								</div>
 								<ul class="connectedSortable menu-list costList" style="background: white" id="day${ trvDay.dayNumber }CostList">
-									<li class="panel-block" style="display:none">
+									<li class="panel-block sampleCost" style="display:none">
 										<div class="media-left" style="width: 20%">
 											<span class="icon costType accomm"><i class="fas fa-bed"></i></span>
 											<span class="icon costType transp"><i class="fas fa-taxi"></i></span>
@@ -219,7 +219,7 @@
 												</div>
 												<div class="media-right" style="width:10%">
 													<input type="hidden" value="${ sch.trvCost.costId }" name="costId">
-													<button class="delete costDeleteBtn" aria-label="close" data-tooptip="일정 삭제"></button>
+													<button class="delete costDeleteBtn" aria-label="close" data-toolptip="가계부 삭제"></button>
 													<br><br>	
 													<span class="icon costInfoBtn" data-tooltip="일정 정보 수정">
 														<i class="fas fa-edit"></i>
@@ -351,20 +351,27 @@
 							type:"POST",
 							data:{budget:budgetWon, trvId:"${ trv.trvId }"},
 							success:function(data) {
+								
 								getLocalBudget(budgetWon);
+								
+								socket.emit('updateBudget', {
+									budget:budgetWon,
+									room:"${ trv.trvId }"
+								});
+								
 							},
 							error:function(err) {
 								alert("err", err);
 							}
 						});
-			      }
+			    	}
 			      
 			    }
 			});
 			
 			
 			//가계부 수정
-			$(".costInfoBtn").click(function() {
+			$(document).on('click', '.costInfoBtn', function() {
 				var li = $(this).parent().parent();
 				var dayId = li.parent().prev().find("input[name=dayId]").val();
 				var costId = li.find("input[name=costId]").val();
@@ -416,7 +423,8 @@
 				$('#costInfoModal').toggleClass('is-active');
 			});
 			
-			$(".costDeleteBtn").click(function() {
+			//가계부 삭제
+			$(document).on('click', '.costDeleteBtn', function() {
 				var li = $(this).parent().parent();
 				var costId = li.find("input[name=costId]").val();
 				var schId = $(this).parent().children().last().val();
@@ -434,6 +442,14 @@
 								$(".sch" + schId + "Block").find(".costAmount").remove();
 								$(".sch" + schId + "Block").find(".costCurrency").remove();
 							}
+							updateSummary();
+							
+							socket.emit('deleteCost', {
+								costId:costId,
+								schId:schId,
+								room:"${ trv.trvId }"
+							});
+							
 							
 						},
 						error:function(err) {
@@ -454,7 +470,7 @@
 		function getLocalBudget(amount) {
 			
 			$.ajax({
-				url:'http://data.fixer.io/api/latest?access_key=92d8dd4822a4117acfc28399dc24faff',
+				url:'http://data.fixer.io/api/latest?access_key=bcc03ec033fd62b9b165b44ecf64e9c2',
 				dataType:'jsonp',
 				success:function(json) {
 					var krw = json.rates.KRW;
@@ -509,14 +525,23 @@
 					+ shoppingCostLocal + etcCostLocal;
 			var balanceLocal = Math.round((budgetLocal - totalCostLocal) * 100) / 100;
 			
-			$("#accommCostLocal").text(accommCostLocal + ' ${ trvCityList[0].currencyUnit }');
-			$("#transpCostLocal").text(transpCostLocal + ' ${ trvCityList[0].currencyUnit }');
-			$("#foodCostLocal").text(foodCostLocal + ' ${ trvCityList[0].currencyUnit }');
-			$("#tourCostLocal").text(tourCostLocal + ' ${ trvCityList[0].currencyUnit }');
-			$("#shoppingCostLocal").text(shoppingCostLocal + ' ${ trvCityList[0].currencyUnit }');
-			$("#etcCostLocal").text(etcCostLocal + ' ${ trvCityList[0].currencyUnit }');
-			$("#totalCostLocal").text(totalCostLocal + ' ${ trvCityList[0].currencyUnit }');
-			$("#balanceLocal").text(balanceLocal + ' ${ trvCityList[0].currencyUnit }');
+			//$("#accommCostLocal").text(accommCostLocal + ' ${ trvCityList[0].currencyUnit }');
+			$("#accommCostLocal").val(accommCostLocal);
+			formatCurrency($("#accommCostLocal"), "budgetLocal", "blur");
+			$("#transpCostLocal").val(transpCostLocal);
+			formatCurrency($("#transpCostLocal"), "budgetLocal", "blur");
+			$("#foodCostLocal").val(foodCostLocal);
+			formatCurrency($("#foodCostLocal"), "budgetLocal", "blur");
+			$("#tourCostLocal").val(tourCostLocal);
+			formatCurrency($("#tourCostLocal"), "budgetLocal", "blur");
+			$("#shoppingCostLocal").val(shoppingCostLocal);
+			formatCurrency($("#shoppingCostLocal"), "budgetLocal", "blur");
+			$("#etcCostLocal").val(etcCostLocal);
+			formatCurrency($("#etcCostLocal"), "budgetLocal", "blur");
+			$("#totalCostLocal").val(totalCostLocal);
+			formatCurrency($("#totalCostLocal"), "budgetLocal", "blur");
+			$("#balanceLocal").val(balanceLocal);
+			formatCurrency($("#balanceLocal"), "budgetLocal", "blur");
 			
 			
 			var accommCostWon = Math.floor(accommCostLocal * rate);
@@ -529,21 +554,24 @@
 					+ shoppingCostWon + etcCostWon;
 			var balanceWon = budgetWon - totalCostWon;
 			
-			$("#accommCostWon").text(accommCostWon + ' 원');
-			$("#transpCostWon").text(transpCostWon + ' 원');
-			$("#foodCostWon").text(foodCostWon + ' 원');
-			$("#tourCostWon").text(tourCostWon + ' 원');
-			$("#shoppingCostWon").text(shoppingCostWon + ' 원');
-			$("#etcCostWon").text(etcCostWon + ' 원');
-			$("#totalCostWon").text(totalCostWon + ' 원');
-			$("#balanceWon").text(balanceWon + ' 원' );
+			$("#accommCostWon").val(accommCostWon);
+			formatCurrency($("#accommCostWon"), "budgetWon", "blur");
+			$("#transpCostWon").val(transpCostWon);
+			formatCurrency($("#transpCostWon"), "budgetWon", "blur");
+			$("#foodCostWon").val(foodCostWon);
+			formatCurrency($("#foodCostWon"), "budgetWon", "blur");
+			$("#tourCostWon").val(tourCostWon);
+			formatCurrency($("#tourCostWon"), "budgetWon", "blur");
+			$("#shoppingCostWon").val(shoppingCostWon);
+			formatCurrency($("#shoppingCostWon"), "budgetWon", "blur");
+			$("#etcCostWon").val(etcCostWon );
+			formatCurrency($("#etcCostWon"), "budgetWon", "blur");
+			$("#totalCostWon").val(totalCostWon);
+			formatCurrency($("#totalCostWon"), "budgetWon", "blur");
+			$("#balanceWon").val(balanceWon);
+			formatCurrency($("#balanceWon"), "budgetWon", "blur");
+			
 		}
-		
-		
-	
-		
-		
-		
 		
 		
 		
@@ -583,7 +611,7 @@
 		    	right_side = right_side.substring(0, 3);
 	
 		    	if(id == 'budgetWon') {
-			    	input_val = left_side + right_side + " 원";
+			    	input_val = left_side + " 원";
 		    	}else {
 		    		input_val = left_side + right_side + " ${ trvCityList[0].currencyUnit }";
 		    	}
@@ -598,7 +626,7 @@
 		    	// final formatting
 		    	if (blur === "blur") {
 		    		if(id == 'budgetWon') {
-		      			input_val += ".00 원";
+		      			input_val += " 원";
 		    		}else {
 		    			input_val += ".00 ${ trvCityList[0].currencyUnit }";
 		    		}
@@ -612,10 +640,12 @@
 		  	var updated_len = input_val.length;
 		  	caret_pos = updated_len - original_len + caret_pos;
 		  	input[0].setSelectionRange(caret_pos, caret_pos);
+		  	
+		  	return input;
 		}
 		
 		
-	
+		
 	
 	
 		

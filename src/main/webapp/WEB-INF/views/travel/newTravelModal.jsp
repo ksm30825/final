@@ -41,7 +41,7 @@
 								<p class="control is-expanded has-icons-left">
 									<span class="icon is-small is-left"><i class="fas fa-globe-americas"></i></span>
 									<span class="select"> 
-										<select name="trvCountry">
+										<select name="trvCountry" id="trvCountry1">
 										</select>
 									</span>
 								</p>
@@ -50,7 +50,7 @@
 								<p class="control is-expanded has-icons-left has-icons-right">
 									<span class="icon is-small is-left"><i class="fas fa-location-arrow"></i></span> 
 									<span class="select"> 
-										<select name="trvCity">
+										<select name="trvCity" id="trvCity1">
 										</select>
 									</span>
 								</p>
@@ -107,6 +107,8 @@
 	</div>
 	<script>
 		$(function() {
+			
+			
 			//modal close
 			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
         		$('html').removeClass('is-clipped');
@@ -186,6 +188,24 @@
 						var $option = $("<option value='" + id + "'>").text(country);
 						$select.append($option);
 					}
+					var country = $("#trvCountry1").children("option:selected");
+		    		var citySelect = $("#trvCity1");
+					$.ajax({
+			    		url:"selectCityList.trv",
+			    		type:"post",
+			    		data:{countryId:country.val()},
+			    		success:function(data) {
+			    			citySelect.children().remove();
+							for(var key in data.cityList) {
+								var id = data.cityList[key].cityId;
+								var city = data.cityList[key].cityNameKo;
+								var $option = $("<option value='" + id + "'>").text(city);
+								citySelect.append($option);
+							}
+			    		}, error:function(data) {
+			    			alert("서버 전송실패");
+			    		}
+			    	});
 				}, error:function(data) {
 					alert("서버 전송실패");
 				}
