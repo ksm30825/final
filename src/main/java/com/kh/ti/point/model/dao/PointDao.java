@@ -1,6 +1,7 @@
 package com.kh.ti.point.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
@@ -117,6 +118,15 @@ public interface PointDao {
 	int getAdRebateListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
 	//관리자 - 환급 내역 조회
 	ArrayList<Proceeds> selectAdRebateList(SqlSessionTemplate sqlSession, PageInfo adRebatePi, SearchPoint sp);
+	//관리자 - 환급 상태 1개변경
+	int updateAdRebate(SqlSessionTemplate sqlSession, int refundId);
+	//관리자 - 환급 상태 여러개변경
+	int updateAdRebates(SqlSessionTemplate sqlSession, int refundId);
+	//관리자 - 미지급 내역 다운로드
+	ArrayList<HashMap> downRebates(SqlSessionTemplate sqlSession, int rebateStatus);
+	//일정리뷰 코드 이용하여 trvId조회
+	int selectTrvId(SqlSessionTemplate sqlSession, int reviewId);
+	
 	
 	
 }

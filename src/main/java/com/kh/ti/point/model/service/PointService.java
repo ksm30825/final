@@ -1,6 +1,10 @@
 package com.kh.ti.point.model.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.member.model.vo.Member;
@@ -115,5 +119,13 @@ public interface PointService {
 	int getAdRebateListCount(SearchPoint sp);
 	//관리자 - 환급 내역 조회
 	ArrayList<Proceeds> selectAdRebateList(PageInfo adRebatePi, SearchPoint sp);
+	//관리자 - 환급 상태 1개변경
+	int updateAdRebate(int refundId);
+	//관리자 - 환급 상태 여러개변경
+	int updateAdRebates(int refundId);
+	//관리자 - 미지급 내역 다운로드
+	void downRebates(int rebateStatus, HttpServletRequest request, HttpServletResponse response) throws IOException;
+	//일정리뷰 코드 이용하여 trvId조회
+	int selectTrvId(int reviewId);
 
 }
