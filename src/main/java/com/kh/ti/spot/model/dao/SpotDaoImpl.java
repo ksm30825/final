@@ -187,4 +187,22 @@ public class SpotDaoImpl implements SpotDao {
 		return (ArrayList) sqlSession.selectList("Spot.selectCityListForAdmin");
 	}
 
+	//관리자 여행지 등록용 - 세령
+	@Override
+	public int insertSpotList(SqlSessionTemplate sqlSession, SpotList spotList) {
+		return sqlSession.insert("Spot.insertSpot", spotList);
+	}
+
+	//관리자 명소 사진 등록용 - 세령
+	@Override
+	public int insertSpotFile(SqlSessionTemplate sqlSession, SpotList spotList) {
+		return sqlSession.insert("Spot.insertSpotFile", spotList);
+	}
+
+	//spot_id 현재 시퀀스 조회 용 - 세령
+	@Override
+	public int getSpotCurrval(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("Spot.getSpotCurrval");
+	}
+
 }

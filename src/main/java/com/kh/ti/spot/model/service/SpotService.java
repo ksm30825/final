@@ -65,4 +65,6 @@ public interface SpotService {
 
 	ArrayList<City> selectCityListForAdmin();
 
+	int insertSpotList(SpotList spotList);
+
 }

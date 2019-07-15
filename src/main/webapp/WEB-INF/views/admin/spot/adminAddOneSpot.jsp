@@ -223,20 +223,17 @@
 			//국가가 선택이 되었을 때
 			$("#countrySelect").click(function(){
 				id = $("#countrySelect option:selected").val();	
-				console.log(id);
-				/* for(var i : )
-				for(var i = 0; i < '${ fn:length(cityList) }'; i++){
-					console.log("test");
-					if('${ cityList[i].countryId }' == id){
-						$("#cityArea").append("<option value='${ cityList[i].cityId}'>${cityList[i].cityNameKo}</option>");
+				
+				var option = "<option>도시명 </option>";
+				$("#cityArea").text(option);
+				<c:forEach var="city" items="${ cityList }">
+					if(id == '${ city.countryId }'){
+						option += '<option value="${ city.cityId }">${ city.cityNameKo }</option>';
 					}
-				} */
+			    </c:forEach>
+			    $("#cityArea").append(option);
 			});
 		});
-		
-		<c:forEach var="city" items="${ cityList }">
-			
-		</c:forEach>
 	</script>
 </body>
 </html>

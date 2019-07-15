@@ -3,6 +3,7 @@ package com.kh.ti.spot.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,6 +39,7 @@ public class TestSpotService {
 	SpotReviews spotReviews;
 	String continent;
 	int countryId;
+	SpotList spotListSet;
 	
 	@Before
 	public void setup() {
@@ -54,6 +56,17 @@ public class TestSpotService {
 		
 		continent = "아시아";
 		countryId = 2077456;
+		
+		spotListSet = new SpotList();
+		spotListSet.setSpotId(1);
+		spotListSet.setSpotNameKo("test");
+		spotListSet.setSpotNameEn("test");
+		spotListSet.setSpotAddress("test");
+		spotListSet.setSpotContent("test");
+		spotListSet.setCityId(1);
+		spotListSet.setPlcTypeId(1);
+		spotListSet.setFilePath("test");
+		
 		System.out.println("셋팅 완료!");
 	}
 	
@@ -74,7 +87,7 @@ public class TestSpotService {
 		log.info(msg);
 	}
 	
-//	@Ignore
+	@Ignore
 	@Test
 	public void selectMyLikeySpotListTest() {
 		ArrayList<HashMap> spotList = ss.selectMyLikeySpotList(20);
@@ -191,5 +204,12 @@ public class TestSpotService {
 		ArrayList<HashMap> countryList = ss.selectMyLikeyCountryList(20);
 		log.info("마이페이지 국가/도시 정보 조회 성공! : " + countryList.size());
 		log.info(countryList.toString());
+	}
+	
+	@Test
+	public void insertSpotListTest() {
+		System.out.println(spotListSet + "?");
+		int result = ss.insertSpotList(spotListSet);
+		log.info("명소를 성공적으로 삽입했습니다. SPOT_FILE, SPOTLIST 데이터베이스를 학인하세요 : " + result);
 	}
 }

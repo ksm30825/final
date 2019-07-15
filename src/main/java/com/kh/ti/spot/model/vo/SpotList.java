@@ -24,6 +24,7 @@ public class SpotList implements Serializable{
 	private int cityId;
 	private String spotStatus;
 	private int plcTypeId;
+	private String filePath;
 	
 	public SpotList() {
 		// TODO Auto-generated constructor stub
@@ -31,7 +32,7 @@ public class SpotList implements Serializable{
 
 	public SpotList(int spotId, String spotNameKo, String spotNameEn, String spotContent, String spotAddress,
 			String openingHours, String spotPhone, String webAddress, Date enrollDate, Date modifyDate, Date delDate,
-			Date recoveryDate, int spotCount, int cityId, String spotStatus, int plcTypeId) {
+			Date recoveryDate, int spotCount, int cityId, String spotStatus, int plcTypeId, String filePath) {
 		super();
 		this.spotId = spotId;
 		this.spotNameKo = spotNameKo;
@@ -49,6 +50,7 @@ public class SpotList implements Serializable{
 		this.cityId = cityId;
 		this.spotStatus = spotStatus;
 		this.plcTypeId = plcTypeId;
+		this.filePath = filePath;
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class SpotList implements Serializable{
 				+ ", spotPhone=" + spotPhone + ", webAddress=" + webAddress + ", enrollDate=" + enrollDate
 				+ ", modifyDate=" + modifyDate + ", delDate=" + delDate + ", recoveryDate=" + recoveryDate
 				+ ", spotCount=" + spotCount + ", cityId=" + cityId + ", spotStatus=" + spotStatus + ", plcTypeId="
-				+ plcTypeId + "]";
+				+ plcTypeId + ", filePath=" + filePath + "]";
 	}
 
 	public int getSpotId() {
@@ -188,7 +190,16 @@ public class SpotList implements Serializable{
 	public void setPlcTypeId(int plcTypeId) {
 		this.plcTypeId = plcTypeId;
 	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 	
 	
+
 	
 }
