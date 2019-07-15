@@ -48,32 +48,47 @@
 			</section>
 			<section class="section" id="cardSection">
 				<div class="columns">
-					
-					<div class="statisticsArea" align="center">
-						<div class="field has-addons" style="justify-content: flex-end; margin-top: 1em;" align="right">
-							<p class="control">
-								<span class="select">
-									<select id="monthSelect">
-										<option value="1">1월</option>
-										<option value="2">2월</option>
-										<option value="3">3월</option>
-										<option value="4">4월</option>
-										<option value="5">5월</option>
-										<option value="6">6월</option>
-										<option value="7">7월</option>
-										<option value="8">8월</option>
-										<option value="9">9월</option>
-										<option value="10">10월</option>
-										<option value="11">11월</option>
-										<option value="12">12월</option>
-									</select>
-								</span>
-							</p>
+				
+					<div class="statisticsArea" style="display: flex; width: 100%;">
+						
+						<input id="yearValue" value="${ rs.year }" style="display: none" type="number">
+						
+						<div class="statisticsArea" align="center">
+							<div class="field has-addons" style="justify-content: flex-end; margin-top: 1em;" align="right">
+								<p class="control">
+									<span class="select">
+										<select id="monthSelect">
+											<option value="1">1월</option>
+											<option value="2">2월</option>
+											<option value="3">3월</option>
+											<option value="4">4월</option>
+											<option value="5">5월</option>
+											<option value="6">6월</option>
+											<option value="7">7월</option>
+											<option value="8">8월</option>
+											<option value="9">9월</option>
+											<option value="10">10월</option>
+											<option value="11">11월</option>
+											<option value="12">12월</option>
+										</select>
+									</span>
+								</p>
+							</div>
+							
+							<span class="" style="justify-content: flex-start; display: inline-block;" onclick="yearCountry('left')">
+								<a><i class="title is-2 fas fa-caret-left"></i></a>
+							</span>
+							&nbsp;
+							<span class="title is-4" style="color: #424242;"><span id="monthText"></span>월 인기 여행나라 10</span>
+							&nbsp;
+							<span class="" style="justify-content: flex-start;" onclick="yearCountry('right')">
+								<a><i class="title is-2 fas fa-caret-right"></i></a>
+							</span>
+							
+							<div id="regions_div" style="width: 900px; height: 500px;"></div>
 						</div>
-						<p class="title is-4" style="color: #424242;">월별 인기 여행나라 10</p>
-						<div id="regions_div" style="width: 900px; height: 500px;"></div>
-					</div>
 					
+					</div>
 				</div>
 			</section>
 		</div>
@@ -112,6 +127,8 @@ $(function(){
     	month = '0' + month;
     }
     
+    $("#monthText").text(year + "년 " + month);
+    
     day = year + '-' + month;
     
     
@@ -140,33 +157,28 @@ $(function(){
     	type : "post",
     	success : function(list) {
     		
-    		console.log(list);
-    		
     		google.charts.setOnLoadCallback(drawRegionsMap);
     		
     		function drawRegionsMap() {
-	    		
-   			  var data = google.visualization.arrayToDataTable([
-   			    ['Country', '인기도'],
-   			    [list[0].countryNameEn, list[0].countryCount],
-	   			[list[1].countryNameEn, list[1].countryCount],
-	   			[list[2].countryNameEn, list[2].countryCount],
-	   			[list[3].countryNameEn, list[3].countryCount],
-	   			[list[4].countryNameEn, list[4].countryCount],
-	   			[list[5].countryNameEn, list[5].countryCount],
-	   			[list[6].countryNameEn, list[6].countryCount],
-	   			[list[7].countryNameEn, list[7].countryCount],
-	   			[list[8].countryNameEn, list[8].countryCount],
-	   			[list[9].countryNameEn, list[9].countryCount]
-   			  ]);
 
-   			  var options = {};
-
-   			  var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-
-   			  chart.draw(data, options);
-   			}
-    		
+    			var chatarray = new Array;
+    			var array = ['Country', '인기도'];
+    			chatarray.push(array);
+    			
+    			if(list.length > 0) {
+    				for (var i = 0 ; i < list.length ; i++){
+    					var chlist = [list[i].countryNameEn, list[i].countryCount];
+     					chatarray.push(chlist);
+     				}
+    			}
+    			
+    			var data = google.visualization.arrayToDataTable(chatarray);
+    			var options = {};
+    			var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+    			
+    			chart.draw(data, options);
+    			
+    		}
     		
     	},
     	error : function(data) {
@@ -184,6 +196,7 @@ $("#monthSelect").change(function() {
 	if(month < 10) {
     	month = '0' + month;
     }
+	$("#monthText").text(year + "년 " + month);
 	day = year + '-' + month;
 	
 	console.log(day);
@@ -194,50 +207,28 @@ $("#monthSelect").change(function() {
     	type : "post",
     	success : function(list) {
     		
+    		google.charts.setOnLoadCallback(drawRegionsMap);
+    		
+    		function drawRegionsMap() {
+    			
+			var chatarray = new Array;
+			var array = ['Country', '인기도'];
+			
+			chatarray.push(array);
+			
 			if(list.length > 0) {
-				google.charts.setOnLoadCallback(drawRegionsMap);
-	    		
-	    		function drawRegionsMap() {
-		    		
-	   			  var data = google.visualization.arrayToDataTable([
-	   			    ['Country', '인기도'],
-	   			    [list[0].countryNameEn, list[0].countryCount],
-		   			[list[1].countryNameEn, list[1].countryCount],
-		   			[list[2].countryNameEn, list[2].countryCount],
-		   			[list[3].countryNameEn, list[3].countryCount],
-		   			[list[4].countryNameEn, list[4].countryCount],
-		   			[list[5].countryNameEn, list[5].countryCount],
-		   			[list[6].countryNameEn, list[6].countryCount],
-		   			[list[7].countryNameEn, list[7].countryCount],
-		   			[list[8].countryNameEn, list[8].countryCount],
-		   			[list[9].countryNameEn, list[9].countryCount]
-	   			  ]);
-
-	   			  var options = {};
-
-	   			  var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-
-	   			  chart.draw(data, options);
-	   			}
-			}else {
-				google.charts.setOnLoadCallback(drawRegionsMap);
-	    		
-	    		function drawRegionsMap() {
-		    		
-	   			  var data = google.visualization.arrayToDataTable([
-	   			    ['Country', '인기도']
-	   			  ]);
-
-	   			  var options = {};
-
-	   			  var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-
-	   			  chart.draw(data, options);
-	   			}
-				
+				for (var i = 0 ; i < list.length ; i++){
+					var chlist = [list[i].countryNameEn, list[i].countryCount];
+					chatarray.push(chlist);
+				}
 			}
-    		
-    		
+			
+			var data = google.visualization.arrayToDataTable(chatarray);
+			var options = {};
+			var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+			
+			chart.draw(data, options);
+    		}
     	},
     	error : function(data) {
     		alert("접속에러");
@@ -245,7 +236,49 @@ $("#monthSelect").change(function() {
     });
 });
 
-
+function yearCountry(text) {
+	var today = new Date();
+	var todayYear = today.getFullYear();
+	
+	var searchYear = year;
+	
+	console.log(searchYear, text);
+	console.log(todayYear);
+	
+	if(text == 'right' && searchYear == todayYear) {
+		alert("가장 최근 년도입니다.");
+	}else {
+		if(text == 'left') {
+			searchYear = year - 1;
+			console.log(searchYear);
+		}else {
+			searchYear = Number(year) + 1;
+			console.log(searchYear);
+		}
+		
+		alert("년도별 검색 하는중");
+		/* $.ajax({
+			url : "",
+			data : {year : searchYear},
+			type : "post",
+			success : function(list) {
+				console.log(list);
+				
+				if(list.length > null) {
+					year = searchYear;
+					$("#yearValue").val(year);
+				}else {
+					$("#yearValue").val(searchYear);
+				}
+				
+				
+			},
+			error : function(data) {
+				alert("접속에러");
+			}
+		}); */
+	}
+}
 </script>
 	
 </body>

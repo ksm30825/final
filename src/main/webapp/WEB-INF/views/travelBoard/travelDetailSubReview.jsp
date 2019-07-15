@@ -212,7 +212,7 @@
 
 	<!-- 리뷰신고 모달 -->
 	<section class="section" id="reviewPanaltySection" >
-		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" id="reviewPanelty" onSubmit="return false;">
+		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" id="reviewPanelty">
 		<div class="modal" id="reviewPanaltyModal">
 		    <div class="modal-background"></div>
 		    <div class="modal-card">
@@ -530,11 +530,11 @@
 		}
 		if(penaltyContent.length > 0 && file != '신고용 사진을 첨부해주세요.'){
 			check = true;
-			if(check) {
-				$("#reviewPanelty").submit();
-			}
 		}
 		
+		if(check) {
+			$("#reviewPanelty").submit();
+		}
 	});
 </script>
 

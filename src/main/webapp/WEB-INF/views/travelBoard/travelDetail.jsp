@@ -560,7 +560,7 @@
 	
 	<!-- 일정신고 모달 -->
 	<section class="section" id="travelPanaltySection" >
-		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" id="trvPanelty" onSubmit="return false;">
+		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" id="trvPanelty" >
 		<div class="modal" id="travelPanaltyModal">
 		    <div class="modal-background"></div>
 		    <div class="modal-card">
@@ -573,8 +573,7 @@
 				<section class="modal-card-body" align="center">
 					<input type="hidden" value="${ loginUser.memberId }" name="complainantId">
 					<input value="일정글" name="list" style="display: none;">
-					<input type="hidden" value="${ loginUser.memberId }" name="listType" style="display: none;">
-					<input value="${ detailTb.trvId }" id="trvId" style="display: none;">
+					<input type="hidden" value="${ detailTb.trvId }" name="listType" style="display: none;">
 					<p>해당 일정글을 신고하시겠습니까?<br>
 					허위 신고 시 불이익이 있을 수 있습니다.</p>
 					<hr style="border: 1px solid lightgray; margin-top: 0.5em;">
@@ -687,10 +686,13 @@
 		}
 		if(penaltyContent.length > 0 && file != '신고용 사진을 첨부해주세요.'){
 			check = true;
-			if(check) {
-				$("#trvPanelty").submit();
-			}
 		}
+		
+		if(check) {
+			$("#trvPanelty").submit();
+		}
+		
+		console.log(check);
 		
 	});
 	
