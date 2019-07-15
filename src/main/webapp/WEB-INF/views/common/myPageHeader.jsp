@@ -114,7 +114,7 @@
 	        </a>
 	      </li>
 	      <li>
-	        <a href="pointMainView.po?currentPage=1" class="myPoint">
+	        <a href="pointMainView.po?payCurrentPage=1&reserveCurrentPage=1&usePointCurrentPage=1" class="myPoint">
 	          <span class="icon"><i class="fas fa-coins"></i></span>
 	          <span>포인트/수익금</span>
 	        </a>

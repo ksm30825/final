@@ -59,7 +59,10 @@ public class PointController {
 	
 	//포인트 전체 페이지
 	@RequestMapping("/pointMainView.po")
-	public String selectPointMainView(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
+	public String selectPointMainView(Model model , HttpServletRequest request, 
+			@RequestParam("payCurrentPage") int payCurrentPage, 
+			@RequestParam("reserveCurrentPage") int reserveCurrentPage, 
+			@RequestParam("usePointCurrentPage") int usePointCurrentPage) {
 		//포인트충전, 지급, 사용 내역 테이블 전체 조회
 		//페이징 처리도 전부
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
@@ -69,7 +72,7 @@ public class PointController {
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		int chargeListCount = ps.getChargeListCount(charge);
-		int chargeCurrentPage = currentPage;
+		int chargeCurrentPage = payCurrentPage;
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
 		model.addAttribute("chPayList", chPayList);
@@ -79,7 +82,7 @@ public class PointController {
 		ReservePoint reserve = new ReservePoint();
 		reserve.setMemberId(memberId);
 		int receiveListCount = ps.getReceiveListCount(reserve);
-		int receiveCurrentPage = currentPage;
+		int receiveCurrentPage = reserveCurrentPage;
 		PageInfo rePi = Pagination.getPageInfo(receiveCurrentPage, receiveListCount);
 		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
 		model.addAttribute("rePayList", rePayList);
@@ -89,7 +92,7 @@ public class PointController {
 		UsePoint use = new UsePoint();
 		use.setMemberId(memberId);
 		int useListCount = ps.getUseListCount(use);
-		int useCurrentPage = currentPage;
+		int useCurrentPage = usePointCurrentPage;
 		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
 		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
 		model.addAttribute("usPayList", usPayList);
@@ -100,29 +103,30 @@ public class PointController {
 	
 	
 	
-	//포인트 충전 페이징//-------------------------------------------------------------------------------------------
-	@RequestMapping("/paymentMain.po")
-	public String selectPaymentMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
-		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		int memberId = loginUser.getMemberId();
-		
-		//포인트 충전에 관한 것들 조회
-		Payment charge = new Payment();
-		charge.setMemberId(memberId);
-		int chargeListCount = ps.getChargeListCount(charge);
-		int chargeCurrentPage = currentPage;
-		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
-		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
-		model.addAttribute("chPayList", chPayList);
-		model.addAttribute("chPi",chPi);
-		
-		return "point/pointMain";		
-	}
+//	//포인트 충전 페이징//-------------------------------------------------------------------------------------------
+//	@RequestMapping("/paymentMain.po")
+//	public String selectPaymentMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
+//		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+//		int memberId = loginUser.getMemberId();
+//		
+//		//포인트 충전에 관한 것들 조회
+//		Payment charge = new Payment();
+//		charge.setMemberId(memberId);
+//		int chargeListCount = ps.getChargeListCount(charge);
+//		int chargeCurrentPage = currentPage;
+//		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
+//		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
+//		model.addAttribute("chPayList", chPayList);
+//		model.addAttribute("chPi",chPi);
+//		
+//		return "point/pointMain";		
+//	}
 	
 	//포인트 충전 월 검색 내역 테이블--수민
 	@ResponseBody
 	@RequestMapping("/oneMonthPay.po")
-	public Object searchOneMonthPay(String month, ModelAndView mv, HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
+	public ResponseEntity searchOneMonthPay(String month, ModelAndView mv, HttpServletRequest request, 
+			@RequestParam("payCurrentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		Payment charge = new Payment();
@@ -136,33 +140,31 @@ public class PointController {
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("chPayList", chPayList);
 		hmap.put("chPi", chPi);
-		mv.addObject("hmap", hmap);
 		
-		mv.setViewName("jsonView");
 		
-		return mv.getModel();
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	
-	//포인트 충전 월검색 페이징//-------------------------------------------------------------------------------------------
-	@RequestMapping("/oneMonthPayPaging.po")
-	public String searchOneMonthPayPaging(String month, Model model, HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
-		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		int memberId = loginUser.getMemberId();
-		Payment charge = new Payment();
-		charge.setMemberId(memberId);
-		charge.setMonth(month);
-		
-		int chargeListCount = ps.getChargeListCount(charge); 
-		int chargeCurrentPage = currentPage; 
-		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
-		ArrayList chPayList = ps.selectChargeList(chPi, charge);
-
-		model.addAttribute("chPayList", chPayList);
-		model.addAttribute("chPi", chPi);
-		
-		return "point/pointMain";
-	}
-	
+//	//포인트 충전 월검색 페이징//-------------------------------------------------------------------------------------------
+//	@RequestMapping("/oneMonthPayPaging.po")
+//	public String searchOneMonthPayPaging(String month, Model model, HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
+//		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+//		int memberId = loginUser.getMemberId();
+//		Payment charge = new Payment();
+//		charge.setMemberId(memberId);
+//		charge.setMonth(month);
+//		
+//		int chargeListCount = ps.getChargeListCount(charge); 
+//		int chargeCurrentPage = currentPage; 
+//		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
+//		ArrayList chPayList = ps.selectChargeList(chPi, charge);
+//
+//		model.addAttribute("chPayList", chPayList);
+//		model.addAttribute("chPi", chPi);
+//		
+//		return "point/pointMain";
+//	}
+//	
 	//포인트 충전하는 페이지로 이동--수민
 	@RequestMapping("/toPayView.po")
 	public String toPayView() {
@@ -207,28 +209,29 @@ public class PointController {
 		}
 	}
 	
-	//포인트 지급 페이징
-	@RequestMapping("/reserveMain.po")
-	public String selectReserveMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
-		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		int memberId = loginUser.getMemberId();
-		
-		//포인트 충전에 관한 것들 조회
-		ReservePoint reserve = new ReservePoint();
-		reserve.setMemberId(memberId);
-		int reserveListCount = ps.getReceiveListCount(reserve);
-		int reserveCurrentPage = currentPage;
-		PageInfo rePi = Pagination.getPageInfo(reserveCurrentPage, reserveListCount);
-		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
-		model.addAttribute("rePayList", rePayList);
-		model.addAttribute("rePayList",rePayList);
-		
-		return "point/pointMain";		
-	}
+//	//포인트 지급 페이징
+//	@RequestMapping("/reserveMain.po")
+//	public String selectReserveMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
+//		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+//		int memberId = loginUser.getMemberId();
+//		
+//		//포인트 충전에 관한 것들 조회
+//		ReservePoint reserve = new ReservePoint();
+//		reserve.setMemberId(memberId);
+//		int reserveListCount = ps.getReceiveListCount(reserve);
+//		int reserveCurrentPage = currentPage;
+//		PageInfo rePi = Pagination.getPageInfo(reserveCurrentPage, reserveListCount);
+//		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
+//		model.addAttribute("rePayList", rePayList);
+//		model.addAttribute("rePayList",rePayList);
+//		
+//		return "point/pointMain";		
+//	}
 	//포인트 지급 월 검색 내역 테이블--수민
 	@ResponseBody
 	@RequestMapping("/oneMonthRPoint.po")
-	public Object searchOneMonthRPoint(String month, ModelAndView mv, HttpServletRequest request) {
+	public ResponseEntity searchOneMonthRPoint(String month, ModelAndView mv, HttpServletRequest request, 
+			@RequestParam("reserveCurrentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		
@@ -237,18 +240,15 @@ public class PointController {
 		reserve.setMonth(month);
 		
 		int reserveListCount = ps.getReceiveListCount(reserve); 
-		int reserveCurrentPage = 1; 
+		int reserveCurrentPage = currentPage; 
 		PageInfo rePi = Pagination.getPageInfo(reserveCurrentPage, reserveListCount);
 		ArrayList rePayList = ps.selectReceiveList(rePi, reserve);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("rePayList", rePayList);
 		hmap.put("rePi", rePi);
-		mv.addObject("hmap", hmap);
 		
-		mv.setViewName("jsonView");
-		
-		return mv.getModel();
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	
 	//포인트 지급 게시글 확인하러 가기버튼 눌렀을때
@@ -323,28 +323,28 @@ public class PointController {
 	}
 	
 	
-	//포인트 사용 페이징
-	@RequestMapping("/useMain.po")
-	public String selectUseMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
-		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		int memberId = loginUser.getMemberId();
-		
-		//포인트 충전에 관한 것들 조회
-		UsePoint use = new UsePoint();
-		use.setMemberId(memberId);
-		int useListCount = ps.getUseListCount(use);
-		int useCurrentPage = currentPage;
-		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
-		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
-		model.addAttribute("usPayList", usPayList);
-		model.addAttribute("usPi",usPi);
-		
-		return "point/pointMain";		
-	}
+//	//포인트 사용 페이징
+//	@RequestMapping("/useMain.po")
+//	public String selectUseMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
+//		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
+//		int memberId = loginUser.getMemberId();
+//		
+//		//포인트 충전에 관한 것들 조회
+//		UsePoint use = new UsePoint();
+//		use.setMemberId(memberId);
+//		int useListCount = ps.getUseListCount(use);
+//		int useCurrentPage = currentPage;
+//		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
+//		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
+//		model.addAttribute("usPayList", usPayList);
+//		model.addAttribute("usPi",usPi);
+//		
+//		return "point/pointMain";		
+//	}
 	//포인트 사용 월 검색 내역 테이블--수민
 	@ResponseBody
 	@RequestMapping("/oneMonthUPoint.po")
-	public Object searchOneMonthUPoint(String month, ModelAndView mv, HttpServletRequest request) {
+	public ResponseEntity searchOneMonthUPoint(String month, ModelAndView mv, HttpServletRequest request, @RequestParam("useCurrentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		
@@ -353,18 +353,15 @@ public class PointController {
 		use.setMonth(month);
 		
 		int useListCount = ps.getUseListCount(use); 
-		int useCurrentPage = 1; 
+		int useCurrentPage = currentPage; 
 		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
 		ArrayList usPayList = ps.selectUseList(usPi, use);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("usPayList", usPayList);
 		hmap.put("usPi", usPi);
-		mv.addObject("hmap", hmap);
 		
-		mv.setViewName("jsonView");
-		
-		return mv.getModel();
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	
 	//포인트 환불 (사용자가 '환불신청' 눌렀을 때 ->환불내역테이블에 insert된다!)--수민

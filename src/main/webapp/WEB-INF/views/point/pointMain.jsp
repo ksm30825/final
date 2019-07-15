@@ -130,10 +130,10 @@
 										</tr>
 								    </thead>
 								    <tbody id="chargeTBody">
-										<c:forEach var="ch" items="${ chPayList }">
+										<c:forEach var="ch" items="${ chPayList }" varStatus ="index">
 											<tr>
 												<td>
-													<c:out value="${ ch.paymentId }"/>
+													<c:out value="${index.count} "/>
 												</td>
 												<td>
 													<span><fmt:formatNumber value="${ ch.payAmount }" groupingUsed="true"/>P</span>
@@ -155,10 +155,12 @@
 										<li><button class="pagingBtn" style="border-color: gray;"> < </button></li>
 									</c:if>
 									<c:if test="${ chPi.currentPage > 1 }">
-										<c:url var="mListBack" value="paymentMain.po">
-											<c:param name="currentPage" value="${ chPi.currentPage - 1 }"/>
+										<c:url var="mListBack" value="pointMainView.po">
+											<c:param name="payCurrentPage" value="${ chPi.currentPage - 1 }"/>
+											<c:param name="reserveCurrentPage" value="${ rePi.currentPage}"/>
+											<c:param name="usePointCurrentPage" value="${ usPi.currentPage}"/>
 										</c:url>
-										<li><button class="pagingBtn" onclick="location.href='z'"> < </button></li>
+										<li><button class="pagingBtn" onclick="location.href='${mListBack}'"> < </button></li>
 									</c:if><!-- end 이전 -->
 									<!-- page number -->
 									<c:forEach var="p" begin="${ chPi.startPage }" end="${ chPi.endPage }">
@@ -166,8 +168,10 @@
 											<li><button class="pagingBtn" style="border-color: gray;"> ${ p } </button></li>
 										</c:if>
 										<c:if test="${ p ne chPi.currentPage }">
-											<c:url var="mListCheck" value="paymentMain.po">
-												<c:param name="currentPage" value="${ p }"/>
+											<c:url var="mListCheck" value="pointMainView.po">
+												<c:param name="payCurrentPage" value="${ p }"/>
+												<c:param name="reserveCurrentPage" value="${ rePi.currentPage}"/>
+												<c:param name="usePointCurrentPage" value="${ usPi.currentPage}"/>
 											</c:url>
 											<li><button class="pagingBtn" onclick="location.href='${ mListCheck }'"> ${ p } </button></li>
 										</c:if>
@@ -177,8 +181,10 @@
 										<li><button class="pagingBtn" style="border-color: gray;"> > </button></li>
 									</c:if>
 									<c:if test="${ chPi.currentPage < chPi.maxPage }">
-										<c:url var="mListEnd" value="paymentMain.po">
-											<c:param name="currentPage" value="${ chPi.currentPage + 1 }"/>
+										<c:url var="mListEnd" value="pointMainView.po">
+											<c:param name="payCurrentPage" value="${ chPi.currentPage + 1 }"/>
+											<c:param name="reserveCurrentPage" value="${ rePi.currentPage}"/>
+											<c:param name="usePointCurrentPage" value="${ usPi.currentPage}"/>
 										</c:url>
 										<li><button class="pagingBtn" onclick="location.href='${ mListEnd }'"> > </button></li>
 									</c:if> <!-- end 다음 -->
@@ -221,10 +227,10 @@
 										</tr>
 								    </thead>
 								    <tbody id="receiveTBody">
-										<c:forEach var="re" items="${ rePayList }">
+										<c:forEach var="re" items="${ rePayList }" varStatus ="index">
 											<tr>
 												<td>
-													<c:out value="${ re.pointId }"/>
+													<c:out value="${index.count} "/>
 												</td>
 												<td>
 													<span><fmt:formatNumber value="${ re.reservePoint }" groupingUsed="true"/>P</span>
@@ -261,8 +267,10 @@
 										<li><button class="pagingBtn" style="border-color: gray;"> < </button></li>
 									</c:if>
 									<c:if test="${ rePi.currentPage > 1 }">
-										<c:url var="reListBack" value="reserveMain.po">
-											<c:param name="currentPage" value="${ rePi.currentPage - 1 }"/>
+										<c:url var="reListBack" value="pointMainView.po">
+											<c:param name="payCurrentPage" value="${ chPi.currentPage}"/>
+											<c:param name="reserveCurrentPage" value="${ rePi.currentPage - 1}"/>
+											<c:param name="usePointCurrentPage" value="${ usPi.currentPage}"/>
 										</c:url>
 										<li><button class="pagingBtn" onclick="location.href='${ reListBack }'"> < </button></li>
 									</c:if><!-- end 이전 -->
@@ -272,8 +280,10 @@
 											<li><button class="pagingBtn" style="border-color: gray;"> ${ p } </button></li>
 										</c:if>
 										<c:if test="${ p ne rePi.currentPage }">
-											<c:url var="reListCheck" value="reserveMain.po">
-												<c:param name="currentPage" value="${ p }"/>
+											<c:url var="reListCheck" value="pointMainView.po">
+												<c:param name="payCurrentPage" value="${ chPi.currentPage}"/>
+												<c:param name="reserveCurrentPage" value="${ p }"/>
+												<c:param name="usePointCurrentPage" value="${ usPi.currentPage}"/>
 											</c:url>
 											<li><button class="pagingBtn" onclick="location.href='${ reListCheck }'"> ${ p } </button></li>
 										</c:if>
@@ -283,8 +293,10 @@
 										<li><button class="pagingBtn" style="border-color: gray;"> > </button></li>
 									</c:if>
 									<c:if test="${ rePi.currentPage < rePi.maxPage }">
-										<c:url var="reListEnd" value="reserveMain.po">
-											<c:param name="currentPage" value="${ rePi.currentPage + 1 }"/>
+										<c:url var="reListEnd" value="pointMainView.po">
+											<c:param name="payCurrentPage" value="${ chPi.currentPage}"/>
+											<c:param name="reserveCurrentPage" value="${ rePi.currentPage + 1 }"/>
+											<c:param name="usePointCurrentPage" value="${ usPi.currentPage}"/>
 										</c:url>
 										<li><button class="pagingBtn" onclick="location.href='${ reListEnd }'"> > </button></li>
 									</c:if> <!-- end 다음 -->
@@ -328,9 +340,11 @@
 								      </tr>
 								    </thead>
 								    <tbody id="useTBody">
-								    	<c:forEach var="us" items="${ usPayList }">
+								    	<c:forEach var="us" items="${ usPayList }" varStatus ="index">
 											<tr>
-												<td><c:out value="${ us.pointId }"/></td>
+												<td>
+													<c:out value="${index.count} "/>
+												</td>
 												<td>
 													<span><fmt:formatNumber value="${ us.usePoint }" groupingUsed="true"/>P</span>
 												</td>
@@ -348,7 +362,6 @@
 												</td>
 												<td>
 													<c:if test="${ us.refund.refundStatus eq null }">
-														<c:out value="${ us.refund.refundStatus }"/>
 														<a class="button is-primary" id="toRefund" data-target="#myModal"style="height:20px;" data-tooltip="환불 신청하기"> 환불신청 </a>
 													</c:if>
 													<c:if test="${ us.refund.refundStatus ne null }">
@@ -378,8 +391,10 @@
 										<li><button class="pagingBtn" style="border-color: gray;"> < </button></li>
 									</c:if>
 									<c:if test="${ usPi.currentPage > 1 }">
-										<c:url var="usListBack" value="useMain.po">
-											<c:param name="currentPage" value="${ usPi.currentPage - 1 }"/>
+										<c:url var="usListBack" value="pointMainView.po">
+											<c:param name="payCurrentPage" value="${ chPi.currentPage}"/>
+											<c:param name="reserveCurrentPage" value="${ rePi.currentPage}"/>
+											<c:param name="usePointCurrentPage" value="${ usPi.currentPage - 1 }"/>
 										</c:url>
 										<li><button class="pagingBtn" onclick="location.href='${ usListBack }'"> < </button></li>
 									</c:if><!-- end 이전 -->
@@ -389,8 +404,10 @@
 											<li><button class="pagingBtn" style="border-color: gray;"> ${ p } </button></li>
 										</c:if>
 										<c:if test="${ p ne usPi.currentPage }">
-											<c:url var="usListCheck" value="useMain.po">
-												<c:param name="currentPage" value="${ p }"/>
+											<c:url var="usListCheck" value="pointMainView.po">
+												<c:param name="payCurrentPage" value="${ chPi.currentPage}"/>
+												<c:param name="reserveCurrentPage" value="${ rePi.currentPage}"/>
+												<c:param name="usePointCurrentPage" value="${ p }"/>
 											</c:url>
 											<li><button class="pagingBtn" onclick="location.href='${ usListCheck }'"> ${ p } </button></li>
 										</c:if>
@@ -400,8 +417,10 @@
 										<li><button class="pagingBtn" style="border-color: gray;"> > </button></li>
 									</c:if>
 									<c:if test="${ usPi.currentPage < usPi.maxPage }">
-										<c:url var="usListEnd" value="useMain.po">
-											<c:param name="currentPage" value="${ usPi.currentPage + 1 }"/>
+										<c:url var="usListEnd" value="pointMainView.po">
+											<c:param name="payCurrentPage" value="${ chPi.currentPage}"/>
+											<c:param name="reserveCurrentPage" value="${ rePi.currentPage}"/>
+											<c:param name="usePointCurrentPage" value="${ usPi.currentPage + 1 }"/>
 										</c:url>
 										<li><button class="pagingBtn" onclick="location.href='${ usListEnd }'"> > </button></li>
 									</c:if> <!-- end 다음 -->
@@ -484,15 +503,14 @@
 				var month = $(this).children('option:selected').val();
 				if(month!='defaultOption'){
 					//console.log("month : " + month );
-					var currentPage = 1;
+					var payCurrentPage = 1;
 					$.ajax({
 						url:"oneMonthPay.po",
 						type:"post",
-						data:{month:month, currentPage:currentPage},
+						data:{month:month, payCurrentPage:payCurrentPage},
 						success:function(data){
 							//console.log(data);
-							makeChargeTable(data.hmap.chPayList, data.hmap.chPi, month);
-							chargePaging(data.hmap.chPi, month);
+							makeChargeTable(data.chPayList, data.chPi, month);
 						},
 						error:function(data){
 							console.log('error');
@@ -503,14 +521,16 @@
 			//포인트 지급 월 검색시
 			$("#receiveSelect").change(function(){
 				var month = $(this).children('option:selected').val();
+				var reserveCurrentPage = 1;
 				if(month!='defaultOption'){
 					//console.log("month : " + month );
 					$.ajax({
 						url:"oneMonthRPoint.po",
 						type:"post",
-						data:{month:month},
+						data:{month:month, reserveCurrentPage:reserveCurrentPage},
 						success:function(data){
-							makeReserveTable(data);
+							//console.log(data);
+							makeReserveTable(data.rePayList, data.rePi, month);
 						},
 						error:function(data){
 							console.log('error');
@@ -521,14 +541,16 @@
 			//포인트 사용 월 검색시
 			$("#useSelect").change(function(){
 				var month = $(this).children('option:selected').val();
+				var useCurrentPage = 1;
 				if(month!='defaultOption'){
 					//console.log("month : " + month );
 					$.ajax({
 						url:"oneMonthUPoint.po",
 						type:"post",
-						data:{month:month},
+						data:{month:month, useCurrentPage:useCurrentPage},
 						success:function(data){
-							makeUseTable(data);
+							console.log(data);
+							makeUseTable(data.usPayList, data.usPi, month);
 						},
 						error:function(data){
 							console.log('error');
@@ -538,14 +560,15 @@
 			});
 		});
 		//포인트 충전 테이블
-		function makeChargeTable(chPayList, chPi, month){
+		function makeChargeTable(List, Pi, month){
 			//console.log(data);
 			$("#chargeTBody").empty();
-			var len = chPayList.length;
+			var len = List.length;
+			var condition = 1;
 			for(var i=0 ; i<len ; i++){
-				var list = chPayList[i];
+				var list = List[i];
 				//console.log(list);
-				var pi = chPi;
+				var pi = Pi;
 				//console.log(pi);
 				
 				var $listTr = $("<tr>");
@@ -570,57 +593,114 @@
 				
 				$("#chargeTBody").append($listTr);
 			}
-			chargePaging(chPi, month);
+			chargePaging(Pi, month,condition);
 		};
 		//포인트 충전 테이블 페이징
-		function chargePaging(chPi, month){
-			var $page = $(".chargePagingArea");
-			
-			var pi = chPi;
+		function chargePaging(Pi, month, condition){
+			var $payPage = $(".chargePagingArea");
+			var $reservePage = $(".receivePagingArea");
+			var $usePage = $(".usePagingArea");
+			console.log(Pi)
+			var pi = Pi;
 			var currentPage = pi.currentPage;
 			var limit = pi.limit;
 			var maxPage = pi.maxPage;
 			var startPage = pi.startPage;
 			var endPage = pi.endPage;
 			//console.log(pi);
-			
+			console.log(condition);
 			var startRow = (currentPage - 1) * limit + 1;
 			var endRow = startRow + limit - 1;	
 			var str;
-			$page.empty();
+			if(condition == 1){
+				$payPage.empty();
+			}else if(condition ==2){
+				$reservePage.empty();
+			}else if(condition == 3){
+				$usePage.empty();
+			}
 			//console.log(chPayList);
 			if(currentPage <= 1){
-				$page.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
+				if(condition == 1){
+					$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
+				}else if(condition == 2){
+					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
+					$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
+				}else if(condition == 3){
+					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
+					$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
+				}
 			}else{
 				var cp = currentPage-1;
-				str = "location.href=oneMonthPayPaging.po?currentPage="+cp+"&month="+month;
-				$page.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
+				if(condition == 1){
+					str = "location.href=oneMonthPay.po?payCurrentPage="+cp+"&month="+month;
+					$payPage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
+				}else if(condition == 2){
+					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
+					$reservePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
+				}else if(condition == 3){
+					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
+					$usePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
+				}
 			}
 			for(var p = startPage ; p<endPage ; p++){
 				if(p == currentPage){
-					$page.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					if(condition == 1){
+						$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					}else if(condition == 2){
+						str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
+						$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					}else if(condition == 3){
+						str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
+						$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					}
 				}else{
-					str = "location.href=oneMonthPayPaging.po?currentPage="+p+"&month="+month;
-					$page.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					if(condition == 1){
+						str = "location.href=oneMonthPay.po?payCurrentPage="+p+"&month="+month;
+						$payPage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					}else if(condition == 2){
+						str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+p+"&month="+month;
+						$reservePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					}else if(condition == 3){
+						str = "location.href=oneMonthUPoint.po?useCurrentPage="+p+"&month="+month;
+						$usePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+					}
 				}
 			} 
 			if(currentPage >= maxPage){
-				$page.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				if(condition == 1){
+					$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				}else if(condition == 2){
+					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
+					$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				}else if(condition == 3){
+					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
+					$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				}
 			}else{
 				var cp = currentPage+1;
-				str = "location.href=oneMonthPayPaging.po?currentPage="+cp+"&month="+month;
-				$page.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				if(condition == 1){
+					str = "location.href=oneMonthPay.po?payCurrentPage="+cp+"&month="+month;
+					$payPage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				}else if(condition == 2){
+					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
+					$reservePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				}else if(condition == 3){
+					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
+					$usePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+				}
 			}
 			
 		};
-		//포인트 지급 테이블 만들기
-		function makeReserveTable(data){
+		//포인트 적립 테이블 만들기
+		function makeReserveTable(rePayList, rePi, month){
 			$("#receiveTBody").empty();			
-			var len = data.hmap.rePayList.length;
+			var len = rePayList.length;
+			var condition=2;
 			for(var i=0 ; i<len ; i++){
-				var list = data.hmap.rePayList[i];
+				var list = rePayList[i];
 				//console.log(list);
-				var pi = data.hmap.rePi;
+				var pi = rePi;
 				//console.log(pi);
 				
 				var $listTr = $("<tr>");
@@ -652,7 +732,7 @@
 					$reserveTypeIn = $('<input type="text" style="display:none;">');
 					$reserveTypeIn.val(list.trvId);
 					
-					$reserveTypeA = $('<button id="reserveLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">일정작성</button>');
+					$reserveTypeA = $('<button id="reserveLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;background:#2068ee;" data-tooltip="해당글 보러가기" target="_blank">일정작성</button>');
 					$reserveMidIn = $('<input type="text" style="display:none;">');
 					$reserveMidIn.val(mid);
 					
@@ -677,7 +757,7 @@
 					$reserveTypeIn = $('<input type="text" style="display:none;">');
 					$reserveTypeIn.val(list.reviewId);
 					
-					$reserveTypeA = $('<button id="reserveLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">일정리뷰</button>');
+					$reserveTypeA = $('<button id="reserveLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;background:#f235cc;" data-tooltip="해당글 보러가기" target="_blank">일정리뷰</button>');
 					$reserveMidIn = $('<input type="text" style="display:none;">');
 					$reserveMidIn.val(mid);
 					
@@ -702,7 +782,7 @@
 					$reserveTypeIn = $('<input type="text" style="display:none;">');
 					$reserveTypeIn.val(list.spotReviewId);
 					
-					$reserveTypeA = $('<button id="reserveLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">명소리뷰</button>');
+					$reserveTypeA = $('<button id="reserveLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;background:#b420ee;" data-tooltip="해당글 보러가기" target="_blank">명소리뷰</button>');
 					$reserveMidIn = $('<input type="text" style="display:none;">');
 					$reserveMidIn.val(mid);
 					
@@ -721,15 +801,17 @@
 				$listTr.append($reserveTypeTd);
 				$("#receiveTBody").append($listTr);
 			}
+			chargePaging(rePi, month, condition);
 		};
 		//포인트 사용 테이블 만들기
-		function makeUseTable(data){
+		function makeUseTable(usPayList, usPi, month){
 			$("#useTBody").empty();	
 			//console.log(data);
-			var len = data.hmap.usPayList.length;
+			var len = usPayList.length;
+			var condition = 3;
 			for(var i=0 ; i<len ; i++){
-				var list = data.hmap.usPayList[i];
-				var pi = data.hmap.usPi;
+				var list = usPayList[i];
+				var pi = usPi;
 				
 				var $listTr = $("<tr>");
 				
@@ -760,7 +842,7 @@
 					$useTypeIn = $('<input type="text" style="display:none;">');
 					$useTypeIn.val(list.trvId);
 					
-					$useTypeA = $('<button id="useLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">일정구매</button>');
+					$useTypeA = $('<button id="useLink" class="button is-info" data-mid='+mid+' data-bid='+bid+' style="height:20px;background:#2068ee;" data-tooltip="해당글 보러가기" target="_blank">일정구매</button>');
 					$useMidIn = $('<input type="text" style="display:none;">');
 					$useMidIn.val(mid);
 					
@@ -781,7 +863,7 @@
 					$useTypeIn = $('<input type="text" style="display:none;">');
 					$useTypeIn.val(list.requestId);
 					
-					$useTypeA = $('<button id="requestLink" class="button is-primary" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">설계구매</button>');
+					$useTypeA = $('<button id="requestLink" class="button is-success" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">설계구매</button>');
 					$useMidIn = $('<input type="text" style="display:none;">');
 					$useMidIn.val(mid);
 					
@@ -795,9 +877,18 @@
 					$useTypeTd.append($useTypeA);
 				}
 				var $refundStatusTd = $("<td>");
-				var $refundStatusA = $('<button class="button is-primary" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불신청 </button>');
+				var $refundStatusA;
+				if(list.refund.refundStatus == 10){//환불대기
+					$refundStatusA = $('<button class="button is-info" disabled="true" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불대기 </button>');
+				}else if(list.refund.refundStatus == 20){//환불승인
+					$refundStatusA = $('<button class="button is-success" disabled="true" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불승인 </button>');
+				}else if(list.refund.refundStatus == 30){//환불거절
+					$refundStatusA = $('<button class="button is-danger" disabled="true" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불거절 </button>');
+				}else{
+					$refundStatusA = $('<button class="button is-primary" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불신청 </button>');
+				}
 				$refundStatusTd.append($refundStatusA);
-				
+
 				$listTr.append($noTd);
 				$listTr.append($usePointTd);
 				$listTr.append($useDate);
@@ -806,6 +897,7 @@
 				
 				$("#useTBody").append($listTr);
 			}
+			chargePaging(usPi, month, condition);
 		};
 		//생성된 지급 테이블의 이벤트 걸기
 		$("body").on("click", "#reserveLink, #useLink",function(){

@@ -35,6 +35,7 @@ public class PointDaoImpl implements PointDao{
 	@Override
 	public int getReceiveListCount(SqlSessionTemplate sqlSession, ReservePoint reserve) {
 		int count = sqlSession.selectOne("Payment.getReceiveListCount", reserve);
+		System.out.println("count : " + count);
 		return count;
 	}
 	//포인트 사용 리스트 전체 카운터
