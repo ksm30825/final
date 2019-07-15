@@ -42,8 +42,6 @@ public class StatisticsController {
 		
 		model.addAttribute("user", userList);
 		
-		System.out.println("userList : " + userList);
-		
 		return "admin/statistics/adminAgeGroupStatistics";
 	}
 	
@@ -57,15 +55,10 @@ public class StatisticsController {
 	@RequestMapping("travelCountryMonthStatistics.sta")
 	public ResponseEntity travelCountryStatistics(String month) {
 		
-		
-		System.out.println("month : " + month);
-		
 		TravelStatistics ts = new TravelStatistics();
 		ts.setMonth(month);
 		
 		ArrayList countryList = ss.travelCountryStatistics(ts);
-		
-		System.out.println("countryList : " + countryList);
 		
 		return new ResponseEntity(countryList, HttpStatus.OK);
 	}
@@ -80,15 +73,10 @@ public class StatisticsController {
 	@RequestMapping("travelTagStatistics.sta")
 	public ResponseEntity travelTagStatistics(String month) {
 		
-		
-		System.out.println("month : " + month);
-		
 		TravelStatistics ts = new TravelStatistics();
 		ts.setMonth(month);
 		
 		ArrayList tagList = ss.travelTagStatistics(ts);
-		
-		System.out.println("tagList : " + tagList);
 		
 		return new ResponseEntity(tagList, HttpStatus.OK);
 	}
@@ -101,8 +89,6 @@ public class StatisticsController {
 		
 		model.addAttribute("rs", rs);
 		
-		System.out.println("rs : " + rs);
-		
 		return "admin/statistics/adminPaymentStatistics";
 	}
 	
@@ -111,8 +97,6 @@ public class StatisticsController {
 	public ResponseEntity paymentYearSearch(String year) {
 		
 		RevenueStatistics rs = ss.paymentYearSearch(year);
-		
-		System.out.println("rs : " + rs);
 		
 		return new ResponseEntity(rs, HttpStatus.OK);
 	}
@@ -125,8 +109,6 @@ public class StatisticsController {
 		
 		model.addAttribute("rs", rs);
 		
-		System.out.println("rs : " + rs);
-		
 		return "admin/statistics/adminRebateStatistics";
 	}
 	
@@ -135,8 +117,6 @@ public class StatisticsController {
 	public ResponseEntity rebateYearSearch(String year) {
 		
 		RevenueStatistics rs = ss.rebateYearSearch(year);
-		
-		System.out.println("rs : " + rs);
 		
 		return new ResponseEntity(rs, HttpStatus.OK);
 	}

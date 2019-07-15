@@ -669,10 +669,6 @@
 		var penaltyId = $("#travelPanalty").val();
 		var penaltyContent = $("#travelPanaltyContent").val();
 		var file = $("#file1").text();
-		console.log(memberId);
-		console.log(penaltyId);
-		console.log(penaltyContent);
-		console.log(file);
 		
 		var check = false;
 		
@@ -691,8 +687,6 @@
 		if(check) {
 			$("#trvPanelty").submit();
 		}
-		
-		console.log(check);
 		
 	});
 	

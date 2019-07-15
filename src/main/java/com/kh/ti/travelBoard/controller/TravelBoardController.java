@@ -123,7 +123,7 @@ public class TravelBoardController {
 	@RequestMapping("searchTagTravelList.tb")
 	public String searchTagTravelList(String trvTags, String cityTags, Model model, HttpServletRequest request) {
 		
-		TravelBoard tb = new TravelBoard(); 
+		TravelBoard tb = new TravelBoard();
 		
 		if(!trvTags.equals("")) {
 			ArrayList<String> trvTag = new ArrayList<String>(Arrays.asList(trvTags.split(",")));

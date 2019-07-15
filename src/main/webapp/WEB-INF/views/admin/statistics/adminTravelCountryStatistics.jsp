@@ -34,12 +34,12 @@
 						<ul class="travelStaNav">
 							<li>
 								<a href="travelCountryStatisticsView.sta">
-									<span style="color:#ccccff;"><i class="fas fa-venus-mars"></i>&nbsp;나라별</span>
+									<span style="color:#ccccff;"><i class="fas fa-globe-americas"></i>&nbsp;나라별</span>
 								</a>
 							</li>
 							<li>
 								<a href="travelTagStatisticsView.sta">
-									<span style="color:#ccccff;"><i class="fas fa-user-clock"></i>&nbsp;여행스타일별</span>
+									<span style="color:#ccccff;"><i class="fas fa-tags"></i>&nbsp;여행스타일별</span>
 								</a>
 							</li>
 						</ul>
@@ -51,7 +51,7 @@
 				
 					<div class="statisticsArea" style="display: flex; width: 100%;">
 						
-						<input id="yearValue" value="${ rs.year }" style="display: none" type="number">
+						<input id="yearValue" value="" style="display: none" type="number">
 						
 						<div class="statisticsArea" align="center">
 							<div class="field has-addons" style="justify-content: flex-end; margin-top: 1em;" align="right">
@@ -75,16 +75,22 @@
 								</p>
 							</div>
 							
-							<span class="" style="justify-content: flex-start; display: inline-block;" onclick="yearCountry('left')">
-								<a><i class="title is-2 fas fa-caret-left"></i></a>
-							</span>
-							&nbsp;
-							<span class="title is-4" style="color: #424242;"><span id="monthText"></span>월 인기 여행나라 10</span>
-							&nbsp;
-							<span class="" style="justify-content: flex-start;" onclick="yearCountry('right')">
-								<a><i class="title is-2 fas fa-caret-right"></i></a>
-							</span>
-							
+							<div style="display: table-cell;">
+								<span style="justify-content: flex-start; display: inline-block; vertical-align: middle;" onclick="yearCountry('left')">
+									<a><i class="title is-2 fas fa-caret-left"></i></a>
+								</span>
+								
+								&nbsp;&nbsp;
+								
+								<span class="title is-4" style="color: #424242; vertical-align: middle;"><span id="monthText"></span>월 인기 여행나라 10</span>
+								
+								&nbsp;&nbsp;
+								
+								<span style="justify-content: flex-start; display: inline-block; vertical-align: middle;" onclick="yearCountry('right')">
+									<a><i class="title is-2 fas fa-caret-right"></i></a>
+								</span>
+							</div>
+							<br>
 							<div id="regions_div" style="width: 900px; height: 500px;"></div>
 						</div>
 					
@@ -114,6 +120,9 @@ $(function(){
   	//현재 월 기준 인기 태그 10위 조회
     today = new Date();
     year = today.getFullYear();
+    
+    $("#yearValue").val(year);
+    
     month = today.getMonth() + 1;
     
     $("#monthSelect option").each(function() {
@@ -130,14 +139,6 @@ $(function(){
     $("#monthText").text(year + "년 " + month);
     
     day = year + '-' + month;
-    
-    
-    google.charts.load('current', {
-   	  'packages':['geochart'],
-   	  // Note: you will need to get a mapsApiKey for your project.
-   	  // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-   	  'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
-   	});
     
 	//현재 월 기준 인기 나라 10위 조회
     today = new Date();
@@ -156,6 +157,11 @@ $(function(){
     	data : {month : day},
     	type : "post",
     	success : function(list) {
+    		
+    	    google.charts.load('current', {
+    	        'packages':['geochart'],
+    	        'mapsApiKey': 'AIzaSyD19cUtWTevnQL9Nh6Nd8BMgPoQs6OWyX0'
+			});
     		
     		google.charts.setOnLoadCallback(drawRegionsMap);
     		
@@ -188,6 +194,7 @@ $(function(){
     
 });
 
+//월 검색
 var selection_array = [];
 selection_array.push(['Country', '인기도']);
 
@@ -198,8 +205,6 @@ $("#monthSelect").change(function() {
     }
 	$("#monthText").text(year + "년 " + month);
 	day = year + '-' + month;
-	
-	console.log(day);
 	
 	$.ajax({
     	url : "travelCountryMonthStatistics.sta",
@@ -239,44 +244,68 @@ $("#monthSelect").change(function() {
 function yearCountry(text) {
 	var today = new Date();
 	var todayYear = today.getFullYear();
-	
 	var searchYear = year;
-	
-	console.log(searchYear, text);
-	console.log(todayYear);
 	
 	if(text == 'right' && searchYear == todayYear) {
 		alert("가장 최근 년도입니다.");
 	}else {
 		if(text == 'left') {
 			searchYear = year - 1;
-			console.log(searchYear);
 		}else {
 			searchYear = Number(year) + 1;
-			console.log(searchYear);
 		}
 		
-		alert("년도별 검색 하는중");
-		/* $.ajax({
-			url : "",
-			data : {year : searchYear},
-			type : "post",
-			success : function(list) {
-				console.log(list);
+		var month = $("#monthSelect option:selected").val();
+		
+		if(month < 10) {
+	    	month = '0' + month;
+	    }
+		
+		var searchDay = searchYear + "-" + month;
+		
+		$.ajax({
+			url : "travelCountryMonthStatistics.sta",
+	    	data : {month : searchDay},
+	    	type : "post",
+	    	success : function(list) {
 				
-				if(list.length > null) {
-					year = searchYear;
-					$("#yearValue").val(year);
-				}else {
-					$("#yearValue").val(searchYear);
+				$("#yearValue").val(searchYear);
+				year = searchYear;
+				
+				$("#monthText").text(searchYear + "년 " + month);
+				
+				google.charts.setOnLoadCallback(drawRegionsMap);
+	    		
+	    		function drawRegionsMap() {
+	    			
+				var chatarray = new Array;
+				var array = ['Country', '인기도'];
+				
+				chatarray.push(array);
+				
+				if(list.length > 0) {
+					for (var i = 0 ; i < list.length ; i++){
+						var chlist = [list[i].countryNameEn, list[i].countryCount];
+						chatarray.push(chlist);
+					}
 				}
+				
+				var data = google.visualization.arrayToDataTable(chatarray);
+				var options = {};
+				var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+				
+				chart.draw(data, options);
+	    		}
+				
+				
+				
 				
 				
 			},
 			error : function(data) {
 				alert("접속에러");
 			}
-		}); */
+		});
 	}
 }
 </script>

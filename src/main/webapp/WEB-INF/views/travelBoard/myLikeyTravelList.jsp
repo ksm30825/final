@@ -175,7 +175,6 @@
 	});
 	
 	function likeyCancel(num) {
-		console.log(num);
 		
 		$("#travelMake").click(function() {
 			alert("일정만들기 작성");
@@ -186,7 +185,6 @@
 			$('#myModal').removeClass('is-active');
 	    });
 	}
-	
 	
 	function myLikeyTravelCancel(trvId) {
 		var answer = confirm("좋아요를 취소하시겠습니까?");

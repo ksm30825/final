@@ -385,7 +385,6 @@
 					
 					grade = Number($(this).attr("score"));
 					
-					console.log(grade);
 				});
 				
 			},
@@ -401,10 +400,6 @@
 		var reviewId = num;
 		var grade = $(".grade").attr("score");
 		var reviewContent = $("#reviewContent").val();
-		
-		console.log("reviewId : " + reviewId);
-		console.log("grade : " + grade);
-		console.log("reviewContent : " + reviewContent);
 		
 		$.ajax({
 			url : "myTourReviewUpdate.tb",

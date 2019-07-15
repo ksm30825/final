@@ -50,9 +50,12 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
 		
-		
 		//페이징 처리된 여행일정 리스트 TRV_ID 가져오기
 		ArrayList trvIdList = (ArrayList) sqlSession.selectList("TravelBoard.selectTravelBoardId", tb, rowBounds);
+		
+		if(trvIdList.size() <= 0) {
+			trvIdList.add(0);
+		}
 		
 		HashMap hmap = new HashMap();
 		hmap.put("tb", tb);

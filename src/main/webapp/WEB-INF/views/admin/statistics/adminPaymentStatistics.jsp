@@ -5,7 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="resources/js/statistics/Chart.bundle.min.js"></script>
+<script src="resources/js/statistics/Chart.min.js"></script>
 </head>
 <style>
 	.column .columns {
@@ -34,12 +35,12 @@
 						<ul class="revenueNav">
 							<li>
 								<a href="paymentStatistics.sta">
-									<span style="color:#ccccff;"><i class="fas fa-venus-mars"></i>&nbsp;결제금액</span>
+									<span style="color:#ccccff;"><i class="far fa-credit-card"></i>&nbsp;결제금액</span>
 								</a>
 							</li>
 							<li>
 								<a href="rebateStatistics.sta">
-									<span style="color:#ccccff;"><i class="fas fa-user-clock"></i>&nbsp;수익금</span>
+									<span style="color:#ccccff;"><i class="fas fa-coins"></i>&nbsp;수익금</span>
 								</a>
 							</li>
 						</ul>
@@ -150,27 +151,20 @@ function yearPayment(text) {
 	
 	var searchYear = year;
 	
-	console.log(searchYear, text);
-	console.log(todayYear);
-	
 	if(text == 'right' && searchYear == todayYear) {
 		alert("가장 최근 년도입니다.");
 	}else {
 		if(text == 'left') {
 			searchYear = year - 1;
-			console.log(searchYear);
 		}else {
 			searchYear = Number(year) + 1;
-			console.log(searchYear);
 		}
 		
-		console.log(searchYear);
 		$.ajax({
 			url : "paymentYearSearch.sta",
 			data : {year : searchYear},
 			type : "post",
 			success : function(rs) {
-				console.log(rs);
 				
 				if(rs != null) {
 					year = searchYear;
@@ -178,9 +172,6 @@ function yearPayment(text) {
 				}else {
 					$("#yearValue").val(searchYear);
 				}
-				
-				
-				myChart.clear();
 				
 				ctx = document.getElementById('paymentChart').getContext('2d');
 			    myChart = new Chart(ctx, {
