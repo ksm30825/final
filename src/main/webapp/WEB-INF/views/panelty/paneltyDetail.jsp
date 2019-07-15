@@ -95,8 +95,11 @@
 							<c:if test="${ p.penaltyResult eq '처리대기' }">
 								<p>신고 처리중</p>							
 							</c:if>
-							<c:if test="${ p.penaltyResult ne '처리대기' }">
-								<p>${ p.penaltyResult }</p>
+							<c:if test="${ p.penaltyResult eq '승인' }">
+								<p>승인 처리</p>
+							</c:if>
+							<c:if test="${ p.penaltyResult eq '거절' }">
+								<p>${ p.rejectionReson }</p>
 							</c:if>
 							</div>
 						</div>

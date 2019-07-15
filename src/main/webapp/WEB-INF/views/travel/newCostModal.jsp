@@ -100,13 +100,7 @@
 		var costCurrency = $("#costCurrency");
 		$(function() {
 			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
-        		$('html').removeClass('is-clipped');
-        	    $(this).parents(".modal").removeClass('is-active');
-        	    costContent.val("");
-        	    costDayId.children().eq(0).prop("selected", true);
-        	    costType.children().eq(0).prop("selected", true);
-        	    costAmount.val(0);
-        	    costCurrency.children().eq(0).prop("selected", true);
+        		clearCostModal();
         	});
         	
         	
@@ -122,63 +116,15 @@
         				type:"POST",
         				data:form,
         				success:function(data) {
-        					$('html').removeClass('is-clipped');
-        					$('#newCostModal').removeClass('is-active');
-        					costContent.val("");
-        	        	    costDayId.children().eq(0).prop("selected", true);
-        	        	    costType.children().eq(0).prop("selected", true);
-        	        	    costAmount.val(0);
-        	        	    costCurrency.children().eq(0).prop("selected", true);
         					
-        	        	    console.log(data.trvCost);
-        					var cost = data.trvCost;
-        					var dayId = cost.dayId;
-        					var type = cost.costType;
-        					var ul = $("#day" + dayId + "Cost").find(".costList");
-        					console.log("ul", ul);
-        					var li = $("#day" + dayId + "Cost").find("li").eq(0).clone(true);
+        					insertNewCost(data.trvCost);
+        					clearCostModal();
         					
-        					switch(type) {
-        					case '숙박':li.children().eq(0).children().each(function() { 
-        								if(!$(this).is(".accomm")) {
-        									$(this).remove();
-        								} 
-        							});break;
-        					case '교통':li.children().eq(0).children().each(function() { 
-										if(!$(this).is(".transp")) {
-											$(this).remove();
-										} 
-									});break;
-        					case '식비':li.children().eq(0).children().each(function() { 
-										if(!$(this).is(".food")) {
-											$(this).remove();
-										} 
-									});break;
-        					case '쇼핑':li.children().eq(0).children().each(function() { 
-										if(!$(this).is(".shopping")) {
-											$(this).remove();
-										} 
-									});break;
-        					case '관광':li.children().eq(0).children().each(function() { 
-										if(!$(this).is(".tour")) {
-											$(this).remove();
-										} 
-									});break;
-        					case '기타':li.children().eq(0).children().each(function() { 
-										if(!$(this).is(".etc")) {
-											$(this).remove();
-										} 
-									});break;
-        					}
+        					socket.emit('insertCost', {
+        						trvCost:data.trvCost,
+        						room:"${ trv.trvId }"
+        					});
         					
-        					li.find(".costAmount").text(cost.costAmount);
-        					li.find(".costCurrency").text(cost.currency);
-        					li.find(".costContent").text(cost.costContent);
-        					li.find("input[name=costId]").val(cost.costId);
-        					li.css("display", "flex");
-        					li.attr("id", "cost_" + cost.costId);
-        					ul.append(li);
-        					updateSummary();
         				},
         				error:function(err) {
         					alert(err);
@@ -188,6 +134,16 @@
         		
         	});
 		});
+		
+		function clearCostModal() {
+			$('html').removeClass('is-clipped');
+			$('#newCostModal').removeClass('is-active');
+			costContent.val("");
+    	    costDayId.children().eq(0).prop("selected", true);
+    	    costType.children().eq(0).prop("selected", true);
+    	    costAmount.val(0);
+    	    costCurrency.children().eq(0).prop("selected", true);
+		}
 	</script>
 </body>
 </html>

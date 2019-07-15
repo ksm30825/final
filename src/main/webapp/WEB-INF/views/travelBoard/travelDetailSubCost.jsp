@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -234,8 +235,7 @@
 							 
 							<div class="column detailCostArea" style="padding: 10.5px 0; display: none;" id="detailCostTable${ st.count }">
 								<nav class="panel costPanel">
-									<div class="panel-heading" align="center"
-										style="background: whitesmoke; color: black; height: 30px">
+									<div class="panel-heading" align="center" style="background: whitesmoke; color: black; height: 30px">
 										<p class="help">${ allCost[j].dayDate }</p>
 									</div>
 									<div class="panel-heading" align="center" style="margin: 0">
@@ -443,7 +443,7 @@
 	//전체환율 계산
 	$(document).ready(function(){
 		var rate = 1;
-		// execute the conversion using the "convert" endpoint:
+		
 		$.ajax({
 			url:'http://data.fixer.io/api/latest?access_key=efce45cabfbb54177c7899aff7d466f4',
 		    dataType: 'jsonp',
@@ -486,22 +486,30 @@
 		        	cost = comma(cost);
 		        	$("#allCostTableKrw > td > span").eq(i).text(cost);
 		        	if(i == 7) {
-		        		balance = budget - total;
 		        		
-		        		balance = comma(balance);
+		        		if(budget > 0) {
+		        			balance = budget - total;
+			        		
+			        		balance = comma(balance);
+			        		
+			        		$("#allCostTableKrw > td > span").eq(i).text(balance);
+			        		//
+			        		balanceLocal = numberBudgetLocal - totalLocal;
+			        		balanceLocal = balanceLocal.toString();
+			        		
+			        		var balanceLocalStr = balanceLocal.substring(0, balanceLocal.indexOf('.'));
+							var balanceLocalIndex = balanceLocal.substring(balanceLocal.indexOf('.'), balanceLocal.indexOf('.') + 3);
+							
+							balanceLocal = comma(balanceLocalStr) + balanceLocalIndex;
+							
+							$("#allCostTableLocal > td > span").eq(i).text(balanceLocal);
+		        		}else {
+		        			$("#allCostTableKrw > td > span").eq(i).text('-');
+		        			$("#allCostTableLocal > td > span").eq(i).text('-');
+		        		}
 		        		
-		        		$("#allCostTableKrw > td > span").eq(i).text(balance);
-		        		//
-		        		balanceLocal = numberBudgetLocal - totalLocal;
-		        		balanceLocal = balanceLocal.toString();
-		        		
-		        		var balanceLocalStr = balanceLocal.substring(0, balanceLocal.indexOf('.'));
-						var balanceLocalIndex = balanceLocal.substring(balanceLocal.indexOf('.'), balanceLocal.indexOf('.') + 3);
-						
-						balanceLocal = comma(balanceLocalStr) + balanceLocalIndex;
-						
-						$("#allCostTableLocal > td > span").eq(i).text(balanceLocal);
 		        	}
+		        	
 		        	i++;
 		        })
 		        
@@ -568,13 +576,7 @@
 	}
 	
 	function costDownload() {
-		$.ajax({
-			url : "costDownload.tb",
-			data : {},
-			success : function(data) {
-				alert("다운로드 처리");
-			}
-		});
+		location.href="costDownload.tb?trvId=${ detailTb.trvId }";
 	}
 </script>
 

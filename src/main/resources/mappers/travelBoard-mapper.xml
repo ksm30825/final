@@ -166,6 +166,19 @@
 		<collection property="trvCost" javaType="java.util.ArrayList" resultMap="costResultSet"/>
 	</resultMap>
 	
+	<!-- 가계부 다운로드 -->
+	<resultMap id="CostDownResultMap" type="java.util.HashMap">
+		<result property="trvTitle" column="TRV_TITLE" />
+		<result property="userName" column="USER_NAME" />
+		<result property="dayNumber" column="DAY_NUMBER" />
+		<result property="dayDate" column="DAY_DATE" />
+		<result property="costContent" column="COST_CONTENT" />
+		<result property="costType" column="COST_TYPE" />
+		<result property="costAmount" column="COST_AMOUNT" />
+		<result property="currency" column="CURRENCY" />
+	</resultMap>
+	
+	
 	<!-- 여행일정 페이징용 -->
 	<select id="getListCount" resultType="_int">
 		SELECT COUNT(*)
@@ -551,7 +564,7 @@
 	    FROM TRAVEL T
 	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
         JOIN USE_POINT UP ON (T.TRV_ID = UP.TRV_ID)
-	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID) AND TD.DAY_NUMBER = 1
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
 	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
         LEFT JOIN SCH_FILE SFI ON (SFI.SCH_ID = TS.SCH_ID) AND SFI.FILE_LEVEL = 0 AND FILE_STATUS = 'Y'
 	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
@@ -588,7 +601,7 @@
 	    FROM TRAVEL T
 	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
         JOIN LIKEY LI ON (LI.TRV_ID = T.TRV_ID)
-	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID) AND TD.DAY_NUMBER = 1
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
 	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
         LEFT JOIN SCH_FILE SFI ON (SFI.SCH_ID = TS.SCH_ID) AND SFI.FILE_LEVEL = 0 AND FILE_STATUS = 'Y'
 	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
@@ -612,9 +625,43 @@
 		JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
 		JOIN TRV_SCH TS ON (TS.DAY_ID = TD.DAY_ID)
 		JOIN SCH_FILE SF ON (TS.SCH_ID = SF.SCH_ID)
-		WHERE T.TRV_ID = 1000
+		WHERE T.TRV_ID = #{ trvId }
 		AND SF.FILE_STATUS = 'Y'
 		ORDER BY TD.DAY_NUMBER, TS.SCH_NUMBER
+	</select>
+	
+	<!-- 마이페이지 좋아요, 구매수 카운트 구하기 -->
+	<select id="selectMyCount" resultMap="travelBoardResultSet">
+		SELECT DISTINCT M.USER_NAME, T.MEMBER_ID, LIKEY_COUNT, BUY_COUNT
+		FROM TRAVEL T
+		JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
+		JOIN (SELECT T.MEMBER_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+		          FROM TRAVEL T
+		          LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+		          WHERE T.STATUS = 'Y'
+		          AND T.TRV_REF IS NULL
+		          GROUP BY T.MEMBER_ID) TRL ON (TRL.MEMBER_ID = T.MEMBER_ID)
+		JOIN (SELECT T.MEMBER_ID, COUNT(U.USE_POINT) as BUY_COUNT
+		          FROM TRAVEL T
+		          LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+		          WHERE T.STATUS = 'Y'
+		          AND T.TRV_REF IS NULL
+		          GROUP BY T.MEMBER_ID) US ON (US.MEMBER_ID = T.MEMBER_ID)
+		WHERE T.STATUS = 'Y'
+		AND T.TRV_REF IS NULL
+		AND T.COMPLETE_DATE IS NOT NULL
+		AND M.MEMBER_ID = #{ memberId }
+	</select>
+	
+	<!-- 가계부 다운로드 -->
+	<select id="costDownload" parameterType="_int" resultMap="CostDownResultMap">
+		SELECT TRV.TRV_TITLE, M.USER_NAME, DAY.DAY_NUMBER, DAY.DAY_DATE, COST.COST_CONTENT, COST.COST_TYPE, COST.COST_AMOUNT, COST.CURRENCY
+		FROM TRV_COST COST
+		JOIN TRV_DAY DAY ON (COST.DAY_ID = DAY.DAY_ID)
+		JOIN TRAVEL TRV ON (TRV.TRV_ID = DAY.TRV_ID)
+		JOIN MEMBER M ON (M.MEMBER_ID = TRV.MEMBER_ID)
+		WHERE TRV.TRV_ID = #{trvId}
+		ORDER BY DAY.DAY_NUMBER, COST.COST_TYPE
 	</select>
 	
 </mapper>

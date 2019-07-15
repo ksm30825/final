@@ -81,18 +81,37 @@
 					<tbody>
 						<c:if test="${ list.size() > 0 }">
 							<c:forEach var="req" items="${ list }">
-								<tr>
-									<td><b>${ req.requestId }</b></td>
-									<td>${ req.requestTitle }</td>
-									<td>${ req.endDate }</td>
-									<td><fmt:formatNumber value="${ req.requestPrice }" groupingUsed="true"/>원</td>
-									<c:if test="${ req.chooseStatus eq 'N' }">
-										<td>미채택</td>
-									</c:if>
-									<c:if test="${ req.chooseStatus eq 'Y' }">
-										<td>채택</td>
-									</c:if>
-								</tr>
+								<c:if test="${ req.chooseStatus eq 'D' }">
+									<tr style="background:lightgray;">
+										<td class="first"><b>${ req.requestId }</b></td>
+										<td class="first">${ req.requestTitle }</td>
+										<td class="first">${ req.endDate }</td>
+										<td class="first"><fmt:formatNumber value="${ req.requestPrice }" groupingUsed="true"/>원</td>
+										<td>관리자에 의해 삭제</td>
+									</tr>
+								</c:if>
+								<c:if test="${ req.chooseStatus ne 'D' }">
+									<tr>
+										<td class="second"><b>${ req.requestId }</b></td>
+										<td class="second">${ req.requestTitle }</td>
+										<td class="second">${ req.endDate }</td>
+										<td class="second"><fmt:formatNumber value="${ req.requestPrice }" groupingUsed="true"/>원</td>
+										<c:if test="${ req.chooseStatus eq 'N' }">
+											<td class="second">미채택</td>
+										</c:if>
+										<c:if test="${ req.chooseStatus eq 'Y' }">
+											<c:if test="${ req.refund.refundStatus == null }">
+												<td class="second">채택</td>
+											</c:if>
+											<c:if test="${ req.refund.refundStatus == 20 }">
+												<td class="second">채택 환불 승인</td>
+											</c:if>
+											<c:if test="${ req.refund.refundStatus == 30 }">
+												<td class="second">채택 환불 거절</td>
+											</c:if>
+										</c:if>
+									</tr>
+								</c:if>
 							</c:forEach>
 						</c:if>
 					</tbody>
@@ -156,13 +175,14 @@
 		var menu = $(".myPageMenu li").eq(3);
         menu.addClass('is-active');
         menu.siblings().removeClass('is-active');
-		$(".table").find("td").mouseenter(function() {
+		$(".table").find("td").not(".first").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",
 				"cursor" : "pointer",
 				"color" : "white"
 			});
-		}).mouseout(function() {
+		});
+		$(".table").find("td").not(".first").mouseout(function() {
 			$(this).parents("tr").css({
 				"background" : "white",
 				"color" : "black"
@@ -171,6 +191,9 @@
 			var reqId = $(this).parents().children("td").eq(0).text();
 			console.log(reqId);
 			location = "requestDetail.tr?reqId=" + reqId + "&userName=${ loginUser.userName }";
+		});
+		$(".first").click(function() {
+			alert("관리자에 의해 삭제되었습니다.");
 		});
 	});
 

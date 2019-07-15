@@ -49,6 +49,9 @@
 		<result property="memberId" column="MEMBER_ID"/>
 		<result property="planId" column="PLAN_ID"/>
 		<result property="requestId" column="REQUEST_ID"/>
+		<result property="complainantName" column="신고자"/>
+		<result property="userName" column="대상자"/>
+		<result property="penalty" column="PENALTY"/>
 		<result property="memberPenalty" column="MEMBER_PENALTY"/>
 		<association property="penaltyType" column="PENALTY_NAME"
 					 javaType="PenaltyType" resultMap="PenaltyTypeResultSet"/>
@@ -128,4 +131,136 @@
 		JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)
 		WHERE PL.LIST_ID = #{listId}
 	</select>
+	
+	<!-- 관리자 신고글 수 -->
+	<select id="getAdminPenaltyCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM PENALTY_LIST
+	</select>
+	
+	<!-- 관리자 신고글 목록 -->
+	<!-- <select id="selectAdminPenaltyList" resultMap="myPaneltyDetail">
+		SELECT *
+		FROM PENALTY_LIST PL
+		JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+	</select> -->
+	<select id="selectAdminPenaltyList" resultMap="myPaneltyDetail">
+		<!-- 설계글 -->
+		SELECT SUB.LIST_ID, SUB.LIST_TYPE, SUB.PENALTY_NAME, M.USER_NAME 신고자, SUB.USER_NAME 대상자,
+		SUB.PENALTY_DATE, SUB.PENALTY_RESULT, SUB.PENALTY, SUB.MEMBER_PENALTY
+		FROM (SELECT PL.COMPLAINANT_ID, PL.PLAN_ID, M.USER_NAME, 
+		      PL.LIST_ID, PL.LIST_TYPE, P.PENALTY_NAME, PL.PENALTY_DATE, PL.PENALTY_RESULT, M.PENALTY,
+		      PL.MEMBER_PENALTY
+		      FROM PENALTY_LIST PL
+		      JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+		      JOIN TRV_PLAN TP ON(PL.PLAN_ID = TP.PLAN_ID)
+		      JOIN MEMBER M ON(M.MEMBER_ID = TP.MEMBER_ID)
+		      JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)) SUB
+		JOIN MEMBER M ON(SUB.COMPLAINANT_ID = M.MEMBER_ID)
+		
+		UNION
+		
+		<!-- 의뢰글 -->
+		SELECT SUB.LIST_ID, SUB.LIST_TYPE, SUB.PENALTY_NAME, M.USER_NAME 신고자, SUB.USER_NAME 대상자,
+		SUB.PENALTY_DATE, SUB.PENALTY_RESULT, SUB.PENALTY, SUB.MEMBER_PENALTY
+		FROM (SELECT PL.COMPLAINANT_ID, PL.REQUEST_ID, M.USER_NAME, 
+		      PL.LIST_ID, PL.LIST_TYPE, P.PENALTY_NAME, PL.PENALTY_DATE, PL.PENALTY_RESULT, M.PENALTY,
+		      PL.MEMBER_PENALTY
+		      FROM PENALTY_LIST PL
+		      JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+		      JOIN TRV_REQUEST TR ON(PL.REQUEST_ID = TR.REQUEST_ID)
+		      JOIN MEMBER M ON(M.MEMBER_ID = TR.MEMBER_ID)
+		      JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)) SUB
+		JOIN MEMBER M ON(SUB.COMPLAINANT_ID = M.MEMBER_ID)
+		
+		UNION 
+		
+		<!-- 여행일정 -->
+		SELECT SUB.LIST_ID, SUB.LIST_TYPE, SUB.PENALTY_NAME, M.USER_NAME 신고자, SUB.USER_NAME 대상자,
+		SUB.PENALTY_DATE, SUB.PENALTY_RESULT, SUB.PENALTY, SUB.MEMBER_PENALTY
+		FROM (SELECT PL.COMPLAINANT_ID, PL.TRV_ID, M.USER_NAME, 
+		      PL.LIST_ID, PL.LIST_TYPE, P.PENALTY_NAME, PL.PENALTY_DATE, PL.PENALTY_RESULT, M.PENALTY,
+		      PL.MEMBER_PENALTY
+		      FROM PENALTY_LIST PL
+		      JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+		      JOIN TRAVEL T ON(PL.TRV_ID = T.TRV_ID)
+		      JOIN MEMBER M ON(M.MEMBER_ID = T.MEMBER_ID)
+		      JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)) SUB
+		JOIN MEMBER M ON(SUB.COMPLAINANT_ID = M.MEMBER_ID)
+		
+		UNION 
+		
+		<!-- 리뷰 -->
+		SELECT SUB.LIST_ID, SUB.LIST_TYPE, SUB.PENALTY_NAME, M.USER_NAME 신고자, SUB.USER_NAME 대상자,
+		SUB.PENALTY_DATE, SUB.PENALTY_RESULT, SUB.PENALTY, SUB.MEMBER_PENALTY
+		FROM (SELECT PL.COMPLAINANT_ID, TR.REVIEW_ID, M.USER_NAME,
+		      PL.LIST_ID, PL.LIST_TYPE, P.PENALTY_NAME, PL.PENALTY_DATE, PL.PENALTY_RESULT, M.PENALTY,
+		      PL.MEMBER_PENALTY
+		      FROM PENALTY_LIST PL
+		      JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+		      JOIN TOUR_REVIEW TR ON(PL.TRV_ID = TR.REVIEW_ID)
+		      JOIN MEMBER M ON(M.MEMBER_ID = TR.MEMBER_ID)
+		      JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)) SUB
+		JOIN MEMBER M ON(SUB.COMPLAINANT_ID = M.MEMBER_ID)
+		
+		UNION
+		
+		<!-- 채팅 -->
+		SELECT SUB.LIST_ID, SUB.LIST_TYPE, SUB.PENALTY_NAME, M.USER_NAME 신고자, SUB.USER_NAME 대상자,
+		SUB.PENALTY_DATE, SUB.PENALTY_RESULT, SUB.PENALTY, SUB.MEMBER_PENALTY
+		FROM (SELECT PL.COMPLAINANT_ID, M.MEMBER_ID, M.USER_NAME,
+		      PL.LIST_ID, PL.LIST_TYPE, P.PENALTY_NAME, PL.PENALTY_DATE, PL.PENALTY_RESULT, M.PENALTY,
+		      PL.MEMBER_PENALTY
+		      FROM PENALTY_LIST PL
+		      JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+		      JOIN MEMBER M ON(M.MEMBER_ID = PL.MEMBER_ID)
+		      JOIN ATTACHMENT_FILE AF ON(PL.LIST_ID = AF.PENALTY_ID)) SUB
+		JOIN MEMBER M ON(SUB.COMPLAINANT_ID = M.MEMBER_ID)
+	</select>
+	
+	<!-- 관리자 신고글 승인 -->
+	<select id="selectPenaltyOk" resultMap="myPaneltyDetail" parameterType="_int">
+		SELECT *
+		FROM PENALTY_LIST PL
+		JOIN PENALTY P ON(PL.PENALTY_ID = P.PENALTY_ID)
+		WHERE PL.LIST_ID = #{listId}
+	</select>
+	
+	<!-- 신고 승인 처리 -->
+	<update id="updatePenaltyOk" parameterType="Penalty">
+		UPDATE PENALTY_LIST
+		SET PROCESS_DATE = SYSDATE,
+		PENALTY_RESULT = '승인'
+		WHERE LIST_ID = #{listId}
+	</update>
+	
+	<!-- 대상자 벌점 증가 -->
+	<update id="updateMemberPenalty" parameterType="Penalty">
+		UPDATE MEMBER
+		SET PENALTY = (SELECT PENALTY
+		               FROM MEMBER
+		               WHERE USER_NAME = #{userName}) + (SELECT PENALTY
+		                                             FROM PENALTY P
+		                                             JOIN PENALTY_LIST PL ON(P.PENALTY_ID = PL.PENALTY_ID)
+		                                             WHERE PL.LIST_ID = #{listId})
+		WHERE MEMBER_ID = (SELECT MEMBER_ID
+		                   FROM MEMBER 
+		                   WHERE USER_NAME = #{userName})
+	</update>
+	
+	<!-- 누적 벌점에 따른 회원상태 변경 -->
+	<update id="updateMemberStatus" parameterType="Penalty">
+		UPDATE MEMBER
+		SET ENROLL_STATUS = 'N'
+		WHERE PENALTY >= 40
+	</update>
+	
+	<!-- 신고 거절 처리 -->
+	<update id="updatePenaltyNo" parameterType="Penalty">
+		UPDATE PENALTY_LIST
+		SET PROCESS_DATE = SYSDATE,
+		PENALTY_RESULT = '거절',
+		REJECTION_RESON = #{rejectionReson}
+		WHERE LIST_ID = #{listId}
+	</update>
 </mapper>

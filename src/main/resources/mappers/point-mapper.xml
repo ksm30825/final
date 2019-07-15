@@ -32,6 +32,17 @@
 		<result property="trvId" column="TRV_ID"/>
 		<result property="requestId" column="REQUEST_ID"/>
 	</resultMap>
+	<resultMap type="UsePoint" id="useRefundResultSet">
+		<id property="pointId" column="POINT_ID"/>
+		
+		<result property="usePoint" column="USE_POINT"/>
+		<result property="useDate" column="USE_DATE"/>
+		<result property="useType" column="USE_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="requestId" column="REQUEST_ID"/>
+		<association property="refund" resultMap="refundResultSet" columnPrefix="R_"></association>
+	</resultMap>
 	<resultMap type="Refund" id="refundResultSet">
 		<id property="refundId" column="REFUND_ID"/>
 		
@@ -111,12 +122,12 @@
 		<association property="travelRequestPlan" resultMap="trvPlanResult" columnPrefix="TRVP_"></association>
 	</resultMap>
 	<resultMap type="Rebate" id="rebateMemberResultSet">
-		<id property="proceedsId" column="PROCEEDS_ID"/>
-		<result property="applyDate" column="PROCEEDS"/>
-		<result property="payAmount" column="PROCEEDS_DATE"/>
-		<result property="memberId" column="PROCEEDS_TYPE"/>
-		<result property="payDate" column="MEMBER_ID"/>
-		<result property="rebateStatus" column="TRV_ID"/>
+		<id property="rebateId" column="REBATE_ID"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="payDate" column="PAY_DATE"/>
+		<result property="rebateStatus" column="REBATE_STATUS"/>
 		<association property="member" resultMap="memberResult" columnPrefix="M_"></association>
 	</resultMap>
 	<resultMap type="Travel" id="trvMemberResult">
@@ -142,6 +153,15 @@
 		<result property="accNumber" column="ACC_NUMBER"/>
 		<result property="userPoint" column="USER_POINT"/>
 		<result property="userProceeds" column="USER_PROCEEDS"/>
+	</resultMap>
+	<resultMap type="java.util.HashMap" id="downRebatesResultMap">
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		
+		<result property="email" column="EMAIL"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="accCode" column="ACC_CODE"/>
+		<result property="accNumber" column="ACC_NUMBER"/>
 	</resultMap>
 	<!-- 포인트 충전 -->
 	<insert id="insertPay" parameterType="Payment">
@@ -173,17 +193,23 @@
 	<!-- 포인트 사용 리스트 전체 카운터 -->
 	<select id="getUseListCount" parameterType="UsePoint" resultType="_int">
 		SELECT COUNT(*)
-		FROM USE_POINT
-		WHERE MEMBER_ID=#{memberId}
-		<choose>
-			<when test="month != null and month != 0">
-				AND EXTRACT(MONTH FROM USE_DATE)=#{month}
-			</when>
-		</choose>
+		FROM (
+			SELECT UP.POINT_ID, USE_POINT, USE_DATE, USE_TYPE, UP.MEMBER_ID, TRV_ID, REQUEST_ID, 
+			R.REFUND_ID AS R_REFUND_ID, R.REFUND_REASON AS R_REFUND_REASON, R.APPLY_DATE AS R_APPLY_DATE, R.PROCESSED_DATE AS R_PROCESSED_DATE, R.REFUND_STATUS AS R_REFUND_STATUS, R.POINT_ID AS R_POINT_ID
+			FROM USE_POINT UP
+			LEFT JOIN REFUND R ON(UP.POINT_ID=R.POINT_ID)
+			WHERE MEMBER_ID=#{memberId}
+			<choose>
+				<when test="month != null and month != 0">
+					AND EXTRACT(MONTH FROM USE_DATE)=#{month}
+				</when>
+			</choose>
+			ORDER BY USE_DATE DESC
+		)
 	</select>
 	<!-- 포인트 충전리스트 전체 조회 -->
 	<select id="selectChargeList" parameterType="Payment" resultMap="paymentResultSet">
-		SELECT *<!-- PAYMENT_ID, TID, MEMBER_ID, PAY_AMOUNT, TO_CHAR(PAYMENT_DATE,'YYYY/MM/DD') -->
+		SELECT *
 		FROM PAYMENT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
@@ -206,9 +232,11 @@
 		ORDER BY RESERVE_DATE DESC
 	</select>
 	<!-- 포인트 사용리스트 전체 조회 -->
-	<select id="selectUseList" parameterType="UsePoint" resultMap="useResultSet">
-		SELECT *
-		FROM USE_POINT
+	<select id="selectUseList" parameterType="UsePoint" resultMap="useRefundResultSet">
+		SELECT UP.POINT_ID, USE_POINT, USE_DATE, USE_TYPE, UP.MEMBER_ID, TRV_ID, REQUEST_ID, 
+		R.REFUND_ID AS R_REFUND_ID, R.REFUND_REASON AS R_REFUND_REASON, R.APPLY_DATE AS R_APPLY_DATE, R.PROCESSED_DATE AS R_PROCESSED_DATE, R.REFUND_STATUS AS R_REFUND_STATUS, R.POINT_ID AS R_POINT_ID
+		FROM USE_POINT UP
+		LEFT JOIN REFUND R ON(UP.POINT_ID=R.POINT_ID)
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
 			<when test="month != null and month != 0">
@@ -498,7 +526,9 @@
 	<select id="getAdRefundListCount" parameterType="Refund" resultType="_int">
 		SELECT COUNT(*)
 		FROM (
-		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL,  USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL,  USE.TRV_ID, TRV_TITLE, 
+			    USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, 
+			    APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
 			FROM REFUND REF
 			JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
 			JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
@@ -526,7 +556,9 @@
 	</select>
 	<!-- 관리자 - 환불 내역 조회 -->
 	<select id="selectAdRefundList" resultMap="refundUseMemberTrvTrvRequestResultSet">
-	    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+	    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, 
+	    	USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, 
+	    	APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
 		FROM REFUND REF
 		JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
 		JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
@@ -663,7 +695,7 @@
 	<select id="selectSpotId" resultType="_int">
 		SELECT SPOT_ID
 		FROM SPOT_REVIEWS
-		WHERE SPOT_REVIEW_ID=1
+		WHERE SPOT_REVIEW_ID=#{spotReviewId}
 	</select>
 	<!-- 관리자 - 환급 내역 리스트 카운트 -->
 	<select id="getAdRebateListCount" resultType="_int">
@@ -677,40 +709,32 @@
 				<when test="condition != 99">
 					WHERE
 					<choose>
-						<when test="condition == 40 or condition == 50 or condition == 60 or condition == 70">
+						<when test="rebateStatus != 0">
 							REBATE_STATUS = #{rebateStatus}
 							<choose>
-								<when test="condition == 60 or condition == 70">
+								<when test="userName != null">
 									AND USER_NAME LIKE '%'||#{userName}||'%'
 									<choose>
-										<when test="condition == 70">
+										<when test="startDate != null">
 											AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 										</when>
 									</choose>
 								</when>
-								<when test="condition == 40 or condition == 50">
-									<choose>
-										<when test="condition == 50">
-											AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
-										</when>
-									</choose>
+								<when test="userName == null and startDate != null">
+									AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 								</when>
 							</choose>
 						</when>
-						<when test="condition == 10 or condition == 20 or condition == 30">
+						<when test="rebateStatus == 0 and userName != null">
+							USER_NAME LIKE '%'||#{userName}||'%'
 							<choose>
-								<when test="condition == 10 or condition ==30">
-									USER_NAME LIKE '%'||#{userName}||'%'
-									<choose>
-										<when test="condition == 30">
-											AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
-										</when>
-									</choose>
-								</when>
-								<when test="condition == 20">
-									APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+								<when test="startDate != null">
+									AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 								</when>
 							</choose>
+						</when>
+						<when test="rebateStatus == 0 and userName == null and startDate != null">
+							APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 						</when>
 					</choose>
 				</when>
@@ -719,50 +743,70 @@
 	</select>
 	<!-- 관리자 - 환급 내역 조회 -->
 	<select id="selectAdRebateList" resultMap="rebateMemberResultSet">
-		SELECT  REBATE_ID, APPLY_DATE, PAY_AMOUNT, R.MEMBER_ID, PAY_DATE, REBATE_STATUS, EMAIL AS M_EMAIL, USER_NAME AS M_USER_NAME, ACC_CODE AS M_ACC_CODE, ACC_NUMBER AS M_ACC_NUMBER, USER_PROCEEDS AS M_USER_PROCEEDS, USER_POINT AS M_USER_POINT
+		SELECT  REBATE_ID, APPLY_DATE, PAY_AMOUNT, R.MEMBER_ID, PAY_DATE, REBATE_STATUS, 
+			EMAIL AS M_EMAIL, USER_NAME AS M_USER_NAME, ACC_CODE AS M_ACC_CODE, ACC_NUMBER AS M_ACC_NUMBER, USER_PROCEEDS AS M_USER_PROCEEDS, USER_POINT AS M_USER_POINT
 		FROM REBATE R
 		JOIN MEMBER M ON(R.MEMBER_ID=M.MEMBER_ID)
 		<choose>
 			<when test="condition != 99">
 				WHERE
 				<choose>
-					<when test="condition == 40 or condition == 50 or condition == 60 or condition == 70">
+					<when test="rebateStatus != 0">
 						REBATE_STATUS = #{rebateStatus}
 						<choose>
-							<when test="condition == 60 or condition == 70">
+							<when test="userName != null">
 								AND USER_NAME LIKE '%'||#{userName}||'%'
 								<choose>
-									<when test="condition == 70">
+									<when test="startDate != null">
 										AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 									</when>
 								</choose>
 							</when>
-							<when test="condition == 40 or condition == 50">
-								<choose>
-									<when test="condition == 50">
-										AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
-									</when>
-								</choose>
+							<when test="userName == null and startDate != null">
+								AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 							</when>
 						</choose>
 					</when>
-					<when test="condition == 10 or condition == 20 or condition == 30">
+					<when test="rebateStatus == 0 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%'
 						<choose>
-							<when test="condition == 10 or condition ==30">
-								USER_NAME LIKE '%'||#{userName}||'%'
-								<choose>
-									<when test="condition == 30">
-										AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
-									</when>
-								</choose>
-							</when>
-							<when test="condition == 20">
-								APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+							<when test="startDate != null">
+								AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 							</when>
 						</choose>
+					</when>
+					<when test="rebateStatus == 0 and userName == null and startDate != null">
+						APPLY_DATE BETWEEN #{startDate} AND #{endDate}
 					</when>
 				</choose>
 			</when>
 		</choose>
 	</select>
+	<!-- 관리자 - 환급 상태 1개 지급 완료로 변경 -->
+	<update id="updateAdRebate" parameterType="_int">
+		UPDATE REBATE
+		SET REBATE_STATUS = 20, PAY_DATE=SYSDATE
+		WHERE REBATE_ID = #{rebateId}
+	</update>
+	<!-- 관리자 - 환급 상태 여러개 지급 완료로 변경 -->
+	<update id="updateAdRebates" parameterType="_int">
+		UPDATE REBATE
+		SET REBATE_STATUS = 20, PAY_DATE=SYSDATE
+		WHERE REBATE_ID = #{rebateId}
+	</update>
+	<select id="downRebates" parameterType="_int" resultMap="downRebatesResultMap">
+		SELECT APPLY_DATE, PAY_AMOUNT,  
+			EMAIL, USER_NAME, ACC_CODE, ACC_NUMBER
+		FROM REBATE R
+		JOIN MEMBER M ON(R.MEMBER_ID=M.MEMBER_ID)
+		WHERE REBATE_STATUS = #{rebateStatus}
+		ORDER BY APPLY_DATE DESC
+	</select>
+	<!-- 일정리뷰 코드 이용하여 trvId조회 -->
+	<select id="selectTrvId" resultType="_int">
+		SELECT TRV_ID
+		FROM TOUR_REVIEW
+		WHERE REVIEW_ID = #{reviewId}
+	</select>
+	
 </mapper>

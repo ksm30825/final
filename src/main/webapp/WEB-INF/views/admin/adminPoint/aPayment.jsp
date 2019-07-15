@@ -28,11 +28,35 @@
 		color:#8484ff;
 		font-weight:bold;
 	}
+	#noLoginBtn{
+		background:#FFBD33;
+		color:white;
+		text-decoration:none;
+		font-size:30px;
+		border-radius:10px;
+		margin-left:70%;
+		border:3px solid #FF5733;
+		padding:5px 10px 5px 10px;
+	}
+	#noLoginBtn:hover{
+		background:#FFE09F;
+		color:#FF5733;
+	}
 </style>
 </head>
 <body>
 	<c:if test="${ empty sessionScope.loginUser || sessionScope.loginUser.memberId != 1}">
-		<h1 align="center">관리자만 접근 가능합니다.</h1>
+	<jsp:include page="../../common/adminMainNav.jsp"/>
+		<div class="columns is-mobile">
+			<div class="column">
+				<section class="section" id="headerSection">
+				</section>
+				<section>
+					<h1 align="center" style="color:#FF5733;"><c:out value="관리자만 접근 가능합니다."/></h1>
+					<a href="javascript:history.back()" id="noLoginBtn">뒤로가기</a>
+				</section>
+			</div>
+		</div>
 	</c:if>
 	<c:if test="${ !empty sessionScope.loginUser && sessionScope.loginUser.memberId == 1}">
 		<jsp:include page="../../common/adminMainNav.jsp"/>

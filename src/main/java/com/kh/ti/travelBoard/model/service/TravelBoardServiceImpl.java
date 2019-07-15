@@ -1,12 +1,24 @@
 package com.kh.ti.travelBoard.model.service;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.ti.common.CommonUtils;
 import com.kh.ti.common.PageInfo;
 import com.kh.ti.point.model.vo.UsePoint;
 import com.kh.ti.travel.model.vo.SchFile;
@@ -143,6 +155,75 @@ public class TravelBoardServiceImpl implements TravelBoardService{
 		
 		return tbd.travelDetailGallery(sqlSession, sch);
 	}
+	
+	//마이페이지 / 좋아요, 구매수 카운트 조회 - 예랑
+	@Override
+	public TravelBoard selectMyCount(int memberId) {
+		
+		return tbd.selectMyCount(sqlSession, memberId);
+	}
+	
+	//여행일정 상세 / 가계부 / 가계부 다운로드 - 예랑
+	@Override
+	public void costDownload(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		SXSSFWorkbook wb = new SXSSFWorkbook();
+		SXSSFSheet sheet = wb.createSheet("cost");
+		for(int i = 0; i <= 6; i++) {
+			sheet.trackColumnForAutoSizing(i);
+		}
+		
+		OutputStream fileOut = response.getOutputStream();
+		
+		ArrayList<HashMap> costList = tbd.costDownload(sqlSession, trvId);
+		
+			
+		Map<String, CellStyle> styles = CommonUtils.createStyles(wb);
+			
+		Row title = sheet.createRow(0);
+		title.createCell(0).setCellValue("TITLE : ");
+		Cell titleCell = title.createCell(1);
+		titleCell.setCellValue(costList.get(0).get("trvTitle").toString());
+		titleCell.setCellStyle(styles.get("cell_b"));
+		title.createCell(5).setCellValue("AUTHOR : ");
+		title.createCell(6).setCellValue(costList.get(0).get("userName").toString());
+		Row header = sheet.createRow(2);
+			
+		header.setHeightInPoints(20f);
+			
+		for (int i = 1; i <= 6; i++) {
+			Cell cell = header.createCell(i);
+	        switch(i) {
+	            case 1: cell.setCellValue("DAY");break;
+	            case 2: cell.setCellValue("날짜");break;
+	            case 3: cell.setCellValue("가계부 항목");break;
+	            case 4: cell.setCellValue("경비 타입");break;
+	            case 5: cell.setCellValue("금액");break;
+	            case 6: cell.setCellValue("통화");break;
+	        }
+	        cell.setCellStyle(styles.get("header"));
+	    }
+		
+		for(int i = 0; i < costList.size(); i++) {
+			HashMap costMap = costList.get(i);
+			Row row = sheet.createRow(i + 3);
+				
+			row.createCell(1).setCellValue(costMap.get("dayNumber").toString());
+			row.createCell(2).setCellValue(costMap.get("dayDate").toString());
+			row.createCell(3).setCellValue(costMap.get("costContent").toString());
+			row.createCell(4).setCellValue(costMap.get("costType").toString());
+			row.createCell(5).setCellValue(costMap.get("costAmount").toString());
+			row.createCell(6).setCellValue(costMap.get("currency").toString());
+		}
 
+		for(int i = 0; i <= 6; i++) {
+			sheet.autoSizeColumn(i);
+		}
+		response.setContentType("Application/Msexcel");
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"cost.xlsx\""));
+		wb.write(fileOut);
+		
+		fileOut.close();
+	}
+		
 
 }

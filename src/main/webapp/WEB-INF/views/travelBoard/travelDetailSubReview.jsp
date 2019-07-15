@@ -88,7 +88,9 @@
 							<c:when test="${ fn:length(trList) > 0 }">
 								<c:forEach var="review" items="${ trList }" varStatus="st">
 									<tr>
-										<td>${ st.count }</td>
+										<td>
+											${ st.count }
+										</td>
 										<td>
 										<c:forEach var="i" begin="1" end="5" step="1">
 											<c:choose>
@@ -107,6 +109,8 @@
 											<c:if test="${ review.memberId eq loginUser.memberId }">
 												&nbsp;<a class="tag is-danger" onclick="deleteReview(${ review.reviewId })">리뷰삭제</a>
 											</c:if>
+											<span id="bell" data-tooltip="리뷰 신고하기"><i class="fas fa-bell" onclick="reviewPenaltyModal(${ review.reviewId })"></i></span>
+											<input value="${ review.reviewId }" style="display: none;" class="reviewIds" name="reviewId">
 										</td>
 										<td>${ review.userName }</td>
 									</tr>
@@ -205,9 +209,63 @@
 		
 	    </div>
 	</div>
+
+	<!-- 리뷰신고 모달 -->
+	<section class="section" id="reviewPanaltySection" >
+		<form action="insertPanelty.pe" method="post" enctype="multipart/form-data" id="reviewPanelty" onSubmit="return false;">
+		<div class="modal" id="reviewPanaltyModal">
+		    <div class="modal-background"></div>
+		    <div class="modal-card">
+		    
+				<header class="modal-card-head">
+					<p class="modal-card-title"><i class="fas fa-exclamation-triangle"></i>&nbsp;리뷰 신고</p>
+					<button class="cancel delete"></button>
+				</header>
+			
+				<section class="modal-card-body" align="center">
+					<input type="hidden" value="${ loginUser.memberId }" name="complainantId">
+					<input value="리뷰" name="list" style="display: none;">
+					<input type="hidden" value="리뷰아이디" name="listType" id="reviewListType" style="display: none;">
+					<p>해당 리뷰를 신고하시겠습니까?<br>
+					허위 신고 시 불이익이 있을 수 있습니다.</p>
+					<hr style="border: 1px solid lightgray; margin-top: 0.5em;">
+					<select name="penaltyId" id="reviewPanalty" style="width: 60%;">
+							<option value="11">부적절 게시물</option>
+							<option value="12">욕설 및 비방</option>
+							<option value="13">저작권 침해 및 명의 도용</option>
+							<option value="30">기타</option>
+					</select>
+					<br>
+					<textarea id="reviewPanaltyContent" name="penaltyContent" rows="5" placeholder="신고 사유를 작성해주세요." style="width: 60%; resize: none; margin-top: 0.5em;" value=""></textarea>
+					<br>
+					<div style="display: inline-block; margin-top: 0.5em;">
+						<div class="field" align="center" align="center">
+							<div class="file has-name">
+								<label class="file-label">
+									<input class="file-input" type="file" name="attachmentFile" multiple="multiple" id="panaltyImg2">
+									<span class="file-cta">
+										<span class="file-icon"> <i class="fa fa-upload"></i></span>
+										<span class="file-label"> Choose a file… </span>
+									</span>
+									<span class="file-name" id="file2" style="width: 250px;"><span style="color: gray;">신고용 사진을 첨부해주세요.</span></span>
+								</label>
+							</div>
+						</div>
+					</div>
+					
+				</section>
+			
+				<footer class="modal-card-foot" style="justify-content: center">
+					<a class="button is-primary" id="reviewPanaltySubmit">리뷰신고</a>
+					<a class="button cancel">닫기</a>
+				</footer>
+		    </div>
+		</div>
+		</form>
+	</section>	
+	
 <script>
 
-	
 	//리뷰작성 모달창 띄우기
 	function reviewForm() {
 		$('#myModal').toggleClass('is-active').removeAttr('style');
@@ -253,17 +311,22 @@
 	//리뷰 삭제
 	function deleteReview(reviewId) {
 		
+		var answer = confirm("리뷰를 삭제하시겠습니까?");
 		var memberId = $("#loginId").val();
 		
-		$.ajax({
-			url : "deliteReview.tb",
-			data : {reviewId : reviewId, memberId : memberId},
-			success : function(data) {
-				alert(data.string);
-				
-				location.href="travelDetailForm.tb?trvId=" + ${ detailTb.trvId };
-			}
-		})
+		if(answer) {
+			
+			$.ajax({
+				url : "deliteReview.tb",
+				data : {reviewId : reviewId, memberId : memberId},
+				success : function(data) {
+					alert(data.string);
+					
+					location.href="travelDetailForm.tb?trvId=" + ${ detailTb.trvId };
+				}
+			});
+			
+		}
 	}
 	
 	
@@ -395,9 +458,9 @@
 					
 					var number = Number(no + key) + 1;
 					
-					var review = "<tr><td>" + number + "</td><td>" + star + "</td><td>" + trList[key].reviewContent;
+					var review = "<tr><td>" + '<input value="' + trList[key].reviewId + '" style="display: none;" class="reviewIds" name="reviewId">' + number + "</td><td>" + star + "</td><td>" + trList[key].reviewContent;
 					if(trList[key].memberId == memberId) {
-						review += '<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a></td><td>' + trList[key].userName + "</td></tr>";
+						review += '<a class="tag is-danger" onclick="deleteReview()">리뷰삭제</a></td><td><span id="bell" data-tooltip="리뷰 신고하기"><i class="fas fa-bell" onclick="reviewPenaltyModal()"></i></span>' + trList[key].userName + "</td></tr>";
 					}else {
 						review += "</td><td>" + trList[key].userName + "</td></tr>";
 					}
@@ -413,6 +476,66 @@
 				
 		});
 	}
+	
+	//리뷰신고 모달 띄우기
+	function reviewPenaltyModal(reviewId) {
+		
+		$("#reviewPanaltySection").removeAttr('style');
+		$('#reviewPanaltyModal').toggleClass('is-active').removeAttr('style');
+		
+		$("#reviewListType").val(reviewId);
+		
+		$(".cancel").click(function(){
+			$('#reviewPanaltyModal').removeClass('is-active');
+			$("#reviewPanaltySection").css("display","none");
+	    });
+		
+	}
+	
+	//파일 업로드 시 해당 파일이름으로 칸 바꾸기
+	$("#panaltyImg2").click(function() {
+		var fileTarget = $(this);
+		
+		fileTarget.on('change', function(){
+			// 값이 변경되면
+			if(window.FileReader){
+				// modern browser
+				var filename = $(this)[0].files[0].name; } else {
+					// old IE
+					var filename = $(this).val().split('/').pop().split('\\').pop();
+					// 파일명만 추출
+					}
+			// 추출한 파일명 삽입
+			$("#file2").text(filename); });
+	});
+	
+	//리뷰 신고 버튼을 눌렀을 때
+	$("#reviewPanaltySubmit").click(function() {
+		
+		var memberId = $("#loginId").val();
+		var penaltyId = $("#reviewlPanalty").val();
+		var penaltyContent = $("#reviewPanaltyContent").val();
+		var file = $("#file2").text();
+		var reviewId = $("#reviewListType").val();
+		
+		var check = false;
+		
+		if(penaltyContent.length <= 0){
+			alert("신고 사유를 반드시 작성해주세요");
+			check = false;
+		}
+		if(file == '신고용 사진을 첨부해주세요.') {
+			alert("신고 첨부파일을 반드시 첨부해주세요");
+			check = false;
+		}
+		if(penaltyContent.length > 0 && file != '신고용 사진을 첨부해주세요.'){
+			check = true;
+			if(check) {
+				$("#reviewPanelty").submit();
+			}
+		}
+		
+	});
 </script>
 
 </body>

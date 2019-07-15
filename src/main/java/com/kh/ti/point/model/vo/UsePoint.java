@@ -13,11 +13,12 @@ public class UsePoint implements Serializable {
 	private int trvId;		//여행일정번호
 	private int requestId;	//의뢰번호
 	private String month;	//검색월
+	private Refund refund;
 	
 	public UsePoint() {}
 
 	public UsePoint(int pointId, int usePoint, Date useDate, int useType, int memberId, int trvId, int requestId,
-			String month) {
+			String month, Refund refund) {
 		super();
 		this.pointId = pointId;
 		this.usePoint = usePoint;
@@ -27,6 +28,7 @@ public class UsePoint implements Serializable {
 		this.trvId = trvId;
 		this.requestId = requestId;
 		this.month = month;
+		this.refund = refund;
 	}
 
 	public int getPointId() {
@@ -61,6 +63,10 @@ public class UsePoint implements Serializable {
 		return month;
 	}
 
+	public Refund getRefund() {
+		return refund;
+	}
+
 	public void setPointId(int pointId) {
 		this.pointId = pointId;
 	}
@@ -93,11 +99,15 @@ public class UsePoint implements Serializable {
 		this.month = month;
 	}
 
+	public void setRefund(Refund refund) {
+		this.refund = refund;
+	}
+
 	@Override
 	public String toString() {
 		return "UsePoint [pointId=" + pointId + ", usePoint=" + usePoint + ", useDate=" + useDate + ", useType="
 				+ useType + ", memberId=" + memberId + ", trvId=" + trvId + ", requestId=" + requestId + ", month="
-				+ month + "]";
+				+ month + ", refund=" + refund + "]";
 	}
-	
+
 }
