@@ -96,12 +96,19 @@
 					</p>
 				</div>
 				<div class="field is-grouped">
-					<p class="control">
-						<button class="button is-primary" onclick="start();">설계해주기</button>
+					<c:if test="${ loginUser.memberId eq 1 }">
+						<p class="control">
+						<button class="button is-link" onclick="adminReset();">돌아가기</button>
 					</p>
-					<p class="control">
-						<button class="button is-link" onclick="reset();">돌아가기</button>
-					</p>
+					</c:if>
+					<c:if test="${ loginUser.memberId ne 1 }">
+						<p class="control">
+							<button class="button is-primary" onclick="start();">설계해주기</button>
+						</p>
+						<p class="control">
+							<button class="button is-link" onclick="reset();">돌아가기</button>
+						</p>
+					</c:if>
 				</div>
 			</section>
 			<section class="section" id="card">
@@ -110,34 +117,36 @@
 				<c:if test="${ loginUser.userName eq userName }">
 				<c:forEach var="plan" items="${ tr.planList }" varStatus="st">
 				<c:if test="${ plan.planTitle != null}">
-					<div class="columns">
-						<div class="column">
-							<div class="card request">
-								<div class="card-image">
-									<figure class="image is-4by3" id="map">
-										<!-- <img src="https://source.unsplash.com/random/800x600"
-											alt="Image"> -->
-									</figure>
-								</div>
-								<div class="card-content">
-									<div class="media">
-										<div class="media-left"></div>
-										<div class="media-content">
-										<input type="hidden" value="${ tr.participationList.get(st.index).ptcpId }" id="ptcpId">
-											<p class="title is-4">제목 : ${ plan.planTitle }</p><br>
-											<p class="subtitle is-6">설계자 : ${ plan.userName }</p>
-											<input type="hidden" value="${ plan.planId }">
-											<p class="subtitle is-6">작성일 : ${ plan.enrollDate }</p>
-										</div>
+					<c:if test="${ tr.participationList.get(st.index).chooseStatus ne 'D' }">
+						<div class="columns">
+							<div class="column">
+								<div class="card request">
+									<div class="card-image">
+										<figure class="image is-4by3" id="map">
+											<!-- <img src="https://source.unsplash.com/random/800x600"
+												alt="Image"> -->
+										</figure>
 									</div>
-									<div class="content">
-										<textarea class="col-lg-12" style="width: 100%; resize: none;"
-											readonly>${ plan.planContent }</textarea>
+									<div class="card-content">
+										<div class="media">
+											<div class="media-left"></div>
+											<div class="media-content">
+											<input type="hidden" value="${ tr.participationList.get(st.index).ptcpId }" id="ptcpId">
+												<p class="title is-4">제목 : ${ plan.planTitle }</p><br>
+												<p class="subtitle is-6">설계자 : ${ plan.userName }</p>
+												<input type="hidden" value="${ plan.planId }">
+												<p class="subtitle is-6">작성일 : ${ plan.enrollDate }</p>
+											</div>
+										</div>
+										<div class="content">
+											<textarea class="col-lg-12" style="width: 100%; resize: none;"
+												readonly>${ plan.planContent }</textarea>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</c:if>
 				</c:if>
 				</c:forEach>
 				</c:if>
@@ -186,18 +195,25 @@
 			location = "showrequestStartForm.tr?reqId=" + reqId + "&userName=" + userName;
 		}
 	}
+	
+	//일반유저 돌아가기
 	function reset() {
 		location = "travelRequest.tr";
 	}
 	
+	//관리자 돌아가기
+	function adminReset() {
+		location = "reqTotalList.ad";
+	}
 	//지도보기
-    var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -33.93979965825738, lng: 151.171365661621},
-          zoom: 13
-        });
-      }
+	var count = $("figure").length;
+	function initMap() {
+	    var map;
+	    map = new google.maps.Map(document.getElementById("map"), {
+	    center: {lat: -33.93979965825738, lng: 151.171365661621},
+	    zoom: 13
+	});
+}	
 </script>
 <script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHA8SfsYSWfcmA-kb6Y1Gf4ucjOrvfXZI&callback=initMap" async defer></script>

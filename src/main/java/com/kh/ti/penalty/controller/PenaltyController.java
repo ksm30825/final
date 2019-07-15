@@ -30,6 +30,7 @@ public class PenaltyController {
 	@Autowired
 	private PenaltyService ps;
 	
+	
 	//신고할 대상 조회 - 이선우
 	@RequestMapping("selectPanelty.pe")
 	public ResponseEntity selectPanelty(

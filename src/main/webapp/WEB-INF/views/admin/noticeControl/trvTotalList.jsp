@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +44,7 @@
 }
 
 .pagination-list {
-	margin-left: 30%;
+	margin-left: 40% !important;
 }
 
 .date {
@@ -60,6 +61,13 @@ textarea {
 #okModal td {
 	border: 1px solid black !important;
 }
+
+#null {
+	width:80%;
+	margin-left:auto !important;
+	margin-right:auto !important;
+	padding-left:30%;
+}
 </style>
 </head>
 <body>
@@ -67,34 +75,15 @@ textarea {
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="table">
+			<br><br>
 				<h1 class="title" style="text-align: center;">게시판</h1>
 				<div class="field">
-					<p class="control">
-						<label>구분</label> &nbsp; &nbsp;
-						<span class="select">
-							<select>
-								<option>여행 일정</option>
-								<option>여행 의뢰</option>
-								<option>기타</option>
-							</select>
-						</span> &nbsp; &nbsp; &nbsp;
-						<label>작성일</label> &nbsp;
-							<span>
-								<input type="date" class="date">
-							</span> &nbsp; &nbsp; &nbsp;
-							<span>
-								<input type="date" class="date">
-							</span> &nbsp; &nbsp; &nbsp;
-						<label>여부</label> &nbsp; &nbsp;
-						<span class="select">
-							<select>
-								<option>삭제</option>
-								<option>게시 중</option>
-							</select>
-						</span> &nbsp; &nbsp; &nbsp;
-						<a class="button is-info"> 조회 </a>
-					</p>
+					<a class="button is-primary is-rounded" href="reqTotalList.ad">여행 의뢰</a> &nbsp; &nbsp;
+					<a class="button is-success is-rounded" href="planTotalList.ad">의뢰 설계</a> &nbsp; &nbsp;
+					<a class="button is-info is-rounded" href="trvTotalList.ad">여행 일정</a> &nbsp; &nbsp;
+					<a class="button is-link is-rounded" href="reviewTotalList.ad">리뷰</a> &nbsp;&nbsp;
 				</div>
+				<br>
 				<hr>
 				<table class="table">
 					<thead>
@@ -108,74 +97,71 @@ textarea {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td><b>1</b></td>
-							<td>여행일정</td>
-							<td>여자 혼자 맬버른 여행</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td><a class="button is-danger is-rounded"
-								onclick="$('#reportModal').toggleClass('is-active')">삭제하기</a></td>
-						</tr>
-						<tr>
-							<td><b>2</b></td>
-							<td>여행일정</td>
-							<td>여자 혼자 맬버른 여행</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td><a class="button is-danger is-rounded"
-								onclick="$('#reportModal').toggleClass('is-active')">삭제하기</a></td>
-						</tr>
-						<tr>
-							<td><b>3</b></td>
-							<td>여행일정</td>
-							<td>여자 혼자 맬버른 여행</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td><a class="button is-danger is-rounded"
-								onclick="$('#reportModal').toggleClass('is-active')">삭제하기</a></td>
-						</tr>
-						<tr>
-							<td><b>4</b></td>
-							<td>여행일정</td>
-							<td>여자 혼자 맬버른 여행</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td><a class="button is-danger is-rounded"
-								onclick="$('#reportModal').toggleClass('is-active')">삭제하기</a></td>
-						</tr>
-						<!-- <tr class="is-selected"> -->
-						<tr>
-							<td><b>5</b></td>
-							<td>여행일정</td>
-							<td>여자 혼자 맬버른 여행</td>
-							<td>2019/07/10</td>
-							<td>user01</td>
-							<td><a class="button is-danger is-rounded"
-								onclick="$('#reportModal').toggleClass('is-active')">삭제하기</a></td>
-						</tr>
+						<c:if test="${ list.size() > 0 }">
+							<c:forEach var="trv" items="${ list }">
+								<tr>
+									<td><b>${ trv.trvId }</b></td>
+									<td>여행 일정</td>
+									<td>${ trv.trvTitle }</td>
+									<td>${ trv.openDate }</td>
+									<td>${ trv.userName }</td>
+									<td class="no"><a class="button is-danger is-rounded">삭제하기</a></td>
+								</tr>
+							</c:forEach>
+						</c:if>
 					</tbody>
 				</table>
 			</section>
+			<c:if test="${ list.size() == 0 }">
+				<div id="null" class="column" style="width:80%; margin-left:center; margin-right:center;">
+					<h1>등록한 글이 없습니다.</h1>
+				</div>
+			</c:if>
 			<section class="section" id="pagination">
-				<hr>
-				<nav class="pagination is-rounded" role="navigation"
-					aria-label="pagination">
-					<ul class="pagination-list">
-						<li><a class="pagination-previous">이전</a></li>
-						<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-						<li><span class="pagination-ellipsis">…</span></li>
-						<li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-						<li><a class="pagination-link is-current"
-							aria-label="Page 46" aria-current="page">46</a></li>
-						<li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-						<li><span class="pagination-ellipsis">…</span></li>
-						<li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
-						<li><a class="pagination-next">다음</a></li>
-					</ul>
-				</nav>
-				<br>
-			</section>
+		<hr>
+		<nav class="pagination is-rounded" role="navigation"
+			aria-label="pagination">
+			<ul class="pagination-list">
+			<!-- 이전버튼 -->
+			<c:if test="${pi.currentPage <= 1 }">
+				<li><a class="pagination-previous">이전</a></li>
+			</c:if>
+			<c:if test="${ pi.currentPage > 1 }">
+				<c:url var="previous" value="reqTotalList.ad">
+					<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
+				</c:url>
+				<li><a class="pagination-previous" href="${ previous }">이전</a></li>
+			</c:if>
+			<!--  -->
+			
+			<!-- 숫자버튼 -->
+			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				<c:if test="${ p eq pi.currentPage }">
+					<li><a class="pagination-link" aria-label="Goto page 1">${ p }</a></li>
+				</c:if>
+				<c:if test="${ p ne pi.currentPage }">
+					<c:url var="number" value="reqTotalList.ad">
+						<c:param name="currentPage" value="${ p }"/>
+					</c:url>
+					<li><a class="pagination-link" aria-label="Goto page 1" href="${ number }">${ p }</a></li>
+				</c:if>
+			</c:forEach>
+			<!--  -->
+			
+			<!-- 다음 버튼 -->
+			<c:if test="${ pi.currentPage >= pi.maxPage }">
+				<li><a class="pagination-next">다음</a></li>
+			</c:if>
+			<c:if test="${ pi.currentPage < pi.maxPage }">
+				<c:url var="next" value="reqTotalList.ad">
+					<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
+				</c:url>
+				<li><a class="pagination-next" href="${ next }">다음</a></li>
+			</c:if>
+			</ul>
+		</nav>
+		<br>
+	</section>
 		</div>
 	</div>
 	<!-- 신고하기 모달 -->
@@ -287,8 +273,9 @@ textarea {
 		});
 
 		$(".is-danger").parent().siblings().click(function() {
-			console.log($(this).parents().children("td").eq(0).text());
-			location = "noticeControlDetail.ad";
+			var trvId = $(this).parents().children("td").eq(0).text()
+			console.log(trvId);
+			location = "travelDetailForm.tb?trvId=" + trvId
 		});
 		
 		$('.modal-background, .modal-close').click(function() {
@@ -320,6 +307,17 @@ textarea {
 		        $target.classList.toggle('is-active');
 		      });
 		   });
+		}
+	});
+	
+	$(document).on("click",".no", function(){
+		var trvId = $(this).parent().find("td").eq(0).text();
+		console.log(trvId);
+		
+		var result = confirm("일정 번호 : " + trvId + "\n"
+							 + "해당글을 정말 삭제하시겠습니까?");
+		if(result) {
+			location = "trvDelete.ad?trvId=" + trvId;
 		}
 	});
 </script>

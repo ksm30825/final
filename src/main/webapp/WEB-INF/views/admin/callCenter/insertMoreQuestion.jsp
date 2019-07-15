@@ -46,61 +46,60 @@ textarea {
 	<jsp:include page="../../common/adminMainNav.jsp" />
 	<div class="columns">
 		<div class="column">
-			<br> <br>
-			<h1 style="text-align: center;" class="title">자주 묻는 질문</h1>
-			<hr>
-			<section class="section" id="box">
-				<div class="box">
-					<article class="media">
-						<div class="media-content">
-							<div class="content">
-								<section class="section" id="form">
-									<div class="columns">
-										<div class="column">
-											<div class="field">
-												<label class="label">제목</label>
-												<p class="control">
-													<input class="input" type="text" placeholder="제목을 입력하세요">
-												</p>
-											</div>
-											<hr>
-											<div class="field">
-												<label class="label">공지 사진</label>
-												<div class="img">
-													<img id="img1" src="resources/images/logo1.png">
+			<br><br>
+			<form action="insertMoreQuestion.ad" method="post"
+				enctype="multipart/form-data">
+				<br><br>
+				<h1 style="text-align: center;" class="title" name="boardType">자주 묻는 질문</h1>
+				<input type="hidden" value="자주 묻는 질문" name="boardType">
+				<hr>
+				<section class="section" id="box">
+					<div class="box">
+						<article class="media">
+							<div class="media-content">
+								<div class="content">
+									<section class="section" id="form">
+										<div class="columns">
+											<div class="column">
+												<div class="field">
+													<label class="label">제목</label>
+													<p class="control">
+														<input class="input" type="text" placeholder="제목을 입력하세요"
+															name="boardTitle">
+													</p>
 												</div>
-												<div class="img">
-													<img id="img2" src="resources/images/logo1.png">
+												<hr>
+												<div class="field" id="plusImg">
+													<label class="label">공지 사진</label>
+													<button type="button" onclick="plusImg();">추가</button>
 												</div>
-											</div>
-											<hr>
-											<div class="field">
-												<label class="label">공지 내용</label>
-												<p class="control">
-													<textarea class="textarea" placeholder="공지 내용을 입력하세요"></textarea>
-												</p>
-											</div>
-											<div id="fileArea">
-												<input type="file" id="img3" name="img5" onchange="loadImg(this, 5);">
-												<input type="file" id="img4" name="img6" onchange="loadImg(this, 6);">
+												<hr>
+												<div class="field">
+													<label class="label">공지 내용</label>
+													<p class="control">
+														<textarea class="textarea" placeholder="공지 내용을 입력하세요"
+															name="boardContent"></textarea>
+													</p>
+												</div>
+												<div id="fileArea"></div>
 											</div>
 										</div>
-									</div>
-								</section>
+									</section>
+								</div>
 							</div>
-						</div>
-					</article>
-				</div>
-				<br>
-				<div class="field is-grouped">
-					<p class="control result">
-						<button class="button is-link">돌아가기</button>
-					</p>
-					<p class="control result">
-						<button class="button is-primary">작성하기</button>
-					</p>
-				</div>
-			</section>
+						</article>
+					</div>
+					<br>
+					<div class="field is-grouped">
+						<p class="control result">
+							<button type="reset" class="button is-link">돌아가기</button>
+						</p>
+						<p class="control result">
+							<button type="submit" class="button is-primary">작성하기</button>
+						</p>
+					</div>
+				</section>
+			</form>
 		</div>
 	</div>
 </body>
@@ -109,17 +108,62 @@ textarea {
 		$(".is-link").click(function() {
 			location = "adminMoreQuestionList.ad";
 		});
-		$(".is-primary").click(function() {
+		/* $(".is-primary").click(function() {
 			location = "adminMoreQuestionList.ad";
-		});
-		
+		}); */
 		$("#fileArea").hide();
-		$("#img1").click(function() {
-			$("#img3").click();
-		});
-		$("#img2").click(function() {
-			$("#img4").click();
-		});
 	});
+
+	$(document).on("click", "#boardImg1", function() {
+		$("#imgArea1").click();
+	});
+	$(document).on("click", "#boardImg2", function() {
+		$("#imgArea2").click();
+	});
+	$(document).on("click", "#boardImg3", function() {
+		$("#imgArea3").click();
+	});
+	$(document).on("click", "#boardImg4", function() {
+		$("#imgArea4").click();
+	});
+
+	//사진 등록
+	function loadImg(value, num) {
+		if (value.files && value.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				switch (num) {
+				case 1:
+					$("#img1").attr("src", e.target.result);
+					break;
+				case 2:
+					$("#img2").attr("src", e.target.result);
+					break;
+				case 3:
+					$("#img3").attr("src", e.target.result);
+					break;
+				case 4:
+					$("#img4").attr("src", e.target.result);
+					break;
+				}
+			}
+			reader.readAsDataURL(value.files[0]);
+		}
+	}
+
+	//사진영역 추가
+	var count = 1;
+	function plusImg() {
+		$("#plusImg")
+				.append(
+						"<div class='img' id='boardImg" + count + "'><img id='img" + count + "'></div>");
+		$("#fileArea")
+				.append(
+						"<input type='file' id='imgArea"
+								+ count
+								+ "' name='attachmentFile' multiple='multiple' onchange='loadImg(this, "
+								+ count + ");'>");
+		count++;
+	}
 </script>
 </html>

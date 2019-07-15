@@ -38,6 +38,7 @@
 		WHERE MEMBER_ID = #{memberId}
 	</select>
 	
+	<!-- 나의 문의 상세조회 -->
 	<select id="selectMyInquiryDetail" resultMap="inquiryListResultSet" parameterType="Inquiry">
 		SELECT *
 		FROM INQUIRY

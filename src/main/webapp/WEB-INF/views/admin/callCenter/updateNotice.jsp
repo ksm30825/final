@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,14 +53,22 @@
 textarea {
 	resize: none;
 }
+#title {
+	border: none;
+	text-align:center;
+}
 </style>
 </head>
 <body>
 	<jsp:include page="../../common/adminMainNav.jsp" />
 	<div class="columns">
 		<div class="column">
+		<br><br>
+			<form action="updateNotice.ad" method="post">
 			<section class="section" id="table">
 				<h1 class="title" style="text-align: center;">공지 사항</h1>
+				<input type="hidden" value="공지사항" name="boardType">
+				<input type="hidden" value="${ b.boardId }" name="boardId">
 				<hr>
 				<table class="table">
 					<thead>
@@ -73,49 +82,55 @@ textarea {
 					</thead>
 					<tbody>
 						<tr>
-							<td><b>1</b></td>
-							<td>사이트 이용약관</td>
-							<td>2019/07/10</td>
+							<td><b>${ b.boardId }</b></td>
+							<td><textarea id="title" name="boardTitle">${ b.boardTitle }</textarea></td>
+							<td>${ b.enrollDate }</td>
 							<td>관리자</td>
-							<td>100</td>
+							<td>${ b.boardCount }</td>
 						</tr>
 					</tbody>
 				</table>
 			</section>
 			<section class="section" id="box">
+					<h1>제목/내용이 수정 가능합니다.</h1>
 				<div class="box">
 					<article class="media">
 						<div class="media-content">
-							<h1 class="title">공지 사진</h1>
-							<div class="content">
-								<div class="img">
-									<img id="img1" src="resources/images/logo1.png">
+							<div class="content" id="plusImg">
+							<c:if test="${ b.attachmentFileList.get(0).fileId ne 0 }">
+								<c:forEach var="img" items="${ b.attachmentFileList }" varStatus="st">
+								<div class="img" id="boardImg${ st.count }">
+									<img id="img${ st.count }" src="resources/uploadFiles/${ img.changeName }">
 								</div>
-								<div class="img">
-									<img id="img2" src="resources/images/logo1.png">
-								</div>
+								</c:forEach>
+							</c:if>
 							</div>
 							<h1 class="title">공지 내용</h1>
 							<div class="content">
-								<textarea style="width: 100%;" rows="15">있는 웅대한 얼마나 것이다. 설산에서 같이, 관현악이며, 낙원을 맺어, 보는 사람은 인간은 방지하는 봄바람이다. 수 장식하는 눈이 안고, 청춘의 싸인 싹이 피다. 천지는 예가 그들의 가치를 피부가 방지하는 황금시대를 열매를 무한한 끓는다. 구하지 커다란 위하여 안고, 따뜻한 듣는다. 고행을 발휘하기 몸이 꽃 곳으로 위하여서. 얼마나 용기가 구하지 힘있다. 위하여 그들은 바이며, 온갖 무한한 없으면, 때까지 이상 구하지 부패뿐이다. 얼마나 심장은 우리의 얼음이 못할 그들은 오아이스도 뜨고, 힘차게 있는가? 보는 곧 원질이 일월과 동력은 더운지라 맺어, 청춘의 속잎나고, 봄바람이다. 없으면 할지라도 없는 생명을 기쁘며, 고동을 뜨거운지라, 피어나는 뭇 있는가?</textarea>
+								<textarea style="width: 100%;" rows="15" name="boardContent">${ b.boardContent }</textarea>
 							</div>
 						</div>
+						<c:if test="${ !b.attachmentFileList.isEmpty() }">
 						<div id="fileArea">
-							<input type="file" id="img3" name="img5" onchange="loadImg(this, 5);">
-							<input type="file" id="img4" name="img6" onchange="loadImg(this, 6);">
+							<c:forEach var="img" items="${ b.attachmentFileList }" varStatus="st">
+								<input type="file" id="imgArea${ st.count }" name="attachmentFile" 
+									multiple="multiple" onchange="loadImg(this, ${ st.count });">
+							</c:forEach>
 						</div>
+						</c:if>
 					</article>
 					<br> <br>
 				</div>
 			</section>
 			<div class="field is-grouped">
 				<p class="control result">
-					<button class="button is-link">돌아가기</button>
+					<button type="reset" class="button is-link">돌아가기</button>
 				</p>
 				<p class="control result">
-					<button class="button is-primary">수정하기</button>
+					<button type="submit" class="button is-primary">수정하기</button>
 				</p>
 			</div>
+			</form>
 		</div>
 	</div>
 </body>
@@ -124,9 +139,9 @@ textarea {
 		$(".is-link").click(function() {
 			location = "adminNoticeList.ad"
 		});
-		$(".is-primary").click(function() {
+		/* $(".is-primary").click(function() {
 			location = "adminNoticeList.ad"
-		});
+		}); */
 		
 		$("#fileArea").hide();
 		$("#img1").click(function() {
@@ -136,5 +151,42 @@ textarea {
 			$("#img4").click();
 		});
 	});
+	
+	$(document).on("click","#boardImg1",function() {
+		$("#imgArea1").click();
+	});
+	$(document).on("click","#boardImg2",function() {
+		$("#imgArea2").click();
+	});
+	$(document).on("click","#boardImg3",function() {
+		$("#imgArea3").click();
+	});
+	$(document).on("click","#boardImg4",function() {
+		$("#imgArea4").click();
+	});
+	
+	//사진 등록
+	function loadImg(value, num) {
+		if(value.files && value.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				switch(num) {
+				case 1 :
+					$("#img1").attr("src", e.target.result);
+					break;
+				case 2 :
+					$("#img2").attr("src", e.target.result);
+					break;
+				case 3 :
+					$("#img3").attr("src", e.target.result);
+					break;
+				case 4 :
+					$("#img4").attr("src", e.target.result);
+					break;
+				}
+			}
+			reader.readAsDataURL(value.files[0]);
+		}
+	}
 </script>
 </html>

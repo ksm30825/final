@@ -53,12 +53,19 @@ th, td {
 .card-image {
 	background: lightgray;
 }
+.hidden {
+	display:none;
+}
 </style>
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
 	<div class="columns">
 		<div class="column">
+		<textarea id="lat" name="PplaceLat" class="hidden"></textarea>
+		<textarea id="lng" name="PplaceLng" class="hidden"></textarea>
+		<textarea id="placeName" name="PplaceTitle" class="hidden"></textarea>
+		<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
 		<%-- <input type="hidden" value="${ code }" id="code">
 		<input type="hidden" value="${ uPoint }" id="uPoint">
 		<input type="hidden" value="${ useType }" id="useType">
@@ -91,12 +98,18 @@ th, td {
 					<div class="column map" style="width: 50%;">
 						<div class="card">
 							<div class="card-image">
-								<c:if test="${ trp.get(0).getChooseStatus() == 'N'}">
-									<figure id="map" class="image is-4by3">
-										<h1 align="center" id="before">채택하셔야 경로가 보여집니다.</h1>
-									</figure>
+								<c:if test="${ loginUser.memberId ne 1 }">
+									<c:if test="${ trp.get(0).getChooseStatus() == 'N'}">
+										<figure id="map" class="image is-4by3">
+											<h1 align="center" id="before">채택하셔야 경로가 보여집니다.</h1>
+										</figure>
+									</c:if>
+									<c:if test="${ trp.get(0).getChooseStatus() == 'Y'}">
+										<figure id="map" class="image is-4by3">
+										</figure>
+									</c:if>
 								</c:if>
-								<c:if test="${ trp.get(0).getChooseStatus() == 'Y' }">
+								<c:if test="${ loginUser.memberId eq 1 }">
 									<figure id="map" class="image is-4by3">
 									</figure>
 								</c:if>
@@ -124,10 +137,15 @@ th, td {
 											</div>
 										</div>
 										<footer class="card-footer">
-											<a class="card-footer-item" onclick="back();">돌아가기</a> <a
-												class="card-footer-item" onclick="return ok();">채택하기</a> <a
-												class="card-footer-item"
-												onclick="$('#reportModal').toggleClass('is-active')">신고하기</a>
+											<c:if test="${ loginUser.memberId ne 1 }">
+												<a class="card-footer-item" onclick="back();">돌아가기</a> <a
+													class="card-footer-item" onclick="return ok();">채택하기</a> <a
+													class="card-footer-item"
+													onclick="$('#reportModal').toggleClass('is-active')">신고하기</a>
+											</c:if>
+											<c:if test="${ loginUser.memberId eq 1 }">
+												<a class="card-footer-item" onclick="adminBack();">돌아가기</a>
+											</c:if>
 										</footer>
 									</div>
 								</div>
@@ -195,7 +213,7 @@ th, td {
 				<section class="section" id="box">
 					<h1>신고사유</h1>
 					<textarea name="list" readonly>설계글</textarea>
-					<textarea id="panelty" name="listType" readonly>${ code }</textarea>
+					<textarea id="panelty" name="listType" readonly>${ trp.get(0).planId }</textarea>
 					<hr>
 					<div class="box">
 						<article class="media">
@@ -296,14 +314,22 @@ th, td {
 		}
 	});
 	
+	//일반유저 뒤로가기
 	function back() {
 		var reqId= $("#reqId").val();
 		var userName = $("#userName").val();
 		location = "requestDetail.tr?reqId=" + reqId + "&userName=" + userName;
 	}
+	
+	//관리자 뒤로가기
+	function adminBack() {
+		location = "planTotalList.ad";
+	}
 	function more() {
-		<c:if test="${ trp.get(0).getChooseStatus() == 'N'}">
-			alert("채택해야 상세보기가 가능합니다.");
+		<c:if test="${ loginUser.memberId ne 1 }">
+			<c:if test="${ trp.get(0).getChooseStatus() == 'N'}">
+				alert("채택해야 상세보기가 가능합니다.");
+			</c:if>
 		</c:if>
 	}
 	function ok() {
@@ -362,15 +388,87 @@ th, td {
     	pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
     }
     </c:forEach>
-    console.log("일정들 장소 명 : " + pTitle.length);
+    /* ${ day.dayList.get(0).placeList.get(0).getPplaceTitle() } */
+    console.log("장소명 : " + pTitle);
+    console.log("일정들 장소 수 : " + pTitle.length);
     console.log("각 장소 주소 : " + pAddress);
     console.log("각 장소 위도 : " + pLat);
     console.log("각 장소 경도 : " + pLng);
     console.log(pLat[0]);
     console.log(pLng[0]);
-    console.log(pTitle[0]);
     
-	<c:if test="${ trp.get(0).getChooseStatus() == 'Y' }">
+    <c:if test="${ loginUser.memberId ne 1 }">
+		<c:if test="${ trp.get(0).getChooseStatus() == 'Y' }">
+	    function initMap() {
+			var first = new google.maps.LatLng(pLat[0], pLng[0]);
+			var destinations = new Array();
+			var contentString = pTitle[0];
+			var content = new Array();
+	    	map = new google.maps.Map(document.getElementById('map'), {
+	    	  	zoom: 13,
+	    	  	center : first
+	    	});
+	    	
+	    	for(var i = 0; i < pTitle.length; i++) {
+	    		if(i == 0) {
+	    			marker = new google.maps.Marker({
+	    	    	    position: new google.maps.LatLng(pLat[0], pLng[0]),
+	    	    	    map: map
+	    	    	});
+	    			$("#lat").append(marker.position.lat() + "#");
+	    		    $("#lng").append(marker.position.lng() + "#");
+	    			destinations.push(new google.maps.LatLng(pLat[0], pLng[0]));
+	    		} else {
+		    		var marker = new google.maps.Marker({
+		        	    position: new google.maps.LatLng(pLat[i], pLng[i]),
+		        	    map: map
+		        	});
+		    		$("#lat").append(marker.position.lat() + "#");
+	    		    $("#lng").append(marker.position.lng() + "#");
+		    		destinations.push(new google.maps.LatLng(pLat[i], pLng[i]));
+	    		}
+	    		
+	    		markers.push(marker);
+	    	}
+	    	console.log(markers);
+	    	$.each(markers, function(index, item) {
+		    	google.maps.event.addListener(markers[index], 'click', function() {
+		            infowindow.setContent('<div><strong>' + pTitle[index] + '</strong><br>' +
+		            pAddress[index] + '</div>');
+		            infowindow.open(map, this);
+		        });
+		    	$("#placeName").append(pTitle[index] + "#");
+		    	$("#placeAddress").append(pAddress[index] + "#");
+	    	});
+	    	
+	    	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
+	    	//폴리라인 객체
+	    	poly = new google.maps.Polyline({
+	    		path: destinations,
+	    	  	strokeColor: "#FF0000",
+	    	  	strokeWeight : 3
+	    	});
+	    	poly.setMap(map);
+	
+	    	//지역 검색
+	        var input = document.getElementById('pac-input');
+	
+	        var autocomplete = new google.maps.places.Autocomplete(input);
+	        autocomplete.bindTo('bounds', map);
+	
+	        // Specify just the place data fields that you need.
+	        autocomplete.setFields(['place_id', 'geometry', 'name']);
+	
+	        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+	
+	        var infowindow = new google.maps.InfoWindow();
+	        var infowindowContent = document.getElementById('infowindow-content');
+	        infowindow.setContent(infowindowContent);
+	    }
+    	</c:if>
+    </c:if>
+    
+    <c:if test="${ loginUser.memberId eq 1 }">
     function initMap() {
 		var first = new google.maps.LatLng(pLat[0], pLng[0]);
 		var destinations = new Array();
@@ -413,7 +511,7 @@ th, td {
 	    	$("#placeAddress").append(pAddress[index] + "#");
     	});
     	
-    	map = new google.maps.Map(document.getElementById('map'), myOptions);
+    	/* map = new google.maps.Map(document.getElementById('map'), myOptions); */
     	//폴리라인 객체
     	poly = new google.maps.Polyline({
     		path: destinations,

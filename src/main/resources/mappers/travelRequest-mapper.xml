@@ -109,6 +109,8 @@
 		<result property="endDate" column="END_DATE"/>
 		<result property="chooseStatus" column="CHOOSE_STATUS"/>
 		<result property="chooseDate" column="CHOOSE_DATE"/>
+		<association property="refund" column="REFUND_STATUS"
+					 javaType="Refund" resultMap="refundResultSet"/>
 	</resultMap>
 	
 	<!-- 마이페이지 나의 설계 목록 -->
@@ -121,6 +123,16 @@
 		<result property="memberId" column="MEMBER_ID"/>
 		<result property="reqPrice" column="REQUEST_PRICE"/>
 		<result property="chooseStatus" column="CHOOSE_STATUS"/>
+	</resultMap>
+	
+	<!-- 채택 환불 승인 거절 -->
+	<resultMap type="Refund" id="refundResultSet">
+		<id property="refundId" column="REFUND_ID"/>	
+		<result property="refundReason" column="REFUND_REASON"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="processedDate" column="PROCESSED_DATE"/>
+		<result property="refundStatus" column="REFUND_STATUS"/>
+		<result property="pointId" column="POINT_ID"/>
 	</resultMap>
 	
 	<!-- 의뢰하기 -->
@@ -163,11 +175,11 @@
 	   SELECT SUB.REQUEST_ID, SUB.REQUEST_TITLE, SUB.REQUEST_CONTENT,
              SUB.USER_NAME, SUB.MEMBER_ID, SUB.REQUEST_PRICE, SUB.TRV_COST, SUB.END_DATE,
              SUB.PLAN_ID, SUB.PLAN_TITLE, SUB.PLAN_CONTENT, SUB.ENROLL_DATE, M.USER_NAME,
-             SUB.PTCP_ID
+             SUB.PTCP_ID, SUB.CHOOSE_STATUS
        FROM (SELECT M.USER_NAME, TR.REQUEST_ID, TR.REQUEST_TITLE, TR.REQUEST_CONTENT, 
              TR.MEMBER_ID, TR.REQUEST_PRICE, TR.TRV_COST, TR.END_DATE,
              TP.PLAN_ID, TP.PLAN_TITLE, TP.PLAN_CONTENT, TP.ENROLL_DATE,
-             P.PTCP_ID
+             P.PTCP_ID, P.CHOOSE_STATUS
              FROM MEMBER M
              RIGHT JOIN TRV_PLAN TP ON (TP.MEMBER_ID= M.MEMBER_ID)
              RIGHT JOIN PARTICIPATION P ON (TP.PLAN_ID = P.PLAN_ID)
@@ -236,7 +248,9 @@
 	
 	<!-- 의뢰자(선택한 설계글 불러오기) -->
 	<select id="selectOneRequestPlan" parameterType="_int" resultMap="loadPlanResultSet">
-		SELECT *
+		SELECT TP.PLAN_TITLE, TP.MEMBER_ID, TP.PLAN_CONTENT, TP.ENROLL_DATE, TP.ROOM_CHARGE, TP.TRAFFIC_CHARGE, TP.ETC_CHARGE,
+		P.PTCP_ID, P.CHOOSE_STATUS, P.PTCP_DATE, P.REQUEST_ID, TR.REQUEST_TITLE, TR.REQUEST_CONTENT, TR.END_DATE, TR.REQUEST_PRICE, TR.TRV_COST,
+		PD.PDAY_ID, PD.PDAY, PD.PDAY_MEMO, PD.OPEN_STATUS, PP.PPLACE_ID, PP.PPLACE_TITLE, PP.PPLACE_ADDRESS, PP.PPLACE_LAT, PP.PPLACE_LNG
 		FROM TRV_PLAN TP
 		JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
 		JOIN TRV_REQUEST TR ON(TR.REQUEST_ID = P.REQUEST_ID)
