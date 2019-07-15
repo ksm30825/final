@@ -50,14 +50,14 @@
 				<div class="columns" align="center">
 					
 					<div class="statisticsArea" style="display: flex; width: 100%;">
-						<div class="column is-1" style="justify-content: flex-start;" onclick="yearPayment($('#yearValue').val(), 'left')">
+						<div class="column is-1" style="justify-content: flex-start;" onclick="yearPayment('left')">
 							<a><i class="title is-2 fas fa-caret-left"></i></a>
 						</div>
 						<input id="yearValue" value="${ rs.year }" style="display: none" type="number">
 						<div class="column is-10" style="justify-content: center;">
 							<canvas id="paymentChart" width="1000"></canvas>
 						</div>
-						<div class="column is-1" style="justify-content: flex-end;" onclick="yearPayment($('#yearValue').val(), 'right')">
+						<div class="column is-1" style="justify-content: flex-end;" onclick="yearPayment('right')">
 							<a><i class="title is-2 fas fa-caret-right"></i></a>
 						</div>
 					</div>
@@ -112,10 +112,7 @@ $(function(){
         }
     });
     
-    /* 데이터 업데이트 */
-    
-    //데이터 넣기
-    
+    //현재 월 데이터 넣기
     myChart.data.labels.push(['1월']);
     myChart.data.labels.push(['2월']);
     myChart.data.labels.push(['3월']);
@@ -129,7 +126,7 @@ $(function(){
     myChart.data.labels.push(['11월']);
     myChart.data.labels.push(['12월']);
     
-	myChart.data.datasets[0].data.push([${rs.m1}]);
+    myChart.data.datasets[0].data.push([${rs.m1}]);
 	myChart.data.datasets[0].data.push([${rs.m2}]);
 	myChart.data.datasets[0].data.push([${rs.m3}]);
 	myChart.data.datasets[0].data.push([${rs.m4}]);
@@ -146,24 +143,28 @@ $(function(){
 	
 });
 
-function yearPayment(yearValue, text) {
-	var searchToday = new Date();
-	var searchYear = searchToday.getFullYear();
+function yearPayment(text) {
 	
-	console.log(yearValue, text);
+	var today = new Date();
+	var todayYear = today.getFullYear();
 	
-	if(text == 'right' && searchYear == yearValue) {
+	var searchYear = year;
+	
+	console.log(searchYear, text);
+	console.log(todayYear);
+	
+	if(text == 'right' && searchYear == todayYear) {
 		alert("가장 최근 년도입니다.");
 	}else {
 		if(text == 'left') {
-			searchYear = yearValue - 1;
+			searchYear = year - 1;
 			console.log(searchYear);
-			
 		}else {
-			searchYear = Number(yearValue) + 1;
+			searchYear = Number(year) + 1;
 			console.log(searchYear);
 		}
 		
+		console.log(searchYear);
 		$.ajax({
 			url : "paymentYearSearch.sta",
 			data : {year : searchYear},
@@ -171,8 +172,13 @@ function yearPayment(yearValue, text) {
 			success : function(rs) {
 				console.log(rs);
 				
-				year = rs.year;
-				$("#yearValue").val(year);
+				if(rs != null) {
+					year = searchYear;
+					$("#yearValue").val(year);
+				}else {
+					$("#yearValue").val(searchYear);
+				}
+				
 				
 				myChart.clear();
 				
@@ -194,7 +200,7 @@ function yearPayment(yearValue, text) {
 			        options: {
 			            title: {
 			            	display: true,
-			            	text: year + '년 월별 결제수익',
+			            	text: searchYear + '년 월별 결제수익',
 			            	fontSize: 25
 			            }
 			        }
@@ -213,18 +219,33 @@ function yearPayment(yearValue, text) {
 			    myChart.data.labels.push(['11월']);
 			    myChart.data.labels.push(['12월']);
 			    
-				myChart.data.datasets[0].data.push([rs.m1]);
-				myChart.data.datasets[0].data.push([rs.m2]);
-				myChart.data.datasets[0].data.push([rs.m3]);
-				myChart.data.datasets[0].data.push([rs.m4]);
-				myChart.data.datasets[0].data.push([rs.m5]);
-				myChart.data.datasets[0].data.push([rs.m6]);
-				myChart.data.datasets[0].data.push([rs.m7]);
-				myChart.data.datasets[0].data.push([rs.m8]);
-				myChart.data.datasets[0].data.push([rs.m9]);
-				myChart.data.datasets[0].data.push([rs.m10]);
-				myChart.data.datasets[0].data.push([rs.m11]);
-				myChart.data.datasets[0].data.push([rs.m12]);
+			    if(rs != null) {
+			    	myChart.data.datasets[0].data.push([rs.m1]);
+					myChart.data.datasets[0].data.push([rs.m2]);
+					myChart.data.datasets[0].data.push([rs.m3]);
+					myChart.data.datasets[0].data.push([rs.m4]);
+					myChart.data.datasets[0].data.push([rs.m5]);
+					myChart.data.datasets[0].data.push([rs.m6]);
+					myChart.data.datasets[0].data.push([rs.m7]);
+					myChart.data.datasets[0].data.push([rs.m8]);
+					myChart.data.datasets[0].data.push([rs.m9]);
+					myChart.data.datasets[0].data.push([rs.m10]);
+					myChart.data.datasets[0].data.push([rs.m11]);
+					myChart.data.datasets[0].data.push([rs.m12]);
+			    }else {
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    	myChart.data.datasets[0].data.push(0);
+			    }
 				
 				myChart.update();
 			},

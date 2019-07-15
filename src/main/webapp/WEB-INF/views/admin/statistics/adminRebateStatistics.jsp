@@ -50,14 +50,14 @@
 				<div class="columns" align="center">
 					
 					<div class="statisticsArea" style="display: flex; width: 100%;">
-						<div class="column is-1" style="justify-content: flex-start;" onclick="yearRebate($('#yearValue').val(), 'left')">
+						<div class="column is-1" style="justify-content: flex-start;" onclick="yearRebate('left')">
 							<a><i class="title is-2 fas fa-caret-left"></i></a>
 						</div>
 						<input id="yearValue" value="${ rs.year }" style="display: none" type="number">
 						<div class="column is-10" style="justify-content: center;">
 							<canvas id="rebateChart" width="1000"></canvas>
 						</div>
-						<div class="column is-1" style="justify-content: flex-end;" onclick="yearRebate($('#yearValue').val(), 'right')">
+						<div class="column is-1" style="justify-content: flex-end;" onclick="yearRebate('right')">
 							<a><i class="title is-2 fas fa-caret-right"></i></a>
 						</div>
 					</div>
@@ -112,10 +112,7 @@ $(function(){
         }
     });
     
-    /* 데이터 업데이트 */
-    
     //데이터 넣기
-    
     myChart.data.labels.push(['1월']);
     myChart.data.labels.push(['2월']);
     myChart.data.labels.push(['3월']);
@@ -146,94 +143,118 @@ $(function(){
 	
 });
 
-function yearRebate(yearValue, text) {
-	var searchToday = new Date();
-	var searchYear = searchToday.getFullYear();
-	
-	console.log(yearValue, text);
-	
-	if(text == 'right' && searchYear == yearValue) {
-		alert("가장 최근 년도입니다.");
-	}else {
-		if(text == 'left') {
-			searchYear = yearValue - 1;
-			console.log(searchYear);
-			
-		}else {
-			searchYear = Number(yearValue) + 1;
-			console.log(searchYear);
-		}
+	function yearRebate(text) {
 		
-		$.ajax({
-			url : "rebateYearSearch.sta",
-			data : {year : searchYear},
-			type : "post",
-			success : function(rs) {
-				console.log(rs);
-				
-				year = rs.year;
-				$("#yearValue").val(year);
-				
-				myChart.clear();
-				
-				ctx = document.getElementById('rebateChart').getContext('2d');
-			    myChart = new Chart(ctx, {
-			        type: 'line',
-			        data: {
-			            labels: [],
-			            datasets: [{
-			                label: '월별 결제수익',
-			                data: [],
-			                borderColor: [
-			                    '#5CD1E5'
-			                ],
-			                backgroundColor: 'rgba(0, 0, 0, 0)',
-			                borderWidth: 2
-			            }]
-			        },
-			        options: {
-			            title: {
-			            	display: true,
-			            	text: year + '년 월별 결제수익',
-			            	fontSize: 25
-			            }
-			        }
-			    });
-	    		
-				myChart.data.labels.push(['1월']);
-			    myChart.data.labels.push(['2월']);
-			    myChart.data.labels.push(['3월']);
-			    myChart.data.labels.push(['4월']);
-			    myChart.data.labels.push(['5월']);
-			    myChart.data.labels.push(['6월']);
-			    myChart.data.labels.push(['7월']);
-			    myChart.data.labels.push(['8월']);
-			    myChart.data.labels.push(['9월']);
-			    myChart.data.labels.push(['10월']);
-			    myChart.data.labels.push(['11월']);
-			    myChart.data.labels.push(['12월']);
-			    
-				myChart.data.datasets[0].data.push([rs.m1]);
-				myChart.data.datasets[0].data.push([rs.m2]);
-				myChart.data.datasets[0].data.push([rs.m3]);
-				myChart.data.datasets[0].data.push([rs.m4]);
-				myChart.data.datasets[0].data.push([rs.m5]);
-				myChart.data.datasets[0].data.push([rs.m6]);
-				myChart.data.datasets[0].data.push([rs.m7]);
-				myChart.data.datasets[0].data.push([rs.m8]);
-				myChart.data.datasets[0].data.push([rs.m9]);
-				myChart.data.datasets[0].data.push([rs.m10]);
-				myChart.data.datasets[0].data.push([rs.m11]);
-				myChart.data.datasets[0].data.push([rs.m12]);
-				
-				myChart.update();
-			},
-			error : function(data) {
-				alert("접속에러");
+		var today = new Date();
+		var todayYear = today.getFullYear();
+		
+		var searchYear = year;
+		
+		console.log(searchYear, text);
+		console.log(todayYear);
+		
+		if(text == 'right' && searchYear == todayYear) {
+			alert("가장 최근 년도입니다.");
+		}else {
+			if(text == 'left') {
+				searchYear = year - 1;
+				console.log(searchYear);
+			}else {
+				searchYear = Number(year) + 1;
+				console.log(searchYear);
 			}
-		});
+			
+			console.log(searchYear);
+			$.ajax({
+				url : "rebateYearSearch.sta",
+				data : {year : searchYear},
+				type : "post",
+				success : function(rs) {
+					console.log(rs);
+					
+					if(rs != null) {
+						year = searchYear;
+						$("#yearValue").val(year);
+					}else {
+						$("#yearValue").val(searchYear);
+					}
+					
+					
+					myChart.clear();
+					
+					ctx = document.getElementById('rebateChart').getContext('2d');
+				    myChart = new Chart(ctx, {
+				        type: 'line',
+				        data: {
+				            labels: [],
+				            datasets: [{
+				                label: '월별 수익금 환급액',
+				                data: [],
+				                borderColor: [
+				                    '#5CD1E5'
+				                ],
+				                backgroundColor: 'rgba(0, 0, 0, 0)',
+				                borderWidth: 2
+				            }]
+				        },
+				        options: {
+				            title: {
+				            	display: true,
+				            	text: searchYear + '년 월별 수익금 환급액',
+				            	fontSize: 25
+				            }
+				        }
+				    });
+		    		
+					myChart.data.labels.push(['1월']);
+				    myChart.data.labels.push(['2월']);
+				    myChart.data.labels.push(['3월']);
+				    myChart.data.labels.push(['4월']);
+				    myChart.data.labels.push(['5월']);
+				    myChart.data.labels.push(['6월']);
+				    myChart.data.labels.push(['7월']);
+				    myChart.data.labels.push(['8월']);
+				    myChart.data.labels.push(['9월']);
+				    myChart.data.labels.push(['10월']);
+				    myChart.data.labels.push(['11월']);
+				    myChart.data.labels.push(['12월']);
+				    
+				    if(rs != null) {
+				    	myChart.data.datasets[0].data.push([rs.m1]);
+						myChart.data.datasets[0].data.push([rs.m2]);
+						myChart.data.datasets[0].data.push([rs.m3]);
+						myChart.data.datasets[0].data.push([rs.m4]);
+						myChart.data.datasets[0].data.push([rs.m5]);
+						myChart.data.datasets[0].data.push([rs.m6]);
+						myChart.data.datasets[0].data.push([rs.m7]);
+						myChart.data.datasets[0].data.push([rs.m8]);
+						myChart.data.datasets[0].data.push([rs.m9]);
+						myChart.data.datasets[0].data.push([rs.m10]);
+						myChart.data.datasets[0].data.push([rs.m11]);
+						myChart.data.datasets[0].data.push([rs.m12]);
+				    }else {
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    	myChart.data.datasets[0].data.push(0);
+				    }
+					
+					myChart.update();
+				},
+				error : function(data) {
+					alert("접속에러");
+				}
+			});
+		}
 	}
-}
 </script>
 	
 </body>

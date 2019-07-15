@@ -25,6 +25,16 @@
       cursor: pointer;
       text-align: center;
    }
+	#imgDiv{
+  	 width : 100%;
+  	 height : 300px;
+   }
+   
+   #imgDiv img{
+   	position: absolute; top:0; left: 0;
+	width: 100%;
+	height: 100%;
+   }
 </style>
 
 <body>
@@ -79,13 +89,15 @@
 								</div>
 							</div>
 					
-							<c:if test="${ !empty tbList.schFiles[0] }">
-								<img src="resources/uploadFiles/${ tbList.schFiles[0].changeName }">
-							</c:if>
-							<c:if test="${ empty tbList.schFiles[0] }">
-								<img src="resources/images/sample1.jpg">
-							</c:if>
-               </div>
+								<div id = "imgDiv">
+									<c:if test="${ !empty tbList.schFiles[0] }">
+										<img src="resources/uploadFiles/${ tbList.schFiles[0].changeName }">
+									</c:if>
+									<c:if test="${ empty tbList.schFiles[0] }">
+										<img src="resources/images/sample1.jpg">
+									</c:if>
+								</div>
+               		</div>
                
                <div class="content">
                   <div class="header">
