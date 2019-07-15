@@ -1,6 +1,7 @@
 package com.kh.ti.Chatting.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
@@ -17,5 +18,7 @@ public interface ChattingDao {
 	public ArrayList<Country> selectContryList(SqlSessionTemplate sqlSession);
 
 	public ArrayList<Tag> selectTagList(SqlSessionTemplate sqlSession);
+
+	public HashMap<String, ArrayList> selectRankTagList(SqlSessionTemplate sqlSession);
 	
 }

@@ -50,6 +50,7 @@
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TourReview" alias="TourReview"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelCost" alias="TravelCost"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.Gallary" alias="Gallary"/>
+
 	</typeAliases>
 	<mappers>
 		<!-- 세령 -->

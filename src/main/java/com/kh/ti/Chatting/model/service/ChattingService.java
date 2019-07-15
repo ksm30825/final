@@ -1,6 +1,7 @@
 package com.kh.ti.Chatting.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,6 @@ public interface ChattingService {
 	public ArrayList<Country> selectContryList();
 
 	public ArrayList<Tag> selectTagList();
+
+	public HashMap<String, ArrayList> selectRankTagList();
 }
