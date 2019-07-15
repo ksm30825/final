@@ -356,4 +356,46 @@
 	<select id="selectCityListForAdmin" resultMap="cityResultSetSpot">
 		SELECT * FROM CITY
 	</select>
+	
+	<!-- 관리자 여행지 등록 세령 -->
+	<insert id="insertSpot" parameterType="SpotList">
+		INSERT INTO SPOTLIST (SPOT_ID, SPOT_NAME_KO, SPOT_NAME_EN, SPOT_CONTENT, SPOT_ADDRESS, 
+		OPENING_HOURS, SPOT_PHONE, WEB_ADDRESS, ENROLL_DATE, MODIFY_DATE, DEL_DATE, RECOVERY_DATE,
+		SPOT_COUNT, CITY_ID, SPOT_STATUS, PLCTYPE_ID) VALUES
+		(SPOT_SEQ.NEXTVAL, #{ spotNameKo }, #{ spotNameEn }, #{ spotContent }, #{ spotAddress },
+		<choose>
+			<when test="openingHours != null and openingHours != '' and openingHours != ' '">
+				#{ openingHours }
+			</when>
+			<otherwise>NULL</otherwise>
+		</choose>,
+		<choose>
+			<when test="spotPhone != null and spotPhone != ' ' and spotPhone != ''">
+				#{ spotPhone }
+			</when>
+			<otherwise>NULL</otherwise>
+		</choose>,
+		<choose>		
+			<when test="webAddress != null and webAddress != '' and webAddress != ' '">
+				#{ webAddress }
+			</when>
+			<otherwise>NULL</otherwise>
+		</choose>,
+		SYSDATE, NULL, NULL, NULL, 0, #{ cityId }, 'Y', #{ plcTypeId })
+	</insert>
+	
+	<!-- 관리자 명소 사진 등록 세령 -->
+	<insert id="insertSpotFile" parameterType="SpotList">
+		INSERT INTO SPOT_FILE (FILE_ID, FILE_PATH, CHANGE_NAME, ORIGIN_NAME, PIC_TYPE, UPLOAD_DATE,
+                        PIC_STATUS, SPOT_ID, CITY_ID, FILE_LEVEL)
+		VALUES (SPOT_FILE_SEQ.NEXTVAL, #{ filePath }, #{ spotNameKo }, 'ORIGIN_NAME',
+		        'SPOT', SYSDATE, 'Y', #{ spotId }, NULL, 1)
+	</insert>
+	
+	
+	<!-- 현제 spot_id 시퀀스 값 조회 세령 -->
+	<select id="getSpotCurrval" resultType="_int">
+		SELECT SPOT_SEQ.NEXTVAL FROM DUAL
+	</select>
+	
  </mapper>

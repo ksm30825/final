@@ -257,5 +257,18 @@ public class SpotServiceImpl implements SpotService{
 		return sd.selectCityListForAdmin(sqlSession);
 	}
 
+	//관리자 여행지 등록용 - 세령
+	@Override
+	public int insertSpotList(SpotList spotList) {
+		int result = sd.insertSpotList(sqlSession, spotList);
+		int resultFile = 0;
+		if(result > 0) {
+			int spotCurrval = sd.getSpotCurrval(sqlSession);
+			spotList.setSpotId(spotCurrval);
+			resultFile = sd.insertSpotFile(sqlSession, spotList);
+		}
+		return resultFile;
+	}
+
 
 }

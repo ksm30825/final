@@ -7,7 +7,7 @@
 	<typeAliases>
 		<!-- 세령 -->
 			<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
-			<typeAlias type="com.kh.ti.spot.model.vo.SpotList" alias="Spot"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.SpotList" alias="SpotList"/>
 			<typeAlias type="com.kh.ti.spot.model.vo.Likey" alias="LikeySpot"/>
 			<typeAlias type="com.kh.ti.spot.model.vo.SpotReviews" alias="SpotReviews"/>
 			<typeAlias type="com.kh.ti.spot.model.vo.AdminSpotList" alias="AdminSpotList"/>

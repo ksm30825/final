@@ -70,5 +70,11 @@ public interface SpotDao {
 
 	ArrayList<City> selectCityListForAdmin(SqlSessionTemplate sqlSession);
 
+	int insertSpotList(SqlSessionTemplate sqlSession, SpotList spotList);
+
+	int insertSpotFile(SqlSessionTemplate sqlSession, SpotList spotList);
+
+	int getSpotCurrval(SqlSessionTemplate sqlSession);
+
 
 }

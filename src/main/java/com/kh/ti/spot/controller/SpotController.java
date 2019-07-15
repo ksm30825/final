@@ -85,7 +85,7 @@ public class SpotController {
 	//입력폼으로여행지추가용메소드
 	@RequestMapping("insertOneSpot.sp")
 	public String insertSpotFromForm(@ModelAttribute SpotList spotList) {
-		System.out.println(spotList);
+		int result = ss.insertSpotList(spotList);
 		return null;
 	}
 	
@@ -120,7 +120,7 @@ public class SpotController {
 		return null;
 	}
 	
-	//여행지정보단일삭제용메소드
+	//여행지정보삭제용메소드
 	@RequestMapping("deleteOneSpot.sp")
 	public String updateOneSpotStatusN(@RequestParam("spotIds") String spotIds, Model model) {
 		ArrayList<Integer> spotIdArr = new ArrayList<Integer>();
@@ -133,24 +133,6 @@ public class SpotController {
 		int result = ss.updateSpotStatus(spotIdArr);
 		model.addAttribute("msg", "총 " + result + "개의 여행지가 삭제 되었습니다.");
 		return "forward:selectAllSpotAdmin.sp?currentPage=1";
-	}
-	
-	//여행지정보복수삭제용메소드
-	@RequestMapping("deleteManySpot.sp")
-	public String updateManySpotStatusN() {
-		return null;
-	}
-	
-	//여행지정보단일복구용메소드
-	@RequestMapping("restoreOneSpot.sp")
-	public String updateOneSpotStatusY() {
-		return null;
-	}
-	
-	//여행지정보복수복구용메소드
-	@RequestMapping("restoreManySpot.sp")
-	public String updateManySpotStatusY() {
-		return null;
 	}
 	
 	//사용자여행지전체조회용메소드 --세령
