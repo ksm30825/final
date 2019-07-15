@@ -209,7 +209,7 @@
 	</select>
 	<!-- 포인트 충전리스트 전체 조회 -->
 	<select id="selectChargeList" parameterType="Payment" resultMap="paymentResultSet">
-		SELECT *<!-- PAYMENT_ID, TID, MEMBER_ID, PAY_AMOUNT, TO_CHAR(PAYMENT_DATE,'YYYY/MM/DD') -->
+		SELECT *
 		FROM PAYMENT
 		WHERE MEMBER_ID=#{memberId}
 		<choose>
@@ -526,7 +526,9 @@
 	<select id="getAdRefundListCount" parameterType="Refund" resultType="_int">
 		SELECT COUNT(*)
 		FROM (
-		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL,  USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL,  USE.TRV_ID, TRV_TITLE, 
+			    USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, 
+			    APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
 			FROM REFUND REF
 			JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
 			JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
@@ -554,7 +556,9 @@
 	</select>
 	<!-- 관리자 - 환불 내역 조회 -->
 	<select id="selectAdRefundList" resultMap="refundUseMemberTrvTrvRequestResultSet">
-	    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+	    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, 
+	    	USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, 
+	    	APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
 		FROM REFUND REF
 		JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
 		JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
@@ -781,13 +785,13 @@
 	<!-- 관리자 - 환급 상태 1개 지급 완료로 변경 -->
 	<update id="updateAdRebate" parameterType="_int">
 		UPDATE REBATE
-		SET REBATE_STATUS = 20
+		SET REBATE_STATUS = 20, PAY_DATE=SYSDATE
 		WHERE REBATE_ID = #{rebateId}
 	</update>
 	<!-- 관리자 - 환급 상태 여러개 지급 완료로 변경 -->
 	<update id="updateAdRebates" parameterType="_int">
 		UPDATE REBATE
-		SET REBATE_STATUS = 20
+		SET REBATE_STATUS = 20, PAY_DATE=SYSDATE
 		WHERE REBATE_ID = #{rebateId}
 	</update>
 	<select id="downRebates" parameterType="_int" resultMap="downRebatesResultMap">
