@@ -383,7 +383,7 @@ public class PointController {
 			switch(reserveType) {
 			case 10 : return "redirect:/showMyTravel.trv";
 			case 20 : int trvId = ps.selectOneTrv(rp); return "redirect:/travelDetailForm.tb?trvId="+trvId; 
-			case 30 : return "redirect:/showMyTravel.trv?"; //세령이 매핑주소로 넘기기
+			case 30 : return "redirect:/selectSpotDetailInfo.sp?spotId=" + spotId; //세령이 매핑주소로 넘기기
 			}
 		}
 		return "common/errorPage";

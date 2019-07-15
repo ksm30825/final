@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,9 +31,10 @@
 </style>
 </head>
 <body>
-	<jsp:include page="../../common/adminMainNav.jsp"/>
+	<jsp:include page="../../common/adminMainNav.jsp"/> <br>
 	<div class="columns">
 		<div class="column">
+			<form action="insertOneSpot.sp" method="post">
 			<section class="section">
 				<div class="field">
 					<h3 class="subtitle is-3" style="color:#209cee;"> 여행지 등록 </h3>
@@ -45,22 +48,26 @@
 					      <label class="label">* 국가명</label>
 					      <p class="control">
 					        <span class="select is-fullwidth">
-					            <select>
-					              <option>국가명</option>
-					              <option>With options</option>
+					            <select id="countrySelect" name="countryId">
+					              <option selected>국가명</option>
+					              <c:forEach var="country" items="${ countryList }">
+					              		<option value="${ country.countryId }">${ country.countryNameKo }</option>
+					              </c:forEach>					              
 					            </select>
 					          </span>
 					      </p>
-					    </div> <!-- end country -->
-					    
+					    </div> <!-- end country -->						
+						
 					    <!-- city -->
 					    <div class="field">
 					      <label class="label">* 도시명</label>
 					      <p class="control">
 					        <span class="select is-fullwidth">
-					            <select>
+					            <select name="cityId" id="cityArea">
 					              <option>도시명</option>
-					              <option>With options</option>
+					             <%--  <c:forEach var="city" items="${ cityList }">
+					              	<option value="${ city.cityId }">${ city.cityNameKo }</option>
+					              </c:forEach> --%>
 					            </select>
 					          </span>
 					      </p>
@@ -79,7 +86,7 @@
 						<div class="field">
 					    	<label class="label">* 한글 명소명</label>
 					    	<p class="control">
-					          <input class="input" type="text" placeholder="Text input">
+					          <input class="input" type="text" placeholder="Text input" name="spotNameKo">
 					        </p>
 					    </div> <!-- end ko name -->
 					    
@@ -87,7 +94,7 @@
 					    <div class="field">
 					    	<label class="label">영어 명소명</label>
 					    	<p class="control">
-					          <input class="input" type="text" placeholder="Text input">
+					          <input class="input" type="text" placeholder="Text input" name="spotNameEn">
 					        </p>
 					    </div> <!-- end eng name -->
 					</div> <!-- end field-body -->
@@ -99,7 +106,7 @@
 						<div class="field">
 							<label class="label">* 상세 주소</label>
 							<p class="control">
-					          <input class="input" type="text" placeholder="Text input">
+					          <input class="input" type="text" placeholder="Text input" name="spotAddress">
 					        </p>
 						</div>
 					</div> <!-- end field-body -->
@@ -111,7 +118,7 @@
 						<div class="field">
 							<label class="label">여행지 설명</label>
 							<p class="control">
-					          <textarea class="textarea" placeholder="Textarea"></textarea>
+					          <textarea class="textarea" placeholder="Textarea" name="spotContent"></textarea>
 					        </p>
 						</div>
 					</div> <!-- end field-body -->
@@ -125,21 +132,8 @@
 				<div class="field is-horizontal">
 					<div class="field-body">
 						<div class="field">
-							<label class="label">요일</label>
 							<p class="control">
-					          <input class="input" type="text" placeholder="Text input">
-					        </p>
-						</div>
-						<div class="field">
-							<label class="label">시간</label>
-							<p class="control">
-					          <input class="input" type="text" placeholder="Text input">
-					        </p>
-						</div>
-						<div class="field">
-							<label class="label">공휴일</label>
-							<p class="control">
-					          <input class="input" type="text" placeholder="Text input">
+					          <input class="input" type="text" placeholder="Text input" name="openingHours">
 					        </p>
 						</div>
 					</div> <!-- end field-body -->
@@ -153,9 +147,10 @@
 							<label class="label">* 명소유형</label>
 							<p class="control">
 					        <span class="select">
-					            <select style="width:300px;">
+					            <select style="width:300px;" name="plcTypeId">
 					              <option>명소유형</option>
-					              <option>With options</option>
+					              <option value="2">맛집</option>
+					              <option value="1">명소</option>
 					            </select>
 					          </span>
 					      </p>
@@ -165,7 +160,7 @@
 						<div class="field">
 							<label class="label">웹사이트</label>
 							<p class="control is-expanded">
-					          <input class="input" type="text" placeholder="Text input">
+					          <input class="input" type="text" placeholder="Text input" name="webAddress">
 					        </p>
 						</div> <!-- end web address -->
 					</div> <!-- end field-body -->
@@ -176,38 +171,22 @@
 						<div class="field">
 							<label class="label">사진</label>
 						</div>
-						<div class="buttons"  style="justify-content:flex-end;">
+						<!-- <div class="buttons"  style="justify-content:flex-end;">
 							<a class="button is-danger is-rounded is-small">삭제</a>
-						</div>
+						</div> -->
 					</div>
 				</div>
 				
 				<!-- picture area -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<div class="field is-grouped">
-							<p class="control is-left">
-								<input type="checkbox">
-							</p>
-							<div class="pic_area" style="width:100%; height:180px;; border:1px solid gray;"></div>
+						<div class="field">
+							<div class="pic_area" style="width:300px; height:180px;; border:1px solid gray;">
+							<img id="picArea"  style="width:300px; height:180px;" ></div>
 						</div>
-						<div class="field is-grouped">
-							<p class="control is-left">
-								<input type="checkbox">
-							</p>
-							<div class="pic_area" style="width:100%; height:180px; border:1px solid gray;"></div>
-						</div>
-						<div class="field is-grouped">
-							<p class="control is-left">
-								<input type="checkbox">
-							</p>
-							<div class="pic_area" style="width:100%; height:180px; border:1px solid gray;"></div>
-						</div>
-						<div class="field is-grouped">
-							<p class="control is-left">
-								<input type="checkbox">
-							</p>
-							<div class="pic_area" style="width:100%; height:180px; border:1px solid gray;"></div>
+						<div class="field is-grouped" style="float: bottom;">
+							<p class="control"> * 이미지 주소를 넣어주세요. </p>
+							<input class="input" type="text" placeholder="이미지 주소" id="imgAddress" name="filePath">
 						</div>
 					</div> <!-- end field-body -->
 				</div> <!-- end picture area -->
@@ -216,14 +195,48 @@
 				<div class="field is-horizontal">
 					<div class="field-body"  style="justify-content:flex-end;">
 						<div class="buttons">
-							<a class="button is-danger is-outlined" style="width:200px;" href="selectAllSpotAdmin.sp"> 취소 </a>
-							<a class="button is-info is-outlined" style="width:200px;" href="#"> 등록 </a>
+							<a class="button is-danger is-outlined" style="width:200px;" href="selectAllSpotAdmin.sp?currentPage=1"> 취소 </a>
+							<button class="button is-info is-outlined" style="width:200px;" type="submit"> 등록 </button>
 						</div>
 					</div> <!-- end field-body -->
 				</div> <!-- end btn area -->
 				
 			</section> <!-- end session -->
+			</form>
 		</div> <!-- end column -->
 	</div> <!-- end columns -->
+	
+	<script>
+		var id = 0;
+		$(function(){
+			$("#imgAddress").click(function(){
+				$("#imgAddress").select();
+			});
+			
+			$("#imgAddress").bind("paste", function(){
+				var text = String($("#imgAddress").val());
+				console.log(text);
+				$("#picArea").attr("src", text);
+			
+			});
+			
+			//국가가 선택이 되었을 때
+			$("#countrySelect").click(function(){
+				id = $("#countrySelect option:selected").val();	
+				console.log(id);
+				/* for(var i : )
+				for(var i = 0; i < '${ fn:length(cityList) }'; i++){
+					console.log("test");
+					if('${ cityList[i].countryId }' == id){
+						$("#cityArea").append("<option value='${ cityList[i].cityId}'>${cityList[i].cityNameKo}</option>");
+					}
+				} */
+			});
+		});
+		
+		<c:forEach var="city" items="${ cityList }">
+			
+		</c:forEach>
+	</script>
 </body>
 </html>

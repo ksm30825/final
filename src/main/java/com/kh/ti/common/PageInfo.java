@@ -1,6 +1,8 @@
 package com.kh.ti.common;
 
-public class PageInfo {
+import java.io.Serializable;
+
+public class PageInfo implements Serializable{
 	
 	private int currentPage;
 	private int listCount;

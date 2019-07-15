@@ -22,6 +22,16 @@
  		<result property="cityNameEn" column="CITY_NAME_EN"/>
  	</resultMap>
  	
+ 	<!-- likey map 세령 -->
+ 	<resultMap type="com.kh.ti.spot.model.vo.Likey" id="likeyResultSet">
+ 		<id property="likeyId" column="LIKEY_ID"/>
+ 		<result property="memberId" column="MEMBER_ID"/>
+ 		<result property="enrollDate" column="ENROLL_DATE"/>
+ 		<result property="likeyType" column="LIKEY_TYPE"/>
+ 		<result property="spotId" column="SPOT_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+ 	</resultMap>
+ 	
  	<!-- spot file map 세령 -->
  	<resultMap type="com.kh.ti.spot.model.vo.SpotFile" id="spotFileResultSet">
  		<id property="fileId" column="FILE_ID"/>
@@ -35,14 +45,6 @@
  		<result property="cityId" column="CITY_ID"/>
  		<result property="fileLevel" column="FILE_LEVEL"/>
  	</resultMap>
- 	
- 	<!-- spotCityList Map 세령 -->
- 	<resultMap type="com.kh.ti.spot.model.vo.SpotCityList" id="spotCityListResultSet">
- 		<id property="CityListId" column="CITY_ID"/>
- 		<collection property="cityList" javaType="java.util.ArrayList" resultMap="cityResultSetSpot"/>
- 		<collection property="countryList" javaType="java.util.ArrayList" resultMap="countryResultSetSpot"/>
- 		<collection property="sFileList" javaType="java.util.ArrayList" resultMap="spotFileResultSet"/>
-  	</resultMap> 
   	
   	<!-- SpotList Map 세령 -->
   	<resultMap type="com.kh.ti.spot.model.vo.SpotList" id="spotResultSet">
@@ -61,7 +63,7 @@
  		<result property="spotCount" column="SPOT_COUNT"/>
  		<result property="cityId" column="CITY_ID"/>
  		<result property="spotStatus" column="SPOT_STATUS"/>
- 		<result property="placeId" column="PLACE_ID"/>
+ 		<result property="plcTypeId" column="PLCTYPE_ID"/>
   	</resultMap>
   	
   	<!-- 여행지 도시 와 사진을 가지고 오기 위한 hashmap 세령-->
@@ -115,16 +117,54 @@
 		<result property="grade" column="GRADE"/>
 	</resultMap>
 	
-	  	<!-- 여행지 도시 와 사진을 가지고 오기 위한 hashmap 세령-->
-	  	<resultMap type="java.util.HashMap" id="spotReviewListResultSet">
-	  		<id property="spotReviewId" column="SPOT_REVIEW_ID"/>
-		 	<result property="reviewContent" column="REVIEW_CONTENT"/>
-			<result property="reviewDate" column="REVIEW_DATE"/>
-			<result property="memberId" column="MEMBER_ID"/>
-			<result property="spotId" column="SPOT_ID"/>
-			<result property="grade" column="GRADE"/>
-			<result property="userName" column="USER_NAME"/>
-	  	</resultMap>
+  	<!-- 여행지 도시 와 사진을 가지고 오기 위한 hashmap 세령-->
+  	<resultMap type="java.util.HashMap" id="spotReviewListResultSet">
+  		<id property="spotReviewId" column="SPOT_REVIEW_ID"/>
+	 	<result property="reviewContent" column="REVIEW_CONTENT"/>
+		<result property="reviewDate" column="REVIEW_DATE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="spotId" column="SPOT_ID"/>
+		<result property="grade" column="GRADE"/>
+		<result property="userName" column="USER_NAME"/>
+  	</resultMap>
+  	
+  	<!-- 마이페이지 좋아요 국가/도시 조회용 세령 -->
+	<resultMap type="java.util.HashMap" id="myPageCountryListResultSet">
+		<result property="countryId" column="COUNTRY_ID"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="cityId" column="CITY_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+	</resultMap>
+	
+	<!-- 마이페이지 명소 좋아 조회용 세령 -->
+	<resultMap type="java.util.HashMap" id="myPageSpotListResultSet">
+		<id property="likeyId" column="LIKEY_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="spotId" column="SPOT_ID"/>
+		<result property="spotNameKo" column="SPOT_NAME_KO"/>
+		<result property="spotNameEn" column="SPOT_NAME_EN"/>
+		<result property="cityId" column="CITY_ID"/>
+		<result property="plctypeId" column="PLCTYPE_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+		<result property="countryId" column="COUNTRY_ID"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result	property="filePath" column="FILE_PATH"/>
+	</resultMap>
+	
+	<!-- 관리자 리스트 조회를 위한 맵 -->
+	<resultMap type="com.kh.ti.spot.model.vo.AdminSpotList" id="adminSpotListResultSet">
+		<id property="spotId" column="SPOT_ID"/>
+		<result property="spotNameKo" column="SPOT_NAME_KO"/>
+		<result property="spotAddress" column="SPOT_ADDRESS"/>
+		<result property="cityId" column="CITY_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+		<result property="countryId" column="COUNTRY_ID"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="spotStatus" column="SPOT_STATUS"/>
+		<result property="plctypeId" column="PLCTYPE_ID"/>
+	</resultMap>
   	
   	<!-- 여행지 상세(명소 조회용) 세령 -->
   	<select id="selectSpotList" resultMap="spotListAllResultSet" parameterType="_int">
@@ -138,6 +178,11 @@
 		AND FILE_LEVEL = 1  	
   	</select>
   	
+  	<!-- city 조회 -->
+	<select id="selectCity" parameterType="_int" resultMap="cityResultSetSpot">
+		SELECT * FROM CITY WHERE CITY_ID = #{ cityId }
+	</select>
+  	
   	<!-- 마이페이지 좋아요 추가용 세령 -->
   	<insert id="insertSpotLikey" parameterType="LikeySpot">
   		INSERT INTO LIKEY
@@ -145,30 +190,58 @@
   	</insert>
   	
   	<!-- 마이페이지 좋아요 명소 조회용 세령 -->
-  	<select id="selectMyLikeySpotList" parameterType="_int" resultMap="spotResultSet" >
-  		SELECT SL.SPOT_ID, SPOT_NAME_KO, SL.PLCTYPE_ID, SPOT_NAME_EN, SPOT_ADDRESS,
-       		   SL.CITY_ID, CITY_NAME_KO, CT.COUNTRY_ID, COUNTRY_NAME_KO
-		FROM LIKEY L     JOIN SPOTLIST SL ON (SL.SPOT_ID = L.SPOT_ID)
-		                 LEFT JOIN CITY CT ON (SL.CITY_ID = CT.CITY_ID)
-		                 JOIN COUNTRY C ON (CT.COUNTRY_ID = C.COUNTRY_ID)
-		WHERE L.MEMBER_ID = #{ memberId }
+  	<select id="selectMyLikeySpotList" parameterType="_int" resultMap="myPageSpotListResultSet" >
+  		SELECT LIKEY_ID, L.MEMBER_ID, L.ENROLL_DATE, L.SPOT_ID, 
+		       SPOT_NAME_KO, SPOT_NAME_EN, S.CITY_ID, S.PLCTYPE_ID,
+		       CITY_NAME_KO, C.COUNTRY_ID, COUNTRY_NAME_KO, FILE_PATH
+		FROM LIKEY L JOIN SPOTLIST S ON (L.SPOT_ID = S.SPOT_ID)
+		             JOIN CITY C ON (S.CITY_ID = C.CITY_ID)
+		             JOIN COUNTRY CR ON (C.COUNTRY_ID = CR.COUNTRY_ID)
+		             JOIN SPOT_FILE SF ON (S.SPOT_ID = SF.SPOT_ID)
+		WHERE MEMBER_ID = #{ memberId }
   	</select>
+  	
+  	<!-- 마이페이지 명소 좋아요 국가/도시 조회용 세령 -->
+	<select id="selectMyListCountryList" resultMap="myPageCountryListResultSet" parameterType="_int">
+		SELECT CR.COUNTRY_ID, CR.COUNTRY_NAME_KO, C.CITY_ID, C.CITY_NAME_KO
+		FROM CITY C JOIN COUNTRY CR ON (C.COUNTRY_ID = CR.COUNTRY_ID)
+	           		     JOIN SPOTLIST S ON (S.CITY_ID = C.CITY_ID)
+		WHERE S.SPOT_ID IN ( SELECT SPOT_ID FROM LIKEY WHERE MEMBER_ID = #{ memberId } GROUP BY SPOT_ID)
+		GROUP BY CR.COUNTRY_ID, CR.COUNTRY_NAME_KO, C.CITY_ID, C.CITY_NAME_KO
+	</select>
   	
   	<!-- ******* -->
   	<!-- 여행지 국가만 조회용 세령 -->
-  	<select id="selectCountryList" resultMap="countryResultSetSpot">
+  	<select id="selectCountryList" resultMap="countryResultSetSpot" parameterType="String">
   		SELECT C.COUNTRY_ID, COUNTRY_NAME_KO, CONTINENT_NAME
 		FROM CITY CT JOIN COUNTRY C ON (CT.COUNTRY_ID = C.COUNTRY_ID)
 		WHERE CT.CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
+		<if test="_parameter != null and !_parameter.equals('all')">
+			AND CONTINENT_NAME = #{ _parameter }
+		</if>
+		GROUP BY C.COUNTRY_ID, COUNTRY_NAME_KO, CONTINENT_NAME
   	</select>
   	
   	<!-- 여행지 도시 전체 조회 세령 -->
-  	<select id="selectCityMap" resultMap="spopCityAllResultSet">
+  	<select id="selectCityMap" resultMap="spopCityAllResultSet" parameterType="String">
   		SELECT C.CITY_ID, CITY_NAME_KO, CITY_CONTENT, C.COUNTRY_ID, CITY_NAME_EN, 
 		       FILE_ID, FILE_PATH, PIC_TYPE, PIC_STATUS, FILE_LEVEL
 		FROM CITY C JOIN SPOT_FILE SF ON (C.CITY_ID = SF.CITY_ID) 
+					JOIN COUNTRY CR ON (C.COUNTRY_ID = CR.COUNTRY_ID)
 		WHERE C.CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
 		AND SF.FILE_LEVEL = 1
+		<if test="_parameter != null and !_parameter.equals('all')">
+			AND CONTINENT_NAME = #{ _parameter }
+		</if>
+  	</select>
+  	
+  	<select id="selectConditionSpotFromUser" resultMap="spopCityAllResultSet" parameterType="_int">
+  		SELECT C.CITY_ID, CITY_NAME_KO, CITY_CONTENT, C.COUNTRY_ID, CITY_NAME_EN, 
+		       FILE_ID, FILE_PATH, PIC_TYPE, PIC_STATUS, FILE_LEVEL
+		FROM CITY C JOIN SPOT_FILE SF ON (C.CITY_ID = SF.CITY_ID)
+		WHERE C.CITY_ID IN (SELECT CITY_ID FROM SPOTLIST GROUP BY CITY_ID)
+		AND SF.FILE_LEVEL = 1
+		AND C.COUNTRY_ID = #{ countryId }
   	</select>
   	
   	<!-- CITY ID로 도시정보 조회 세령 -->
@@ -220,5 +293,67 @@
 		SELECT *
 		FROM SPOT_FILE
 		WHERE SPOT_ID = #{ spotId }
+	</select>
+	
+	<!-- 사용자 좋아요 명소 조회 세령 -->
+	<select id="selectUserLikey"  parameterType="LikeySpot" resultMap="likeyResultSet">
+		SELECT * FROM LIKEY
+		WHERE MEMBER_ID = #{ memberId }
+		AND SPOT_ID = #{ spotId }
+	</select>
+	
+	<!-- 사용자의 좋아요 명소 삭제 세령 -->
+	<delete id="deleteSpotLikey" parameterType="LikeySpot">
+		DELETE FROM LIKEY
+		WHERE MEMBER_ID = #{ memberId } 
+		AND SPOT_ID = #{ spotId }
+	</delete>
+	
+	<!-- 사용자의 명소 리뷰 수정용 세령 -->
+	<update id="updateSpotReviews" parameterType="SpotReviews">
+		UPDATE SPOT_REVIEWS
+		SET REVIEW_CONTENT = #{ reviewContent },
+		    GRADE = #{ grade },
+		    MODIFY_DATE = SYSDATE
+		WHERE SPOT_REVIEW_ID = #{ spotReviewId }
+	</update>
+	
+	<!-- 사용자의 명소 리뷰 삭제용 세령 -->
+	<delete id="deleteSpotReviews" parameterType="_int">
+		DELETE SPOT_REVIEWS
+		WHERE SPOT_REVIEW_ID = #{ spotReviewId }
+	</delete>
+	
+	<!-- 명소 리스트 수 조회 세령 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*) FROM SPOTLIST
+		WHERE SPOT_STATUS = 'Y'
+	</select>
+	
+	<!-- 관리자 명소 조회 세령 -->
+	<select id="selectAllSpotList" resultMap="adminSpotListResultSet">
+		SELECT  S.SPOT_ID, SPOT_NAME_KO, SPOT_ADDRESS, CT.CITY_ID, CITY_NAME_KO, C.COUNTRY_ID, COUNTRY_NAME_KO
+		        ,S.ENROLL_DATE, S.SPOT_STATUS, S.PLCTYPE_ID
+		FROM SPOTLIST S JOIN CITY CT ON (S.CITY_ID = CT.CITY_ID)
+		                JOIN COUNTRY C ON (CT.COUNTRY_ID = C.COUNTRY_ID)
+		WHERE SPOT_STATUS = 'Y'
+		ORDER BY SPOT_ID DESC
+	</select>
+	
+	<!-- 관리자 명소 삭제 세령-->
+	<update id="updateSpotStatusN" parameterType="_int">
+		UPDATE SPOTLIST
+		SET SPOT_STATUS = 'N'
+		WHERE SPOT_ID = #{ spotId }
+	</update>
+	
+	<!-- 관리자 여행지 국가 조회 세령-->
+	<select id="selectCountryListFroAdmin" resultMap="countryResultSetSpot">
+		SELECT * FROM COUNTRY
+	</select>
+	
+	<!-- 관리자 여행지 도시 조회 세령 -->
+	<select id="selectCityListForAdmin" resultMap="cityResultSetSpot">
+		SELECT * FROM CITY
 	</select>
  </mapper>

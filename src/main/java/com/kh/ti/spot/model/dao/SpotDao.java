@@ -5,8 +5,9 @@ import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.spot.model.vo.AdminSpotList;
 import com.kh.ti.spot.model.vo.Likey;
-import com.kh.ti.spot.model.vo.SpotCityList;
 import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
 import com.kh.ti.spot.model.vo.SpotReviews;
@@ -19,7 +20,7 @@ public interface SpotDao {
 
 	int insertSpotLikey(SqlSessionTemplate sqlSession, Likey likey);
 
-	ArrayList<SpotList> selectMyLikeySpotList(SqlSessionTemplate sqlSession, int memberId);
+	ArrayList<HashMap> selectMyLikeySpotList(SqlSessionTemplate sqlSession, int memberId);
 
 	ArrayList<Country> selectCountryList(SqlSessionTemplate sqlSession);
 
@@ -40,6 +41,34 @@ public interface SpotDao {
 	int getSpotReviewIdCurrval(SqlSessionTemplate sqlSession);
 
 	ArrayList<SpotFile> selectSpotFile(SqlSessionTemplate sqlSession, int spotId);
+
+	ArrayList<HashMap> selectCityMap(SqlSessionTemplate sqlSession, String condition);
+
+	ArrayList<Country> selectCountryList(SqlSessionTemplate sqlSession, String condition);
+
+	ArrayList<HashMap> selectConditionSpotFromUser(SqlSessionTemplate sqlSession, int countryId);
+
+	Likey selectLikey(SqlSessionTemplate sqlSession, Likey likey);
+
+	int deleteSpotLikey(SqlSessionTemplate sqlSession, Likey likey);
+
+	int updateSpotReview(SqlSessionTemplate sqlSession, SpotReviews spotReviews);
+
+	int deleteSpotReview(SqlSessionTemplate sqlSession, int spotReviewId);
+
+	ArrayList<HashMap> selectMyLikeyCountryList(SqlSessionTemplate sqlSession, int memberId);
+
+	City selectCity(SqlSessionTemplate sqlSession, int cityId);
+
+	int getSpotListCount(SqlSessionTemplate sqlSession);
+
+	ArrayList<AdminSpotList> selectAllSpot(SqlSessionTemplate sqlSession, PageInfo pi);
+
+	int updateSpotStatus(SqlSessionTemplate sqlSession, int spotId);
+
+	ArrayList<Country> selectCountryListForAdmin(SqlSessionTemplate sqlSession);
+
+	ArrayList<City> selectCityListForAdmin(SqlSessionTemplate sqlSession);
 
 
 }

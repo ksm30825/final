@@ -663,7 +663,7 @@
 	<select id="selectSpotId" resultType="_int">
 		SELECT SPOT_ID
 		FROM SPOT_REVIEWS
-		WHERE SPOT_REVIEW_ID=1
+		WHERE SPOT_REVIEW_ID= #{ spotReviewId }
 	</select>
 	<!-- 관리자 - 환급 내역 리스트 카운트 -->
 	<select id="getAdRebateListCount" resultType="_int">
