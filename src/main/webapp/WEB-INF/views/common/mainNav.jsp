@@ -131,7 +131,7 @@
 		                    	</a>
 		                    	<div class="navbar-dropdown">
 	                    			<c:if test="${ loginUser.email eq 'admin@gmail.com' }">
-	                    				<a class="navbar-item " href="genderStatisticsYear.sta"> 관리자페이지 </a> 
+	                    				<a class="navbar-item " href="genderStatistics.sta"> 관리자페이지 </a> 
 	                    			</c:if>
                     				<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a>
                     				<a class="navbar-item " onclick="Logout();"> 로그아웃 </a>

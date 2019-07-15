@@ -50,5 +50,9 @@ public interface TravelBoardDao {
 
 	ArrayList travelDetailGallery(SqlSessionTemplate sqlSession, TrvDaySchedule sch);
 
+	TravelBoard selectMyCount(SqlSessionTemplate sqlSession, int memberId);
+
+	ArrayList<HashMap> costDownload(SqlSessionTemplate sqlSession, int trvId);
+
 
 }

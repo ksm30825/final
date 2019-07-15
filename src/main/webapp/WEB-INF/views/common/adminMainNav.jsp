@@ -62,7 +62,7 @@
                   <a class="navbar-item subnav" href="toAdRebateView.po" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
                 </div>
           	</div>
-            <a class="navbar-item " href="genderStatisticsYear.sta"> <strong>통계관리</strong> </a>
+            <a class="navbar-item " href="genderStatistics.sta"> <strong>통계관리</strong> </a>
          </div>
          <div class="navbar-end">
             
