@@ -36,6 +36,8 @@ public class TestSpotService {
 	
 	Likey likey;
 	SpotReviews spotReviews;
+	String continent;
+	int countryId;
 	
 	@Before
 	public void setup() {
@@ -45,9 +47,13 @@ public class TestSpotService {
 		
 		spotReviews = new SpotReviews();
 		spotReviews.setGrade(5);
-		spotReviews.setMemberId(7);
+		spotReviews.setMemberId(20);
 		spotReviews.setReviewContent("장관이구요~ 신이주신 선물이네요~");
 		spotReviews.setSpotId(1);
+		spotReviews.setSpotReviewId(1);
+		
+		continent = "아시아";
+		countryId = 2077456;
 		System.out.println("셋팅 완료!");
 	}
 	
@@ -64,14 +70,14 @@ public class TestSpotService {
 	@Ignore
 	@Test
 	public void insertSpotLikey() {
-		ss.insertSpotLikey(likey);
-		log.info("명소 종아요를 추가 성공!");
+		String msg = ss.insertSpotLikey(likey);
+		log.info(msg);
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void selectMyLikeySpotListTest() {
-		ArrayList<SpotList> spotList = ss.selectMyLikeySpotList(7);
+		ArrayList<HashMap> spotList = ss.selectMyLikeySpotList(20);
 		log.info("마이페이지 좋아요 명소 조회 성공!" + spotList.size());
 		log.info(spotList.toString());
 	}
@@ -79,7 +85,12 @@ public class TestSpotService {
 	@Ignore
 	@Test
 	public void selectCountryListTest() {
-		ArrayList<Country> countryList = ss.selectCountryList();
+		//전체 조회
+		ArrayList<Country> countryList = null;
+		//countryList = ss.selectCountryList();
+		//조건 조회
+		countryList = ss.selectCountryList(continent);
+		
 		log.info("여행지 국가만 조회 성공!" + countryList.size());
 		log.info(countryList.toString());
 	}
@@ -87,8 +98,12 @@ public class TestSpotService {
 	@Ignore
 	@Test
 	public void selectCityMap() {
-		ArrayList<HashMap> cityMap = ss.selectCityMap();
-		log.info("여행지 도시 전체 조회 성공!");
+		ArrayList<HashMap> cityMap = null;
+		//전체조회
+		//cityMap = ss.selectCityMap();
+		//조건 조회
+		cityMap = ss.selectCityMap(continent);
+		log.info("여행지 도시 조회 성공!" + cityMap.size());
 		log.info(cityMap.toString());
 	}
 	
@@ -140,10 +155,41 @@ public class TestSpotService {
 		log.info(spotReviews.toString());
 	}
 	
+	@Ignore
 	@Test
 	public void selectSpotFileTest() {
 		ArrayList<SpotFile> spotFile = ss.selectSpotFile(1);
 		log.info("명소 파일 조회 성공!" + spotFile.size());
 		log.info(spotFile.toString());
+	}
+	
+	@Ignore
+	@Test
+	public void selectConditionSpotFromUserTest() {
+		ArrayList<HashMap> cityMap = ss.selectConditionSpotFromUser(countryId);
+		log.info("여행지 도시 조회 성공!" + cityMap.size());
+		log.info(cityMap.toString());
+	}
+	
+	@Ignore
+	@Test
+	public void updateSpotReviewTest() {
+		String msg = ss.updateSpotReview(spotReviews);
+		log.info(msg);
+	}
+	
+	@Ignore
+	@Test
+	public void deleteSpotReviewTest() {
+		String msg = ss.deleteSpotReview(2);
+		log.info(msg);
+	}
+	
+	@Ignore
+	@Test
+	public void selectMyLikeyCountryListTest() {
+		ArrayList<HashMap> countryList = ss.selectMyLikeyCountryList(20);
+		log.info("마이페이지 국가/도시 정보 조회 성공! : " + countryList.size());
+		log.info(countryList.toString());
 	}
 }

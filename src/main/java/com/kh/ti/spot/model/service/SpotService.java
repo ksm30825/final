@@ -1,10 +1,12 @@
 package com.kh.ti.spot.model.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.kh.ti.common.PageInfo;
+import com.kh.ti.spot.model.vo.AdminSpotList;
 import com.kh.ti.spot.model.vo.Likey;
-import com.kh.ti.spot.model.vo.SpotCityList;
 import com.kh.ti.spot.model.vo.SpotFile;
 import com.kh.ti.spot.model.vo.SpotList;
 import com.kh.ti.spot.model.vo.SpotReviews;
@@ -15,9 +17,9 @@ public interface SpotService {
 
 	ArrayList<HashMap> selectSpotList(int cityId);
 
-	int insertSpotLikey(Likey likey);
+	String insertSpotLikey(Likey likey);
 
-	ArrayList<SpotList> selectMyLikeySpotList(int memberId);
+	ArrayList<HashMap> selectMyLikeySpotList(int memberId);
 
 	ArrayList<Country> selectCountryList();
 
@@ -37,5 +39,30 @@ public interface SpotService {
 
 	ArrayList<SpotFile> selectSpotFile(int spotId);
 
+	ArrayList<Country> selectCountryList(String condition);
+
+	ArrayList<HashMap> selectCityMap(String condition);
+
+	ArrayList<HashMap> selectConditionSpotFromUser(int countryId);
+
+	String updateSpotReview(SpotReviews spotReviews);
+
+	String deleteSpotReview(int spotReviewId);
+
+	ArrayList<HashMap> selectMyLikeyCountryList(int memberId);
+
+	City selectCity(int cityId);
+
+	int getSpotListCount();
+
+	ArrayList<AdminSpotList> selectAllSpot(PageInfo pi);
+
+	void insertMassiveArticleInBoard(File destFile);
+
+	int updateSpotStatus(ArrayList<Integer> spotIdArr);
+
+	ArrayList<Country> selectCountryListForAdmin();
+
+	ArrayList<City> selectCityListForAdmin();
 
 }

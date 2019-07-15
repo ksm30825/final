@@ -87,14 +87,14 @@
             	</a>
             	<a class="navbar-item" href="travelList.tb"> <strong>여행일정</strong> </a>
             	<div class="navbar-item has-dropdown is-hoverable">
-               		<a class="navbar-link " href="selectAllSpotUser.sp"> <strong>여행지</strong> </a> <!-- href 수정(세령) -->
+               		<a class="navbar-link " href="selectAllSpotUser.sp?condition=all"> <strong>여행지</strong> </a> <!-- href 수정(세령) -->
                		<div class="navbar-dropdown ">
-                  		<a class="navbar-item " href="#"> 주요도시 </a> 
-                  		<a class="navbar-item " href="#"> 아시아 </a> 
-                  		<a class="navbar-item " href="#"> 유럽 </a> 
-                  		<a class="navbar-item " href="#"> 오세아니아 </a> 
-                  		<a class="navbar-item " href="#"> 북미 </a> 
-                  		<a class="navbar-item " href="#"> 중남미 </a> 
+                  		<a class="navbar-item " href="selectAllSpotUser.sp?condition=all"> 주요도시 </a> 
+                  		<a class="navbar-item " href="selectAllSpotUser.sp?condition=아시아"> 아시아 </a> 
+                  		<a class="navbar-item " href="selectAllSpotUser.sp?condition=유럽"> 유럽 </a> 
+                  		<a class="navbar-item " href="selectAllSpotUser.sp?condition=오세아니아"> 오세아니아 </a> 
+                  		<a class="navbar-item " href="selectAllSpotUser.sp?condition=북아메리카"> 북미 </a> 
+                  		<a class="navbar-item " href="selectAllSpotUser.sp?condition=남아메리카"> 중남미 </a> 
               		</div>
 				</div>
             	<a class="navbar-item" href="travelRequest.tr"> <strong>여행의뢰</strong> </a>

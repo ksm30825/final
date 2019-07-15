@@ -17,6 +17,33 @@
 <script src="resources/js/jquery-ui.min.js"></script>
 <script src="resources/js/semantic.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<style>
+  /* Always set the map height explicitly to define the size of the div
+   * element that contains the map. */
+  #map {
+    height: 100%;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  #floating-panel {
+    position: absolute;
+    top: 10px;
+    left: 25%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: 'Roboto','sans-serif';
+    line-height: 30px;
+    padding-left: 10px;
+  }
+</style>
 <style>
 	.section {
 		width:90% !important;
@@ -53,7 +80,7 @@
   		<!-- title -->
 			<section class="section">
 				<h1 class="title" style="color:gray;">
-					<i class="fas fa-chevron-circle-left" style="font-size: 40px; color: skyblue;"></i>
+					<i class="fas fa-chevron-circle-left" style="font-size: 40px; color: skyblue;" onclick="history.go(-1);"></i>
 					<b style="color:black;">${ city.cityNameKo }</b> ${ city.cityNameEn }
 				</h1>
 			</section> <!-- end title -->
@@ -73,20 +100,19 @@
 								<!-- <i class="far fa-star" style="font-size: 35px; color: yellow;"  onclick="clickStar(this);"></i> -->
 							</div>
 							<div class="field">
-								<h3 class="title"><b>${ spotList.spotNameKo }</b></h3>
+								<h3 class="title" style="color: gray;"><b>${ spotList.spotNameKo }</b> ${ spotList.spotNameEn }</h3>
 							</div>
 							
 							<hr>
-							
+							<%-- 
 							<div class="field is-horizontal">
 								<div class="field-body">
 									<div class="field is-grouped">
 										<i class="fas fa-map-marker-alt" style="color: purple; font-size: 20px;"></i> &nbsp;&nbsp;
-										<label class="label" style="width: 80%; color: gray;">${ spotList.spotAddress }</label> &nbsp;&nbsp;
-										<a href="#">google 지도</a>
+										<label class="label" style="width: 80%; color: gray;">${ spotList.spotAddress }</label> 
 									</div>
 								</div>
-							</div>
+							</div> --%>
 							
 							<hr>
 							
@@ -99,10 +125,10 @@
 					</div> <!-- end field body -->
 				</div> <!-- end header -->
 				
-				<hr style="border: 0.5px solid gray;">
+				<!-- <hr style="border: 0.5px solid gray;"> -->
 				
 				<!-- header sub pic area -->
-				<div class="field is-horizontal">
+				<%-- <div class="field is-horizontal">
 					<div class="field-body">
 						<c:forEach var="spotImg" items="${ spotFile }">
 							<div class="field">
@@ -110,78 +136,87 @@
 							</div>
 						</c:forEach>
 					</div>
-				</div> <!-- end header sub pic area -->
+				</div> --%> <!-- end header sub pic area -->
 				
 				<hr style="border: 0.5px solid gray;">
 				
-				<!-- spot detail info area -->
-				<div class="field">
-					<div class="field is-horizontal">
-						<div class="field-body">
-							<div class="field-label">
-								<label class="label">상세주소</label>
-							</div>
-							<div class="field spotInfo">
-								<label class="label" style="width: 80%;">${ spotList.spotAddress }</label>
-							</div>
-						</div>
-					</div>
-					
-					<div class="field is-horizontal">
-						<div class="field-body">
-							<div class="field-label">
-								<label class="label">연락처 </label>
-							</div>
-							<div class="field spotInfo">
-								<label class="label" style="width: 80%;">${ spotList.spotPhone }</label>
-							</div>
-						</div>
-					</div>
-					
-					<div class="field is-horizontal">
-						<div class="field-body">
-							<div class="field-label">
-								<label class="label">웹사이트</label>
-							</div>
-							<div class="field spotInfo">
-								<label class="label" style="width: 80%;">${ spotList.webAddress }</label>
-							</div>
-						</div>
-					</div>
-					
-					<div class="field is-horizontal">
-						<div class="field-body">
-							<div class="field-label">
-								<label class="label">영업시간</label>
-							</div>
-							<div class="field">
-								<label class="label spotInfo" style="width: 80%;">${ spotList.openingHours }</label>
-							</div>
-						</div>
-					</div>
-				</div> <!-- end spot detail info area -->
-				
-				<hr style="border: 0.5px solid gray;">
-				
-				<!-- relative plan -->
 				<div class="field is-horizontal">
 					<div class="field-body">
-						<h3>관련 일정</h3>
-						<div class="field" style="justify-content: flex-end; text-align: right;">
-							<a href="#">일정 더보기 > </a>
+					
+						<!-- map -->
+						<div class="field" style="width: 60%;">
+							<div id="floating-panel">
+						      <input id="address" type="text" value="${ spotList.spotAddress }">
+						      <input id="submit" type="button" value="Geocode">
+						    </div>
+							<div id="map" style="height: 400px;"></div>
 						</div>
-					</div>
-				</div> <!-- end relativ plan -->
+						
+						<!-- info -->
+						<div class="field" style="widht: 40%;">
+							<!-- spot detail info area -->
+							<div class="field">
+										<h4 class="title">기본 정보</h4>
+								<div class="field is-horizontal">
+									<div class="field-body">
+										<div class="field-label">
+											<label class="label">상세주소</label>
+										</div>
+										<div class="field spotInfo">
+											<label class="label" style="width: 80%;">${ spotList.spotAddress }</label>
+										</div>
+									</div>
+								</div>
+								
+								<div class="field is-horizontal">
+									<div class="field-body">
+										<div class="field-label">
+											<label class="label">연락처 </label>
+										</div>
+										<div class="field spotInfo">
+											<label class="label" style="width: 80%;">${ spotList.spotPhone }</label>
+										</div>
+									</div>
+								</div>
+								
+								<div class="field is-horizontal">
+									<div class="field-body">
+										<div class="field-label">
+											<label class="label">홈페이지</label>
+										</div>
+										<div class="field spotInfo">
+											<a style="width: 80%;" target="_blank" href="${ spotList.webAddress }">${ spotList.webAddress }</a>
+										</div>
+									</div>
+								</div>
+								
+								<div class="field is-horizontal">
+									<div class="field-body">
+										<div class="field-label">
+											<label class="label">영업시간</label>
+										</div>
+										<div class="field">
+											<label class="label spotInfo" style="width: 80%;">${ spotList.openingHours }</label>
+										</div>
+									</div>
+								</div>
+							</div> <!-- end spot detail info area -->
+						</div>
+						
+					</div> <!--  end field body -->
+				</div> <!-- end is-horizontal -->
+				
+				
 				
 				<hr style="border: 0.5px solid gray;">
 				
 				<!-- 리뷰 평균 구하기 -->
-				<c:set var="sum" value=""/>
+				<c:set var="sum" value="0"/>
 				<c:forEach var="grade" items="${ spotReviews }">
 					<c:set var="sum" value="${ sum + grade.grade }"/>
 				</c:forEach>
 				<c:set var="length" value="${ fn:length(spotReviews) }"/>	
-				<fmt:formatNumber var="avg" value="${ sum / length }" pattern=".0"/>
+				<c:set var="avg" value="${ sum / length }"/>
 				<!-- end 리뷰 평균 구하기 -->
 				
 				<!-- reviews area -->
@@ -193,17 +228,37 @@
 								<div class="field is-grouped" style="justify-content: flex-end;">
 									<i class="fas fa-smile" style="color: red; font-size: 30px;"></i> &nbsp; &nbsp;
 									<div class="field">
-										<h2 style="color: red; font-size: 25px;">${ avg } </h2> &nbsp; &nbsp;
+										<c:if test="${ fn:length(spotReviews) gt 0 }">
+											<c:choose>
+												<c:when test="${ avg eq 1 }">
+													<h2 style="color: red; font-size: 25px;">별로예요</h2> &nbsp; &nbsp;
+												 </c:when>
+												<c:when test="${ avg eq 2 }"> 
+													<h2 style="color: red; font-size: 25px;">아쉬워요</h2> &nbsp; &nbsp;
+												</c:when>
+												<c:when test="${ avg eq 3 }">
+													<h2 style="color: red; font-size: 25px;">가볼만해요</h2> &nbsp; &nbsp;
+												</c:when>
+												<c:when test="${ avg eq 4 }"> 
+													<h2 style="color: red; font-size: 25px;">꽤 가볼만 해요</h2> &nbsp; &nbsp;
+												</c:when>
+												<c:when test="${ avg eq 5 }">
+													<h2 style="color: red; font-size: 25px;">꼭 가봐야 해요!</h2> &nbsp; &nbsp;
+												</c:when>
+											</c:choose>
+										</c:if>
+										<c:if test="${ fn:length(spotReviews) eq 0 }">
+											<h2 style="color: #cc0066; font-size: 15px; margin-top: 5px;">처음으로 리뷰를 남겨주세요!</h2> &nbsp; &nbsp;
+										</c:if>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div> <!-- end header -->
 				</div> <!-- end reviews area -->
-					
 			<!-- insert review area -->
 			<form action="insertSpotReview.sp" method="post">
-				<div class="field" style="border: 0.3px solid gray; padding:10px;">
+				<div class="field" style="border: 0.3px solid gray; padding:10px;" id="reviewAreaId">
 					<c:if test="${ !empty loginUser }">
 						<input type="hidden" value="${ loginUser.memberId }" name="memberId">
 						<input type="hidden" value="${ spotList.spotId }" name="spotId">
@@ -219,14 +274,14 @@
 										<i class="fas fa-grin-hearts" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i>
 						          </div>				
 								<span class="select" style="margin-top: 10px; width: 100%;">
-						            <select name="grade" style="width: 100%;" id="gradeOption">
+						            <select name="grade" style="width: 100%; text-align: center;" id="gradeOption">
 						              <option value="5" selected>꼭 가봐야 해요!(5)</option>
 						              <option value="4">꽤 가볼만해요(4)</option>
 						              <option value="3">가볼만해요(3)</option>
 						              <option value="2">아쉬워요(2)</option>
 						              <option value="1">별로예요(1)</option>
 						            </select>
-						          </span>					          
+						        </span>					          
 							</div>
 							
 							<!-- text area -->
@@ -250,29 +305,64 @@
 				
 					<div class="field is-horizontal">
 						<div class="field-body">
-							<div class="field" style="width: 15%; padding-top: 10px;" align="center">	
+							<c:set var="iconId" value="userIcon${ reviews['memberId'] }"/>
+							<c:set var="gradeOpId" value="gradeOp${ reviews['memberId'] }"/>
+							<div class="field" id="${ gradeId }" style="width: 15%; padding-top: 10px;" align="center">
+							
+								<!-- User review icon area -->
 								<c:choose>
 									<c:when test="${ reviews['grade'] eq 1 }"> 
-										<i class="fas fa-laugh" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i>
-										<label class="label" style="width: 100%;">별로예요</label>
+										<i class="fas fa-laugh" style="font-size: 70px; color: #ff0066;" id="${ iconId }"></i>
 									 </c:when>
 									<c:when test="${ reviews['grade'] eq 2 }"> 
-										<i class="fas fa-grin-beam-sweat" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i> 
-										<label class="label" style="width: 100%;">아쉬워요</label>
+										<i class="fas fa-grin-beam-sweat" style="font-size: 70px; color: #ff0066;" id="${ iconId }"></i>
 									</c:when>
 									<c:when test="${ reviews['grade'] eq 3 }"> 
-										<i class="fas fa-grin-beam" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i>
-										<label class="label" style="width: 100%;">가볼만해요</label> 
+										<i class="fas fa-grin-beam" style="font-size: 70px; color: #ff0066;" id="${ iconId }"></i>
 									</c:when>
 									<c:when test="${ reviews['grade'] eq 4 }"> 
-										<i class="fas fa-grin-squint" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i> 
-										<label class="label" style="width: 100%;">꽤 가볼만 해요</label>
+										<i class="fas fa-grin-squint" style="font-size: 70px; color: #ff0066;" id="${ iconId }"></i> 
 									</c:when>
 									<c:when test="${ reviews['grade'] eq 5 }"> 
-										<i class="fas fa-grin-hearts" style="font-size: 70px; color: #ff0066;" id="gradeIcon"></i> 
-										<label class="label" style="width: 100%;">꼭 가봐야 해요!</label>
+										<i class="fas fa-grin-hearts" style="font-size: 70px; color: #ff0066;" id="${ iconId }"></i> 
 									</c:when>
-								</c:choose>
+								</c:choose> <!-- end user review icon area -->
+								
+								<!-- user review text area -->
+								<c:if test="${ loginUser.memberId ne reviews['memberId'] }">
+									<c:choose>
+										<c:when test="${ reviews['grade'] eq 1 }">
+											<label class="label" style="width: 100%;">별로예요</label>
+										 </c:when>
+										<c:when test="${ reviews['grade'] eq 2 }"> 
+											<label class="label" style="width: 100%;">아쉬워요</label>
+										</c:when>
+										<c:when test="${ reviews['grade'] eq 3 }">
+											<label class="label" style="width: 100%;">가볼만해요</label> 
+										</c:when>
+										<c:when test="${ reviews['grade'] eq 4 }"> 
+											<label class="label" style="width: 100%;">꽤 가볼만 해요</label>
+										</c:when>
+										<c:when test="${ reviews['grade'] eq 5 }">
+											<label class="label" style="width: 100%;">꼭 가봐야 해요!</label>
+										</c:when>
+									</c:choose> 
+								</c:if>
+								
+								<c:if test="${ loginUser.memberId eq reviews['memberId'] }">
+									<span class="select" style="margin-top: 10px; width: 100%;">
+							            <select name="grade" style="width: 100%; text-align: center;" id="${ gradeOpId }"
+							            	 	onchange="updateGrade(this);">
+							              <option value="5" <c:if test="${ reviews['grade'] eq 5 }">selected</c:if>>꼭 가봐야 해요!(5)</option>
+							              <option value="4" <c:if test="${ reviews['grade'] eq 4 }">selected</c:if>>꽤 가볼만해요(4)</option>
+							              <option value="3" <c:if test="${ reviews['grade'] eq 3 }">selected</c:if>>가볼만해요(3)</option>
+							              <option value="2" <c:if test="${ reviews['grade'] eq 2 }">selected</c:if>>아쉬워요(2)</option>
+							              <option value="1" <c:if test="${ reviews['grade'] eq 1 }">selected</c:if>>별로예요(1)</option>
+							            </select>
+							        </span>	
+								</c:if>						        
+								<!-- end user review text area -->
+								
 							</div>
 							<!-- text area -->
 							<div class="field" style="width: 85%;">
@@ -282,15 +372,21 @@
 										<label class="label" style="width: 80%;" > ${ reviews['userName'] } </label>
 										<c:if test="${ loginUser.memberId eq reviews['memberId'] }">
 											<div class="field" align="right">
-												<a href="#" style="color: #666699;">수정</a> &nbsp; &nbsp;
-												<a href="#" style="color: #666699;">삭제</a> 
+												<a href="#" style="color: #666699;" onclick="updateReview('${reviews['spotReviewId']}');">수정</a> &nbsp; &nbsp;
+												<a href="#" style="color: #666699;" onclick="deleteReview('${reviews['spotReviewId']}');">삭제</a> 
 											</div>
 										</c:if>
 									</div>
 								</div>
 								
 					           <div class="control">
-					             <textarea class="textarea" readonly> ${ reviews['reviewContent'] } </textarea>
+					           		<c:set var="contentId" value="content${ reviews['memberId'] }"/>
+					           		<c:if test="${ loginUser.memberId eq reviews['memberId'] }">
+					           			<textarea class="textarea" id="${ contentId }"> ${ reviews['reviewContent'] } </textarea>
+					           		</c:if>
+					           		<c:if test="${ loginUser.memberId ne reviews['memberId'] }">
+							            <textarea class="textarea" readonly id="${ contentId }"> ${ reviews['reviewContent'] } </textarea>
+					           		</c:if>
 					           </div>
 					        </div> <!--  end text area -->					       
 						</div> <!-- end field-body -->
@@ -310,8 +406,10 @@
   		console.log($(star));
   		$(star).removeClass();
   		$(star).addClass("fas fa-star");
+  		
   	} //end func
   	
+  	//리뷰등록용 함수
   	function insertReview(){
   		if('${ loginUser}' != null && '${ loginUser}' != "" && '${ loginUser}' != " "){ //로그인 되어 있을 때
   			if($("#reviewContent").val() != null && $("#reviewContent").val() != "" && $("#reviewContent").val() != " "){
@@ -326,7 +424,58 @@
   		}
   	} //end func
   	
+  	//리뷰 수정용 함수
+  	function updateReview(spotReviewId){
+  		
+  		var grade = $("#gradeOp"+'${ loginUser.memberId }').val();
+  		var content = $("#content"+'${ loginUser.memberId }').val();
+  		$.ajax({
+  			url : "updateSpotReview.sp",
+  			type : "post",
+  			data : { "spotReviewId" : spotReviewId,
+  					 "grade" : grade, "content" : content},
+  			success : function(data){
+  				//alert(data);
+  				location.reload();
+  			},
+  			error : function(Data){
+  				alert("빈 값으로 수정할 수 없습니다.");
+  			}, 
+  			complete : function(){
+  		    	location.href="#reviewAreaId";
+  			}
+  		}); //end ajax
+  	} //end func
+  	
+  	//리뷰 삭제용 함수
+  	function deleteReview(spotReviewId){
+  		location.href = "deleteSpotReview.sp?spotReviewId=" + spotReviewId 
+  						+ "&spotId=" +  '${ spotList.spotId }';
+  	} //end func
+  	
+  	//점수 onchange 이벤트용 함수
+  	function updateGrade(selectedValue){
+  		var value =	$(selectedValue).val();
+  		var classVar = "";
+  		var iconId = "#userIcon" + '${ loginUser.memberId }';
+  		switch(value){
+			case "1" : classVar = "fas fa-laugh"; break;
+			case "2" : classVar = "fas fa-grin-beam-sweat"; break;
+			case "3" : classVar = "fas fa-grin-beam"; break;
+			case "4" : classVar = "fas fa-grin-squint"; break;
+			case "5" : classVar = "fas fa-grin-hearts"; break;
+		} //end switch
+  		$(iconId).attr("class", classVar);
+  	} //end func
+  	
   	$(function(){
+  		$("#submit").click();
+  		if( '${ msg }' != null && '${ msg }' != "" && '${ msg }' != " "){
+  			console.log("test");
+  			alert('${ msg }');
+  			location.href="#reviewAreaId";
+  		}
+  		
   		$('.toggle.example .rating')
 	  	  .rating({
 	  	    initialRating: 2,
@@ -349,6 +498,39 @@
   			
   		});
   	});
-  </script> <!-- end script -->
+  </script> 
+  
+  <script>
+  function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 18,
+        center: {lat: -34.397, lng: 150.644}
+      });
+      var geocoder = new google.maps.Geocoder();
+
+      document.getElementById('submit').addEventListener('click', function() {
+        geocodeAddress(geocoder, map);
+      });
+    }
+
+    function geocodeAddress(geocoder, resultsMap) {
+      var address = document.getElementById('address').value;
+      geocoder.geocode({'address': address}, function(results, status) {
+        if (status === 'OK') {
+          resultsMap.setCenter(results[0].geometry.location);
+          var marker = new google.maps.Marker({
+            map: resultsMap,
+            position: results[0].geometry.location
+          });
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBPsggRrwEVvAPZQ5vVU2p2z-nFGtVe8Y&callback=initMap"
+    async defer></script>
+    
+  <!-- end script -->
 </body>
 </html>

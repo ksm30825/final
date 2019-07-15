@@ -9,12 +9,14 @@
 	        <p class="modal-card-title" style="padding-top:20px;">엑셀로 여행지 추가</p>
 	        <button class="delete is-large" onclick="closeModal();"></button>
 	      </header>
+	        		 <form id="massiveForm" name="massiveForm" enctype="multipart/form-data" method="post" action="insertSpotExcel.sp" >
 	      <section class="modal-card-body">
 	        <div class="columns">
 	        	<div class="column">
+	        		 	  
 	        		<div class="field">
 				          <label class="file-label">
-				            <input class="file-input" type="file" name="resume">
+				            <input class="file-input" type="file" name="excelFile">
 				            <span class="file-cta" style="background-color:#ffcc00;">
 				              <span class="file-icon">
 				                <i class="fa fa-upload"></i>
@@ -28,6 +30,10 @@
 	        	</div>
 	        </div>
 	      </section>
+				       <footer class="modal-card-foot" style="justify-content:flex-end;">
+					        <button class="button is-danger" type="submit">등록하기</button>
+					      </footer>
+				      </form>
 	     <!--  <footer class="modal-card-foot">
 	        <a class="button is-primary">엑셀파일로 여행지 추가</a>
 	        <a class="button" onclick="closeModal();">취소</a>
