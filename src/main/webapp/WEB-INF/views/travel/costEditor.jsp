@@ -569,6 +569,7 @@
 			$("#totalCostWon").val(totalCostWon);
 			formatCurrency($("#totalCostWon"), "budgetWon", "blur");
 			$("#balanceWon").val(balanceWon);
+			console.log(balanceWon);
 			formatCurrency($("#balanceWon"), "budgetWon", "blur");
 			
 		}
@@ -579,7 +580,12 @@
 		
 		//formatting
 		function formatNumber(n) {
-		  return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+			console.log(n);
+			if(n.charAt(0) == '-') {
+				return '-' + n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}else {
+				return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
 		}
 	
 	

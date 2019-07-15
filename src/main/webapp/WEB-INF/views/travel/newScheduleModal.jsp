@@ -160,6 +160,8 @@
 		var endTime1 = $("#endTime1");
 		var costAmount1 = $("#costAmount1");
 		var transp1 = $("#schTransp1");
+		var plcId1 = $("#plcId1");
+		var plcName1 = $("#plcName1");
 		$(function() {
 			$("#currency1").children().each(function() {
 				if($(this).text() == $(this).siblings().text()) {
@@ -242,6 +244,8 @@
     	   	endTime1.val('');
     	   	costAmount1.val(0);
     	   	transp1.val('');
+    	   	plcId1.val('');
+    	   	plcName1.val('');
 		}
 		
 		

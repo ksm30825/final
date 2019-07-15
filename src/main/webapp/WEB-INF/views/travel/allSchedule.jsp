@@ -134,7 +134,7 @@
 														<strong>${ sch.schTitle }</strong>
 													</p>
 													<c:if test="${ !empty sch.trvCost }">
-														<small class="costType">${ sch.trvCost.costType } : </small>
+														<small class="costType">${ sch.trvCost.costType }:</small>
 														<small><strong class="costAmount">${ sch.trvCost.costAmount }</strong></small>
 														<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 													</c:if>
