@@ -17,6 +17,7 @@
 		<result property="inquiryType" column="INQUIRY_TYPE"/>
 		<result property="inquiryTitle" column="INQUIRY_TITLE"/>
 	</resultMap>
+	
 	<!-- 문의하기 인서트 -->
 	<insert id="insertInquiry" parameterType="Inquiry">
 		INSERT INTO INQUIRY

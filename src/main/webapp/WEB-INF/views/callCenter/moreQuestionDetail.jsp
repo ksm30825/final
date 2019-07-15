@@ -51,10 +51,12 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
+	<br><br>
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="table">
 				<h1 class="title" style="text-align: center;">자주 묻는 질문</h1>
+				<br><br>
 				<hr>
 				<table class="table">
 					<thead>

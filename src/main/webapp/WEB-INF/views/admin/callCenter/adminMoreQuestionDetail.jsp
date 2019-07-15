@@ -60,8 +60,9 @@
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="table">
+				<br><br>
 				<h1 class="title" style="text-align: center;">자주 묻는 질문</h1>
-				<hr>
+				<br><br>
 				<table class="table">
 					<thead>
 						<tr>

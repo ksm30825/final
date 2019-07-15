@@ -37,7 +37,7 @@
             <a class="navbar-item is-active" href="adminMemberListForm.me?currentPage=1&status=ALL"> <strong>회원관리</strong> </a> <!-- href 경로수정(세령) -->
 
             <div class="navbar-item has-dropdown is-hoverable">
-	            <a class="navbar-link " href="#"> <strong>고객센터관리</strong> </a>
+	            <a class="navbar-link " href="adminNoticeList.ad"> <strong>고객센터관리</strong> </a>
 	            <div class="navbar-dropdown ">
 	                  <a class="navbar-item subnav" href="adminNoticeList.ad"> 공지사항 </a> 
 	                  <a class="navbar-item subnav" href="adminMoreQuestionList.ad"> 자주묻는 질문 </a>
@@ -45,9 +45,9 @@
 	            </div>
 	        </div>
             <div class="navbar-item has-dropdown is-hoverable">
-               <a class="navbar-link " href="#"> <strong>게시판관리</strong> </a>
+               <a class="navbar-link " href="reqTotalList.ad"> <strong>게시판관리</strong> </a>
                <div class="navbar-dropdown ">
-                  <a class="navbar-item subnav" href="noticeControlList.ad"> 게시판 </a> 
+                  <a class="navbar-item subnav" href="reqTotalList.ad"> 게시판 </a> 
                   <a class="navbar-item subnav" href="selectAllSpotAdmin.sp?currentPage=1"> 여행지 </a> <!-- href 경로 추가 : 세령 -->
                </div>
             </div>
