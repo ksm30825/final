@@ -266,7 +266,7 @@
 	<select id="selectTrvDayId" resultType="_int">
 		SELECT TRV_DAY_SEQ.CURRVAL FROM DUAL
 	</select>
-	<select id="selectDayNumber" parameterType="_int">
+	<select id="selectDayNumber" parameterType="_int" resultType="_int">
 		SELECT DAY_NUMBER
 		FROM TRV_DAY
 		WHERE DAY_ID = #{dayId}
@@ -364,11 +364,13 @@
 		SELECT *
 		FROM SCH_FILE
 		WHERE FILE_ID = #{fileId}
+		AND FILE_STATUS = 'Y'
 	</select>
 	<select id="selectSchFileList" parameterType="_int" resultMap="SchFileResultSet">
 		SELECT *
 		FROM SCH_FILE
 		WHERE SCH_ID = #{schId}
+		AND FILE_STATUS = 'Y'
 	</select>
 	<update id="updateTrvFileLevel" parameterType="_int">
 		UPDATE SCH_FILE
@@ -391,7 +393,10 @@
 						 				  WHERE TRV_ID = #{trvId}))
 		AND FILE_LEVEL = 0
 	</select>
-	
+	<delete id="deleteSchFile" parameterType="_int">
+		DELETE FROM SCH_FILE
+		WHERE FILE_ID = #{fileId}
+	</delete>
 	
 	
 	
@@ -432,6 +437,12 @@
 		FROM TRV_COST
 		WHERE DAY_ID = #{dayId}
 		AND SCH_ID IS NULL
+		ORDER BY COST_TYPE, COST_ID
+	</select>
+	<select id="selectDayCostList" parameterType="_int" resultMap="TrvCostResultSet">
+		SELECT *
+		FROM TRV_COST
+		WHERE DAY_ID = #{dayId}
 		ORDER BY COST_TYPE, COST_ID
 	</select>
 	<select id="selectDownloadCost" parameterType="_int" resultMap="CostDownResultMap">

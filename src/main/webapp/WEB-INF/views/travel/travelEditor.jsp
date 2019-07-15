@@ -17,101 +17,6 @@
 <script src="resources/js/semantic.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
-<script>
-	var socket = io.connect('http://127.0.0.1:4000');
-			
-	if(socket !== undefined) {
-		console.log('Socket connected');
-				
-		socket.emit('memberIn', {
-			name:"${ loginUser.userName }",
-			email:"${ loginUser.email }",
-			room:"${ trv.trvId }"
-		});
-				
-		socket.on('updateMemberList', function(data) {
-			$("#memberInArea").empty();
-			for(var key in data) {
-				var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
-					+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
-				$("#memberInArea").append(a);
-			}
-		});
-		
-		socket.on('insertTag', function(tagId, tagName) {
-			$(".themes").each(function() {
-				if($(this).children().val() == tagId) {
-					$(this).removeClass('is-white').addClass('is-link');
-				}
-			});
-			$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
-					+ tagName + '</a><a class="tag is-delete tagDelete"></a><input type="hidden" value="' + tagId + '"></div></div>'));
-		
-			$(".tagDelete").click(function() {
-				var name = $(this).prev().text();
-				var id = parseInt($(this).next().val());
-				var trvTag = $(this).parent().parent();
-				$.ajax({
-					url:"deleteTrvTag.trv",
-					data:{tagId:id, trvId:"${ trv.trvId }"},
-					type:"post",
-					success:function(data) {
-						trvTag.remove();
-						$(".themes").each(function() {
-							if($(this).children().val() == id) {
-								$(this).removeClass('is-link').addClass('is-white');
-							}
-						});
-						
-						//socket tagDelete
-						socket.emit('deleteTag', {
-							tagId:id,
-							tagName:name,
-							room:'${ trv.trvId }'
-						});
-					},
-					error:function(data) {
-						//alert("서버전송 실패");
-					}
-				});
-				
-			});
-		
-		});
-		
-		socket.on('deleteTag', function(tagId, tagName) {
-			$(".themes").each(function() {
-				if($(this).children().val() == tagId) {
-					$(this).removeClass('is-link').addClass('is-white');
-				}
-			});
-			$("#myTagArea .tags.has-addons").each(function() {
-				if($(this).children().last().val() == tagId) {
-					$(this).parent().remove();
-				}
-			});
-		});
-		
-		socket.on('updateSchedule', function(dayId) {
-			$.ajax({
-				url:"selectSchList.trv",
-				type:"POST",
-				data:{dayId:dayId},
-				success:function(data) {
-					for(var key in data) {
-						console.log(data[key]);
-					}
-				},
-				error:function(err) {
-					alert("err");
-				}
-			});
-		});
-				
-				
-	}
-</script>
 <style>
 	body {
 		overflow-x:visible !important;
@@ -123,7 +28,6 @@
 		width:200px !important;
 	}
 </style>
-
 </head>
 <body>
 	<%-- <c:set var="trv" value="${ sessionScopetrv }" /> --%>
@@ -304,6 +208,196 @@
 			</section>
 		</div>
 	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+	<script>
+		var socket = io.connect('http://127.0.0.1:4000');
+				
+		if(socket !== undefined) {
+			console.log('Socket connected');
+					
+			socket.emit('memberIn', {
+				name:"${ loginUser.userName }",
+				email:"${ loginUser.email }",
+				room:"${ trv.trvId }"
+			});
+					
+			socket.on('updateMemberList', function(data) {
+				$("#memberInArea").empty();
+				for(var key in data) {
+					var a = "<p class='control'><a class='button is-success' data-tooltip='" + data[key].email + "(" + data[key].name + ")' data-variation='mini'" 
+						+ " data-position='left center'>" + data[key].name.charAt(0) + '</a></p>';
+					$("#memberInArea").append(a);
+				}
+			});
+			
+			socket.on('insertTag', function(tagId, tagName) {
+				$(".themes").each(function() {
+					if($(this).children().val() == tagId) {
+						$(this).removeClass('is-white').addClass('is-link');
+					}
+				});
+				$("#myTagArea").append($('<div class="control"><div class="tags has-addons"><a class="tag is-primary">' 
+						+ tagName + '</a><a class="tag is-delete tagDelete"></a><input type="hidden" value="' + tagId + '"></div></div>'));
+			});
+			
+			socket.on('deleteTag', function(tagId, tagName) {
+				$(".themes").each(function() {
+					if($(this).children().val() == tagId) {
+						$(this).removeClass('is-link').addClass('is-white');
+					}
+				});
+				$("#myTagArea .tags.has-addons").each(function() {
+					if($(this).children().last().val() == tagId) {
+						$(this).parent().remove();
+					}
+				});
+			});
+			
+			socket.on('insertSchedule', function(schId, dayNumber, schList) {
+				updateSchList(dayNumber, schList);
+				for(var key in schList) {
+					var sch = schList[key];
+					
+					//가계부는 새로 insert된 일정만 금액이 있을경우에 가계부 리스트에 추가
+					if(sch.schId == schId && sch.trvCost != null) {
+    					insertNewCost(sch.trvCost);
+					}
+				}
+			});
+			
+			socket.on('deleteSchedule', function(costId, dayNumber, schList) {
+				updateSchList(dayNumber, schList);
+				if(costId != undefined) {
+					deleteCost(costId);
+				}
+			});
+			
+			socket.on('updateSchedule', function(originDayNumber, originSchList, originCostList, changeDayNumber,
+					changeSchList, changeCostList) {
+				updateSchList(originDayNumber, originSchList);
+				updateCostList(originDayNumber, originCostList);
+				
+				if(changeDayNumber != undefined) {
+					updateSchList(changeDayNumber, changeSchList);
+					updateCostList(changeDayNumber, changeCostList);
+				}
+			});
+			
+			socket.on('reorderSchListInADay', function(dayNumber, schList) {
+				//reorderSchListInADay(dayNumber, schList);
+				updateSchList(dayNumber, schList);
+			});
+			
+			socket.on('reorderSchListBetweenDays', function(originDayNumber, originSchList, changeDayNumber, changeSchList, costId) {
+				updateSchList(originDayNumber, originSchList);
+				updateSchList(changeDayNumber, changeSchList);
+				
+				if(costId != undefined) {
+					var costList = $("#day" + changeDayNumber + "CostList"); 
+					costList.append($("#cost_" + costId));
+				}
+			});
+			
+			socket.on('addGallaryImage', function(dayNumber, changeName, fileLevel, fileId) {
+				addGallaryImage(dayNumber, changeName, fileLevel, fileId);
+			});
+			
+			socket.on('changeMainImage', function(fileId) {
+				$(".mainImageIcon").hide();
+				$(".changeMainImageBtn").show();
+				$("input[name=fileId]").each(function() {
+					if($(this).val() == fileId) {
+						$(this).parent().hide();
+						$(this).parent().prev().show();
+					}
+				});
+			});
+			
+			socket.on('deleteGallaryImage', function(fileId) {
+				$("input[name=fileId]").each(function() {
+					if($(this).val() == fileId) {
+						$(this).parent().parent().parent().remove();
+					}
+				});
+			});
+			
+			socket.on('changeWeather', function(dayNumber, dayWeather) {
+				$("#day" + dayNumber + "Header").find(".weatherArea").find(".weatherBtn").each(function() {
+					if($(this).attr("id") == dayWeather) {
+						$(this).removeClass('is-outlined');
+						$(this).parent().siblings().children().addClass('is-outlined');
+						var span = $(this).parent().siblings().eq(0);
+						if(dayWeather == "SUN") {
+							span.text('맑음');
+						}else if(dayWeather == "CLOUD") {
+							span.text('흐림');
+						}else if(dayWeather == "RAIN") {
+							span.text('비');
+						}else if(dayWeather == "SNOW") {
+							span.text('눈');
+						}else if(dayWeather == "LIGHTNING") {
+							span.text('번개');
+						}
+						return;
+					}
+				});
+				
+				
+			});
+			
+			socket.on('insertCompany', function(memberId, memberInfo) {
+				var compTr = $(".compTr").eq(0).clone(true);
+				compTr.children().eq(1).text(memberInfo);
+				compTr.find("input[name=memberId]").val(memberId);
+				compTr.show();
+				$("#compTable").children().append(compTr);
+			});
+			
+			socket.on('deleteCompany', function(memberId) {
+				$(".compTr").each(function() {
+					var compTr = $(this);
+					if($(this).children().eq(0).children("input[name=memberId]").val() == memberId) {
+						compTr.remove();
+					}
+				});
+			});
+			
+			socket.on('updateMemo', function(dayId, memo) {
+				$(".day" + dayId + "Memo").each(function() {
+					$(this).val(memo);
+				});
+			});
+			
+			socket.on('insertCost', function(trvCost) {
+				insertNewCost(trvCost);
+			});
+			
+			socket.on('updateCost', function(trvCost) {
+				updateCost(trvCost);
+			});
+			
+			socket.on('deleteCost', function(costId, schId) {
+				deleteCost(costId);
+				if(schId != 0) {
+					$(".sch" + schId + "Block").find(".costType").remove();
+					$(".sch" + schId + "Block").find(".costAmount").remove();
+					$(".sch" + schId + "Block").find(".costCurrency").remove();
+				}
+			});
+			
+			socket.on('updateBudget', function(budget) {
+				$("#budgetWon").val(budget);
+				formatCurrency($("#budgetWon"), "budgetWon", "blur");
+				getLocalBudget(budget);
+			});
+			
+			socket.on('completeTravel', function() {
+				alert("일정이 작성완료처리 됩니다.");
+				location.href="showMyTravel.trv";
+			});
+		}
+	</script>
+	
 	<div>
 		<div id="scheduleEditor">
 			<jsp:include page="scheduleEditor.jsp" />
@@ -318,164 +412,196 @@
 			<jsp:include page="costEditor.jsp" />
 		</div>
 	</div>
-
 	
 	<jsp:include page="travelInfoModal.jsp" />
-	<jsp:include page="newScheduleModal.jsp" />
-	<jsp:include page="scheduleInfoModal.jsp" />
+	
 	<script>
 		$(function() {
 			$(".editorMenu").tab();
-			$("#inviteBtn").click(function() {
-				$("#inviteDropdown").toggle();
+		});
+
+		$("#inviteBtn").click(function() {
+			$("#inviteDropdown").toggle();
+		});
+		$(".closeBtn").click(function() {
+			$("#inviteDropdown").hide();
+		});
+
+		//dayMemo
+		$(".dayMemo").change(function() {
+			var memo = $(this).val();
+			var dayId = $(this).prev().val();
+			$.ajax({
+				url : "updateDayMemo.trv",
+				type : "post",
+				data : {dayMemo : memo, dayId : dayId},
+				success : function(data) {
+					console.log(data);
+					console.log($(".day" + dayId + "Memo"));
+					$(".day" + dayId + "Memo").each(function() {
+						$(this).val(memo);
+					});
+					
+					socket.emit('updateMemo', {
+						dayId:dayId,
+						memo:memo,
+						room:"${ trv.trvId }"
+					});
+				},
+				error : function(data) {
+					alert("memo 서버전송 실패");
+				}
 			});
-			$(".closeBtn").click(function() {
-				$("#inviteDropdown").hide();
+		});
+
+		//동행검색
+		$("#searchComp").change(function() {
+			var input = $(this).val();
+			$.ajax({
+				url : "searchCompany.trv",
+				type : "POST",
+				data : {
+					email : input
+				},
+				success : function(data) {
+
+					if (data.member != undefined) {
+						$("#compSearchMemberId").val(
+								data.member.memberId);
+						$("#compSearchResult").text(
+								data.member.email + " ("
+										+ data.member.userName + ")");
+						$("#addCompBtn").show();
+					} else {
+						$("#compSearchMemberId").val(0);
+						$("#compSearchResult").text(
+								"일치하는 회원 정보를 찾을 수 없습니다.");
+						$("#addCompBtn").hide();
+					}
+				},
+				error : function(err) {
+					alert("err");
+				}
 			});
-			
-			//dayMemo
-			$(".dayMemo").change(function() {
-				var memo = $(this).val();
-				var dayId = $(this).prev().val();
+		});
+
+		//동행추가
+		$("#addCompBtn").click(function() {
+			var memberInfo = $("#compSearchResult").text();
+			var memberId = $("#compSearchMemberId").val();
+			var compTr = $(".compTr").eq(0).clone(true);
+			var exist = false;
+			$(".compTr").each(function() {
+				if (memberId == $(this).find("input[name=memberId]").val()) {
+					alert("이미 동행추가된 멤버입니다.");
+					exist = true;
+					return;
+				}
+			});
+			if (!exist) {
 				$.ajax({
-					url:"updateDayMemo.trv",
-					type:"post",
-					data:{dayMemo:memo, dayId: dayId},
-					success:function(data) {
-						console.log(data);
-						console.log($(".day" + dayId + "Memo"));
-						$(".day" + dayId + "Memo").each(function() {
-							$(this).val(memo);
+					url : "insertCompany.trv",
+					type : "POST",
+					data : {memberId : memberId, trvId : "${ trv.trvId }"},
+					success : function(data) {
+						compTr.children().eq(1).text(memberInfo);
+						compTr.find("input[name=memberId]").val(memberId);
+						compTr.show();
+						$("#compTable").children().append(compTr);
+						
+						socket.emit('insertCompany', {
+							memberId:memberId,
+							memberInfo:memberInfo,
+							room:"${ trv.trvId }"
 						});
 					},
-					error:function(data) {
-						alert("memo 서버전송 실패");
-					}
-				});
-			});
-			
-			//동행검색
-			$("#searchComp").change(function() {
-				var input = $(this).val();
-				$.ajax({
-					url:"searchCompany.trv",
-					type:"POST",
-					data:{email:input},
-					success:function(data) {
-						
-						if(data.member != undefined) {
-							$("#compSearchMemberId").val(data.member.memberId);
-							$("#compSearchResult").text(data.member.email + " (" + data.member.userName + ")");
-							$("#addCompBtn").show();
-						}else {
-							$("#compSearchMemberId").val(0);
-							$("#compSearchResult").text("일치하는 회원 정보를 찾을 수 없습니다.");
-							$("#addCompBtn").hide();
-						}
-					},
-					error:function(err) {
+					error : function(err) {
 						alert("err");
 					}
 				});
-			});
-			
-			//동행추가
-			$("#addCompBtn").click(function() {
-				var memberInfo = $("#compSearchResult").text();
-				var memberId = $("#compSearchMemberId").val();
-				var compTr = $(".compTr").eq(0).clone(true);
-				var exist = false;
-				$(".compTr").each(function() {
-					if(memberId == $(this).find("input[name=memberId]").val()) {
-						alert("이미 동행추가된 멤버입니다."); 
-						exist = true;
-						return;
+			}
+		});
+
+		//동행삭제
+		$(".compDeleteBtn").click(function() {
+			var memberId = $(this).parent().prev().prev().find("input[name=memberId]").val();
+			var answer = window.confirm("해당 멤버를 동행 목록에서 삭제하시겠습니까? '확인' 선택시 이 멤버와는 더이상 일정 공유가 불가합니다.");
+			var compTr = $(this).parent().parent();
+			if (answer) {
+				$.ajax({
+					url : "deleteCompany.trv",
+					type : "POST",
+					data : {memberId : memberId, trvId : "${ trv.trvId }"},
+					success : function(data) {
+						compTr.remove();
+						alert("삭제되었습니다.");
+						
+						socket.emit('deleteCompany', {
+							memberId:memberId,
+							room:"${ trv.trvId }"
+						});
+					},
+					error : function(err) {
+						alert("deleteCompany 서버전송 실패");
 					}
 				});
-				if(!exist) {
-					$.ajax({
-						url:"insertCompany.trv",
-						type:"POST",
-						data:{memberId:memberId, trvId:"${ trv.trvId }"},
-						success:function(data) {
-							compTr.children().eq(1).text(memberInfo);
-							compTr.find("input[name=memberId]").val(memberId);
-							compTr.show();
-							$("#compTable").children().append(compTr);
-						},
-						error:function(err) {
-							alert("err");
-						}
-					});
-				}
-			});
-			
-			//동행삭제
-			$(".compDeleteBtn").click(function() {
-				var memberId = $(this).parent().prev().prev().find("input[name=memberId]").val();
-				var answer = window.confirm("해당 멤버를 동행 목록에서 삭제하시겠습니까? '확인' 선택시 이 멤버와는 더이상 일정 공유가 불가합니다.");
-				var compTr = $(this).parent().parent();
-				if(answer) {
-					$.ajax({
-						url:"deleteCompany.trv",
-						type:"POST",
-						data:{memberId:memberId, trvId:"${ trv.trvId }"},
-						success:function(data) {
-							console.log(data);
-							compTr.remove();
-							alert("삭제되었습니다.");
-						}, 
-						error:function(err) {
-							alert("deleteCompany 서버전송 실패");
-						}
-					});
-				}
-			});
-			
-			
-			$(".editorMenu li").click(function() {
-				$(this).addClass('is-active');
-				$(this).siblings().removeClass('is-active');
-				var menu = $(this).children().children().text();
-				switch(menu) {
-				case '일정작성' : $("#scheduleEditor").show();
-								$("#scheduleEditor").siblings().hide();loadMap(map); break;
-				case '상세글작성' : $("#detailEditor").show();
-								$("#detailEditor").siblings().hide(); break;
-				case '일정전체보기' : $("#allSchedule").show();
-								$("#allSchedule").siblings().hide();loadMapWide(mapWide); break;
-				case '가계부' : $("#costEditor").show();
-								$("#costEditor").siblings().hide(); break;
-				}
-			});
-			
-			
+			}
 		});
-		
+
+		$(".editorMenu li").click(function() {
+			$(this).addClass('is-active');
+			$(this).siblings().removeClass('is-active');
+			var menu = $(this).children().children().text();
+			switch (menu) {
+			case '일정작성':
+				$("#scheduleEditor").show();
+				$("#scheduleEditor").siblings().hide();
+				loadMap(map);
+				break;
+			case '상세글작성':
+				$("#detailEditor").show();
+				$("#detailEditor").siblings().hide();
+				break;
+			case '일정전체보기':
+				$("#allSchedule").show();
+				$("#allSchedule").siblings().hide();
+				loadMapWide(mapWide);
+				break;
+			case '가계부':
+				$("#costEditor").show();
+				$("#costEditor").siblings().hide();
+				break;
+			}
+		});
+
 		function goToMyTravel() {
-			location.href="showMyTravel.trv";
+			location.href = "showMyTravel.trv";
 		}
 		function completeTravel() {
-			if("${ trv.trvRef }" == 0) {
-				var answer = window.confirm("[작성완료 안내] \n1. 작성완료 처리시 사이트에 이 일정의 1/3이 미리보기로 공개되며" 
-							+ "\n2. 다른 회원이 이 일정을 구입하여 이를 바탕으로 새일정 작성이 가능해집니다." 
-							+ "\n3. 한 일정당 총 구매된 금액이 최소 금액을 초과하게 되면 수익금이 작성자에게 지급됩니다."
-							+ "\n4. 또한, 추후 이 일정은 수정 및 삭제가 불가합니다."
-							+ "\n5. 작성완료 처리시 일정 공유에 대한 포인트가 지급됩니다. \n공개하시겠습니까?");
-				if(answer) {
-					location.href="completeTravel.trv?trvId=${ trv.trvId }&memberId=${ sessionScope.loginUser.memberId }";
+			if ("${ trv.trvRef }" == 0) {
+				var answer = window
+						.confirm("[작성완료 안내] \n1. 작성완료 처리시 사이트에 이 일정의 1/3이 미리보기로 공개되며"
+								+ "\n2. 다른 회원이 이 일정을 구입하여 이를 바탕으로 새일정 작성이 가능해집니다."
+								+ "\n3. 한 일정당 총 구매된 금액이 최소 금액을 초과하게 되면 수익금이 작성자에게 지급됩니다."
+								+ "\n4. 또한, 추후 이 일정은 수정 및 삭제가 불가합니다."
+								+ "\n5. 작성완료 처리시 일정 공유에 대한 포인트가 지급됩니다. \n공개하시겠습니까?");
+				if (answer) {
+					location.href = "completeTravel.trv?trvId=${ trv.trvId }&memberId=${ sessionScope.loginUser.memberId }";
+					
+					socket.emit('completeTravel', {
+						room:"${ trv.trvId }"
+					});
 				}
-			}else {
+			} else {
 				alert("다른 일정을 오버라이딩 한 일정은 개인소장만 가능하며, 사이트 공개가 불가합니다.");
 			}
 		}
 		function deleteTravel() {
 			var answer = window.confirm("정말로 삭제하시겠습니까? 해당 여행의 일정이 모두 삭제됩니다.");
-			if(answer) {
-				location.href="deleteTravel.trv?trvId=${ trv.trvId }";
+			if (answer) {
+				location.href = "deleteTravel.trv?trvId=${ trv.trvId }";
 			}
 		}
-		
 	</script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7fLkDFvRtLNooR612ov12h_gwdsqDI6Q&libraries=places&callback=initMap"
     async defer></script>
@@ -697,7 +823,6 @@
 				m.setMap(null);
 			});
 			markers = [];
-			coords = [];
 			if(dayPath != undefined) {
 				dayPath.setMap(null);
 			}
@@ -705,9 +830,11 @@
 				return;				
 			}
 			var bounds = new google.maps.LatLngBounds();
-			//bounds = map.getBounds();
-			var coords = new google.maps.MVCArray();
-			
+			dayPath = new google.maps.Polyline({
+			    strokeColor: '#FB0303',
+			    strokeOpacity: 1.0,
+			    strokeWeight: 2
+			});
 			places.forEach(function(p, index) {
 				var request = {
 					placeId:p,
@@ -730,8 +857,9 @@
 						});
 						
 						markers.push(m);
-						coords.push(place.geometry.location);
-						
+						dayPath.setMap(map);
+						var path = dayPath.getPath();
+						path.push(place.geometry.location);
 						
 						if(place.geometry.viewport) {
 							bounds.union(place.geometry.viewport);
@@ -751,15 +879,7 @@
 				
 			});
 			
-			dayPath = new google.maps.Polyline({
-			    path:coords,
-			    geodesic: true,
-			    strokeColor: '#FB0303',
-			    strokeOpacity: 1.0,
-			    strokeWeight: 2
-			});
 			
-			dayPath.setMap(map);
 			map.fitBounds(bounds, 0);
 			var fitBoundsListener = google.maps.event.addListener(map, 'idle', function() {
 		    	if (map.getZoom() < 15) map.setZoom(15); 

@@ -95,10 +95,11 @@ public class TravelController {
 	// 새일정작성-민지
 	@RequestMapping("insertTravel.trv")
 	public String insertTravel(Travel trv, String startDate, String endDate, String trvCity, Model model) {
-
+		System.out.println(trv);
 		trv.setStartDate(Date.valueOf(startDate));
 		trv.setEndDate(Date.valueOf(endDate));
 		String[] strArr = trvCity.split(",");
+		System.out.println(trvCity);
 		int[] cityArr = new int[strArr.length];
 		for (int i = 0; i < strArr.length; i++) {
 			cityArr[i] = Integer.parseInt(strArr[i]);
@@ -187,39 +188,83 @@ public class TravelController {
 
 	// 상세일정추가-민지
 	@RequestMapping("insertSch.trv")
-	public String insertTrvSchedule(TrvSchedule sch, TrvCost cost, int trvId, Model model) {
+	public ModelAndView insertTrvSchedule(TrvSchedule sch, TrvCost cost, int trvId, ModelAndView mv) {
 		System.out.println("SCH : " + sch);
 		System.out.println("COST : " + cost);
 
 		cost.setCostContent(sch.getSchTitle());
 
-		int result = ts.insertTrvSchedule(sch, cost);
-		if (result > 0) {
-			return "redirect:/selectTravel.trv?trvId=" + trvId;
-		} else {
-			model.addAttribute("msg", "상세일정 등록 실패!");
-			return "common/errorPage";
-		}
-
+		int schId = ts.insertTrvSchedule(sch, cost);
+		
+		ArrayList<TrvSchedule> schList = ts.selectSchList(sch.getDayId());
+		int dayNumber = ts.selectDayNumber(sch.getDayId());
+		
+		mv.addObject("schId", schId);
+		mv.addObject("schList", schList);
+		mv.addObject("dayNumber", dayNumber);
+		mv.setViewName("jsonView");
+		return mv;
 	}
 
 
 	// 상세일정업데이트-민지
 	@RequestMapping("updateSch.trv")
-	public String updateTrvSchedule(TrvSchedule sch, TrvCost cost, int trvId, Model model) {
+	public ModelAndView updateTrvSchedule(TrvSchedule sch, TrvCost cost, int trvId, ModelAndView mv) {
 		System.out.println("sch: " + sch);
 		System.out.println("cost: " + cost);
 		System.out.println("trvId: " + trvId);
-
 		cost.setCostContent(sch.getSchTitle());
-
+		
+		int schId = sch.getSchId();
+		TrvSchedule originSch = ts.selectTrvSchedule(schId);
+		int originDayId = originSch.getDayId();
+		int changeDayId = sch.getDayId();
+		System.out.println("originDayId : " + originDayId);
+		System.out.println("changeDayId : " + changeDayId);
+		TrvCost originCost = ts.selectSchCost(schId);
+		
 		int result = ts.updateTrvSchedule(sch, cost);
-		if (result > 0) {
-			return "redirect:/selectTravel.trv?trvId=" + trvId;
-		} else {
-			model.addAttribute("msg", "상세일정 업데이트 실패");
-			return "common/errorPage";
+		
+		
+		ArrayList<TrvSchedule> originSchList = ts.selectSchList(originDayId);
+		int originDayNumber = ts.selectDayNumber(originDayId);
+		mv.addObject("originSchList", originSchList);
+		mv.addObject("originDayNumber", originDayNumber);
+		ArrayList<TrvCost> originCostList = ts.selectDayCostList(originDayId);
+		mv.addObject("originCostList", originCostList);
+		
+		
+		if(originDayId != changeDayId) {
+			ArrayList<TrvSchedule> changeSchList = ts.selectSchList(changeDayId);
+			int changeDayNumber = ts.selectDayNumber(changeDayId);
+			mv.addObject("changeSchList", changeSchList);
+			mv.addObject("changeDayNumber", changeDayNumber);
+			ArrayList<TrvCost> changeCostList = ts.selectDayCostList(changeDayId);
+			mv.addObject("changeCostList", changeCostList);
 		}
+		
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 상세일정삭제-민지
+	@RequestMapping("deleteSch.trv")
+	public ModelAndView deleteSchedule(int schId, int trvId, ModelAndView mv) {
+
+		TrvCost cost = ts.selectSchCost(schId);
+		if(cost != null) {
+			mv.addObject("costId", cost.getCostId());
+		}
+		int dayId = ts.deleteTrvSchedule(schId);
+		
+		ArrayList<TrvSchedule> schList = ts.selectSchList(dayId);
+		int dayNumber = ts.selectDayNumber(dayId);
+		
+		mv.addObject("dayNumber", dayNumber);
+		mv.addObject("schList", schList);
+		mv.setViewName("jsonView");
+		return mv;
 	}
 
 	// 상세일정 순서변경-민지
@@ -237,6 +282,8 @@ public class TravelController {
 	@RequestMapping("deleteSchNumber.trv")
 	public ModelAndView deleteSchNumber(int originDayId, int[] sch, ModelAndView mv) {
 		int result = ts.deleteSchNumber(originDayId, sch);
+		
+		//mv.st
 		mv.setViewName("jsonView");
 		return mv;
 	}
@@ -246,6 +293,14 @@ public class TravelController {
 	public ModelAndView changeSchDay(TrvSchedule trvSch, int[] sch, ModelAndView mv) {
 
 		System.out.println("sch" + sch);
+		TrvSchedule originSch = ts.selectTrvSchedule(trvSch.getSchId());
+		int originDayId = originSch.getDayId();
+		int originDayNumber = ts.selectDayNumber(originDayId);
+		int changeDayId = trvSch.getDayId();
+		int changeDayNumber = ts.selectDayNumber(changeDayId);
+		mv.addObject("originDayNumber", originDayNumber);
+		mv.addObject("changeDayNumber", changeDayNumber);
+		
 		int result = ts.updateSchDay(trvSch, sch);
 		TrvCost cost = ts.selectSchCost(trvSch.getSchId());
 		if (cost != null) {
@@ -253,25 +308,17 @@ public class TravelController {
 			int result1 = ts.updateTrvCost(cost);
 			mv.addObject("costId", cost.getCostId());
 		}
-
-		ArrayList<TrvSchedule> updList = ts.selectSchList(trvSch.getDayId());
-		mv.addObject("updList", updList);
+		
+		ArrayList<TrvSchedule> originSchList = ts.selectSchList(originDayId);
+		ArrayList<TrvSchedule> changeSchList = ts.selectSchList(trvSch.getDayId());
+		mv.addObject("originSchList", originSchList);
+		mv.addObject("changeSchList", changeSchList);
+		
 		mv.setViewName("jsonView");
 		return mv;
 	}
 
-	// 상세일정삭제-민지
-	@RequestMapping("deleteSch.trv")
-	public String deleteSchedule(int schId, int trvId, Model model) {
-
-		int result = ts.deleteTrvSchedule(schId);
-		if (result > 0) {
-			return "redirect:/selectTravel.trv?trvId=" + trvId;
-		} else {
-			model.addAttribute("msg", "일정 삭제 실패");
-			return "common/errorPage";
-		}
-	}
+	
 
 	// 여행테마추가-민지
 	@RequestMapping("insertTrvTag.trv")
@@ -323,13 +370,6 @@ public class TravelController {
 	}
 
 	
-	public void saveFile(HttpServletRequest request) {
-		
-
-
-	}
-	
-	
 	// 사진업로드-민지
 	@RequestMapping("insertSchFile.trv")
 	public ModelAndView insertSchFile(HttpServletRequest request, ModelAndView mv,
@@ -357,7 +397,7 @@ public class TravelController {
 			SchFile schFile = ts.selectSchFile(fileId);
 			mv.addObject("changeName", schFile.getChangeName());
 			mv.addObject("fileLevel", schFile.getFileLevel());
-			mv.addObject("fileId", schFile.getFileId());
+			mv.addObject("fileId", fileId);
 			// mv.addObject("schFile", schFile);
 
 		} catch (Exception e) {
@@ -378,6 +418,21 @@ public class TravelController {
 		mv.setViewName("jsonView");
 		return mv;
 	}
+	
+	// 사진삭제-민지
+	@RequestMapping("deleteSchFile.trv")
+	public ModelAndView deleteSchFile(int fileId, HttpServletRequest request, ModelAndView mv) {
+		
+		SchFile originFile = ts.selectSchFile(fileId);
+		int result = ts.deleteSchFile(fileId);
+		
+		String root = request.getSession().getServletContext().getRealPath("resources");
+		String filePath = root + "\\uploadFiles";
+		new File(filePath + "\\" + originFile.getChangeName()).delete();
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
 
 	// 날씨정보업로드-민지
 	@RequestMapping("updateDayWeather.trv")
@@ -385,6 +440,9 @@ public class TravelController {
 
 		System.out.println("trvDay : " + trvDay);
 		int result = ts.updateDayWeather(trvDay);
+		int dayNumber = ts.selectDayNumber(trvDay.getDayId());
+		
+		mv.addObject("dayNumber", dayNumber);
 		mv.setViewName("jsonView");
 		return mv;
 	}
@@ -433,7 +491,7 @@ public class TravelController {
 	@RequestMapping("deleteCost.trv")
 	public ModelAndView deleteTrvCost(int costId, ModelAndView mv) {
 		int result = ts.deleteTrvCost(costId);
-
+		
 		mv.setViewName("jsonView");
 		return mv;
 	}
@@ -506,62 +564,25 @@ public class TravelController {
 
 	// 여행동행삭제-민지
 	@RequestMapping("deleteCompany.trv")
-	public String deleteTrvComp(int trvId, int memberId) {
-		TrvCompany trvComp = new TrvCompany();
-		trvComp.setMemberId(memberId);
-		trvComp.setTrvId(trvId);
+	public ModelAndView deleteTrvComp(TrvCompany trvComp, ModelAndView mv) {
 		int result = ts.deleteTrvComp(trvComp);
-		return "";
+		
+		mv.setViewName("jsonView");
+		return mv;
 	}
-	
-	
-
-	
-	
 	
 
 	//상세일정리스트조회 - 민지
 	@RequestMapping("selectSchList.trv")
-	public ModelAndView selectSchedule(int dayId, ModelAndView mv) {
+	public ModelAndView selectSchList(int dayId, ModelAndView mv) {
 		ArrayList<TrvSchedule> schList = ts.selectSchList(dayId);
-		
+		int dayNumber = ts.selectDayNumber(dayId);
 		mv.addObject("schList", schList);
+		mv.addObject("dayNumber", dayNumber);
 		mv.setViewName("jsonView");
 		return mv;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	// 인기명소 불러오기-민지
-	@RequestMapping("selectSpotList.trv")
-	public String selectSpotList(Travel trv) {
-		HashMap spotMap = ts.selectSpotList(trv);
-		return "";
-	}
-
-
-	// 사진삭제-민지
-	@RequestMapping("deleteFile.trv")
-	public String deleteSchFile(SchFile file) {
-		int result = ts.deleteSchFile(file);
-		return "";
-	}
-	
-	
 	
 
 }

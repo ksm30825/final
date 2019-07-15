@@ -45,7 +45,7 @@
 									<p class="control is-expanded has-icons-left">
 										<span class="icon is-small is-left"><i class="fas fa-globe-americas"></i></span>
 										<span class="select"> 
-											<select name="trvCountry">
+											<select name="trvCountry" id="trvCountry2">
 												<option value="${ trvCity.countryId }" selected>${ trvCity.countryNameKo }</option>
 											</select>
 										</span>
@@ -55,7 +55,7 @@
 									<p class="control is-expanded has-icons-left has-icons-right">
 										<span class="icon is-small is-left"><i class="fas fa-location-arrow"></i></span> 
 										<span class="select"> 
-											<select name="trvCity">
+											<select name="trvCity" id="trvCity2">
 												<option value="${ trvCity.cityId }" selected>${ trvCity.cityNameKo }</option>
 											</select>
 										</span>

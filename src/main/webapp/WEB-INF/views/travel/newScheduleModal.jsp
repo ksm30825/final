@@ -17,7 +17,7 @@
 				<button class="delete" aria-label="close"></button>
 			</header>
 			<section class="modal-card-body">
-				<form action="insertSch.trv" method="post" id="newSchForm">
+				<form action="" method="post" id="newSchForm">
 					<div class="field">
 						<p class="control">
 							<input type="hidden" value="${ trv.trvId }" name="trvId">
@@ -166,84 +166,86 @@
 					$(this).remove();
 				}
 			});
-			
-			
-			$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
-        		$('html').removeClass('is-clipped');
-        	    $(this).parents(".modal").removeClass('is-active');
-        	   	title1.val('');
-        	   	dayId1.children().eq(0).prop("selected", true);
-        	   	isTimeset1.prop("checked", false);
-        	   	startTime1.val('');
-        	   	endTime1.val('');
-        	   	costAmount1.val(0);
-        	   	transp1.val('');
-        		
-        	});
-			
-			$("#isTimeset1").click(function() {
-				if($(this).prop("checked")) {
-					startTime1.val('');
-	        		endTime1.val('');
-				}
-			});
-			
-			$("#costAmount1").change(function() {
-				console.log($(this).val());
-				if($(this).val() == "") {
-					$(this).val(0);
-				}
-			});
-
-        	$("#submitSchBtn").click(function() {
-        		console.log("start : " + startTime1);
-        		console.log("end : " + endTime1);
-        		if(title1.val() == '') {
-        			alert("일정제목을 입력해주세요.");
-        		}else if(!isTimeset1.prop("checked") && (startTime1.val() == '' || endTime1.val() == '')) {
-        			alert('시간을 지정하지 않으시려면 시간미지정 박스에 체크해주세요.');
-        		}else if(startTime1.val() > endTime1.val()) {
-        			alert('시작시간과 종료시간을 다시 확인하세요');
-        		}else {
-        			/* var form = $("#newSchForm").serialize();
-        			var day
-        			$.ajax({
-        				url:"insertSch.trv",
-        				type:"POST",
-        				data:form,
-        				success:function(data) {
-        					var schId = data.trvSch.schId;
-        					var dayNumber = data.dayNumber;
-        					var schNumber = data.trvSch.schNumber;
-        					
-        					$("")
-        					
-        					
-        					if(data.trvCost != null) {
-        						
-        						
-        						
-        					}
-        				},
-        				error:function(err) {
-        					alert("err");
-        				}
-        			}); */
-        			$("#newSchForm").submit();
-        			/* var title1 =  $("#schTitle1");
-        			var dayId1 = $("#dayId1");
-        			var isTimeset1 = $("#isTimeset1");
-        			var startTime1 = $("#startTime1");
-        			var endTime1 = $("#endTime1");
-        			var costAmount1 = $("#costAmount1");
-        			var transp1 = $("#schTransp1"); */
-        			socket.emit('insertSchedule', {
-        				dayId:dayId1.val(),
-        				room:"${ trv.trvId }"
-        			});
-        		}
-        	});
 		});
+		
+		$('.modal-background, .modal-card-head>.delete, .cancelBtn').click(function() {
+    		clearNewSchModal();
+    	});
+		
+		$("#isTimeset1").click(function() {
+			if($(this).prop("checked")) {
+				startTime1.val('');
+        		endTime1.val('');
+			}
+		});
+		
+		$("#costAmount1").change(function() {
+			console.log($(this).val());
+			if($(this).val() == "") {
+				$(this).val(0);
+			}
+		});
+		
+		//새일정 제출 버튼 클릭시 db insert, listUpdate, socket emit
+    	$("#submitSchBtn").click(function() {
+    		if(title1.val() == '') {
+    			alert("일정제목을 입력해주세요.");
+    		}else if(!isTimeset1.prop("checked") && (startTime1.val() == '' || endTime1.val() == '')) {
+    			alert('시간을 지정하지 않으시려면 시간미지정 박스에 체크해주세요.');
+    		}else if(startTime1.val() > endTime1.val()) {
+    			alert('시작시간과 종료시간을 다시 확인하세요');
+    		}else {
+    			var form = $("#newSchForm").serialize();
+    			var day
+    			$.ajax({
+    				url:"insertSch.trv",
+    				type:"POST",
+    				data:form,
+    				success:function(data) {
+    					
+    					updateSchList(data.dayNumber, data.schList);
+    					
+    					for(var key in data.schList) {
+    						var sch = data.schList[key];
+    						
+    						//가계부는 새로 insert된 일정만 금액이 있을경우에 가계부 리스트에 추가
+    						if(sch.schId == data.schId && sch.trvCost != null) {
+		    					insertNewCost(sch.trvCost);
+    						}
+    					}
+    					clearNewSchModal();
+    					
+    					//상세일정 작성시 socket
+    					socket.emit('insertSchedule', {
+    						schId:data.schId,
+	        				dayNumber:data.dayNumber,
+	        				schList:data.schList,
+	        				room:"${ trv.trvId }"
+	        			});
+    				},
+    				error:function(err) {
+    					alert("err");
+    				}
+    			});
+    		}
+    	});
+		
+		
+		//--------------------------------------------------------------------------
+		function clearNewSchModal() {
+			$('html').removeClass('is-clipped');
+    	    $("#newScheduleModal").removeClass('is-active');
+    	   	title1.val('');
+    	   	dayId1.children().eq(0).prop("selected", true);
+    	   	isTimeset1.prop("checked", false);
+    	   	startTime1.val('');
+    	   	endTime1.val('');
+    	   	costAmount1.val(0);
+    	   	transp1.val('');
+		}
+		
+		
+		
 	</script>
 </body>
 </html>

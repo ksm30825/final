@@ -66,7 +66,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="level-right" id="weatherArea">
+							<div class="level-right weatherArea">
 								<c:choose>
 									<c:when test="${ trvDay.dayWeather eq 'SUN' }">
 										<p class="level-item"><span class="weather">맑음</span></p>
@@ -310,6 +310,7 @@
 											<input type="hidden" value="" name="fileId">
 											<span>대표사진 등록</span>
 										</a>
+										<button class="delete photoDeleteBtn" aria-label="close" data-toolptip="사진 삭제"></button>
 										<div class="content" align="right">${ trvDay.dayDate }</div>
 									</div>
 								</div>
@@ -332,6 +333,7 @@
 														<input type="hidden" value="${ file.fileId }" name="fileId">
 														<span>대표사진 등록</span>
 													</a>
+													<button class="delete photoDeleteBtn" aria-label="close" data-toolptip="사진 삭제"></button>
 												</c:if>
 												<c:if test="${ file.fileLevel ne 0 }" >
 													<span class="icon is-medium mainImageIcon" style="color:orange;display:none" data-tooltip="대표사진">
@@ -341,6 +343,7 @@
 														<input type="hidden" value="${ file.fileId }" name="fileId">
 														<span>대표사진 등록</span>
 													</a>
+													<button class="delete photoDeleteBtn" aria-label="close" data-toolptip="사진 삭제"></button>
 												</c:if>
 												<div class="content" align="right">${ trvDay.dayDate }</div>
 											</div>
@@ -356,8 +359,9 @@
 	</div>
 	
 	<script>
-		var quills = [];
+		
 		$(function() {
+			//setEditor($(".editor"));
 			$("#day1Header").show();
 			$("#day1Area").show();
 			$("#daySideMenu>li").click(function() {
@@ -392,265 +396,309 @@
 			
 			var dayWeather = "${ trvDay.dayWeather }";
 			
-			$(".weatherBtn").click(function() {
-				var dayWeather = $(this).attr("id");
-				var dayId = $(this).parent().parent().prev().find("input[name=dayId]").val();
-				$(this).removeClass('is-outlined');
-				$(this).parent().siblings().children().addClass('is-outlined');
-				var span = $(this).parent().siblings().eq(0);
-				if(dayWeather == "SUN") {
-					span.text('맑음');
-				}else if(dayWeather == "CLOUD") {
-					span.text('흐림');
-				}else if(dayWeather == "RAIN") {
-					span.text('비');
-				}else if(dayWeather == "SNOW") {
-					span.text('눈');
-				}else if(dayWeather == "LIGHTNING") {
-					span.text('번개');
+		});
+		
+		//날씨변경
+		$(document).on('click', '.weatherBtn', function() {
+			var dayWeather = $(this).attr("id");
+			var dayId = $(this).parent().parent().prev().find("input[name=dayId]").val();
+			$(this).removeClass('is-outlined');
+			$(this).parent().siblings().children().addClass('is-outlined');
+			var span = $(this).parent().siblings().eq(0);
+			if(dayWeather == "SUN") {
+				span.text('맑음');
+			}else if(dayWeather == "CLOUD") {
+				span.text('흐림');
+			}else if(dayWeather == "RAIN") {
+				span.text('비');
+			}else if(dayWeather == "SNOW") {
+				span.text('눈');
+			}else if(dayWeather == "LIGHTNING") {
+				span.text('번개');
+			}
+			
+			$.ajax({
+				url:"updateDayWeather.trv",
+				type:"POST",
+				data:{dayId:dayId , dayWeather:dayWeather},
+				success:function(data) {
+					console.log(data);
+					
+					socket.emit('changeWeather', {
+						dayNumber:data.dayNumber,
+						dayWeather:dayWeather,
+						room:"${ trv.trvId }"
+					});
+					
+					
+				}, 
+				error:function(err) {
+					alert("err");
 				}
-				
-				$.ajax({
-					url:"updateDayWeather.trv",
-					type:"POST",
-					data:{dayId:dayId , dayWeather:dayWeather},
-					success:function(data) {
-						console.log(data);
-					}, 
-					error:function(err) {
-						alert("err");
-					}
-				
-				});
-				
-				
+			
 			});
+		});
+		
+		//대표사진변경
+		$(document).on('click', '.changeMainImageBtn', function() {
+			alert("대표사진이 변경됩니다.");
+			var fileId = $(this).children().eq(0).val();
+			var mainImageIcon = $(this).parent().find(".mainImageIcon");
+			var changeMainImageBtn = $(this);
 			
-			
-			
-			$(".changeMainImageBtn").click(function() {
-				alert("대표사진이 변경됩니다.");
-				var fileId = $(this).children().eq(0).val();
-				var mainImageIcon = $(this).parent().find(".mainImageIcon");
-				var changeMainImageBtn = $(this);
-				
+			$.ajax({
+				url:"changeFileLevel.trv",
+				type:"POST",
+				data:{fileId:fileId},
+				success:function(data) {
+					console.log(data);
+					$(".trvCard").find(".mainImageIcon").hide();
+					$(".trvCard").find(".changeMainImageBtn").show();
+					mainImageIcon.show();
+					changeMainImageBtn.hide();
+					
+					socket.emit('changeMainImage', {
+						fileId:fileId,
+						room:"${ trv.trvId }"
+					});
+					
+					
+					
+				},
+				error:function(err) {
+					alert("err");
+				}
+			});
+		});
+		
+		//사진삭제
+		$(document).on('click', '.photoDeleteBtn', function() {
+			var answer = window.confirm("사진을 삭제하시겠습니까?");
+			var fileId = $(this).prev().find("input[name=fileId]").val();
+			var photoCard = $(this).parent().parent().parent();
+			console.log(fileId);
+			if(answer) {
 				$.ajax({
-					url:"changeFileLevel.trv",
+					url:"deleteSchFile.trv",
 					type:"POST",
 					data:{fileId:fileId},
 					success:function(data) {
 						console.log(data);
-						$(".trvCard").find(".mainImageIcon").hide();
-						$(".trvCard").find(".changeMainImageBtn").show();
-						mainImageIcon.show();
-						changeMainImageBtn.hide();
+						//$("#sch" + schId + "CardSection").
+						photoCard.remove();
+						
+						socket.emit('deleteGallaryImage', {
+							fileId:fileId,
+							room:"${ trv.trvId }"
+						});
+						
+						
 					},
 					error:function(err) {
 						alert("err");
 					}
 				});
+			}
+		});
+		
+		//editor세팅
+		var quills = [];
+		var toolbarOptions = [ 
+			[ 'bold', 'italic', 'underline', 'strike' ], // toggled buttons
+			[ 'blockquote', 'code-block' ],
+
+			[ { 'header' : 1}, {'header' : 2} ], // custom button values
+			[ {'list' : 'ordered'}, {'list' : 'bullet'} ], [ {'script' : 'sub'}, {'script' : 'super'} ], // superscript/subscript
+			[ {'direction' : 'rtl'} ], // text direction
+
+			[ {'header' : [ 1, 2, 3, 4, 5, 6, false ]} ],
+
+			[ {'color' : []}, {'background' : []} ], // dropdown with defaults from theme
+			[ {'font' : []} ], [ {'align' : []} ],
+
+			[ 'link', 'image' ],
+
+			[ 'clean' ] // remove formatting button
+		];
+		
+		var contents;
+		$(document).on('click', '.detailShowBtn', function(editor) {
+			var container = $(this).parent().parent().next().find(".editor")[0];
+			console.log(container);
+			var schId = $(this).parent().prev().find("input[name=schId]").val();
+			var dayNumber = $(this).parent().parent().parent().parent().parent().attr("id").charAt(3);
+			var quill = new Quill(container, {
+				modules : {
+					toolbar : toolbarOptions
+				},
+				placeholder : '멋진 사진과 함께 여행 후기글을 작성해보세요! ',
+				theme : 'snow' // or 'bubble'
+			});
+			//quills.push(quill);
+			
+			$.ajax({
+				url:"selectSchContent.trv",
+				type:"POST",
+				data:{schId:schId},
+				success:function(data) {
+					if(data.content) {
+						quill.setContents(JSON.parse(data.content));
+					}
+				},
+				error:function(err) {
+					alert("err", err);
+				}
 			});
 			
 			
-			var toolbarOptions = [ 
-				[ 'bold', 'italic', 'underline', 'strike' ], // toggled buttons
-				[ 'blockquote', 'code-block' ],
-
-				[ { 'header' : 1}, {'header' : 2} ], // custom button values
-				[ {'list' : 'ordered'}, {'list' : 'bullet'} ], [ {'script' : 'sub'}, {'script' : 'super'} ], // superscript/subscript
-				[ {'direction' : 'rtl'} ], // text direction
-
-				[ {'header' : [ 1, 2, 3, 4, 5, 6, false ]} ],
-
-				[ {'color' : []}, {'background' : []} ], // dropdown with defaults from theme
-				[ {'font' : []} ], [ {'align' : []} ],
-
-				[ 'link', 'image' ],
-
-				[ 'clean' ] // remove formatting button
-			];
-			
-			var contents;
-
-			$(".editor").each(function() {
-				var container = $(this).get(0);
-				var schId = $(this).parent().prev().find("input[name=schId]").val();
-				var dayNumber = $(this).parent().parent().parent().parent().attr("id").charAt(3);
-				var quill = new Quill(container, {
-					modules : {
-						toolbar : toolbarOptions
+			quill.getModule('toolbar').addHandler('image', function() {
+				console.log("handler작동");
+				var fileInput = document.createElement('input');
+				fileInput.setAttribute('type', 'file');
+				fileInput.setAttribute('name', 'image');
+				fileInput.click();
+				
+				fileInput.onchange = function() {
+					var fd = new FormData();
+					var file = $(this)[0].files[0];
+					fd.append('image', file);
+					fd.append('schId', schId);
+					$.ajax({
+						url:"insertSchFile.trv",
+						type:"POST",
+						data:fd,
+						cache:false,
+						processData:false,
+						contentType:false,
+						success:function(data) {
+							console.log('ajax success called');
+							var range = quill.getSelection();
+							quill.insertEmbed(range.index, 'image', 'http://localhost:8001/ti/resources/uploadFiles/' + data.changeName);
+							
+							addGallaryImage(dayNumber, data.changeName, data.fileLevel, data.fileId);
+							
+							socket.emit('addGallaryImage', {
+								dayNumber:dayNumber,
+								changeName:data.changeName,
+								fileLevel:data.fileLevel,
+								fileId:data.fileId,
+								room:"${ trv.trvId }"
+							});
+							
+						},
+						error:function(err) {
+							alert("err", err);
+						}
+					});
+				}
+				
+				
+			});
+			/* quill.on('text-change', function() {
+				
+				contents = quill.getContents();
+				$.ajax({
+					url:"updateSchContent.trv",
+					type:"post",
+					data:{schId:schId, schContent:JSON.stringify(contents)},
+					success:function() {
+						alert("success!");
 					},
-					placeholder : '멋진 사진과 함께 여행 후기글을 작성해보세요! ',
-					theme : 'snow' // or 'bubble'
+					error:function() {
+						alert("updateSchContent 서버전송 실패");
+					}
 				});
-				quills.push(quill);
+				
+				;
+			}); */
+			
+			
+			quill.enable(false);
+			//quill.setContents(contents);
+			var toolbar = $(this).parent().parent().next().find(".ql-toolbar");
+			toolbar.appendTo($(this).parent().parent().next());
+			toolbar.hide();
+			var content = $(this).parent().parent().next();
+			content.toggle();
+			var footer = $(this).parent().parent().next().next();
+			footer.toggle();
+			
+			//EDIT
+			footer.find(".editBtn").click(function() {
+				quill.enable(true);
+				toolbar.show();
+				
+				
+			});
+			
+			//SAVE
+			footer.find(".saveBtn").click(function() {
+				var contents = quill.getContents();
+				console.log(contents);
+				
+				var schContent = JSON.stringify(contents);
+				console.log(schContent);
+				//var text = quill.getText();
+				//console.log(text);
 				
 				$.ajax({
-					url:"selectSchContent.trv",
-					type:"POST",
-					data:{schId:schId},
+					url:"updateSchContent.trv",
+					type:"post",
+					data:{schId:schId, schContent:schContent},
 					success:function(data) {
-						if(data.content) {
-							quill.setContents(JSON.parse(data.content));
-						}
+						var delta = JSON.parse(data.sch.schContent);
+						quill.setContents(delta);
+						quill.enable(false);
+						toolbar.hide();
 					},
-					error:function(err) {
-						alert("err", err);
+					error:function() {
+						alert("updateSchContent 서버전송 실패");
 					}
-				});
-				
-				
-				quill.getModule('toolbar').addHandler('image', function() {
-					console.log("handler작동");
-					var fileInput = document.createElement('input');
-					fileInput.setAttribute('type', 'file');
-					fileInput.setAttribute('name', 'image');
-					fileInput.click();
-					
-					fileInput.onchange = function() {
-						var fd = new FormData();
-						var file = $(this)[0].files[0];
-						fd.append('image', file);
-						fd.append('schId', schId);
-						$.ajax({
-							url:"insertSchFile.trv",
-							type:"POST",
-							data:fd,
-							cache:false,
-							processData:false,
-							contentType:false,
-							success:function(data) {
-								//var file = data.schFile;
-								//console.log(file);
-								console.log(data);
-								var range = quill.getSelection();
-								quill.insertEmbed(range.index, 'image', 'http://localhost:8001/ti/resources/uploadFiles/' + data.changeName);
-								
-								var photoCard = $("#gallary" + dayNumber + "Area").find(".photoCard").eq(0).clone();
-								photoCard.find("img").attr("src", "resources/uploadFiles/" + data.changeName);
-								
-								if(data.fileLevel == 0) {
-									photoCard.find(".changeMainImageBtn").hide();
-								}else {
-									photoCard.find(".mainImageIcon").hide();
-									photoCard.find(".changeMainImageBtn").children("input[name=fileId]").val(data.fileId);
-								}
-								
-								photoCard.appendTo($("#gallary" + dayNumber + "Area").children().children());
-								photoCard.show();
-								
-								$(".changeMainImageBtn").click(function() {
-									alert("대표사진이 변경됩니다.");
-									var fileId = $(this).children().eq(0).val();
-									var mainImageIcon = $(this).parent().find(".mainImageIcon");
-									var changeMainImageBtn = $(this);
-									
-									$.ajax({
-										url:"changeFileLevel.trv",
-										type:"POST",
-										data:{fileId:fileId},
-										success:function(data) {
-											console.log(data);
-											$(".trvCard").find(".mainImageIcon").hide();
-											$(".trvCard").find(".changeMainImageBtn").show();
-											mainImageIcon.show();
-											changeMainImageBtn.hide();
-										},
-										error:function(err) {
-											alert("err");
-										}
-									});
-								});
-								
-							},
-							error:function(err) {
-								alert("err", err);
-							}
-						});
-					}
-					
-					
-				});
-				/* quill.on('text-change', function() {
-					
-					contents = quill.getContents();
-					$.ajax({
-						url:"updateSchContent.trv",
-						type:"post",
-						data:{schId:schId, schContent:JSON.stringify(contents)},
-						success:function() {
-							alert("success!");
-						},
-						error:function() {
-							alert("updateSchContent 서버전송 실패");
-						}
-					});
-					
-					;
-				}); */
-				
-				
-				$(this).parent().prev().find(".detailShowBtn").click(function() {
-					quill.enable(false);
-					//quill.setContents(contents);
-					var toolbar = $(this).parent().parent().next().find(".ql-toolbar");
-					toolbar.appendTo($(this).parent().parent().next());
-					toolbar.hide();
-					var content = $(this).parent().parent().next();
-					content.toggle();
-					var footer = $(this).parent().parent().next().next();
-					footer.toggle();
-					
-					//EDIT
-					footer.find(".editBtn").click(function() {
-						quill.enable(true);
-						toolbar.show();
-						
-						
-					});
-					
-					//SAVE
-					footer.find(".saveBtn").click(function() {
-						var contents = quill.getContents();
-						console.log(contents);
-						
-						var schContent = JSON.stringify(contents);
-						console.log(schContent);
-						//var text = quill.getText();
-						//console.log(text);
-						
-						$.ajax({
-							url:"updateSchContent.trv",
-							type:"post",
-							data:{schId:schId, schContent:schContent},
-							success:function(data) {
-								var delta = JSON.parse(data.sch.schContent);
-								quill.setContents(delta);
-								quill.enable(false);
-								toolbar.hide();
-							},
-							error:function() {
-								alert("updateSchContent 서버전송 실패");
-							}
-						});
-						
-					});
-					
-					//REMOVE
-					footer.find(".removeBtn").click(function() {
-						
-					});
-					
 				});
 				
 			});
 			
-			
-			
+			//REMOVE
+			footer.find(".removeBtn").click(function() {
+				var answer = window.confirm('선택하신 일정의 내용이 모두 사라집니다. 삭제하시겠습니까?')
+				$.ajax({
+					url:"updateSchContent.trv",
+					type:"post",
+					data:{schId:schId, schContent:""},
+					success:function(data) {
+						quill.setContents("");
+						quill.enable(false);
+						toolbar.hide();
+					},
+					error:function() {
+						alert("updateSchContent 서버전송 실패");
+					}
+				});
+			});
+				
 			
 		});
-
+			
 		
+		//-----------------------------------------------------------------------
+		//사진갤러리추가
+		function addGallaryImage(dayNumber, changeName, fileLevel, fileId) {
+			
+			
+			var photoCard = $("#gallary" + dayNumber + "Area").find(".photoCard").eq(0).clone(true);
+			photoCard.find("img").attr("src", "resources/uploadFiles/" + changeName);
+			
+			if(fileLevel == 0) {
+				photoCard.find(".changeMainImageBtn").hide();
+			}else {
+				photoCard.find(".mainImageIcon").hide();
+				photoCard.find(".changeMainImageBtn").children("input[name=fileId]").val(fileId);
+			}
+			
+			photoCard.appendTo($("#gallary" + dayNumber + "Area").children().children());
+			photoCard.show();
+		}
+			
 		
 		
 	</script>
