@@ -1175,7 +1175,9 @@
 	     	
 	  	    //평판 관리 이력
 		 	 socket.on('preReputInfo', function(data){
+		 	
 		 		if (data != null){
+		 			  console.log("?? ->" + data);
 		 			  console.log("상태 :" + data.reLevel);
 					   
 					   if (data.reLevel == "good"){
@@ -1213,7 +1215,7 @@
 					   $("#goodCount").text(goodcnt);
 					   $("#badCount").text(badcnt);
 		 		}else {
-		 			var temp = "<label>조회결과가 없습니다.</label>";
+		 			var temp = "<br><label>조회결과가 없습니다.</label>";
 		 			$(temp).appendTo("#Like");
 		 			$(temp).appendTo("#Bad");
 		 		}

@@ -14,10 +14,18 @@
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/companion_main.css">
 <style>
 	#HeaderImage {
-		width : 100%;
-		height: 100%;
-   		max-height: 158px;
-	}
+    width: 100%;
+    height: 100%;
+    max-height: 200px;
+    margin: 0;
+    padding: 0;
+    }
+    
+    .container{
+    	padding : 0;
+    	margin : 0;
+    }
+    
 </style>
 </head>
 <body>

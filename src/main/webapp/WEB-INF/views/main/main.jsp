@@ -8,31 +8,34 @@
 <link rel = "stylesheet" type = "text/css" href = "resources/css/main/main.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <style>
+	body {
+		overflow-y : hidden;
+	}
 	.wrap{
+		margin : 0 ; padding : 0;
 		width : 100%;
 		height: 100%;
+		overflow-y : hidden;
 	}
 	
-	.leftwrap{
-		width : 10%;
-		height: 80%;
-		float:left;
-	}
+	 ::-webkit-scrollbar { 
+    	display: none !important; 	
+    }
+	
 	
 	.contentwrap{
-		width : 80%;
-		height: auto;
-		float:left;
+		margin : 0 ; padding : 0;
+		width : 100%;
+		min-height: 100%;
 		background-image : url("resources/images/main.jpg");
 		background-repeat : no-repeat;
-		background-size: contain;
+		background-size: cover;
+		background-position : center;
+		background-attachment : fixed;
+  	 overflow-y : hidden;
+
 	}
 	
-	.rightwrap{
-		width : 10%;
-		height: 80%;
-		float:left;
-	}
 	
 	.SearchArea{
 		margin-top : 20%;
@@ -111,13 +114,9 @@
 <body>
 	<jsp:include page = "../common/mainNav.jsp"/>
 	
-	<!-- <section class="section" id="content"> -->
  		<div class = "wrap">
- 		<div class = "leftwrap">
- 			<br>
- 		</div>	
+
  		<div class = "contentwrap">
- 			<!-- <img src = "resources/images/main.jpg" id = "mainimg">--> 		
  			<div class = "SearchArea">
  				 <div style="background:black; background : rgba(0,0,0,0.6);"> 
  					<table id = "SearchTable">
@@ -193,9 +192,7 @@
  				</div>
  		
  		</div>	
-		<div class = "rightwrap">
-			<br>
-		</div>
+	
 		</div>
 		<script>
 			$(function() {
