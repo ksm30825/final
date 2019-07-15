@@ -79,10 +79,10 @@ th, td {
 					<div class="column">
 						<br>
 						<div class="field">
-						<c:forEach var="day" items="${ trp }" varStatus="number">
+						<c:forEach var="day" items="${ trp.get(0).dayList }" varStatus="number">
 							<a class="button is-primary">Day${ number.count }</a>
 							<p class="control">
-								<textarea class="textarea" readonly>${ day.getDayList().get(0).getpDayMemo() }</textarea>
+								<textarea class="textarea" readonly>${ day.getpDayMemo() }</textarea>
 							</p>
 						</c:forEach>
 						</div>
@@ -282,6 +282,8 @@ th, td {
 </body>
 <script>
 	$(function() {
+		
+		
 		$('.modal-background, .modal-close').click(function() {
 	   		$('html').removeClass('is-clipped');
 	    	$(this).parent().removeClass('is-active');
@@ -380,14 +382,37 @@ th, td {
     var pLat = new Array();		//각 장소의 위도
     var pLng = new Array();		//각 장소의 경도
     
-    <c:forEach var="latList" items="${ trp }" varStatus="st">
+    
+    /* <c:forEach var="place" items="${ trp.get(0).dayList }" varStatus="st">
+		<c:if test="${ st.last }">
+		<!-- get(0).getPplaceTitle() -->
+			pTitle.push("${ place.getPlaceList().get(0).getPplaceTitle() }");
+			pAddress.push("${ place.getPlaceList().get(0).getPplaceAddress() }");
+			pLat.push("${ place.getPlaceList().get(0).getPplaceLat() }");
+			pLng.push("${ place.getPlaceList().get(0).getPplaceLng() }");
+		</c:if>
+	</c:forEach> */
+	
+	<c:if test="${ trp.get(0).getChooseStatus() == 'Y'}">
+		<c:forEach var="place" items="${ trp.get(0).dayList }" varStatus="st">
+		<c:if test="${ st.last }">
+			<c:forEach var="count" begin="0" end="${ st.index }" step="1">
+				pTitle.push("${ place.getPlaceList().get(count).getPplaceTitle() }");
+				pAddress.push("${ place.getPlaceList().get(count).getPplaceAddress() }");
+				pLat.push("${ place.getPlaceList().get(count).getPplaceLat() }");
+				pLng.push("${ place.getPlaceList().get(count).getPplaceLng() }");
+			</c:forEach>
+		</c:if>
+		</c:forEach>
+	</c:if>
+    /* <c:forEach var="latList" items="${ trp }" varStatus="st">
     if("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }" != "") {
     	pTitle.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceTitle() }");
     	pAddress.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceAddress() }");
     	pLat.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLat() }");
     	pLng.push("${ latList.getDayList().get(0).getPlaceList().get(0).getPplaceLng() }");
     }
-    </c:forEach>
+    </c:forEach> */
     /* ${ day.dayList.get(0).placeList.get(0).getPplaceTitle() } */
     console.log("장소명 : " + pTitle);
     console.log("일정들 장소 수 : " + pTitle.length);

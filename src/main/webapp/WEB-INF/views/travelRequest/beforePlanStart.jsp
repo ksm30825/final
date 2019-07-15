@@ -91,6 +91,10 @@ th, td {
 #loadTable {
 	width:100% !important;
 }
+
+.hidden {
+	display:none;
+}
 </style>
 </head>
 <body>
@@ -105,7 +109,7 @@ th, td {
 			<textarea id="placeName" name="PplaceTitle" class="hidden"></textarea>
 			<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
 			<input type="hidden" value="${ loginUser.memberId }" name="memberId">
-			<input type="text" value="${ loginUser.userName }" name="userName">
+			<input type="hidden" value="${ loginUser.userName }" name="userName">
 				<h1 class="title">일정작성</h1>
 				<hr>
 				<div class="columns">
@@ -194,7 +198,7 @@ th, td {
 											</div>
 										</div>
 										<footer class="card-footer">
-											<a class="card-footer-item">중간저장</a> <a
+											<a
 												class="card-footer-item" onclick="back();">돌아가기</a> <a
 												class="card-footer-item" data-target="#okModal"
 												onclick="endSave();">최종 저장</a> <a
@@ -344,7 +348,7 @@ th, td {
 		var choose = Math.floor(count/3);
 		console.log(choose);
 		console.log(count);
-		if(count < 1) {
+		if(choose < 1) {
 			$("#choose").append("하이라이트 일정 선택 불가");
 			$("#chooseBody").append("<tr id='chooseTr'>");
 			for(var i = 1; i <= count; i++) {

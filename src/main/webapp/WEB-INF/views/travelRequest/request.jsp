@@ -23,11 +23,15 @@
 </head>
 <body>
 	<jsp:include page="../common/mainNav.jsp" />
-	<div class="column is-half">
+	<br>
+	<br>
+	<br>
+	<br>
+	<article class="message is-info">
 		<div class="notification is-info" style="text-align: center;">
 			<b>여행 의뢰 게시판</b>
 		</div>
-	</div>
+	</article>
 	<hr>
 	<div class="columns">
 		<div class="column">

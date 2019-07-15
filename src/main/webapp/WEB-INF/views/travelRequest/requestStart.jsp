@@ -201,7 +201,7 @@ th, td {
 											</div>
 										</div>
 										<footer class="card-footer">
-											<a class="card-footer-item">중간저장</a> <a
+											<a
 												class="card-footer-item" onclick="back();">돌아가기</a> <a
 												class="card-footer-item" data-target="#okModal"
 												onclick="endSave();">최종 저장</a> <a
@@ -351,8 +351,8 @@ th, td {
 		var choose = Math.floor(count/3);
 		console.log(choose);
 		console.log(count);
-		if(count < 2) {
-			$("#choose").append("하이라이트 일정 선택 불가");
+		if(choose < 1) {
+			$("#choose").append("1박 2일 일정은 하이라이트 일정 선택이 불가합니다.");
 			$("#chooseBody").append("<tr id='chooseTr'>");
 			for(var i = 1; i <= count; i++) {
 				$("#chooseTr").append("<td><input type='checkbox' class='open' checked value='Y'>Day" + i + "<input type='hidden' name='openStatus' value='Y'></td>");

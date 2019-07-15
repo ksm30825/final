@@ -59,5 +59,7 @@ public interface MyRequestDao {
 	ArrayList<Inquiry> selectInquiryList(SqlSessionTemplate sqlSession, PageInfo pi, int memberId);
 
 	Inquiry slectMyInquiryDetail(SqlSessionTemplate sqlSession, int inquiryId);
+
+	int updatePlanOpenStatus(SqlSessionTemplate sqlSession, int planId);
 	
 }

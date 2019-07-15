@@ -261,6 +261,13 @@
 		ORDER BY PD.PDAY_ID
 	</select>
 	
+	<!-- 설계글 오픈상태 업데이트 -->
+	<update id="updatePlanOpenStatus" parameterType="_int">
+		UPDATE PLAN_DAY
+		SET OPEN_STATUS = 'Y'
+		WHERE PLAN_ID = #{planId}
+	</update>
+	
 	<!-- 의뢰참여 채택상태 업데이트 -->
 	<update id="updateParticipation" parameterType="_int">
 		UPDATE PARTICIPATION
