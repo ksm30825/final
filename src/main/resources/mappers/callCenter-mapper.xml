@@ -163,6 +163,7 @@
 		SELECT *
 		FROM INQUIRY I
 		JOIN MEMBER M ON(I.MEMBER_ID = M.MEMBER_ID)
+		ORDER BY I.REPLY_STATUS
 	</select>
 	
 	<!-- 1:1문의 상세보기 -->

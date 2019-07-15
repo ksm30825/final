@@ -87,6 +87,7 @@ input {
 			<section class="section" id="table">
 			<br><br>
 				<h1 class="title" style="text-align: center;">신고관리</h1>
+				<br><br>
 				<!-- <div class="field">
 					<p class="control">
 						<label>구분</label> &nbsp; &nbsp; <span class="select"> <select>

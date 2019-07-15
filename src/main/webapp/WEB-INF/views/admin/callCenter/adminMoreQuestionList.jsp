@@ -56,17 +56,15 @@
 	<jsp:include page="../../common/adminMainNav.jsp" />
 	<div class="columns">
 		<div class="column">
-			<section class="section" id="button">
-				<div class="columns">
-					<div class="column">
-						<div class="buttons">
-							<a class="button is-primary is-rounded" href="adminNoticeList.ad">공지사항</a>
-							<a class="button is-info is-rounded"
-								href="adminMoreQuestionList.ad">자주 묻는 질문</a>
-						</div>
-					</div>
-				</div>
+			<section class="section" id="table">
+			<br><br>
 				<h1 class="title" style="text-align: center;">자주 묻는 질문</h1>
+				<div class="field">
+					<a class="button is-primary is-rounded" href="adminNoticeList.ad">공지사항</a>
+					<a class="button is-info is-rounded" href="adminMoreQuestionList.ad">자주 묻는 질문</a>
+				</div>
+				<br>
+				<hr>
 				<hr>
 				<table class="table">
 					<thead>
