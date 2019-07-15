@@ -366,9 +366,6 @@ public class PointServiceImpl implements PointService {
 
 		Map<String, CellStyle> styles = CommonUtils.createStyles(wb);
 
-//		for (int i = 0; i < rebatesList.size(); i++) {
-//			System.out.println("rebatesList.get(" + i + ") : " + rebatesList.get(i));
-//		}
 		Row header = sheet.createRow(2);
 		
 		header.setHeightInPoints(20f);

@@ -341,6 +341,7 @@
 						data:{memberId:memberId, currentpage:currentpage, month:month},
 						success:function(data){
 							makeRebateTB(data.rebatePi, data.rebateList);
+							console.log(data);
 						},
 						error:function(data){
 							console.log('rebate main error');
@@ -448,6 +449,9 @@
 				date = getFormatDate(date);
 				var $rebateDateTd = $("<td>").text(date);
 				
+				var payDate = new Date(list.payDate);
+				payDate = getFormatDate(payDate);
+				
 				var rebate = list.payAmount;
 				rebate = comma(rebate);
 				var $rebateTd = $("<td>").text(rebate);
@@ -455,24 +459,17 @@
 				var $statusTd =$("<td>");
 				var mid, $rebateIn, $rebateBtn, $rebateMidIn, $rebateBidIn; 
 				mid = list.memberId;
-				if(list.rebateStatus == 10){
-					$rebateIn = $('<input type="hidden">').val(list.rebateId);
-					
-					$rebateBtn = $('<button class="button is-primary" style="height:20px;line-height:60%;border-radius:5px;">승인 대기</button>');
-					
-					$statusTd.append($rebateIn);
-					$statusTd.append($rebateBtn);
-				}else if(list.rebateStatus == 20){
+				if(list.rebateStatus == 10){//미지급
 					$rebateIn = $('<input type="hidden">').val(list.rebateId);
 					
 					$rebateBtn = $('<button class="button is-warning" style="height:20px;line-height:60%;border-radius:5px;">지급 대기</button>');
 					
 					$statusTd.append($rebateIn);
 					$statusTd.append($rebateBtn);
-				}else if(list.rebateStatus == 30){
+				}else if(list.rebateStatus == 20){//지급완료
 					$rebateIn = $('<input type="hidden">').val(list.rebateId);
 					
-					$rebateBtn = $('<button class="button is-success" style="height:20px;line-height:60%;border-radius:5px;">지급 완료</button>');
+					$rebateBtn = $('<button class="button is-success" style="height:20px;line-height:60%;border-radius:5px;">지급 완료 '+payDate+'</button>');
 					
 					$statusTd.append($rebateIn);
 					$statusTd.append($rebateBtn);

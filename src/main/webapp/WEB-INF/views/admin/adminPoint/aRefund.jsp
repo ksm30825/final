@@ -244,14 +244,14 @@
 				
 				if(list.useType == 10){
 					title1 = list.trvTitle;
-					title2 = title1.substring(0,6) + '...';
+					title2 = title1.substring(0,4) + '...';
 					$titleTd = $("<td class='modalOpen'>").text(title2);
 					$boardId = $("<input type='hidden'>").val(list.trvId);
 					$useTypeId = $("<input type='hidden'>").val(list.useType);
 					$refundStatusId = $("<input type='hidden'>").val(list.refundStatus);
 				}else if(list.useType == 20){
 					title1 = list.planTitle;
-					title2 = title1.substring(0,6) + '...';
+					title2 = title1.substring(0,4) + '...';
 					$titleTd = $("<td class='modalOpen'>").text(title2);
 					$boardId = $("<input type='hidden'>").val(list.requestId);
 					$useTypeId = $("<input type='hidden'>").val(list.useType);

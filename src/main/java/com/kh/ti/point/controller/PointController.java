@@ -43,11 +43,8 @@ public class PointController {
 	public ResponseEntity selectAccumulate(ModelAndView mv, HttpServletRequest request, int memberId) {
 		//회원의 누적 포인트, 수익금 조회
 		
-		//System.out.println("memberId : " + memberId);
 		int userPoint = ps.selectUserPoint(memberId);
-		//System.out.println("userPoint : " + userPoint);
 		int userProceeds = ps.selectUserProceeds(memberId);
-		//System.out.println("userProceeds : " + userProceeds);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("userPoint", userPoint);
@@ -66,40 +63,34 @@ public class PointController {
 		//포인트충전, 지급, 사용 내역 테이블 전체 조회
 		//페이징 처리도 전부
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		////System.out.println(loginUser.getMemberId());
 		int memberId = loginUser.getMemberId();
 		
 		//포인트 충전에 관한 것들 조회
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		int chargeListCount = ps.getChargeListCount(charge);
-		////System.out.println("chargeListCount : " + chargeListCount);
 		int chargeCurrentPage = currentPage;
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
-		////System.out.println("chPi : " + chPi);
 		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
 		model.addAttribute("chPayList", chPayList);
 		model.addAttribute("chPi",chPi);
+
 		//포인트 지급에 관한 것들 조회
 		ReservePoint reserve = new ReservePoint();
 		reserve.setMemberId(memberId);
 		int receiveListCount = ps.getReceiveListCount(reserve);
-		////System.out.println("ReceiveListCount : " + receiveListCount);
 		int receiveCurrentPage = currentPage;
 		PageInfo rePi = Pagination.getPageInfo(receiveCurrentPage, receiveListCount);
 		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
 		model.addAttribute("rePayList", rePayList);
-		////System.out.println("rePi : " + rePi);
 		model.addAttribute("rePi",rePi);
 		
 		//포인트 사용에 관한 것들 조회
 		UsePoint use = new UsePoint();
 		use.setMemberId(memberId);
 		int useListCount = ps.getUseListCount(use);
-		////System.out.println("useListCount : " + useListCount);
 		int useCurrentPage = currentPage;
 		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
-		////System.out.println("usPi : " + usPi);
 		ArrayList<UsePoint> usPayList = ps.selectUseList(usPi, use);
 		model.addAttribute("usPayList", usPayList);
 		model.addAttribute("usPi",usPi);
@@ -113,17 +104,14 @@ public class PointController {
 	@RequestMapping("/paymentMain.po")
 	public String selectPaymentMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		////System.out.println(loginUser.getMemberId());
 		int memberId = loginUser.getMemberId();
 		
 		//포인트 충전에 관한 것들 조회
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		int chargeListCount = ps.getChargeListCount(charge);
-		////System.out.println("chargeListCount : " + chargeListCount);
 		int chargeCurrentPage = currentPage;
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
-		////System.out.println("chPi : " + chPi);
 		ArrayList<Payment> chPayList = ps.selectChargeList(chPi, charge);
 		model.addAttribute("chPayList", chPayList);
 		model.addAttribute("chPi",chPi);
@@ -142,7 +130,6 @@ public class PointController {
 		charge.setMonth(month);
 		
 		int chargeListCount = ps.getChargeListCount(charge); 
-		//System.out.println("chargeListCount : "+chargeListCount);
 		int chargeCurrentPage = currentPage; 
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		ArrayList chPayList = ps.selectChargeList(chPi, charge);
@@ -152,7 +139,6 @@ public class PointController {
 		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
-		//System.out.println("mv : " + mv);
 		
 		return mv.getModel();
 	}
@@ -160,7 +146,6 @@ public class PointController {
 	//포인트 충전 월검색 페이징//-------------------------------------------------------------------------------------------
 	@RequestMapping("/oneMonthPayPaging.po")
 	public String searchOneMonthPayPaging(String month, Model model, HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
-		//System.out.println("oneMonthPayPaging");
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		Payment charge = new Payment();
@@ -180,8 +165,7 @@ public class PointController {
 	
 	//포인트 충전하는 페이지로 이동--수민
 	@RequestMapping("/toPayView.po")
-	public String toPayView(/* int memberId, String payAmount */) {
-		
+	public String toPayView() {
 		return "point/payment";
 	}
 	
@@ -205,11 +189,13 @@ public class PointController {
 		//포인트충전
 		//->결제 테이블에 insert
 		int result = ps.insertPay(pay);
-		////System.out.println("result : " + result);
 		int updateUserPoint = 0;
+		int updatedUserPoint = 0;
 		if(result > 0) {
-			//System.out.println("누적 전 : " + pay);
 			updateUserPoint = ps.updateUserPoint(pay);
+			updatedUserPoint = ps.getUseMemberPoint(memberId);
+			
+			loginUser.setUserPoint(updatedUserPoint);
 		} else {
 			return "common/errorPage";
 		}
@@ -221,11 +207,10 @@ public class PointController {
 		}
 	}
 	
-	//포인트 지급 페이징//-------------------------------------------------------------------------------------------
+	//포인트 지급 페이징
 	@RequestMapping("/reserveMain.po")
 	public String selectReserveMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		////System.out.println(loginUser.getMemberId());
 		int memberId = loginUser.getMemberId();
 		
 		//포인트 충전에 관한 것들 조회
@@ -234,12 +219,9 @@ public class PointController {
 		int reserveListCount = ps.getReceiveListCount(reserve);
 		int reserveCurrentPage = currentPage;
 		PageInfo rePi = Pagination.getPageInfo(reserveCurrentPage, reserveListCount);
-		////System.out.println("chPi : " + chPi);
 		ArrayList<ReservePoint> rePayList = ps.selectReceiveList(rePi, reserve);
 		model.addAttribute("rePayList", rePayList);
 		model.addAttribute("rePayList",rePayList);
-		
-		//-------------------------------------------------------------------------------------------ptcpId찾아서 넘겨주기
 		
 		return "point/pointMain";		
 	}
@@ -247,22 +229,17 @@ public class PointController {
 	@ResponseBody
 	@RequestMapping("/oneMonthRPoint.po")
 	public Object searchOneMonthRPoint(String month, ModelAndView mv, HttpServletRequest request) {
-		////System.out.println("month : " + month);
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		
 		ReservePoint reserve = new ReservePoint();
 		reserve.setMemberId(memberId);
 		reserve.setMonth(month);
-		////System.out.println("reserve : " + reserve);
 		
 		int reserveListCount = ps.getReceiveListCount(reserve); 
-		////System.out.println("월 검색 reserveListCount : "+reserveListCount);
 		int reserveCurrentPage = 1; 
 		PageInfo rePi = Pagination.getPageInfo(reserveCurrentPage, reserveListCount);
 		ArrayList rePayList = ps.selectReceiveList(rePi, reserve);
-		////System.out.println("rePayList : "+ rePayList);
-		
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("rePayList", rePayList);
@@ -270,19 +247,17 @@ public class PointController {
 		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
-		////System.out.println("mv : " + mv);
 		
 		return mv.getModel();
 	}
 	
-	//-------------------------------------------------------------------------------일정작성, 일정리뷰, 명소리뷰
 	//포인트 지급 게시글 확인하러 가기버튼 눌렀을때
 		//-> 해당 게시글번호(리뷰면 리뷰, 일정작성이면 일정작성)--수민
 	@RequestMapping("/oneBoardRPoint.po")
 	public String selectOneBoardRPoint(String mid, String bid) {
 		int memberId = Integer.parseInt(mid);
 		int boardCode = Integer.parseInt(bid);
-		return "redirect:/travelDetailForm.tb?trvId="+boardCode;//-------------------------------------------------------------------------------
+		return "redirect:/travelDetailForm.tb?trvId="+boardCode;
 	}
 	@RequestMapping("/oneBoardReserve.po")
 	public String selectOneBoardRequest(@RequestParam("mid") int mid, @RequestParam("bid") int bid, @RequestParam("reserveType") int reserveType) {
@@ -333,29 +308,25 @@ public class PointController {
 			spotId = ps.selectSpotId(rp.getSpotReviewId());
 			break;
 		}
-		
 		int result = ps.insertReservePoint(rp);//포인트 insert
 		
 		int updateUserPoint = ps.updateUserPointAuto(rp);//userPoint 증가
-		
-		
 		
 		if(result>0 && updateUserPoint>0) {
 			switch(reserveType) {
 			case 10 : return "redirect:/showMyTravel.trv";
 			case 20 : int trvId = ps.selectOneTrv(rp); return "redirect:/travelDetailForm.tb?trvId="+trvId; 
-			case 30 : return "redirect:/showMyTravel.trv?"; //세령이 매핑주소로 넘기기
+			case 30 : return "redirect:selectSpotDetailInfo.sp?spotId=" + spotId;
 			}
 		}
 		return "common/errorPage";
 	}
 	
 	
-	//포인트 사용 페이징//-------------------------------------------------------------------------------------------
+	//포인트 사용 페이징
 	@RequestMapping("/useMain.po")
 	public String selectUseMain(Model model , HttpServletRequest request, @RequestParam("currentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		////System.out.println(loginUser.getMemberId());
 		int memberId = loginUser.getMemberId();
 		
 		//포인트 충전에 관한 것들 조회
@@ -374,22 +345,17 @@ public class PointController {
 	@ResponseBody
 	@RequestMapping("/oneMonthUPoint.po")
 	public Object searchOneMonthUPoint(String month, ModelAndView mv, HttpServletRequest request) {
-		//System.out.println("month : " + month);
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
 		
 		UsePoint use = new UsePoint();
 		use.setMemberId(memberId);
 		use.setMonth(month);
-		//System.out.println("use : " + use);
 		
 		int useListCount = ps.getUseListCount(use); 
-		//System.out.println("월 검색 reserveListCount : "+useListCount);
 		int useCurrentPage = 1; 
 		PageInfo usPi = Pagination.getPageInfo(useCurrentPage, useListCount);
 		ArrayList usPayList = ps.selectUseList(usPi, use);
-		//System.out.println("rePayList : "+ usePayList);
-		
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("usPayList", usPayList);
@@ -397,7 +363,6 @@ public class PointController {
 		mv.addObject("hmap", hmap);
 		
 		mv.setViewName("jsonView");
-		//System.out.println("mv : " + mv);
 		
 		return mv.getModel();
 	}
@@ -407,8 +372,6 @@ public class PointController {
 	public ModelAndView insertRefund(String refundId, String refundReason, ModelAndView mv) {
 		
 		int pointId = Integer.parseInt(refundId);
-		//System.out.println("refundId:  "+refundId);
-		//System.out.println("refundReason:  "+refundReason);
 		
 		//대기 상태로 인서트
 		int refundStatus = 10;
@@ -419,7 +382,6 @@ public class PointController {
 		
 		int result = ps.insertRefund(refund);
 		
-		//System.out.println("result : " + result);
 		mv.setViewName("jsonView");
 		
 		return mv;
@@ -435,11 +397,8 @@ public class PointController {
 		//useType : 10:일정구매, 20:설계의뢰
 		//uPoint : 사용 포인트
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
-		//System.out.println("loginUser : " + loginUser);
-		//System.out.println("loginUser userPoint 1: " + loginUser.getUserPoint());
-		//System.out.println("loginUser userProceeds 1: " + loginUser.getUserProceeds());
 		int mid = loginUser.getMemberId();//포인트를 사용한 사람의 아이디
-		
+
 		//포인트 사용 내역에 insert(포인트 사용)
 		UsePoint userPoint = new UsePoint(); 
 		userPoint.setUsePoint(uPoint);//사용 포인트
@@ -449,16 +408,13 @@ public class PointController {
 		case 10 : userPoint.setTrvId(code); break;//일정구매일 경우
 		case 20 : userPoint.setRequestId(code); break;//설계채택일 경우
 		}
-		//System.out.println("userPoint : " + userPoint);
 		int userResult = ps.insertPointUse(userPoint); 
-		//System.out.println("userResult : "+userResult);
 		
 		//성공시 판 사람의 수익금발생내역에 인서트
 		double receiveProceeds = uPoint * 0.8;
 		int proceeds=(int) Math.round(receiveProceeds);//수익금 발생금액 -> 원금*0.8
 		
 		int receiverMemberId=0;//수익금 받는 사람 아이디(판 사람 아이디)
-		int accumulateProceeds=0;//판사람의 누적 수익금 
 		
 		Proceeds findProceeds=null;//판매한 사람의 기존 수익금 내역
 		
@@ -477,7 +433,6 @@ public class PointController {
 				receiverMemberId = ps.selectReceiverTrvMemberId(receiverBoard.getTrvId()); //판매한 여행일정코드와 일치하는 회원번호를 조회
 				
 				findProceeds = ps.selectOneProceeds(receiverBoard);//판매한 사람의 기존 수익금 내역을 찾아옴
-				//System.out.println("findProceeds : " + findProceeds);
 				
 				receiverBoard.setMemberId(receiverMemberId);//판매자의 새로운 수익금 내역에 판매한 사람의 회원번호를 setter
 				
@@ -488,10 +443,8 @@ public class PointController {
 					insertProceeds= ps.insertReceiverProceeds(receiverBoard);
 					
 				}else {//판매자의 기존 수익금 내역이 존재 할 경우 --> update
-					//System.out.println("findProceeds.getProceedsId() : "+findProceeds.getProceedsId());
 					receiverBoard.setProceedsId(findProceeds.getProceedsId());
 					receiverBoard.setProceeds(findProceeds.getProceeds()+proceeds);
-					//System.out.println(receiverBoard);
 					
 					//판매자의 기존 수익금 내역이 존재 할 경우 --> update
 					updateProceeds = ps.updateReceiverProceeds(receiverBoard);
@@ -501,9 +454,7 @@ public class PointController {
 				//판매자의 새로운 수익금 내역의 참여번호를 넣어줘야 한다.
 				//넘어온 것이 requestId
 				//해당 requestId와 일치하는 ptcpId를 찾고 채택여부가 Y인 내역을 조회해 와야 한다.
-				//System.out.println("userPoint.getRequestId() : " + userPoint.getRequestId());
 				int ptcpId = ps.selectOnePtcp(userPoint.getRequestId());
-				//System.out.println("ptcpId : " + ptcpId);
 				receiverBoard.setPtcpId(ptcpId); //판매자의 새로운 수익금 내역의 참여번호를 넣어준다.
 		
 				receiverMemberId = ps.selectReceiverRequestMemberId(receiverBoard.getPtcpId()); //판매한 여행일정코드와 일치하는 회원번호를 조회해온다.
@@ -515,25 +466,15 @@ public class PointController {
 				insertProceeds= ps.insertReceiverProceeds(receiverBoard);
 				break;
 		}
-		//System.out.println("receiverBoard : " + receiverBoard);
-		
-		
 		//성공시 구매자 member 테이블의 누적 포인트 차감
 		int updateUserPoint = ps.updateUserDeductionPoint(userPoint);
 		
 		//성공시 판매자 member 테이블의 누적 수익금 추가
 		int updateUserProceeds = ps.updateUserIncreaseProceeds(receiverBoard);
 		
-		//기존 loginUser의 userPoint
-		int existingPoint = loginUser.getUserPoint();
-		//System.out.println("existingPoint : " + existingPoint);
-		
 		//차감된 userPoint 찾기
 		int laterPoint = ps.selectOnePoint(mid);
-		//System.out.println("laterPoint : "+ laterPoint);
 		loginUser.setUserPoint(laterPoint);
-		//System.out.println("loginUser.getUserPoint() : " + loginUser.getUserPoint());
-		
 		
 		if((updateProceeds>0 || insertProceeds>0) &&userResult>0 && updateUserPoint>0 && updateUserProceeds>0) {
 			switch(useType) {
@@ -556,30 +497,24 @@ public class PointController {
 		int userProceeds = ps.selectUserProceeds(memberId);
 		
 		loginUser.setUserProceeds(userProceeds);
-		//System.out.println(loginUser.getUserProceeds());
 		return "point/proceedsMain";
 	}
 	//수익금 달성내역 전체 조회
 	@ResponseBody
 	@RequestMapping("/allProceeds.po")
-	public ResponseEntity selectAllProceeds(@RequestParam("memberId") int memberId, @RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
-		//System.out.println("memberId : " + memberId);
-		//System.out.println("currentPage : " + currentPage);
-		//System.out.println("month : " + month);
+	public ResponseEntity selectAllProceeds(@RequestParam("memberId") int memberId, 
+			@RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
 		
 		Proceeds proceeds = new Proceeds();
 		proceeds.setMemberId(memberId);
 		proceeds.setMonth(month);
 		
 		int proceedsListCount = ps.getProceedsListCount(proceeds);
-		//System.out.println("proceedsListCount : " + proceedsListCount);
 		int proceedsCurrentPage = currentPage;
 		
 		PageInfo proPi = Pagination.getPageInfo(proceedsCurrentPage, proceedsListCount);
 		
 		ArrayList<Proceeds> proceedsList = ps.selectAllProceeds(proPi, proceeds);
-		
-		//System.out.println("proceedsList : "+proceedsList);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("proceedsList", proceedsList);
@@ -591,19 +526,18 @@ public class PointController {
 	//환급 신청내역 전체 조회
 	@ResponseBody
 	@RequestMapping("/allRebate.po")
-	public ResponseEntity selectAllRebate(@RequestParam("memberId") int memberId, @RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
+	public ResponseEntity selectAllRebate(@RequestParam("memberId") int memberId, 
+			@RequestParam("currentpage") int currentPage, @RequestParam("month") String month) {
 		Rebate rebate = new Rebate();
 		rebate.setMemberId(memberId);
 		rebate.setMonth(month);
 		
 		int rebateListCount = ps.getRebateListCount(rebate);
-		//System.out.println("rebateListCount : " + rebateListCount);
 		int rebateCurrentPage = currentPage;
 		
 		PageInfo rebatePi = Pagination.getPageInfo(rebateCurrentPage, rebateListCount);
 		
 		ArrayList<Rebate> rebateList = ps.selectAllRebate(rebatePi, rebate);
-		//System.out.println("rebateList : " + rebateList);
 		HashMap<String, Object> rebateHmap = new HashMap<String, Object>();
 		rebateHmap.put("rebateList", rebateList);
 		rebateHmap.put("rebatePi", rebatePi);
@@ -686,8 +620,6 @@ public class PointController {
 			hmap.put("adPayList", adPayList);
 			hmap.put("adPayPi", adPayPi);
 			
-			//System.out.println("hmap : " + hmap);
-			
 			return new ResponseEntity(hmap, HttpStatus.OK);
 			
 		}else {
@@ -723,23 +655,17 @@ public class PointController {
 			sp.setStartDate(startDate);
 			sp.setEndDate(endDate);
 			sp.setCondition(condition);
-			//System.out.println("condition 30 -> sp : " + sp);
 		}else if(condition == 10) {
 			//이름만 검색 조건
 			sp.setUserName(userName);
 			sp.setCondition(condition);
-			//System.out.println("condition 10 -> sp : " + sp);
 		}else if(condition == 20) {
 			//날짜만 검색 조건
 			sp.setStartDate(startDate);
 			sp.setEndDate(endDate);
 			sp.setCondition(condition);
-			//System.out.println("condition 20 -> sp : " + sp);
 		}
-		
-		//System.out.println("sp : " + sp);
 		int adPaySearchListCount = ps.getAdPaySearchListCount(sp);
-		//System.out.println("adPaySearchListCount : " + adPaySearchListCount);
 		
 		int adPayCurrentPage = currentPage;
 		
@@ -760,6 +686,7 @@ public class PointController {
 		
 		return "admin/adminPoint/aPoint";
 	}	
+	//포인트 전체 내역 조회
 	@ResponseBody
 	@RequestMapping("/allAdPoint.po")
 	public ResponseEntity adSelectAllPoint(@RequestParam("memberId") int memberId, @RequestParam("currentPage") int currentPage) {
@@ -820,16 +747,13 @@ public class PointController {
 		SearchPoint sp = new SearchPoint();
 		sp.setCondition(condition);
 		
-		//System.out.println("sp : " + sp);
 		int adProceedsListCount = ps.getAdProceedsListCount(sp);
-		//System.out.println("adProceedsListCount : " + adProceedsListCount);
 		
 		int adProceedsCurrentPage = currentPage;
 		
 		PageInfo adProceedsPi = Pagination.getPageInfo(adProceedsCurrentPage, adProceedsListCount);
 		
 		ArrayList<Proceeds> adProceedsList = ps.selectAdProceedsList(adProceedsPi, sp);
-		//System.out.println("adProceedsList : " + adProceedsList);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("adProceedsList", adProceedsList);
@@ -845,16 +769,13 @@ public class PointController {
 		sp.setCondition(condition);
 		sp.setUserName(userName);
 		
-		//System.out.println("sp : " + sp);
 		int adProceedsListCount = ps.getAdProceedsListCount(sp);
-		//System.out.println("adProceedsListCount : " + adProceedsListCount);
 		
 		int adProceedsCurrentPage = currentPage;
 		
 		PageInfo adProceedsPi = Pagination.getPageInfo(adProceedsCurrentPage, adProceedsListCount);
 		
 		ArrayList<Proceeds> adProceedsList = ps.selectAdProceedsList(adProceedsPi, sp);
-		//System.out.println("adProceedsList : " + adProceedsList);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("adProceedsList", adProceedsList);
@@ -862,13 +783,6 @@ public class PointController {
 		
 		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
-	//수익금 발생 게시글 조회--수민
-	@RequestMapping("/oneBoardAdProceeds.po")
-	public String adSelectOneBoardProceeds(String bid) {
-		
-		return "??";
-	}
-	
 	//수익금 환급 내역 이동--수민
 	@RequestMapping("/toAdRebateView.po")
 	public String adSelectAllRebate() {
@@ -881,17 +795,13 @@ public class PointController {
 		SearchPoint sp = new SearchPoint();
 		sp.setCondition(condition);
 		
-		//System.out.println("sp : " + sp);
 		int adRebateListCount = ps.getAdRebateListCount(sp);
-		//System.out.println("adRebateListCount : " + adRebateListCount);
 		
 		int adRebateCurrentPage = currentPage;
 		
 		PageInfo adRebatePi = Pagination.getPageInfo(adRebateCurrentPage, adRebateListCount);
-		//System.out.println("adRebatePi : " + adRebatePi) ;
 		
 		ArrayList<Proceeds> adRebateList = ps.selectAdRebateList(adRebatePi, sp);
-		//System.out.println("adRebateList : " + adRebateList);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("adRebateList", adRebateList);
@@ -946,15 +856,12 @@ public class PointController {
 		}
 		
 		int adRebateListCount = ps.getAdRebateListCount(sp);
-		//System.out.println("adRebateListCount : " + adRebateListCount);
 		
 		int adRebateCurrentPage = currentPage;
 		
 		PageInfo adRebatePi = Pagination.getPageInfo(adRebateCurrentPage, adRebateListCount);
-		//System.out.println("adRebatePi : " + adRebatePi) ;
 		
 		ArrayList<Proceeds> adRebateList = ps.selectAdRebateList(adRebatePi, sp);
-		//System.out.println("adRebateList : " + adRebateList);
 		
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("adRebateList", adRebateList);
@@ -967,8 +874,6 @@ public class PointController {
 	@RequestMapping("updateOneAdRebate.po")
 	public String adUpdateOneRebate(@RequestParam("refund") int refundId) {
 		int updateAdRebate = ps.updateAdRebate(refundId);
-		
-		//System.out.println("updateAdRefund : " + updateAdRebate);
 		
 		if(updateAdRebate > 0) {
 			return "redirect:/toAdRebateView.po";
@@ -985,16 +890,11 @@ public class PointController {
 		int[] rebates = new int[rebatesStr.length];
 		for(int i=0 ; i<rebatesStr.length ; i++) {
 			rebates[i] = Integer.parseInt(rebatesStr[i]);
-			//System.out.println("rebatesStr : " + rebatesStr[i]);
 		}
-		//System.out.println("---------------");
 		int updateAdRebates = 0;
 		for(int i=0 ; i<rebates.length ; i++) {
-			//System.out.println("rebates : " + rebates[i]);
 			updateAdRebates += ps.updateAdRebates(rebates[i]);
 		}
-		//System.out.println("---------------");
-		//System.out.println("updateAdRebates : " + updateAdRebates);
 		if(updateAdRebates == rebates.length) {
 			return "redirect:/toAdRebateView.po";
 		}else {
@@ -1034,9 +934,6 @@ public class PointController {
 	public ResponseEntity adSelectOneMemberRefund(@RequestParam("userName") String userName, @RequestParam("refundSta") int refundSta, 
 			@RequestParam("condition") int condition, @RequestParam("currentPage") int currentPage) {
 		
-		//System.out.println("userName : " + userName);
-		//System.out.println("refundSta : " + refundSta);
-		//System.out.println("condition : " + condition);
 		SearchPoint sp = new SearchPoint();
 		
 		if(condition == 30) {
@@ -1044,22 +941,17 @@ public class PointController {
 			sp.setUserName(userName);
 			sp.setRefundStatus(refundSta);
 			sp.setCondition(condition);
-			//System.out.println("condition 30 -> sp : " + sp);
 		}else if(condition == 10) {
 			//이름만 검색 조건
 			sp.setUserName(userName);
 			sp.setCondition(condition);
-			//System.out.println("condition 10 -> sp : " + sp);
 		}else if(condition == 20) {
 			//셀렉트박스만 검색 조건
 			sp.setRefundStatus(refundSta);
 			sp.setCondition(condition);
-			//System.out.println("condition 20 -> sp : " + sp);
 		}
 		
-		//System.out.println("sp : " + sp);
 		int adRefundSearchListCount = ps.getAdRefundListCount(sp);
-		//System.out.println("adRefundSearchListCount : " + adRefundSearchListCount);
 		
 		int adRefundCurrentPage = currentPage;
 		
@@ -1080,8 +972,6 @@ public class PointController {
 		//->	->환불한 게시글의 수익금(해당포인트만큼) 차감
 	@RequestMapping("/updateAdRefund.po")
 	public String adUpdateRefund(String refId, String bid, String cond) {
-		//System.out.println("refundId : " + refId);
-		//System.out.println("condition : " + cond);
 		int refundId = Integer.parseInt(refId);
 		int boardId = Integer.parseInt(bid);
 		int condition = Integer.parseInt(cond);
@@ -1097,13 +987,10 @@ public class PointController {
 			//거절
 			refund.setRefundStatus(30);
 		}
-		
 		int update = ps.updateRefund(refund);//업데이트 해준다
 		
 		//환불 신청한 내역에서 refundId가 일치하는 하나의 환불내역 조회
 		Refund updatedRefund = ps.selectOneRefund(refund);
-		//System.out.println("updatedRefund : " + updatedRefund);
-		
 		
 		int updateUserPoint=0;
 		int updateUserProceeds=0;
@@ -1120,13 +1007,10 @@ public class PointController {
 			if(updatedRefund.getUseType() == 10) {
 				//여행일정
 				proceeds = ps.selectMemberIdTrv(updatedRefund);
-				//System.out.println("TRV Proceeds : " + proceeds);
 			}else if(updatedRefund.getUseType() == 20) {
 				//설계채택
 				proceeds = ps.selectMemberIdRequest(updatedRefund);
-				//System.out.println("PLAN Proceeds : " + proceeds);
 			}
-			//System.out.println("Proceeds : " + proceeds);
 			updateUserProceeds= ps.updateUserProceedsRefund(proceeds);
 		}
 		
