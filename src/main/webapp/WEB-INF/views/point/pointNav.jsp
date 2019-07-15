@@ -22,7 +22,7 @@
 	<div class="tabs is-boxed"style="width:50%;margin-left:10px;">
 		<ul style="border:none !important;">
 			<li>
-				<a href="pointMainView.po?currentPage=1" class="pointNav">
+				<a href="pointMainView.po?payCurrentPage=1&reserveCurrentPage=1&usePointCurrentPage=1" class="pointNav">
 					<span style="color:red;">&nbsp;<strong style="font-size:25px;">포인트관리</strong><br> <p id="userPoint"></p> </span>
 				</a>
 			</li>
