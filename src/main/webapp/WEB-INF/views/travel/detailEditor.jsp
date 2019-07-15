@@ -683,7 +683,7 @@
 		//-----------------------------------------------------------------------
 		//사진갤러리추가
 		function addGallaryImage(dayNumber, changeName, fileLevel, fileId) {
-			
+			console.log(fileId);
 			
 			var photoCard = $("#gallary" + dayNumber + "Area").find(".photoCard").eq(0).clone(true);
 			photoCard.find("img").attr("src", "resources/uploadFiles/" + changeName);
@@ -692,9 +692,9 @@
 				photoCard.find(".changeMainImageBtn").hide();
 			}else {
 				photoCard.find(".mainImageIcon").hide();
-				photoCard.find(".changeMainImageBtn").children("input[name=fileId]").val(fileId);
 			}
 			
+			photoCard.find(".changeMainImageBtn").children("input[name=fileId]").val(fileId);
 			photoCard.appendTo($("#gallary" + dayNumber + "Area").children().children());
 			photoCard.show();
 		}

@@ -98,7 +98,7 @@
 		background:lightgray;
 		opacity:0.9;
 	}
-	.dayList {
+	.dayList, #likeList, #recommList {
 		height:400px;
 		overflow-y:scroll;
 	}
@@ -134,7 +134,7 @@
 									<div class="content">
 										<p><strong class="schTitle">${ sch.schTitle }</strong></p>
 										<c:if test="${ !empty sch.trvCost }">
-											<small class="costType">${ sch.trvCost.costType } : </small>
+											<small class="costType">${ sch.trvCost.costType }:</small>
 											<small ><strong class="costAmount">${ sch.trvCost.costAmount }</strong></small>
 											<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 										</c:if>
@@ -229,7 +229,7 @@
 														<strong class="schTitle">${ sch.schTitle }</strong>
 													</p>
 													<c:if test="${ !empty sch.trvCost }">
-														<small class="costType">${ sch.trvCost.costType } : </small>
+														<small class="costType">${ sch.trvCost.costType }:</small>
 														<small><strong class="costAmount">${ sch.trvCost.costAmount }</strong></small>
 														<small class="costCurrency">(${ sch.trvCost.currency }) /</small>
 													</c:if>
@@ -299,7 +299,7 @@
 								</ul>
 							</div>
 							<!-- <label class="panel-block"><input type="checkbox">선택</label> -->
-							<ul id="likeList" class="connectedSortable menu-list" >
+							<ul id="likeList" class="connectedSortable menu-list" style="height:400px">
 								<c:forEach var="likeySpot" items="${ likeySpotList }" varStatus="st">
 									<li class="panel-block" style="background:white">
 										<div class="media-left">
@@ -339,7 +339,7 @@
 								</c:forEach>
 							</ul>
 							
-							<ul id="recommList" class="connectedSortable menu-list" style="display:none">
+							<ul id="recommList" class="connectedSortable menu-list" style="display:none; hegiht:400px">
 								<c:forEach var="recommSpot" items="${ recommSpotList }" varStatus="st">
 									<li class="panel-block" style="background:white">
 										<div class="media-left">
@@ -666,6 +666,7 @@
 		//좋아요장소 insert
 		$(document).on('click', '.spotInsertBtn', function() {
 			var plcName = $(this).parent().prev().find(".plcName").text();
+			console.log(plcName);
 			placeTextSearch(plcName, map, "insert");
 			//$("#plcName1").val(plcName);
 			$("#newScheduleModal").toggleClass('is-active');
@@ -865,15 +866,17 @@
 			
 			var schTransp = li.find(".schTransp").text();
 			var schTime = li.find(".schTime").text();
+			console.log(schTime);
 			var index = schTime.indexOf("-");
 			var startTime = "";
 			var endTime = "";
-			if(schTime != " - ") {
+			if(schTime != "-") {
 				startTime = schTime.substring(0, index - 1);
 				endTime = schTime.substring(index + 2);
 			}
-			var costTypeStr = li.find(".costType").text().substring();
-			var costType = costTypeStr.substring(0, costTypeStr.indexOf(":") - 1);
+			var costTypeStr = li.find(".costType").text();
+			console.log(costTypeStr);
+			var costType = costTypeStr.substring(0, costTypeStr.indexOf(":"));
 			var costAmount = li.find(".costAmount").text();
 			var costCurrency = li.find(".costCurrency").text();
 			var currency = costCurrency.substring(1, costCurrency.length - 3);
@@ -977,12 +980,12 @@
 				
 				li += '<li class="panel-block sch' + sch.schId + 'Block" style="background: white" id="sch_' + sch.schId + '">'
 				 	   + '<div class="media-left" style="width:20%">'
-				 	   + '<p class="schTime">' + sch.startTime + '-' + sch.endTime + '</p>'
+				 	   + '<p class="schTime">' + sch.startTime + ' - ' + sch.endTime + '</p>'
 				 	   + '<input type="hidden" value="' + sch.schNumber + '" name="schNumber"></div>'
 				 	   + '<div class="media-content" style="width: 70%"><div class="content">'
 				 	   + '<p><strong class="schTitle">' + sch.schTitle + '</strong></p>';
 				if(sch.trvCost != null) {
-					li += '<small class="costType">' + sch.trvCost.costType + ': </small>'
+					li += '<small class="costType">' + sch.trvCost.costType + ':</small>'
 				 	   + '<small ><strong class="costAmount">' + sch.trvCost.costAmount + '</strong></small>'
 				 	   + '<small class="costCurrency">(' + sch.trvCost.currency + ') /</small>';
 				}
@@ -1042,9 +1045,6 @@
 						+ '<a class="card-footer-item editBtn" style="background:skyblue;color:white">Edit</a>'
 						+ '<a class="card-footer-item removeBtn" style="background:lightgray;color:white">Delete</a>'
 						+ '</footer></div></section>';
-			
-				
-			
 			}
 			
 			

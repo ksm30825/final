@@ -895,10 +895,17 @@
 			};
 			service.findPlaceFromQuery(request, function(results, status) {
 				if(status === google.maps.places.PlacesServiceStatus.OK) {
+					console.log(results[0].place_id);
+					console.log(results[0].name);
 					placeDetailSearch(results[0].place_id, map);
 					if(insert == "insert") {
 						$("#plcId1").val(results[0].place_id);
-						$("#plcName1").val(results[0].name);
+						
+						if(results[0].name == "") {
+							$("#plcName1").val(placeName);
+						}else {
+							$("#plcName1").val(results[0].name);
+						}
 					}
 				}
 			});
