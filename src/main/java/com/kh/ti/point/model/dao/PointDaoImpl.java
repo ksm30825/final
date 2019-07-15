@@ -23,7 +23,7 @@ public class PointDaoImpl implements PointDao{
 	//포인트 충전
 	@Override
 	public int insertPay(SqlSessionTemplate sqlSession, Payment pay) {
-		System.out.println("payAmount : " + pay.getPayAmount());
+		//System.out.println("payAmount : " + pay.getPayAmount());
 		return sqlSession.insert("Payment.insertPay", pay);
 	}
 	//포인트 충전 리스트 전체 카운터
@@ -35,7 +35,6 @@ public class PointDaoImpl implements PointDao{
 	@Override
 	public int getReceiveListCount(SqlSessionTemplate sqlSession, ReservePoint reserve) {
 		int count = sqlSession.selectOne("Payment.getReceiveListCount", reserve);
-		System.out.println("count : " + count);
 		return count;
 	}
 	//포인트 사용 리스트 전체 카운터
@@ -48,7 +47,6 @@ public class PointDaoImpl implements PointDao{
 	public ArrayList selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, Payment charge) {
 		int offset = (chPi.getCurrentPage() - 1) * chPi.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, chPi.getLimit());
-		
 		ArrayList chPayList = (ArrayList)sqlSession.selectList("Payment.selectChargeList",	charge, rowBounds);
 		
 		return chPayList;
@@ -145,7 +143,7 @@ public class PointDaoImpl implements PointDao{
 	//수익금 달성내역 전체 리스트 카운트
 	@Override
 	public int getProceedsListCount(SqlSessionTemplate sqlSession, Proceeds proceeds) {
-		System.out.println("getProceedsListCount proceeds : " + proceeds);
+		//System.out.println("getProceedsListCount proceeds : " + proceeds);
 		return sqlSession.selectOne("Payment.getProceedsListCount", proceeds);
 	}
 	//수익금 달성내역 가져오기
@@ -338,5 +336,33 @@ public class PointDaoImpl implements PointDao{
 	public int selectTrvId(SqlSessionTemplate sqlSession, int reviewId) {
 		return sqlSession.selectOne("Payment.selectTrvId", reviewId);
 
+	}
+	//사용자 - 환급신청 내역 월 검색 리스트 카운트
+	@Override
+	public int selectOneRebateListCount(SqlSessionTemplate sqlSession, SearchPoint sp) {
+		return sqlSession.selectOne("Payment.selectOneRebateListCount", sp);
+	}
+	//사용자 - 환급신청 내역 월 검색 조회
+	@Override
+	public ArrayList<Rebate> selectOneRebateList(SqlSessionTemplate sqlSession, PageInfo rebatePi, SearchPoint sp) {
+		int offset = (rebatePi.getCurrentPage() - 1) * rebatePi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, rebatePi.getLimit());
+		
+		ArrayList<Rebate> rebateList = (ArrayList)sqlSession.selectList("Payment.selectOneRebateList", sp, rowBounds);
+		return rebateList;
+	}
+	//사용자 - 수익달성 내역 월 검색 리스트 카운트
+	@Override
+	public int selectOneProceedsListCount(SqlSessionTemplate sqlSession, SearchPoint sp) {
+		return sqlSession.selectOne("Payment.selectOneProceedsListCount", sp);
+	}
+	//사용자 - 수익달성 내역 월 검색 조회
+	@Override
+	public ArrayList<Proceeds> selectOneProceedsList(SqlSessionTemplate sqlSession, PageInfo proPi, SearchPoint sp) {
+		int offset = (proPi.getCurrentPage() - 1) * proPi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, proPi.getLimit());
+		
+		ArrayList<Proceeds> proceedsList = (ArrayList)sqlSession.selectList("Payment.selectOneProceedsList", sp, rowBounds);
+		return proceedsList;
 	}
 }

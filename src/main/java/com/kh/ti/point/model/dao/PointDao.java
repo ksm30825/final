@@ -126,7 +126,12 @@ public interface PointDao {
 	ArrayList<HashMap> downRebates(SqlSessionTemplate sqlSession, int rebateStatus);
 	//일정리뷰 코드 이용하여 trvId조회
 	int selectTrvId(SqlSessionTemplate sqlSession, int reviewId);
-	
-	
-	
+	//사용자 - 환급신청 내역 월 검색 리스트 카운트
+	int selectOneRebateListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
+	//사용자 - 환급신청 내역 월 검색 조회
+	ArrayList<Rebate> selectOneRebateList(SqlSessionTemplate sqlSession, PageInfo rebatePi, SearchPoint sp);
+	//사용자 - 수익달성 내역 월 검색 리스트 카운트
+	int selectOneProceedsListCount(SqlSessionTemplate sqlSession, SearchPoint sp);
+	//사용자 - 수익달성 내역 월 검색 조회
+	ArrayList<Proceeds> selectOneProceedsList(SqlSessionTemplate sqlSession, PageInfo proPi, SearchPoint sp);
 }

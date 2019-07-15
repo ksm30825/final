@@ -408,5 +408,25 @@ public class PointServiceImpl implements PointService {
 	public int selectTrvId(int reviewId) {
 		return pd.selectTrvId(sqlSession, reviewId);
 	}
+	//사용자 - 환급신청 내역 월 검색 리스트 카운트
+	@Override
+	public int selectOneRebateListCount(SearchPoint sp) {
+		return pd.selectOneRebateListCount(sqlSession, sp);
+	}
+	//사용자 - 환급신청 내역 월 검색 조회
+	@Override
+	public ArrayList<Rebate> selectOneRebateList(PageInfo rebatePi, SearchPoint sp) {
+		return pd.selectOneRebateList(sqlSession, rebatePi, sp);
+	}
+	//사용자 - 수익달성 내역 월 검색 리스트 카운트
+	@Override
+	public int selectOneProceedsListCount(SearchPoint sp) {
+		return pd.selectOneProceedsListCount(sqlSession, sp);
+	}
+	//사용자 - 수익달성 내역 월 검색 조회
+	@Override
+	public ArrayList<Proceeds> selectOneProceedsList(PageInfo proPi, SearchPoint sp) {
+		return pd.selectOneProceedsList(sqlSession, proPi, sp);
+	}
 
 }

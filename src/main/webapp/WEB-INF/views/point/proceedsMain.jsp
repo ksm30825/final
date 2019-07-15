@@ -11,7 +11,7 @@
 	#rebateTB *, #proceedsTB *{
 		text-align:center;
 	}
-	.pageingBtn{
+	.pagingBtn{
 		width:30px;
 		height:22px;
 		background:white;
@@ -19,7 +19,7 @@
 		border:1px solid purple;
 		border-radius:5px;
 	}
-	.pageingBtn:hover{
+	.pagingBtn:hover{
 		background:purple;
 		color:white;
 	}
@@ -115,7 +115,7 @@
 						            	</c:if>
 						            </c:if>
 						  			<div class="select" style="display:inline-block;float:right;margin-bottom:4px;">
-							            <select name="rebateSelect">
+							            <select name="rebateSelect" id="rebateSelect">
 											<option value="defaultOption">--월--</option>
 											<option value="1">1</option>
 											<option value="2">2</option>
@@ -162,7 +162,7 @@
 					    			수익금 달성 내역
 				    			</div>
 					 			<div class="select" style="display:inline-block;float:right;margin-bottom:4px;">
-						            <select name="rebateSelect">
+						            <select name="proccedsSelect" id="proceedsSelect">
 						            	<option value="defaultOption">--월--</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
@@ -246,28 +246,51 @@
 			//console.log(memberId);
 			var currentpage = 1;
 			var month = 0;
-			total(memberId, currentpage, month);
+			total(memberId, currentpage, month);//전체 페이지 생성해주는 함수
+			//환급신청 월검색 시
+			$("#rebateSelect").change(function(){
+				var month = $(this).children('option:selected').val();
+				var memberId = $("#member").val();
+				var currentPage = 1;
+				if(month!='defaultOption'){
+					//console.log("month : " + month );
+					var condition = 1;
+					oneRebate(memberId, month, condition, currentPage);
+				}
+			});
+			//수익 달성 월검색 시
+			$("#proceedsSelect").change(function(){
+				var month = $(this).children('option:selected').val();
+				var memberId = $("#member").val();
+				var currentPage = 1;
+				if(month!='defaultOption'){
+					//console.log("month : " + month );
+					var condition = 2;
+					oneProcceds(memberId, month, condition, currentPage);
+				}
+			});
 		});
-		//해당 글 바로가기
+		//해당 글 바로가기//설계글 제외
 		$("body").on("click", "#proceedsLink",function(){
-			var mid = $(this).children().eq(0).val();
+			//var mid = $(this).children().eq(0).val();
 			var bid = $(this).children().eq(1).val();
-			var url = "oneBoardRPoint.po?mid="+mid+"&bid="+bid;
-
+			var url = "oneBoard.po?bid="+bid;
 			window.open(url, "oneBoard", "width=1000,height=700");
 		});
+		//해당 설계글 바로가기
 		$("body").on("click", "#requsetLink",function(){
 			var mid = $(this).children().eq(0).val();
 			var bid = $(this).children().eq(1).val();
-			var url = "oneBoardRequest.po?mid="+mid+"&bid="+bid;
-
+			var url = "oneBoardRequest.po?bid="+bid;
 			window.open(url, "oneBoard", "width=1000,height=700");
 		});
+		//환급신청 모달에서 yes를 눌렀을 경우
 		$("body").on("click", "#toApply",function(){
 			var payAmountStr = $(this).parent().parent().parent().children().eq(1).children().eq(0).val();
 			var memberId =$(this).parent().parent().parent().children().eq(1).children().eq(1).val();
 			var payAmount = Number(payAmountStr);
 			if(payAmount % 10000 != 0){
+				//10000원 단위만 환급되게 막기
 				$('#myModal').removeClass('is-active');
 				$('#modalHeader2').text('10000원 단위만 환급신청이 가능합니다.');
 				$("#myModal2").toggleClass('is-active');
@@ -275,13 +298,15 @@
 					$('#myModal2').removeClass('is-active');
 				});
 			}else{
+				//10000원 단위일 경우 
 				var userProceedsString = $("#userProceeds").text();
 				var userProceedsStr =  userProceedsString.replace(/[^0-9]/g,"");
 				var proceeds = Number(userProceedsStr);
 				//console.log(payAmount);
 				//console.log(proceeds);
 				
-				if(payAmount > proceeds){
+				if(payAmount >= proceeds){
+					//총 수익금과 환급신청액 비교
 					$('#myModal').removeClass('is-active');
 					$('#modalHeader2').text('현재 총 수익금이 모자릅니다.');
 					$("#myModal2").toggleClass('is-active');
@@ -289,7 +314,9 @@
 						$('#myModal2').removeClass('is-active');
 					});
 				}else if(payAmount < proceeds){
+					//총 수익금과 환급신청액 비교
 					if(proceeds<30000){
+						//총수익금이 30000원 미만이면 신청불가 
 						$('#myModal').removeClass('is-active');
     					$('#modalHeader2').text('총 수익금이 30000원 이상이어야 환급신청이 가능합니다.');
     					$("#myModal2").toggleClass('is-active');
@@ -297,24 +324,30 @@
     						$('#myModal2').removeClass('is-active');
     					});
 					}else{
+						//총수익금이 30000원 이상이면 신청 가능
 						$('#myModal').removeClass('is-active');
     					$('#modalHeader2').text('환급 신청한 내역이 관리자에게 전달 되었습니다.').append('<p>정산은 매월 15일에 이뤄집니다.</p>');
     					$("#myModal2").toggleClass('is-active');
     					$("#okay").click(function(){
+    						//확인을 눌렀을 때 환급 신청 매핑으로 간다.
+    						//환급 신청 내역에 인서트가 된다.
     						$('#myModal2').removeClass('is-active');
 	    					location.href="rebateProceeds.po?memberId="+memberId+"&payAmount="+payAmount;
     					});
 					}
 				}
 			}
-			$("#payAmount").val("");
+			$("#payAmount").val("");//환급신청액 입력란을 비어줘야 한다.
 		});
+		//모달 닫기
 		$('.modal-background, .modal-close').click(function() {
 			$(this).parent().removeClass('is-active');
 		});
+		//모달 닫기
 		$("#del").click(function(){
 			$(this).parent().parent().parent().removeClass('is-active');
 		});
+		//환급신청시 아니오를 클릭했을 경우
 		$(".no").click(function(){
 			$("#payAmount").val("");
 			$('#myModal').removeClass('is-active');
@@ -324,24 +357,28 @@
 				$('#myModal2').removeClass('is-active');
 			});
 		});
+		//전체 페이지 에이작스 함수
 		function total(memberId, currentpage, month){
 			//controller에서도 condition 보내줘야 함
 			//paging으로 연결
 			//월검색 에이작스 만들고 그것도 테이블 생성하는 함수로 condition 20으로 보내주기
 			var condition = 99;
 			$.ajax({
+				//수익금 달성 내역 조회 에이작스를 먼저 호출
 				url:"allProceeds.po",
 				type:"post",
 				data:{memberId:memberId, currentpage:currentpage, month:month},
 				success:function(data){
-					makeProceedsTB(data.proPi, data.proceedsList);
+					makeProceedsTB(data.proPi, data.proceedsList, condition, month);//수익금 달성 내역 테이블 생성
+					//console.log(data);
 					$.ajax({
+						//환급 신청 내역 조회 에이작스를 호출
 						url:"allRebate.po",
 						type:"post",
 						data:{memberId:memberId, currentpage:currentpage, month:month},
 						success:function(data){
-							makeRebateTB(data.rebatePi, data.rebateList);
-							console.log(data);
+							makeRebateTB(data.rebatePi, data.rebateList, condition, month);//환급 신청 내역 테이블 생성
+							//console.log(data);
 						},
 						error:function(data){
 							console.log('rebate main error');
@@ -352,35 +389,37 @@
 					console.log('proceeds main error');
 				}
 			});
-		}
+		};
 		//수익금 달성 테이블 생성
-		function makeProceedsTB(proPi, proceedsList){
+		function makeProceedsTB(proPi, proceedsList, condition, month){
 			//console.log(proPi);
-			console.log(proceedsList);
+			//console.log(proceedsList);
 			
 			//console.log(month);
 			$("#proceedsTBody").empty();
 			
 			var len = proceedsList.length;
+			var memberId;
 			//console.log(len);
 			for(var i=0 ; i<len ; i++){
 				var list = proceedsList[i];
 				var proceeds = list.proceeds;
-				if(proceeds>=30000){
+				memberId = list.memberId;
+				if(proceeds>=30000){//수익 달성액이 30000점 이상인 글만 보여주기 위한 조건
 					//console.log(list);
 					var pi = proPi;
 					//console.log(pi);
 					
 					var $listTr = $("<tr>");
-					var $noTd = $("<td width='10px'>").text(i+1);
+					var $noTd = $("<td width='10px'>").text(i+1);//1,2,3,4,5...
 					
 					var date = new Date(list.proceedsDate);
 					date = getFormatDate(date);
-					var $proceedsDateTd = $("<td>").text(date);
+					var $proceedsDateTd = $("<td>").text(date);//수익금 달성 날짜 
 					
 					
 					proceeds = comma(proceeds);
-					var $proceedsTd = $("<td>").text(proceeds);
+					var $proceedsTd = $("<td>").text(proceeds);//수익 달성액
 					
 					var $boardTd =$("<td>");
 					var mid, bid, $proceedsIn, $proceedsBtn, $proceedsMidIn, $proceedsBidIn; 
@@ -389,12 +428,12 @@
 						bid = list.trvId;
 						console.log(bid);
 						
-						$proceedsIn = $('<input type="hidden">').val(list.trvId);
+						$proceedsIn = $('<input type="text">').val(list.trvId);//수익 달성 게시글 보기를 위한 여행일정번호
+						//data-mid='+mid+'
+						$proceedsBtn = $('<button id="proceedsLink" class="button is-info" data-bid='+bid+'data-tooltip="해당 글 보러가기" target="_blank">판매된 일정</button>');//게시글 보러가기
 						
-						$proceedsBtn = $('<button id="proceedsLink" class="button is-info" data-mid='+mid+'data-bid='+bid+'data-tooltip="해당 글 보러가기" target="_blank">판매된 일정</button>');
-						
-						$proceedsMidIn = $('<input type="hidden">').val(mid);
-						$proceedsBidIn = $('<input type="hidden">').val(bid);
+						$proceedsMidIn = $('<input type="hidden">').val(mid);//회원 번호
+						$proceedsBidIn = $('<input type="hidden">').val(bid);//게시글번호
 						
 						$proceedsBtn.append($proceedsMidIn);
 						$proceedsBtn.append($proceedsBidIn);
@@ -405,12 +444,12 @@
 						bid = list.ptcpId;
 						console.log(bid);
 						
-						$proceedsIn = $('<input type="hidden">').val(list.ptcpId);
+						$proceedsIn = $('<input type="text">').val(list.ptcpId);//수익 달성 게시글 보기를 위한 참여번호
+						//data-mid='+mid+'
+						$proceedsBtn = $('<button id="requsetLink" class="button is-success" data-bid='+bid+' data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
 						
-						$proceedsBtn = $('<button id="requsetLink" class="button is-success" data-mid='+mid+'data-bid='+bid+' data-tooltip="해당 글 보러가기" target="_blank">채택된 설계</button>');
-						
-						$proceedsMidIn = $('<input type="hidden">').val(mid);
-						$proceedsBidIn = $('<input type="hidden">').val(bid);
+						$proceedsMidIn = $('<input type="hidden">').val(mid);//회원번호
+						$proceedsBidIn = $('<input type="hidden">').val(bid);//게시글 번호
 						
 						$proceedsBtn.append($proceedsMidIn);
 						$proceedsBtn.append($proceedsBidIn);
@@ -425,49 +464,51 @@
 					
 					$("#proceedsTBody").append($listTr);
 				}
-				
-				
+				pagingProceeds(pi, condition, memberId, month);
 			}
-		}
+		};
 		//환급 신청 테이블 생성
-		function makeRebateTB(rebatePi, rebateList){
+		function makeRebateTB(rebatePi, rebateList, condition, month){
 			//console.log(proPi);
 			//console.log(proceedsList);
 			//console.log(month);
 			$("#rebateTBody").empty();
 			var len = rebateList.length;
+			var memberId;
 			//console.log(len);
 			for(var i=0 ; i<len ; i++){
 				var list = rebateList[i];
 				//console.log(list);
 				var pi = rebatePi;
 				//console.log(pi);
-				
+				memberId = list.memberId;
 				var $listTr = $("<tr>");
-				var $noTd = $("<td width='10px'>").text(i+1);
+				var $noTd = $("<td width='10px'>").text(i+1);//1,2,3,4,5,...
 				var date = new Date(list.applyDate);
 				date = getFormatDate(date);
-				var $rebateDateTd = $("<td>").text(date);
+				var $rebateDateTd = $("<td>").text(date);//환급신청일
 				
-				var payDate = new Date(list.payDate);
+				var payDate = new Date(list.payDate);//환급지급일
 				payDate = getFormatDate(payDate);
 				
 				var rebate = list.payAmount;
 				rebate = comma(rebate);
-				var $rebateTd = $("<td>").text(rebate);
+				var $rebateTd = $("<td>").text(rebate);//환급신청액
 				
 				var $statusTd =$("<td>");
 				var mid, $rebateIn, $rebateBtn, $rebateMidIn, $rebateBidIn; 
-				mid = list.memberId;
-				if(list.rebateStatus == 10){//미지급
-					$rebateIn = $('<input type="hidden">').val(list.rebateId);
+				mid = list.memberId;//회원번호
+				if(list.rebateStatus == 10){
+					//미지급
+					$rebateIn = $('<input type="hidden">').val(list.rebateId);//환급신청번호
 					
 					$rebateBtn = $('<button class="button is-warning" style="height:20px;line-height:60%;border-radius:5px;">지급 대기</button>');
 					
 					$statusTd.append($rebateIn);
 					$statusTd.append($rebateBtn);
-				}else if(list.rebateStatus == 20){//지급완료
-					$rebateIn = $('<input type="hidden">').val(list.rebateId);
+				}else if(list.rebateStatus == 20){
+					//지급완료시 지급일도 표기
+					$rebateIn = $('<input type="hidden">').val(list.rebateId);//환급신청번호
 					
 					$rebateBtn = $('<button class="button is-success" style="height:20px;line-height:60%;border-radius:5px;">지급 완료 '+payDate+'</button>');
 					
@@ -481,10 +522,42 @@
 				
 				$("#rebateTBody").append($listTr);
 			}
-		}
-		function paging(pi, condition){
+			pagingRebate(pi, condition, memberId, month);
+		};
+		function oneRebate(memberId, month, condition, currentPage){
+			//환급신청 월검색 페이징하기
+			$.ajax({
+				url:"oneMonthRebate.po",
+				type:"post",
+				data:{memberId:memberId, currentPage:currentPage, month:month},
+				success:function(data){
+					console.log(data);
+					makeRebateTB(data.rebatePi, data.rebateList, condition, month);
+				},
+				error:function(data){
+					console.log('환급신청 에이작스 에러');
+				}
+			});
+		};
+		function oneProcceds(memberId, month, condition, currentPage){
+			//수익달성 월검색 페이징하기
+			$.ajax({
+				url:"oneMonthProceeds.po",
+				type:"post",
+				data:{memberId:memberId, currentPage:currentPage, month:month},
+				success:function(data){
+					console.log(data);
+					makeProceedsTB(data.proPi, data.proceedsList, condition, month);
+				},
+				error:function(data){
+					console.log('환급신청 에이작스 에러');
+				}
+			});
+		};
+		//환급 신청 페이징처리
+		function pagingRebate(pi, condition, memberId, month){
 			//console.log(pi);
-			var $page = $(".pagingBtnArea");
+			var $page = $(".rebatePagingArea");
 			
 			var currentPage = pi.currentPage;
 			var limit = pi.limit;
@@ -495,10 +568,10 @@
 			$page.empty();
 			
 			$page.append($("<button>").attr("class", "pagingBtn").text(" << ").css({"cursor":"pointer"}).click(function(){
-				if(condition == 99){
-					total(1);
+				if(condition == 99){//그냥
+					total(memberId, 1, month);
 				}else{
-					searchFunc(1);
+					oneRebate(memberId, month, condition, 1)//검색했을 때
 				}
 			}));
 			
@@ -506,10 +579,10 @@
 				$page.append($("<button>").attr("class", "pagingBtn").attr("disabled",true).text(" < ").css({"cursor":"pointer"}));
 			}else{
 				$page.append($("<button>").attr("class", "pagingBtn").text("<").click(function(){
-					if(condition == 99){
-						total(currentPage-1);
+					if(condition == 99){//그냥
+						total(memberId, currentPage-1, month);
 					}else{
-						searchFunc(currentPage-1);
+						oneRebate(memberId, month, condition, currentPage-1)//검색했을 때
 					}
               }));
 			}
@@ -518,10 +591,10 @@
 					$page.append($("<button>").attr("class", "pagingBtn").text(p).attr("disabled",true).css({"cursor":"pointer"}));
 				}else{ 
 					$page.append($("<button>").attr("class", "pagingBtn").text(p).css({"cursor":"pointer"}).click(function(){
-						if(condition == 99){
-							total($(this).text());
+						if(condition == 99){//그냥
+							total(memberId, $(this).text(), month);
 						}else{
-							searchFunc($(this).text());
+							oneRebate(memberId, month, condition, $(this).text())//검색했을 때
 						}
 					}));
 				}
@@ -530,21 +603,86 @@
 				$page.append($("<button>").attr("class", "pagingBtn").attr("disabled",true).text(" > ").css({"cursor":"pointer"}));         
             }else {
             	$page.append($("<button>").attr("class", "pagingBtn").attr("disabled",true).text(" > ").css({"cursor":"pointer"}).click(function(){
-            		if(condition == 99){
-            			total(currentPage + 1);
+            		if(condition == 99){//그냥
+            			total(memberId, currentPage + 1, month);
 					}else{
-						searchFunc(currentPage + 1);
+						oneRebate(memberId, month, condition, currentPage + 1)//검색했을 때
 					}
             	}));
             } 
 			$page.append($("<button>").attr("class", "pagingBtn").text(" >> ").css({"cursor":"pointer"}).click(function(){
-				if(condition == 99){
-					total(maxPage);
+				if(condition == 99){//그냥
+					total(memberId, maxPage, month);
 				}else{
-					searchFunc(maxPage);
+					oneRebate(memberId, month, condition, maxPage)//검색했을 때
 				}
             }));
-		}
+		};
+		//수익달성 페이징처리
+		function pagingProceeds(pi, condition, memberId, month){
+			//console.log(pi);
+			var $page = $(".proceedsPagingArea");
+			
+			var currentPage = pi.currentPage;
+			var limit = pi.limit;
+			var maxPage = pi.maxPage;
+			var startPage = pi.startPage;
+			var endPage = pi.endPage;
+			
+			$page.empty();
+			
+			$page.append($("<button>").attr("class", "pagingBtn").text(" << ").css({"cursor":"pointer"}).click(function(){
+				if(condition == 99){//그냥
+					total(memberId, 1, month);
+				}else{
+					oneProcceds(memberId, month, condition, 1);
+				}
+			}));
+			
+			if(currentPage <= 1){
+				$page.append($("<button>").attr("class", "pagingBtn").attr("disabled",true).text(" < ").css({"cursor":"pointer"}));
+			}else{
+				$page.append($("<button>").attr("class", "pagingBtn").text("<").click(function(){
+					if(condition == 99){//그냥
+						total(memberId, currentPage-1, month);
+					}else{
+						oneProcceds(memberId, month, condition, currentPage-1);
+					}
+              }));
+			}
+			for(var p=startPage ; p<=endPage ; p++){
+				if(p == currentPage){
+					$page.append($("<button>").attr("class", "pagingBtn").text(p).attr("disabled",true).css({"cursor":"pointer"}));
+				}else{ 
+					$page.append($("<button>").attr("class", "pagingBtn").text(p).css({"cursor":"pointer"}).click(function(){
+						if(condition == 99){//그냥
+							total(memberId, $(this).text(), month);
+						}else{
+							oneProcceds(memberId, month, condition, $(this).text());
+						}
+					}));
+				}
+			}
+			if(currentPage >= maxPage){ 
+				$page.append($("<button>").attr("class", "pagingBtn").attr("disabled",true).text(" > ").css({"cursor":"pointer"}));         
+            }else {
+            	$page.append($("<button>").attr("class", "pagingBtn").attr("disabled",true).text(" > ").css({"cursor":"pointer"}).click(function(){
+            		if(condition == 99){//그냥
+    					total(memberId, currentPage + 1, month);
+    				}else{
+    					oneProcceds(memberId, month, condition, currentPage + 1);
+    				}
+            	}));
+            } 
+			$page.append($("<button>").attr("class", "pagingBtn").text(" >> ").css({"cursor":"pointer"}).click(function(){
+				if(condition == 99){//그냥
+					total(memberId, maxPage, month);
+				}else{
+					oneProcceds(memberId, month, condition, maxPage);
+				}
+            }));
+		};
+		//날짜 폼을 위한 함수
 		function getFormatDate(date){ 
 			//console.log(date);
 			//console.log(typeof(date));
@@ -559,7 +697,8 @@
 			var minu = date.getMinutes();
 			minu = minu >=10 ? minu : '0' + minu;
 			return year + '/' + month + '/' + day + '	' + hour + ':' + minu; 
-		}
+		};
+		//숫자 폼을 위한 함수
 		function comma(num){
 		    var len, point, str; 
 		       
@@ -574,7 +713,7 @@
 		        point += 3; 
 		    } 
 		    return str;
-		}
+		};
 	</script>
 </body>
 </html>

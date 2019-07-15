@@ -344,6 +344,7 @@
 											<tr>
 												<td>
 													<c:out value="${index.count} "/>
+													<input type="hidden" value="${ us.pointId }"/>
 												</td>
 												<td>
 													<span><fmt:formatNumber value="${ us.usePoint }" groupingUsed="true"/>P</span>
@@ -504,18 +505,7 @@
 				if(month!='defaultOption'){
 					//console.log("month : " + month );
 					var payCurrentPage = 1;
-					$.ajax({
-						url:"oneMonthPay.po",
-						type:"post",
-						data:{month:month, payCurrentPage:payCurrentPage},
-						success:function(data){
-							//console.log(data);
-							makeChargeTable(data.chPayList, data.chPi, month);
-						},
-						error:function(data){
-							console.log('error');
-						}
-					});
+					toOnePay(month, payCurrentPage);
 				}
 			});
 			//포인트 지급 월 검색시
@@ -524,18 +514,7 @@
 				var reserveCurrentPage = 1;
 				if(month!='defaultOption'){
 					//console.log("month : " + month );
-					$.ajax({
-						url:"oneMonthRPoint.po",
-						type:"post",
-						data:{month:month, reserveCurrentPage:reserveCurrentPage},
-						success:function(data){
-							//console.log(data);
-							makeReserveTable(data.rePayList, data.rePi, month);
-						},
-						error:function(data){
-							console.log('error');
-						}
-					});
+					toOneReserve(month, reserveCurrentPage);
 				}
 			});
 			//포인트 사용 월 검색시
@@ -543,22 +522,53 @@
 				var month = $(this).children('option:selected').val();
 				var useCurrentPage = 1;
 				if(month!='defaultOption'){
+					toOneUse(month, useCurrentPage);
 					//console.log("month : " + month );
-					$.ajax({
-						url:"oneMonthUPoint.po",
-						type:"post",
-						data:{month:month, useCurrentPage:useCurrentPage},
-						success:function(data){
-							console.log(data);
-							makeUseTable(data.usPayList, data.usPi, month);
-						},
-						error:function(data){
-							console.log('error');
-						}
-					});
 				}
 			});
 		});
+		function toOnePay(month, payCurrentPage){
+			$.ajax({
+				url:"oneMonthPay.po",
+				type:"post",
+				data:{month:month, payCurrentPage:payCurrentPage},
+				success:function(data){
+					//console.log(data);
+					makeChargeTable(data.chPayList, data.chPi, month);
+				},
+				error:function(data){
+					console.log('error');
+				}
+			});
+		};
+		function toOneReserve(month, reserveCurrentPage){
+			$.ajax({
+				url:"oneMonthRPoint.po",
+				type:"post",
+				data:{month:month, reserveCurrentPage:reserveCurrentPage},
+				success:function(data){
+					//console.log(data);
+					makeReserveTable(data.rePayList, data.rePi, month);
+				},
+				error:function(data){
+					console.log('error');
+				}
+			});
+		};
+		function toOneUse(month, useCurrentPage){
+			$.ajax({
+				url:"oneMonthUPoint.po",
+				type:"post",
+				data:{month:month, useCurrentPage:useCurrentPage},
+				success:function(data){
+					console.log(data);
+					makeUseTable(data.usPayList, data.usPi, month);
+				},
+				error:function(data){
+					console.log('error');
+				}
+			});
+		};
 		//포인트 충전 테이블
 		function makeChargeTable(List, Pi, month){
 			//console.log(data);
@@ -600,7 +610,6 @@
 			var $payPage = $(".chargePagingArea");
 			var $reservePage = $(".receivePagingArea");
 			var $usePage = $(".usePagingArea");
-			console.log(Pi)
 			var pi = Pi;
 			var currentPage = pi.currentPage;
 			var limit = pi.limit;
@@ -608,87 +617,41 @@
 			var startPage = pi.startPage;
 			var endPage = pi.endPage;
 			//console.log(pi);
-			console.log(condition);
-			var startRow = (currentPage - 1) * limit + 1;
-			var endRow = startRow + limit - 1;	
-			var str;
+			//console.log(condition);
 			if(condition == 1){
 				$payPage.empty();
-			}else if(condition ==2){
-				$reservePage.empty();
-			}else if(condition == 3){
-				$usePage.empty();
 			}
-			//console.log(chPayList);
-			if(currentPage <= 1){
-				if(condition == 1){
-					$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
-				}else if(condition == 2){
-					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
-					$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
-				}else if(condition == 3){
-					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
-					$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
-				}
-			}else{
-				var cp = currentPage-1;
-				if(condition == 1){
-					str = "location.href=oneMonthPay.po?payCurrentPage="+cp+"&month="+month;
-					$payPage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
-				}else if(condition == 2){
-					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
-					$reservePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
-				}else if(condition == 3){
-					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
-					$usePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").text("<"));
-				}
+			
+			//페이징 기능
+			if(currentPage <= 1){//현재 페이지가 0 또는 1일때
+				//보여주기만
+				$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
+			}else{//현재 페이지가 2이상일 때
+				//기능
+				$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").text("<")).click(function(){
+					toOnePay(month, currentPage-1);
+				});
 			}
-			for(var p = startPage ; p<endPage ; p++){
-				if(p == currentPage){
-					if(condition == 1){
-						$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
-					}else if(condition == 2){
-						str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
-						$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
-					}else if(condition == 3){
-						str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
-						$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
-					}
-				}else{
-					if(condition == 1){
-						str = "location.href=oneMonthPay.po?payCurrentPage="+p+"&month="+month;
-						$payPage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
-					}else if(condition == 2){
-						str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+p+"&month="+month;
-						$reservePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
-					}else if(condition == 3){
-						str = "location.href=oneMonthUPoint.po?useCurrentPage="+p+"&month="+month;
-						$usePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
-					}
+			for(var p = startPage ; p<=endPage ; p++){//1,2,.... 버튼이 보임
+				if(p == currentPage){//현재 2페이지일때 2번을 누르면
+					//보여주기만
+					$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+				}else{//현재 2페이지일때 1번을 누르거나 3번을 누르면
+					//기능
+					//충전
+					$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p)).click(function(){
+						toOnePay(month, p);
+					});
 				}
 			} 
 			if(currentPage >= maxPage){
-				if(condition == 1){
-					$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
-				}else if(condition == 2){
-					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
-					$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
-				}else if(condition == 3){
-					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
-					$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
-				}
+				//보여주기만
+				$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
 			}else{
-				var cp = currentPage+1;
-				if(condition == 1){
-					str = "location.href=oneMonthPay.po?payCurrentPage="+cp+"&month="+month;
-					$payPage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
-				}else if(condition == 2){
-					str = "location.href=oneMonthRPoint.po?reserveCurrentPage="+cp+"&month="+month;
-					$reservePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
-				}else if(condition == 3){
-					str = "location.href=oneMonthUPoint.po?useCurrentPage="+cp+"&month="+month;
-					$usePage.append($("<li>")).append($("<button onclick="+str+">").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
-				}
+				//기능
+				$payPage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">")).click(function(){
+					toOnePay(month, currentPage+1);
+				});
 			}
 			
 		};
@@ -801,7 +764,55 @@
 				$listTr.append($reserveTypeTd);
 				$("#receiveTBody").append($listTr);
 			}
-			chargePaging(rePi, month, condition);
+			reservePaging(rePi, month, condition);
+		};
+		//포인트 적립 테이블 페이징
+		function reservePaging(Pi, month, condition){
+			var $payPage = $(".chargePagingArea");
+			var $reservePage = $(".receivePagingArea");
+			var $usePage = $(".usePagingArea");
+			var pi = Pi;
+			var currentPage = pi.currentPage;
+			var limit = pi.limit;
+			var maxPage = pi.maxPage;
+			var startPage = pi.startPage;
+			var endPage = pi.endPage;
+			//console.log(pi);
+			//console.log(condition);
+			$reservePage.empty();
+			
+			//페이징 기능
+			if(currentPage <= 1){//현재 페이지가 0 또는 1일때
+				//보여주기만
+				$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
+			}else{//현재 페이지가 2이상일 때
+				//기능
+				//적립
+				$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").text("<")).click(function(){
+					toOneReserve(month, currentPage-1);
+				});
+			}
+			for(var p = startPage ; p<=endPage ; p++){//1,2,.... 버튼이 보임
+				if(p == currentPage){//현재 2페이지일때 2번을 누르면
+					//보여주기만
+					$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+				}else{//현재 2페이지일때 1번을 누르면
+					//기능
+					$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p)).click(function(){
+						toOneReserve(month, p);
+					});
+				}
+			} 
+			if(currentPage >= maxPage){
+				//보여주기만
+				$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+			}else{
+				//기능
+				$reservePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">")).click(function(){
+					toOneReserve(month, currentPage+1);
+				});
+			}
+			
 		};
 		//포인트 사용 테이블 만들기
 		function makeUseTable(usPayList, usPi, month){
@@ -839,14 +850,14 @@
 					bid = list.trvId;
 					//console.log("mid"+mid);
 					//console.log("bid"+bid);
-					$useTypeIn = $('<input type="text" style="display:none;">');
+					$useTypeIn = $('<input type="hidden">');
 					$useTypeIn.val(list.trvId);
 					
 					$useTypeA = $('<button id="useLink" class="button is-info" data-mid='+mid+' data-bid='+bid+' style="height:20px;background:#2068ee;" data-tooltip="해당글 보러가기" target="_blank">일정구매</button>');
-					$useMidIn = $('<input type="text" style="display:none;">');
+					$useMidIn = $('<input type="hidden">');
 					$useMidIn.val(mid);
 					
-					$useBidIn = $('<input type="text" style="display:none;">');
+					$useBidIn = $('<input type="hidden">');
 					$useBidIn.val(bid);
 					
 					$useTypeA.append($useMidIn);
@@ -860,14 +871,14 @@
 					bid = list.requestId;
 					//console.log("mid"+mid);
 					//console.log("bid"+bid);
-					$useTypeIn = $('<input type="text" style="display:none;">');
+					$useTypeIn = $('<input type="hidden" style="display:none;">');
 					$useTypeIn.val(list.requestId);
 					
 					$useTypeA = $('<button id="requestLink" class="button is-success" data-mid='+mid+' data-bid='+bid+' style="height:20px;" data-tooltip="해당글 보러가기" target="_blank">설계구매</button>');
-					$useMidIn = $('<input type="text" style="display:none;">');
+					$useMidIn = $('<input type="hidden">');
 					$useMidIn.val(mid);
 					
-					$useBidIn = $('<input type="text" style="display:none;">');
+					$useBidIn = $('<input type="hidden">');
 					$useBidIn.val(bid);
 					
 					$useTypeA.append($useMidIn);
@@ -878,14 +889,14 @@
 				}
 				var $refundStatusTd = $("<td>");
 				var $refundStatusA;
-				if(list.refund.refundStatus == 10){//환불대기
+				if(list.refund == null){
+					$refundStatusA = $('<button class="button is-primary" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불신청 </button>');
+				}else if(list.refund.refundStatus == 10){//환불대기
 					$refundStatusA = $('<button class="button is-info" disabled="true" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불대기 </button>');
 				}else if(list.refund.refundStatus == 20){//환불승인
 					$refundStatusA = $('<button class="button is-success" disabled="true" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불승인 </button>');
 				}else if(list.refund.refundStatus == 30){//환불거절
 					$refundStatusA = $('<button class="button is-danger" disabled="true" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불거절 </button>');
-				}else{
-					$refundStatusA = $('<button class="button is-primary" id="refundStatus" data-target="#myModal" style="height:20px;" data-tooltip="환불 신청하기">  환불신청 </button>');
 				}
 				$refundStatusTd.append($refundStatusA);
 
@@ -897,7 +908,54 @@
 				
 				$("#useTBody").append($listTr);
 			}
-			chargePaging(usPi, month, condition);
+			usePaging(usPi, month, condition);
+		};
+		//포인트 적립 테이블 페이징
+		function usePaging(Pi, month, condition){
+			var $payPage = $(".chargePagingArea");
+			var $reservePage = $(".receivePagingArea");
+			var $usePage = $(".usePagingArea");
+			var pi = Pi;
+			var currentPage = pi.currentPage;
+			var limit = pi.limit;
+			var maxPage = pi.maxPage;
+			var startPage = pi.startPage;
+			var endPage = pi.endPage;
+			//console.log(pi);
+			//console.log(condition);
+			$usePage.empty();
+			
+			//페이징 기능
+			if(currentPage <= 1){//현재 페이지가 0 또는 1일때
+				//보여주기만
+				$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text("<"));
+			}else{//현재 페이지가 2이상일 때
+				//기능
+				$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").text("<")).click(function(){
+					toOneUse(month, currentPage-1);
+				});
+			}
+			for(var p = startPage ; p<=endPage ; p++){//1,2,.... 버튼이 보임
+				if(p == currentPage){//현재 2페이지일때 2번을 누르면
+					//보여주기만
+					$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p));
+				}else{//현재 2페이지일때 1번을 누르면
+					//기능
+					$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(p)).click(function(){
+						toOneUse(month, p);
+					});
+				}
+			} 
+			if(currentPage >= maxPage){
+				//보여주기만
+				$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">"));
+			}else{
+				//기능
+				$usePage.append($("<li>")).append($("<button>").attr("class", "pagingBtn").css({"border-color":"gray"}).text(">")).click(function(){
+					toOneUse(month, currentPage+1);
+				});
+			}
+			
 		};
 		//생성된 지급 테이블의 이벤트 걸기
 		$("body").on("click", "#reserveLink, #useLink",function(){
@@ -926,10 +984,12 @@
 		});
 		//기존 사용 테이블의 이벤트 걸기
 		$("body").on("click","#toRefund", function(){
-			var usePointId = $(this).parent().parent().children().eq(0).text();
+			var usePointId = $(this).parent().parent().children().eq(0).children().eq(0).val();
 			var useDate = $(this).parent().parent().children().eq(2).text();
 			
+			
 			//console.log(useDate);
+			console.log(usePointId);
 			var year = useDate.substring(0,2);
 			var month = useDate.substring(3,5);
 			var day = useDate.substring(6,8);
@@ -956,7 +1016,8 @@
 			//console.log(time);
 			var sub = Number(milisFuture) - Number(milisNow);
 			if(sub<=0){
-				//console.log('24시간 지남');
+				$(this).parent().parent().children().eq(4).children().css({"background":"red"}).text('환불 불가').attr("disabled","true");
+				console.log('24시간 지남');
 				$("#modalHeader2").text('24시간이 지나 환불신청이 불가능합니다.');
 				$('#myModal2').toggleClass('is-active');
 				$('#back2, #del2').click(function() {
@@ -968,7 +1029,7 @@
 				});
 				
 			}else{
-				//console.log('24시간 안지남');
+				console.log('24시간 안지남');
 				$("#refundPointId").val(usePointId);
 				$("#modalHeader").text('환불을 신청하시겠습니까?');
 				$("#modalContent").attr('placeholder','환불사유를 입력해주세요');
@@ -988,6 +1049,7 @@
 			var refundId = $(this).parent().parent().parent().children().eq(0).children().eq(2).val();
 			var refundReason = $(this).parent().parent().parent().children().eq(1).children().eq(0).val();
 			
+			console.log(refundId);
 			console.log(refundReason);
 			if(refundReason == ""){
 				$("#myModal").removeClass('is-active');
