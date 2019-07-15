@@ -36,6 +36,8 @@ body {overflow-y: hidden; overflow-x: hidden; margin : 0;}
 	
 	#chatPlace, #chatTitle{
 	    width: 340px !important; 
+	    height: 30px;
+	    border-radius : 5%;
 	}
 	
 	#trStartDate , #trEndDate{ width : 150px; display : inline-block; /* margin-right : 10px; */ }

@@ -166,8 +166,12 @@
 	        }
         });
 		function showPopup(){
-       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left=100, top=50");        	
-        }
+			var top  = (($(window).height()-700)/2+$(window).scrollTop()) + "px";
+            var left = (($(window).width()-400)/2+$(window).scrollLeft()) + "px";
+            //window.resizeTo(400,700);
+       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left="+left+", top="+top+", resizable= 0");        	
+       		
+		}
 		
 		function Logout(){
 			if('${ loginUser.enrollType }' == "카카오가입"){

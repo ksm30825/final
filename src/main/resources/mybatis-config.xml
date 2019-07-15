@@ -53,10 +53,11 @@
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TourReview" alias="TourReview"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelCost" alias="TravelCost"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.Gallary" alias="Gallary"/>
-		<!-- Statistics Part (예랑) -->
+		  <!-- Statistics Part (예랑) -->
 			<typeAlias type="com.kh.ti.statistics.model.vo.UserStatistics" alias="UserStatistics"/>
 			<typeAlias type="com.kh.ti.statistics.model.vo.TravelStatistics" alias="TravelStatistics"/>
 			<typeAlias type="com.kh.ti.statistics.model.vo.RevenueStatistics" alias="RevenueStatistics"/>
+
 	</typeAliases>
 	<mappers>
 		<!-- 세령 -->
