@@ -2,6 +2,7 @@ package com.kh.ti.adminCallCenter.model.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Board implements Serializable{
 	private int boardId;	//게시글코드
@@ -13,11 +14,12 @@ public class Board implements Serializable{
 	private String boardStatus;	//상태
 	private String boardType;	//구분
 	private int memberId;		//회원코드
+	private ArrayList<BoardAttachment> attachmentFileList;	//글 이미지들
 	
 	public Board() {}
 
 	public Board(int boardId, String boardTitle, String boardContent, int boardCount, Date enrollDate, Date modifyDate,
-			String boardStatus, String boardType, int memberId) {
+			String boardStatus, String boardType, int memberId, ArrayList<BoardAttachment> attachmentFileList) {
 		super();
 		this.boardId = boardId;
 		this.boardTitle = boardTitle;
@@ -28,6 +30,7 @@ public class Board implements Serializable{
 		this.boardStatus = boardStatus;
 		this.boardType = boardType;
 		this.memberId = memberId;
+		this.attachmentFileList = attachmentFileList;
 	}
 
 	public int getBoardId() {
@@ -102,10 +105,19 @@ public class Board implements Serializable{
 		this.memberId = memberId;
 	}
 
+	public ArrayList<BoardAttachment> getAttachmentFileList() {
+		return attachmentFileList;
+	}
+
+	public void setAttachmentFileList(ArrayList<BoardAttachment> attachmentFileList) {
+		this.attachmentFileList = attachmentFileList;
+	}
+
 	@Override
 	public String toString() {
 		return "Board [boardId=" + boardId + ", boardTitle=" + boardTitle + ", boardContent=" + boardContent
 				+ ", boardCount=" + boardCount + ", enrollDate=" + enrollDate + ", modifyDate=" + modifyDate
-				+ ", boardStatus=" + boardStatus + ", boardType=" + boardType + ", memberId=" + memberId + "]";
+				+ ", boardStatus=" + boardStatus + ", boardType=" + boardType + ", memberId=" + memberId
+				+ ", attachmentFileList=" + attachmentFileList + "]";
 	}
 }

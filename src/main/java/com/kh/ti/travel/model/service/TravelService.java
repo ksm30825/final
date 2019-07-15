@@ -51,6 +51,8 @@ public interface TravelService {
 
 	int updateTrvSchedule(TrvSchedule sch, TrvCost cost);
 
+	ArrayList<TrvCost> selectDayCostList(int dayId);
+
 	ArrayList<TrvSchedule> selectSchList(int dayId);
 	
 	int updateSchNumber(int dayId, int[] sch);
@@ -85,7 +87,7 @@ public interface TravelService {
 
 	int updateSchFileId(int fileId);
 
-	int deleteSchFile(SchFile file);
+	int deleteSchFile(int fileId);
 	
 	
 	
@@ -134,6 +136,7 @@ public interface TravelService {
 	ArrayList<Travel> selectSharedTrvList(int memberId);
 
 	int selectPublicTrvCount(int memberId);
+
 
 
 

@@ -21,15 +21,19 @@ public class Penalty implements Serializable{
 	private int planId;				//설계번호
 	private int requestId;			//의뢰번호
 	private int memberPenalty;		//벌점
+	private int penalty;			//누적벌점
 	private ArrayList<PenaltyAttachment> attachmentFileList;	//사진들
 	private PenaltyType penaltyType;
+	private String complainantName;	//신고자
+	private String userName;	//대상자
 	
 	public Penalty() {}
 
 	public Penalty(int listId, String penaltyContent, Date penaltyDate, String penaltyResult, Date processDate,
 			int penaltyId, int complainantId, String list, String listType, String rejectionReson, int trvId,
-			int reviewId, int memberId, int planId, int requestId, int memberPenalty,
-			ArrayList<PenaltyAttachment> attachmentFileList, PenaltyType penaltyType) {
+			int reviewId, int memberId, int planId, int requestId, int memberPenalty, int penalty,
+			ArrayList<PenaltyAttachment> attachmentFileList, PenaltyType penaltyType, String complainantName,
+			String userName) {
 		super();
 		this.listId = listId;
 		this.penaltyContent = penaltyContent;
@@ -47,8 +51,11 @@ public class Penalty implements Serializable{
 		this.planId = planId;
 		this.requestId = requestId;
 		this.memberPenalty = memberPenalty;
+		this.penalty = penalty;
 		this.attachmentFileList = attachmentFileList;
 		this.penaltyType = penaltyType;
+		this.complainantName = complainantName;
+		this.userName = userName;
 	}
 
 	public int getListId() {
@@ -179,6 +186,14 @@ public class Penalty implements Serializable{
 		this.memberPenalty = memberPenalty;
 	}
 
+	public int getPenalty() {
+		return penalty;
+	}
+
+	public void setPenalty(int penalty) {
+		this.penalty = penalty;
+	}
+
 	public ArrayList<PenaltyAttachment> getAttachmentFileList() {
 		return attachmentFileList;
 	}
@@ -195,13 +210,30 @@ public class Penalty implements Serializable{
 		this.penaltyType = penaltyType;
 	}
 
+	public String getComplainantName() {
+		return complainantName;
+	}
+
+	public void setComplainantName(String complainantName) {
+		this.complainantName = complainantName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	@Override
 	public String toString() {
 		return "Penalty [listId=" + listId + ", penaltyContent=" + penaltyContent + ", penaltyDate=" + penaltyDate
 				+ ", penaltyResult=" + penaltyResult + ", processDate=" + processDate + ", penaltyId=" + penaltyId
 				+ ", complainantId=" + complainantId + ", list=" + list + ", listType=" + listType + ", rejectionReson="
 				+ rejectionReson + ", trvId=" + trvId + ", reviewId=" + reviewId + ", memberId=" + memberId
-				+ ", planId=" + planId + ", requestId=" + requestId + ", memberPenalty=" + memberPenalty
-				+ ", attachmentFileList=" + attachmentFileList + ", penaltyType=" + penaltyType + "]";
+				+ ", planId=" + planId + ", requestId=" + requestId + ", memberPenalty=" + memberPenalty + ", penalty="
+				+ penalty + ", attachmentFileList=" + attachmentFileList + ", penaltyType=" + penaltyType
+				+ ", complainantName=" + complainantName + ", userName=" + userName + "]";
 	}
 }

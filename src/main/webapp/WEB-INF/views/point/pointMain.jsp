@@ -45,11 +45,36 @@
 	#reserveLink:hover, #useLink:hover, #requestLink:hover, #refundStatus:hover{
 		border: 1px solid purple;
 	}
+	#noLoginBtn{
+		background:#FFBD33;
+		color:white;
+		text-decoration:none;
+		font-size:30px;
+		border-radius:10px;
+		margin-left:70%;
+		border:3px solid #FF5733;
+		padding:5px 10px 5px 10px;
+	}
+	#noLoginBtn:hover{
+		background:#FFE09F;
+		color:#FF5733;
+	}
 </style>
 </head>
 <body>
 	<c:if test="${ empty sessionScope.loginUser }">
-		<c:out value="로그인이 필요한 서비스입니다."/>
+	<jsp:include page="../common/mainNav.jsp"/>
+		<div class="columns is-mobile">
+			<div class="column">
+				<section class="section" id="headerSection">
+				</section>
+				<section>
+					<h1 align="center" style="color:#FF5733;"><c:out value="로그인이 필요한 서비스입니다."/></h1>
+					<a href="javascript:history.back()" id="noLoginBtn">뒤로가기</a>
+				</section>
+			</div>
+		</div>
+		
 	</c:if>
 	<c:if test="${ !empty sessionScope.loginUser }">
 		<div id="pt"></div>
@@ -133,7 +158,7 @@
 										<c:url var="mListBack" value="paymentMain.po">
 											<c:param name="currentPage" value="${ chPi.currentPage - 1 }"/>
 										</c:url>
-										<li><button class="pagingBtn" onclick="location.href='${ mListBack }'"> < </button></li>
+										<li><button class="pagingBtn" onclick="location.href='z'"> < </button></li>
 									</c:if><!-- end 이전 -->
 									<!-- page number -->
 									<c:forEach var="p" begin="${ chPi.startPage }" end="${ chPi.endPage }">
@@ -165,7 +190,7 @@
 				    	<div id="receiveArea" style="margin-top:3%; border-top:1px solid lightgray;">
 				    		<div id="receiveTop">
 				    			<div id="receiveTitle" style="color:purple; font-size:28px;margin-top:3%;">
-					    			포인트 지급내역
+					    			포인트 적립내역
 				    			</div>
 					    		<div class="select" style="display:inline-block;float:right;margin-bottom:1%;">
 					    			<select name="receiveSelect" id="receiveSelect">
@@ -190,9 +215,9 @@
 								    <thead>
 										<tr style="background:skyblue;">
 											<th width="10px"> No </th>
-											<th> 지급포인트 </th>
-											<th> 지급일 </th>
-											<th> 지급게시글 </th>
+											<th> 적립포인트 </th>
+											<th> 적립일 </th>
+											<th> 적립게시글 </th>
 										</tr>
 								    </thead>
 								    <tbody id="receiveTBody">
@@ -211,15 +236,15 @@
 												<!-- ----------------------함수로 보낼 수 없나? -->
 													<c:if test="${ re.reserveType eq 10}">
 														<input type="text" value="${ re.trvId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${re.memberId}&bid=${ re.trvId }">일정작성</a>
+														<a class="button is-info" style="height:20px;background:#2068ee;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardReserve.po?mid=${re.memberId}&bid=${ re.trvId }&reserveType=${re.reserveType}">일정작성</a>
 													</c:if>
 													<c:if test="${ re.reserveType eq 20}">
 														<input type="text" value="${ re.reviewId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${re.memberId}&bid=${ re.reviewId }">일정리뷰</a>
+														<a class="button is-info" style="height:20px;background:#f235cc;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardReserve.po?mid=${re.memberId}&bid=${ re.reviewId }&reserveType=${re.reserveType}">일정리뷰</a>
 													</c:if>
 													<c:if test="${ re.reserveType eq 30}">
 														<input type="text" value="${ re.spotReviewId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${re.memberId}&bid=${ re.spotReviewId }">명소리뷰</a>
+														<a class="button is-info" style="height:20px;background:#b420ee;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardReserve.po?mid=${re.memberId}&bid=${ re.spotReviewId }&reserveType=${re.reserveType}">명소리뷰</a>
 													</c:if>
 												</td>
 											</tr>
@@ -314,15 +339,30 @@
 													<c:if test="${ us.useType eq 10}">
 														<!-- 일정구매 -->
 														<input type="text" value="${ us.trvId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${us.memberId}&bid=${ us.trvId }">일정구매</a>
+														<a class="button is-info" style="height:20px;background:#2068ee;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRPoint.po?mid=${us.memberId}&bid=${ us.trvId }">일정구매</a>
 													</c:if>
 													<c:if test="${ us.useType eq 20}">
 														<input type="text" value="${ us.requestId }" style="display:none;">
-														<a class="button is-primary" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRequest.po?mid=${us.memberId}&bid=${ us.requestId }">의뢰채택</a>
+														<a class="button is-success" style="height:20px;" data-tooltip="해당글 보러가기" target="_blank" href="oneBoardRequest.po?mid=${us.memberId}&bid=${ us.requestId }">의뢰채택</a>
 													</c:if>
 												</td>
 												<td>
-													<a class="button is-primary" id="toRefund" data-target="#myModal"style="height:20px;" data-tooltip="환불 신청하기">  환불신청 </a>
+													<c:if test="${ us.refund.refundStatus eq null }">
+														<c:out value="${ us.refund.refundStatus }"/>
+														<a class="button is-primary" id="toRefund" data-target="#myModal"style="height:20px;" data-tooltip="환불 신청하기"> 환불신청 </a>
+													</c:if>
+													<c:if test="${ us.refund.refundStatus ne null }">
+														<c:if test="${ us.refund.refundStatus eq 10 }">
+															<a class="button is-info" style="height:20px;" disabled="true" data-tooltip="이미 신청된 건입니다"> 환불대기 </a>
+														</c:if>
+														<c:if test="${ us.refund.refundStatus eq 20 }">
+															<a class="button is-success" style="height:20px;" disabled="true"  data-tooltip="이미 신청된 건입니다"> 환불승인 </a>
+														</c:if>
+														<c:if test="${ us.refund.refundStatus eq 30 }">
+															<a class="button is-danger" style="height:20px;" disabled="true"  data-tooltip="이미 신청된 건입니다"> 환불거절 </a>
+														</c:if>
+													</c:if>
+													
 												</td>
 											</tr>
 										</c:forEach>

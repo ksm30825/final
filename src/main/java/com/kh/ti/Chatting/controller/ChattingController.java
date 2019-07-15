@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -153,6 +154,18 @@ public class ChattingController {
 			
 			return new ResponseEntity(taglist,HttpStatus.OK);
 		}
+		
+		
+		@RequestMapping("/trRank.ch")
+		public ResponseEntity selectTravelRank() {
+			
+			HashMap<String, ArrayList> taglist =  cs.selectRankTagList();
+			
+			System.out.println("태그 :" + taglist);
+			
+			return new ResponseEntity(taglist,HttpStatus.OK);
+		}
+		
 		
 	
 	

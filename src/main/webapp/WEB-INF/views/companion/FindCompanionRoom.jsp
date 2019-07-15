@@ -17,7 +17,6 @@
 		 width: 100%;
 	   	 height:500px;
 	     position: absolute;
-	     border:1px solid lightgray;
 	     overflow: hidden !important;  
 	}
 	
@@ -31,6 +30,20 @@
 	    overflow-y:scroll;
 	    padding-left: 5%;padding-right: 5%;
     } 
+    
+    #checkTable td{
+    	padding : 10px;
+    }
+    
+    label {
+        margin-bottom: 0px !important;
+	}
+	
+	select#TravelPlaceSelect {
+    width: 100%;
+    height: 30px;
+    border-radius: 5%;
+	}
 </style>
 </head>
 <body>
@@ -75,9 +88,12 @@
 		         			</td>
 		         		</tr>
 		         		<tr>
-		         			<td>
-		         				<input type = "text" name = "chatPlace"  id = "chatPlace"
-		         						class="form-control input-sm" placeholder = "떠날 여행지 작성해주세요"/>
+		         			<td >
+		         			<!-- 	<input type = "text" name = "chatPlace"  id = "chatPlace"
+		         						class="form-control input-sm" placeholder = "떠날 여행지 작성해주세요"/> -->
+		         				<select id = "TravelPlaceSelect">
+		         					<option>여행지 선택</option>
+		         				</select>
 		         			</td>
 		         		</tr>
 		         		<tr>
@@ -126,12 +142,26 @@
           <form>
           	   <table id = "checkTable">
           	   		<tr>
-          	   			<td><h4 id = "checkTitle">채팅방 제목</h4>
+          	   			<td colspan = "2"><h4 id = "checkTitle">채팅방 제목</h4>
           	   			<input type ="hidden" id = "checkRoomNum" name = "checkRoomNum">
           	   			</td>
           	   		</tr>
           	   		<tr>
-          	   			<td><p id = "checkDetail"><br>채팅방 설명입니다.</p>
+          	   			<td> 여행지
+          	   			</td>
+          	   			<td>
+          	   				<label id= "checkRoomPlace"></label>
+          	   			</td>
+          	   		</tr>
+          	   		<tr>
+          	   			<td> 여행날짜 
+          	   			</td>
+          	   			<td>
+          	   				<label id= "checkRoomDate"></label>
+          	   			</td>
+          	   		</tr>
+          	   		<tr>
+          	   			<td colspan = "2"><p id = "checkDetail"><br>채팅방 설명입니다.</p>
           	   			<input type ="hidden" id = "checkstatus" name = "checkstatus">
           	   			</td>
           	   		</tr>
@@ -193,21 +223,34 @@
 	        
 	        //여기서부터 서버
 	        $(document).ready(function() { //start
-	        
-	        	
 	        	//서버
 				var socket = io("http://localhost:8010");
-	        	
-	        /* 	//console.log( ${ loginUser.memberId } + "?"); */
-				
+	        				
 	        	var user = ${ loginUser.memberId };
+				
+	        	 $.ajax({
+	        		   url : "${contextPath}/trBoardList.ch",
+	        	       success : function(data) {
+	        	    	   var $select = $("#TravelPlaceSelect");
+		   					  for(var key in data) {
+		   						var id = data[key].countryId;
+		   						var country = data[key].countryNameKo;
+		   						var $option = $("<option value='" + country + "'>").text(country);
+		   						$select.append($option);
+		   					 }
+	        	       },
+	        	       error : function(){
+	        	    	   console.log("에러발생");
+	        	       }
+	        	   });
+	        	
 	        	
 	        	
 	        	//방만들기 메소드
 	        	$("#CreateRoomBtn").click(function(){
 	        		var id;
 	        		 socket.emit('createChatRoom', {
-	        			 title : $("#chatTitle").val() , place : $("#chatPlace").val() , start : $("#trStartDate").val(),
+	        			 title : $("#chatTitle").val() , place : $("#TravelPlaceSelect").val() , start : $("#trStartDate").val(),
 	        			 end :  $("#trEndDate").val(), peoplenum : $("#peopleNum").val() , chatDetail :  $("#chatDetail").val(),
 	        			 user : user
 	        		 }); 
@@ -224,12 +267,32 @@
 	        	
 	        	//모집 중인 방 가져오기 
 	        	socket.on('preload' , function(data){
+	        		 var formattedStartDate = new Date(data.start);
+		        	 var sd = formattedStartDate.getDate();
+		        	 var sm =  formattedStartDate.getMonth();
+		        	 sm += 1;  // JavaScript months are 0-11
+		        	 var sy = formattedStartDate.getFullYear();
+
+					 var startDate = sy + "/" + sm  + '/' + sd;
+					 
+					 var formattedEndDate = new Date(data.end);
+		        	 var ed = formattedEndDate.getDate();
+		        	 var em =  formattedEndDate.getMonth();
+		        	 em += 1;  // JavaScript months are 0-11
+		        	 var ey = formattedEndDate.getFullYear();
+
+					 var endDate = ey + "/" + em  + '/' + ed;
+					 
+					 var chatDate = startDate + "~" + endDate;
+	        		
 	                 var output = '';
 	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
 	                 output += '<tr>';
 		     		 output += '<td colspan = "2" class = "AllChatTitle">';
 		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.chatnum +'">';
 		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+		     		 output += '<input type = "hidden" id = "chatRoomPlace" name = "chatRoomPlace" value = "'+ data.place +'">';
+		     		 output += '<input type = "hidden" id = "chatRoomDate" name = "chatRoomDate" value = "'+ chatDate +'">';
 		     		 output += '<label>'+ data.title +'</label></td>'
 		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
 	     			 output += '</tr>';
@@ -247,12 +310,32 @@
         			 console.log("data :" + data);
         			 
         			 if (data.chatnum != null){
+        				 var formattedStartDate = new Date(data.start);
+    		        	 var sd = formattedStartDate.getDate();
+    		        	 var sm =  formattedStartDate.getMonth();
+    		        	 sm += 1;  // JavaScript months are 0-11
+    		        	 var sy = formattedStartDate.getFullYear();
+
+    					 var startDate = sy + "/" + sm  + '/' + sd;
+    					 
+    					 var formattedEndDate = new Date(data.end);
+    		        	 var ed = formattedEndDate.getDate();
+    		        	 var em =  formattedEndDate.getMonth();
+    		        	 em += 1;  // JavaScript months are 0-11
+    		        	 var ey = formattedEndDate.getFullYear();
+
+    					 var endDate = ey + "/" + em  + '/' + ed;
+    					 
+    					 var chatDate = startDate + "~" + endDate;
+    					 
         				 var output = '';
     	                 output += '<table class = "AllChatList" id = "ChatListTable" >';
     	                 output += '<tr>';
     		     		 output += '<td colspan = "2" class = "AllChatTitle">';
     		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data.chatnum +'">';
     		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
+    		   			 output += '<input type = "hidden" id = "chatRoomPlace" name = "chatRoomPlace" value = "'+ data.place +'">';
+    		   			 output += '<input type = "hidden" id = "chatRoomDate" name = "chatRoomDate" value = "'+ chatDate +'">';
     		     		 output += '<label>'+ data.title +'</label></td>'
     		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
     	     			 output += '</tr>';
@@ -275,6 +358,8 @@
 	 	 	 		var chatTitle = chatList.children("label").html(); 
 	 	 	 		var chatNum = chatList.children("#chatNum").val();
 	 	 	 		var chatDetail = chatList.children("#chatRoomDetail").val();
+	 	 	 		var chatPlace = chatList.children("#chatRoomPlace").val();
+	 	 	 		var chatDate = chatList.children("#chatRoomDate").val();
 	 	 	 		var chatPeopleNum = $(this).parent().children("#peopleTR").children().children("#pnum").text();
 	 	 	 		
 	 	 	 		var pnumArray = chatPeopleNum.split('/');
@@ -283,21 +368,13 @@
 	 	 	 		var ChatPnum = pnumArray[1];
 	 	 	 		var chatpnum = ChatPnum.split(')');
 	 	 	 		
-	 	 	 		//console.log(chatList);
-	 	 	 		//console.log("chatNum :" + chatTitle);
-	 	 	 		//console.log("chatDetail :"+chatDetail);
-	 	 	 		//console.log("chatNum" + chatNum);
-	 	 	 		//console.log("pnum :" + pnum[1]);
-	 	 	 		//console.log("chatnum :" + chatpnum[0]);
-	 	 	 		
 	 	 	 		var checkTable = $("#checkTable");
 	 	 	 		
 	 	 	 		$("#checkTable").children().children().children().children("#checkTitle").text(chatTitle);
-	 	 	 		
 	 	 	 		$("#checkTable").children().children().children().children("#checkRoomNum").val(chatNum);
-	 	 	 		
 	 	 	 		$("#checkTable").children().children().children().children("#checkDetail").text(chatDetail);
-	 	 	 		
+	 	 	 		$("#checkTable").children().children().children().children("#checkRoomPlace").text(chatPlace);
+	 	 	 		$("#checkTable").children().children().children().children("#checkRoomDate").text(chatDate);
 	 	 	 		
 	 	 	 		if (chatpnum[0] != pnum[1]){
 	 	 	 			
@@ -371,7 +448,24 @@
 	 		 	
 	 		 	//채팅방 들어가기 
 	 			 socket.on('UpdateChattingPeople', function(data){
-	 				 console.log("들어간 후 ? 시동되니?" + data.peoplenum);
+	 				var formattedStartDate = new Date(data.start);
+		        	 var sd = formattedStartDate.getDate();
+		        	 var sm =  formattedStartDate.getMonth();
+		        	 sm += 1;  // JavaScript months are 0-11
+		        	 var sy = formattedStartDate.getFullYear();
+
+					 var startDate = sy + "/" + sm  + '/' + sd;
+					 
+					 var formattedEndDate = new Date(data.end);
+		        	 var ed = formattedEndDate.getDate();
+		        	 var em =  formattedEndDate.getMonth();
+		        	 em += 1;  // JavaScript months are 0-11
+		        	 var ey = formattedEndDate.getFullYear();
+
+					 var endDate = ey + "/" + em  + '/' + ed;
+					 
+					 var chatDate = startDate + "~" + endDate;
+	 				 
 		 				var updateChatId = data._id;
 		 		 		
 			 		  	  $(".AllChatList").each(function(index ,item) {
@@ -390,7 +484,9 @@
 		    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
 		    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ data._id +'">';
 		    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
-		    		     		 output += '<label>'+ data.title +'</label></td>'
+		    			     	 output += '<input type = "hidden" id = "chatRoomPlace" name = "chatRoomPlace" value = "'+ data.place +'">';
+		    			     	 output += '<input type = "hidden" id = "chatRoomDate" name = "chatRoomDate" value = "'+ chatDate +'">';
+		    			     	 output += '<label>'+ data.title +'</label></td>'
 		    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
 		    	     			 output += '</tr>';
 		    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
@@ -407,11 +503,30 @@
 	 		 	
 	 		 	//채팅방 수정 
 	 		 	socket.on('updateChatInfo', function(data){
+	 		 		var formattedStartDate = new Date(data.start);
+		        	 var sd = formattedStartDate.getDate();
+		        	 var sm =  formattedStartDate.getMonth();
+		        	 sm += 1;  // JavaScript months are 0-11
+		        	 var sy = formattedStartDate.getFullYear();
+
+					 var startDate = sy + "/" + sm  + '/' + sd;
+					 
+					 var formattedEndDate = new Date(data.end);
+		        	 var ed = formattedEndDate.getDate();
+		        	 var em =  formattedEndDate.getMonth();
+		        	 em += 1;  // JavaScript months are 0-11
+		        	 var ey = formattedEndDate.getFullYear();
+
+					 var endDate = ey + "/" + em  + '/' + ed;
+					 
+					 var chatDate = startDate + "~" + endDate;
+					 
+	 		 		
 	 		 		var updateChatId = data._id;
 	 		 		
 	 		  	  $(".AllChatList").each(function(index ,item) {
 	        			 var checkUserID = $(this).children().children().children().children("#chatNum").val();
-	        			 console.log("updateChatId : " + updateChatId + "- checkUserId :" + checkUserID);
+	        			 console.log("updateChatId : " + updateChatId + "- checkUserId :" + checkUserID + "- 여행지 수정 :" + data.place);
 	        			 if (checkUserID == updateChatId){
 	        				$(this).remove();
 	        				
@@ -423,7 +538,9 @@
 	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
 	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ updateChatId +'">';
 	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
-	    		     		 output += '<label>'+ data.title +'</label></td>'
+	    			     	 output += '<input type = "hidden" id = "chatRoomPlace" name = "chatRoomPlace" value = "'+ data.place +'">';
+	    			     	 output += '<input type = "hidden" id = "chatRoomDate" name = "chatRoomDate" value = "'+ chatDate +'">';
+	    			     	 output += '<label>'+ data.title +'</label></td>'
 	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
 	    	     			 output += '</tr>';
 	    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
@@ -459,7 +576,9 @@
 	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
 	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ updateChatId +'">';
 	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
-	    		     		 output += '<label>'+ data.title +'</label></td>'
+	    			     	 output += '<input type = "hidden" id = "chatRoomPlace" name = "chatRoomPlace" value = "'+ data.place +'">';
+	    			     	 output += '<input type = "hidden" id = "chatRoomDate" name = "chatRoomDate" value = "'+ chatDate +'">';
+	    			     	 output += '<label>'+ data.title +'</label></td>'
 	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
 	    	     			 output += '</tr>';
 	    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';
@@ -480,6 +599,24 @@
 	        		  var changeChatId = data._id;
 	        		  var status = data.status;
 	        		  
+	        		  var formattedStartDate = new Date(data.start);
+			        	 var sd = formattedStartDate.getDate();
+			        	 var sm =  formattedStartDate.getMonth();
+			        	 sm += 1;  // JavaScript months are 0-11
+			        	 var sy = formattedStartDate.getFullYear();
+
+						 var startDate = sy + "/" + sm  + '/' + sd;
+						 
+						 var formattedEndDate = new Date(data.end);
+			        	 var ed = formattedEndDate.getDate();
+			        	 var em =  formattedEndDate.getMonth();
+			        	 em += 1;  // JavaScript months are 0-11
+			        	 var ey = formattedEndDate.getFullYear();
+
+						 var endDate = ey + "/" + em  + '/' + ed;
+						 
+						 var chatDate = startDate + "~" + endDate;
+	        		  
 	        		  if (status == "모집종료"){
 	        			  $(".AllChatList").each(function(index ,item) {
 			        			 var checkUserID = $(this).children().children().children().children("#chatNum").val();
@@ -497,7 +634,9 @@
 	    		     		 output += '<td colspan = "2" class = "AllChatTitle">';
 	    		     		 output += '<input type = "hidden" id = "chatNum" name = "chatRoomNum" value = "'+ changeChatId +'">';
 	    		     		 output += '<input type = "hidden" id = "chatRoomDetail" name = "chatRoomDetail" value = "'+ data.detail +'">';
-	    		     		 output += '<label>'+ data.title +'</label></td>'
+	    			     	 output += '<input type = "hidden" id = "chatRoomPlace" name = "chatRoomPlace" value = "'+ data.place +'">';
+	    			     	 output += '<input type = "hidden" id = "chatRoomDate" name = "chatRoomDate" value = "'+ chatDate +'">';
+	    			     	 output += '<label>'+ data.title +'</label></td>'
 	    		     		 output += '<td><label>&nbsp;&nbsp;'+ data.status +'</label></td>';
 	    	     			 output += '</tr>';
 	    		     		 output += '<tr id = "peopleTR" style=  "border-bottom : 1px solid lightgray;">';

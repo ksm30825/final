@@ -1,6 +1,7 @@
 package com.kh.ti.point.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -22,7 +23,6 @@ public class PointDaoImpl implements PointDao{
 	//포인트 충전
 	@Override
 	public int insertPay(SqlSessionTemplate sqlSession, Payment pay) {
-		//System.out.println("넘어온 후 pay : " + pay);
 		System.out.println("payAmount : " + pay.getPayAmount());
 		return sqlSession.insert("Payment.insertPay", pay);
 	}
@@ -35,7 +35,6 @@ public class PointDaoImpl implements PointDao{
 	@Override
 	public int getReceiveListCount(SqlSessionTemplate sqlSession, ReservePoint reserve) {
 		int count = sqlSession.selectOne("Payment.getReceiveListCount", reserve);
-		//System.out.println("receiveCount : " + count);
 		return count;
 	}
 	//포인트 사용 리스트 전체 카운터
@@ -47,49 +46,33 @@ public class PointDaoImpl implements PointDao{
 	@Override
 	public ArrayList selectChargeList(SqlSessionTemplate sqlSession, PageInfo chPi, Payment charge) {
 		int offset = (chPi.getCurrentPage() - 1) * chPi.getLimit();
-		//System.out.println("chPayList offset : " + offset);
 		RowBounds rowBounds = new RowBounds(offset, chPi.getLimit());
-		//System.out.println("chPayList rowBounds : " + rowBounds);
 		
 		ArrayList chPayList = (ArrayList)sqlSession.selectList("Payment.selectChargeList",	charge, rowBounds);
-		//System.out.println("chPayList chPayList : " + chPayList);
 		
-		/*
-		 * for(int i=0 ; i<chPayList.size() ; i++) {
-		 * System.out.println("dao : chPayList.get("+i+").getPaymentDate() : "+chPayList
-		 * .get(i).getPaymentDate()); }
-		 */
 		return chPayList;
 	}
 	//포인트 지급리스트 전체 조회
 	@Override
 	public ArrayList<ReservePoint> selectReceiveList(SqlSessionTemplate sqlSession, PageInfo rePi, ReservePoint reserve) {
 		int offset = (rePi.getCurrentPage() - 1) * rePi.getLimit();
-		//System.out.println("rePayList offset : " + offset);
 		RowBounds rowBounds = new RowBounds(offset, rePi.getLimit());
-		//System.out.println("rePayList rowBounds : " + rowBounds);
 		
 		ArrayList<ReservePoint> rePayList = (ArrayList)sqlSession.selectList("Payment.selectReceiveList", reserve, rowBounds);
-		//System.out.println("rePayList rePayList : " + rePayList);
 		return rePayList;
 	}
 	//포인트 사용리스트 전체 조회
 	@Override
 	public ArrayList<UsePoint> selectUseList(SqlSessionTemplate sqlSession, PageInfo usPi, UsePoint use) {
 		int offset = (usPi.getCurrentPage() - 1) * usPi.getLimit();
-		//System.out.println("rePayList offset : " + offset);
 		RowBounds rowBounds = new RowBounds(offset, usPi.getLimit());
-		//System.out.println("rePayList rowBounds : " + rowBounds);
 		
 		ArrayList<UsePoint> usPayList = (ArrayList)sqlSession.selectList("Payment.selectUseList", use, rowBounds);
-		//System.out.println("rePayList rePayList : " + rePayList);
 		return usPayList;
 	}
 	//포인트 자동으로 적립하기
 	@Override
 	public int insertReservePoint(SqlSessionTemplate sqlSession, ReservePoint rp) {
-		//System.out.println("rp : " + rp);
-		//System.out.println("rp.getReservePoint() : " + rp.getReservePoint());
 		return sqlSession.insert("Payment.insertReservePoint",rp);
 	}
 	//성공시 멤버 누적포인트 증가
@@ -187,12 +170,9 @@ public class PointDaoImpl implements PointDao{
 	@Override
 	public ArrayList<Rebate> selectAllRebate(SqlSessionTemplate sqlSession, Rebate rebate, PageInfo rebatePi) {
 		int offset = (rebatePi.getCurrentPage() - 1) * rebatePi.getLimit();
-		//System.out.println("rePayList offset : " + offset);
 		RowBounds rowBounds = new RowBounds(offset, rebatePi.getLimit());
-		//System.out.println("rePayList rowBounds : " + rowBounds);
 		
 		ArrayList<Rebate> rebateList = (ArrayList)sqlSession.selectList("Payment.selectAllRebate", rebate, rowBounds);
-		//System.out.println("rePayList rePayList : " + rePayList);
 		return rebateList;
 	}
 	//환불 신청시
@@ -337,9 +317,25 @@ public class PointDaoImpl implements PointDao{
 		ArrayList<Proceeds> adRebateList = (ArrayList)sqlSession.selectList("Payment.selectAdRebateList", sp, rowBounds);
 		return adRebateList;
 	}
-	
-	
-	
-	
-	
+	//관리자 - 환급 상태 1개변경
+	@Override
+	public int updateAdRebate(SqlSessionTemplate sqlSession, int refundId) {
+		return sqlSession.update("Payment.updateAdRebate", refundId);
+	}
+	//관리자 - 환급 상태 여러개변경
+	@Override
+	public int updateAdRebates(SqlSessionTemplate sqlSession, int refundId) {
+		return sqlSession.update("Payment.updateAdRebates", refundId);
+	}
+	//관리자 - 미지급 내역 다운로드
+	@Override
+	public ArrayList<HashMap> downRebates(SqlSessionTemplate sqlSession, int rebateStatus) {
+		return (ArrayList)sqlSession.selectList("Payment.downRebates", rebateStatus);
+	}
+	//일정리뷰 코드 이용하여 trvId조회
+	@Override
+	public int selectTrvId(SqlSessionTemplate sqlSession, int reviewId) {
+		return sqlSession.selectOne("Payment.selectTrvId", reviewId);
+
+	}
 }

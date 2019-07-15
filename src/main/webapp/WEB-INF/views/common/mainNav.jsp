@@ -131,7 +131,7 @@
 		                    	</a>
 		                    	<div class="navbar-dropdown">
 	                    			<c:if test="${ loginUser.email eq 'admin@gmail.com' }">
-	                    				<a class="navbar-item " href="genderStatisticsYear.sta"> 관리자페이지 </a> 
+	                    				<a class="navbar-item " href="genderStatistics.sta"> 관리자페이지 </a> 
 	                    			</c:if>
                     				<a class="navbar-item " href="showMyTravel.trv"> 마이페이지 </a>
                     				<a class="navbar-item " onclick="Logout();"> 로그아웃 </a>
@@ -166,8 +166,12 @@
 	        }
         });
 		function showPopup(){
-       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left=100, top=50");        	
-        }
+			var top  = (($(window).height()-700)/2+$(window).scrollTop()) + "px";
+            var left = (($(window).width()-400)/2+$(window).scrollLeft()) + "px";
+            //window.resizeTo(400,700);
+       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left="+left+", top="+top+", resizable= 0");        	
+       		
+		}
 		
 		function Logout(){
 			if('${ loginUser.enrollType }' == "카카오가입"){

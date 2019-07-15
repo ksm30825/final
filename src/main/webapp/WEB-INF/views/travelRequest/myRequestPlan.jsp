@@ -83,7 +83,7 @@ textarea {
 								설계</a> <a class="button is-link is-rounded" onclick="beforePlan();">미리작성</a>
 						</div>
 					</div>
-					<div class="column">
+					<!-- <div class="column">
 						<div class="field">
 							<p class="control">
 								<span class="select"> <select>
@@ -97,14 +97,14 @@ textarea {
 								</span>
 							</p>
 						</div>
-					</div>
-					<div class="column">
+					</div> -->
+					<!-- <div class="column">
 						<div class="field is-grouped">
 							<p class="control">
 								<a class="button is-info"> 조회 </a>
 							</p>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</section>
 			<!-- <section class="section" id="button"> -->
@@ -127,23 +127,39 @@ textarea {
 					<tbody>
 						<c:if test="${ list.size() > 0 }">
 							<c:forEach var="pList" items="${ list }">
-								<tr>
-									<td><b>${ pList.planId }</b></td>
-									<td>${ pList.reqId }</td>
-									<td>${ pList.planTitle }</td>
-									<td>${ pList.endDate }</td>
-									<td>${ pList.reqName }</td>
-									<td><fmt:formatNumber value="${ pList.reqPrice }" groupingUsed="true"/>원</td>
-									<c:if test="${ pList.chooseStatus eq 'Y' }">
-										<td>채택완료</td>
-									</c:if>
-									<c:if test="${ pList.chooseStatus eq 'N' }">
-										<td>미채택</td>
-									</c:if>
-									<td class="report">
-										<i class="far fa-bell"></i>
-									</td>
-								</tr>
+								<c:if test="${ pList.chooseStatus eq 'D' }">
+									<tr style="background:lightgray;">
+										<td class="first"><b>${ pList.planId }</b></td>
+										<td class="first">${ pList.reqId }</td>
+										<td class="first">${ pList.planTitle }</td>
+										<td class="first">${ pList.endDate }</td>
+										<td class="first">${ pList.reqName }</td>
+										<td class="first"><fmt:formatNumber value="${ pList.reqPrice }" groupingUsed="true"/>원</td>
+										<td class="first">관리자에 의해 삭제</td>
+										<td class="report first">
+											<i class="far fa-bell"></i>
+										</td>
+									</tr>
+								</c:if>
+								<c:if test="${ pList.chooseStatus ne 'D' }">
+									<tr>
+										<td class="second"><b>${ pList.planId }</b></td>
+										<td class="second">${ pList.reqId }</td>
+										<td class="second">${ pList.planTitle }</td>
+										<td class="second">${ pList.endDate }</td>
+										<td class="second">${ pList.reqName }</td>
+										<td class="second"><fmt:formatNumber value="${ pList.reqPrice }" groupingUsed="true"/>원</td>
+										<c:if test="${ pList.chooseStatus eq 'Y' }">
+											<td class="second">채택완료</td>
+										</c:if>
+										<c:if test="${ pList.chooseStatus eq 'N' }">
+											<td class="second">미채택</td>
+										</c:if>
+										<td class="report second">
+											<i class="far fa-bell"></i>
+										</td>
+									</tr>
+								</c:if>
 							</c:forEach>
 						</c:if>
 					</tbody>
@@ -290,8 +306,8 @@ textarea {
 				</section>
 			</section>
 			<footer class="modal-card-foot">
-				<button type="submit" class="button is-primary">신고</a>
-				<button class="button" onclick="cancel();">취소</a>
+				<button type="submit" class="button is-primary">신고</button>
+				<button class="button" onclick="cancel();">취소</button>
 			</footer>
 		</div>
 	</div>
@@ -303,20 +319,24 @@ textarea {
         menu.addClass('is-active');
         menu.siblings().removeClass('is-active');
         
-		$(".table").find("td").mouseenter(function() {
+		$(".table").find("td").not(".first").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",
 				"cursor" : "pointer",
 				"color" : "white"
 			});
-		}).mouseout(function() {
+		});
+		$(".table").find("td").not(".first").mouseout(function() {
 			$(this).parents("tr").css({
 				"background" : "white",
 				"color" : "black"
 			});
 		});
+		$(".first").click(function() {
+			alert("관리자에 의해 삭제되었습니다.");
+		});
 
-		$(".far").parent().siblings().click(function() {
+		$(".far").parent().siblings().not(".first").click(function() {
 			var planId = $(this).parents().children("td").eq(0).text();
 			var reqId = $(this).parents().children("td").eq(1).text();
 			console.log("설계번호 : " + planId);

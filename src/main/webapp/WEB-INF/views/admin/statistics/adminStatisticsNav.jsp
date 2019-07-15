@@ -10,37 +10,30 @@
 
 	<div class="columns is-multiline is-mobile is-vcentered" >
 		<div class="column is-full-mobile" >
-	
-	
-	
-		<div class="tabs is-toggle is-fullwidth is-large">
-    <ul>
-      <li class="is-active">
-        <a>
-          <span class="icon"><i class="fas fa-user"></i></span>
-          <span>회원</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="icon"><i class="fas fa-plane"></i></span>
-          <span>여행</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="icon"><i class="fas fa-coins"></i></span>
-          <span>수익</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  
-
-      </div>
-    </div>
-		
-		
+			<div class="tabs is-toggle is-fullwidth is-large">
+				<ul class="statisticsNav">
+					<li class="is-active">
+						<a href="genderStatistics.sta">
+							<span class="icon"><i class="fas fa-user"></i></span>
+							<span>회원</span>
+						</a>
+					</li>
+					<li>
+						<a href='travelCountryStatisticsView.sta'>
+							<span class="icon"><i class="fas fa-plane"></i></span>
+							<span>여행</span>
+						</a>
+					</li>
+					<li>
+						<a href='paymentStatistics.sta'>
+							<span class="icon"><i class="fas fa-coins"></i></span>
+							<span>수익</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>

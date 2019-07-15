@@ -202,10 +202,6 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 		ArrayList<TravelBoard> tbList = (ArrayList) sqlSession.selectList("TravelBoard.myBuyTravelListView", memberId);
 		tbMap.put("tbList", tbList);
 		
-		//도시태그 리스트
-		ArrayList cityList = (ArrayList) sqlSession.selectList("TravelBoard.selectCityList");
-		tbMap.put("cityList", cityList);
-		
 		return tbMap;
 	}
 	
@@ -234,6 +230,20 @@ public class TravelBoardDaoImpl implements TravelBoardDao {
 	public ArrayList travelDetailGallery(SqlSessionTemplate sqlSession, TrvDaySchedule sch) {
 		
 		return (ArrayList) sqlSession.selectList("TravelBoard.travelDetailGallery", sch);
+	}
+
+	//마이페이지 / 좋아요, 구매수 카운트 조회 - 예랑
+	@Override
+	public TravelBoard selectMyCount(SqlSessionTemplate sqlSession, int memberId) {
+		
+		return sqlSession.selectOne("TravelBoard.selectMyCount", memberId);
+	}
+
+	//여행일정 상세 / 가계부 / 가계부 다운로드 - 예랑
+	@Override
+	public ArrayList<HashMap> costDownload(SqlSessionTemplate sqlSession, int trvId) {
+		
+		return (ArrayList)sqlSession.selectList("TravelBoard.costDownload", trvId);
 	}
 	
 

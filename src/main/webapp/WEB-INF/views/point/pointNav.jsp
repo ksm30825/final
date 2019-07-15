@@ -18,6 +18,7 @@
 </style>
 </head>
 <body>
+	
 	<div class="tabs is-boxed"style="width:50%;margin-left:10px;">
 		<ul style="border:none !important;">
 			<li>

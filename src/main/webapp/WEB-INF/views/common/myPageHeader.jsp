@@ -76,14 +76,14 @@
 				<i class="fab fa-2x fa-gratipay"></i>
 			</span>
 			<span class="subtitle myHead">좋아요 받은 수</span>
-			<span class="title myHead">0</span>
+			<span class="title myHead" id="myLikeyCount">0</span>
 		</div>
 		<div class="column is-one-third-mobile" >
 			<span class="icon is-medium has-text-primary">
 				<i class="fas fa-2x fa-crown"></i>
 			</span>
 			<span class="subtitle myHead">내 글 구매 수</span>
-			<span class="title myHead">0</span>
+			<span class="title myHead" id="myBuyCount">0</span>
 		</div>
 	</div>
 	<br>
@@ -147,6 +147,22 @@
 				$(this).addClass('is-active');
 				$(this).siblings().removeClass('is-active');
 	 		});
+ 		});
+ 		
+ 		//좋아요 받은 수, 내 글 구매 수 카운트
+ 		$(function() {
+ 			$.ajax({
+ 				url : "selectMyCount.tb",
+ 				type : "post",
+ 				data : {memberId : "${ loginUser.memberId }"},
+ 				success : function(data) {
+ 					$("#myBuyCount").text(data.buyCount);
+ 					$("#myLikeyCount").text(data.likeyCount);
+ 				},
+ 				error : function(data) {
+ 					alert("접속에러");
+ 				}
+ 			});
  		});
  	</script>
 </body>

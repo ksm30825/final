@@ -46,10 +46,9 @@ textarea {
 	<jsp:include page="../../common/adminMainNav.jsp" />
 	<div class="columns">
 		<div class="column">
-			<br>
-			<br>
-			<form action="insertNotice.ad" method="post" enctype="multipart/form-data">>
-			<br>
+			<br><br>
+			<form action="insertNotice.ad" method="post" enctype="multipart/form-data">
+			<br><br>
 				<h1 style="text-align: center;" class="title">공지사항</h1>
 				<input type="hidden" value="공지사항" name="boardType">
 				<hr>
@@ -68,20 +67,9 @@ textarea {
 													</p>
 												</div>
 												<hr>
-												<div class="field">
+												<div class="field" id="plusImg">
 													<label class="label">공지 사진</label>
-													<div class="img" id="boardImg1">
-														<img id="img1">
-													</div>
-													<div class="img" id="boardImg2">
-														<img id="img2">
-													</div>
-													<div class="img" id="boardImg3">
-														<img id="img3">
-													</div>
-													<div class="img" id="boardImg4">
-														<img id="img4">
-													</div>
+													<button type="button" onclick="plusImg();">추가</button>
 												</div>
 												<hr>
 												<div class="field">
@@ -90,11 +78,7 @@ textarea {
 														<textarea class="textarea" placeholder="공지 내용을 입력하세요" name="boardContent"></textarea>
 													</p>
 												</div>
-												<div id="fileArea">
-													<input type="file" id="imgArea1" name=attachmentFile multiple="multiple" onchange="loadImg(this, 1);">
-													<input type="file" id="imgArea2" name=attachmentFile multiple="multiple" onchange="loadImg(this, 2);">
-													<input type="file" id="imgArea3" name=attachmentFile multiple="multiple" onchange="loadImg(this, 3);">
-													<input type="file" id="imgArea4" name=attachmentFile multiple="multiple" onchange="loadImg(this, 4);">
+												<div id="fileArea">											
 												</div>
 											</div>
 										</div>
@@ -106,10 +90,10 @@ textarea {
 					<br>
 					<div class="field is-grouped">
 						<p class="control result">
-							<button class="button is-link">돌아가기</button>
+							<button type="reset" class="button is-link">돌아가기</button>
 						</p>
 						<p class="control result">
-							<button class="button is-primary">작성하기</button>
+							<button type="submit" class="button is-primary">작성하기</button>
 						</p>
 					</div>
 				</section>
@@ -122,23 +106,23 @@ textarea {
 		$(".is-link").click(function() {
 			location = "adminNoticeList.ad";
 		});
-		$(".is-primary").click(function() {
+		/* $(".is-primary").click(function() {
 			location = "adminNoticeList.ad";
-		});
-
+		}); */
 		$("#fileArea").hide();
-		$("#boardImg1").click(function() {
-			$("#imgArea1").click();
-		});
-		$("#boardImg2").click(function() {
-			$("#imgArea2").click();
-		});
-		$("#boardImg3").click(function() {
-			$("#imgArea3").click();
-		});
-		$("#boardImg4").click(function() {
-			$("#imgArea4").click();
-		});
+	});
+	
+	$(document).on("click","#boardImg1",function() {
+		$("#imgArea1").click();
+	});
+	$(document).on("click","#boardImg2",function() {
+		$("#imgArea2").click();
+	});
+	$(document).on("click","#boardImg3",function() {
+		$("#imgArea3").click();
+	});
+	$(document).on("click","#boardImg4",function() {
+		$("#imgArea4").click();
 	});
 	
 	//사진 등록
@@ -163,6 +147,14 @@ textarea {
 			}
 			reader.readAsDataURL(value.files[0]);
 		}
+	}
+	
+	//사진영역 추가
+	var count = 1;
+	function plusImg() {
+		$("#plusImg").append("<div class='img' id='boardImg" + count + "'><img id='img" + count + "'></div>");
+		$("#fileArea").append("<input type='file' id='imgArea" + count + "' name='attachmentFile' multiple='multiple' onchange='loadImg(this, " + count + ");'>");
+		count++;
 	}
 </script>
 </html>

@@ -176,7 +176,11 @@ public class TravelDaoImpl implements TravelDao {
 	public int updateTrvSchedule(SqlSessionTemplate sqlSession, TrvSchedule sch) {
 		return sqlSession.update("Travel.updateSch", sch);
 	}
-	
+
+	@Override
+	public ArrayList<TrvCost> selectDayCostList(SqlSessionTemplate sqlSession, int dayId) {
+		return (ArrayList)sqlSession.selectList("Travel.selectDayCostList", dayId);
+	}
 
 	@Override
 	public int deleteSchTime(SqlSessionTemplate sqlSession, TrvSchedule sch) {
@@ -205,15 +209,6 @@ public class TravelDaoImpl implements TravelDao {
 		return sqlSession.update("Travel.updateTrvDayWeather", trvDay);
 	}
 
-	
-	
-	@Override
-	public int updateSchPlcId(SqlSessionTemplate sqlSession, TrvSchedule sch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
 	
 	@Override
 	public int insertTag(SqlSessionTemplate sqlSession, TrvTag trvTag) {
@@ -275,9 +270,8 @@ public class TravelDaoImpl implements TravelDao {
 	}
 	
 	@Override
-	public int deleteSchFile(SqlSessionTemplate sqlSession, SchFile file) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteSchFile(SqlSessionTemplate sqlSession, int fileId) {
+		return sqlSession.delete("Travel.deleteSchFile", fileId);
 	}
 	
 	@Override

@@ -57,8 +57,11 @@
 				         		</tr>
 				         		<tr>
 				         			<td>
-				         				<input type = "text" name = "chatPlace"  id = "chatPlace"
-				         						class="form-control input-sm" placeholder = "떠날 여행지 작성해주세요"/>
+				         				<!-- <input type = "text" name = "chatPlace"  id = "chatPlace"
+				         						class="form-control input-sm" placeholder = "떠날 여행지 작성해주세요"/> -->
+				         				<select id = "chatPlace">
+				         					
+				         				</select>
 				         			</td>
 				         		</tr>
 				         		<tr>
@@ -177,6 +180,11 @@
 	    	   //서버
 			   var socket = io("http://localhost:8010");
 	    	   
+	    	
+	    	   
+	    	   
+	    	   
+	    	   
 	    	   //뒤로가기
 	    	   $("#returnBtn").click(function(){
 	    		   location.href = "${contextPath}/enterChatting.ch?num="+ chatId;
@@ -190,7 +198,30 @@
 	        	  var place = data.place;
 	        	  
 	        	  $("#chatTitle").val(title);
-	        	  $("#chatPlace").val(place);
+	        	  //$("#chatPlace").val(place);
+	        	  
+	        	     //채팅방 여행지
+	    	   		 $.ajax({
+	        		   url : "${contextPath}/trBoardList.ch",
+	        	       success : function(data) {
+	        	    	   var $select = $("#chatPlace");
+		   					  for(var key in data) {
+		   						var id = data[key].countryId;
+		   						var country = data[key].countryNameKo;
+		   						if (country == place){
+		   							var $option = $("<option value='" + country + "'selected>").text(country);
+		   						}else {
+		   							var $option = $("<option value='" + country + "'>").text(country);
+		   						}
+		   						
+		   						$select.append($option);
+		   					 }
+	        	       },
+	        	       error : function(){
+	        	    	   console.log("에러발생");
+	        	       }
+		        	 });
+		        	  
 	        	  
 	        	  var formattedStartDate = new Date(data.start);
 	        	  var sd = formattedStartDate.getDate();

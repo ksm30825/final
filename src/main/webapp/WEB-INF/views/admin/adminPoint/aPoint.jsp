@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,75 +27,104 @@
 		color:#8484ff;
 		font-weight:bold;
 	}
+	#noLoginBtn{
+		background:#FFBD33;
+		color:white;
+		text-decoration:none;
+		font-size:30px;
+		border-radius:10px;
+		margin-left:70%;
+		border:3px solid #FF5733;
+		padding:5px 10px 5px 10px;
+	}
+	#noLoginBtn:hover{
+		background:#FFE09F;
+		color:#FF5733;
+	}
 </style>
 </head>
 <body>
+	<c:if test="${ empty sessionScope.loginUser || sessionScope.loginUser.memberId != 1}">
 	<jsp:include page="../../common/adminMainNav.jsp"/>
-	<div class="columns is-mobile">
-		<div class="column">
-			<section class="section" id="headerSection" style="margin-bottom:-60px;">
-				<jsp:include page="aPointNav.jsp"/>				
-			</section>
-			<section class="section">
-				<div class="container" style="width:90%;height:100%;">
-					<div style="width:100%;font-size:25px;color:#209cee;">포인트 내역</div>
-		         <div style="width:100%;height:100%;">
-		         	<div>
-		         		<div class="field has-addons" style="float:right;">
-							<p class="control">
-								<input type="checkbox" style="display:inline-block;float:left;" id="searchNameCheck" name="searchNameCheck">
-								<p style="width:100px;display:inline-block;"><label for="searchNameCheck">이름 검색하기</label></p>
-								<input class="input" type="text" placeholder="회원 이름을 검색하세요" style="width:150px;height:20px;display:none" id="nameArea">
-							</p>
-							<p class="control" id="search" style="margin-left:1%;display:inline-block;float:right;">
-								<a class="button is-primary" style="width:60px;height:20px;">
-									<i class='fas fa-search' style='font-size:15px'></i>검색
-								</a>
-							</p>
-							<a class="button is-primary is-outlined" style="width:120px;height:20px;margin-left:2%;" href="toAdRefundView.po">환불내역 보러가기</a>
+		<div class="columns is-mobile">
+			<div class="column">
+				<section class="section" id="headerSection">
+				</section>
+				<section>
+					<h1 align="center" style="color:#FF5733;"><c:out value="관리자만 접근 가능합니다."/></h1>
+					<a href="javascript:history.back()" id="noLoginBtn">뒤로가기</a>
+				</section>
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${ !empty sessionScope.loginUser && sessionScope.loginUser.memberId == 1}">
+		<jsp:include page="../../common/adminMainNav.jsp"/>
+		<div class="columns is-mobile">
+			<div class="column">
+				<section class="section" id="headerSection" style="margin-bottom:-60px;">
+					<jsp:include page="aPointNav.jsp"/>				
+				</section>
+				<section class="section">
+					<div class="container" style="width:90%;height:100%;">
+						<div style="width:100%;font-size:25px;color:#209cee;">포인트 내역</div>
+			         <div style="width:100%;height:100%;">
+			         	<div>
+			         		<div class="field has-addons" style="float:right;">
+								<p class="control">
+									<input type="checkbox" style="display:inline-block;float:left;" id="searchNameCheck" name="searchNameCheck">
+									<p style="width:100px;display:inline-block;"><label for="searchNameCheck">이름 검색하기</label></p>
+									<input class="input" type="text" placeholder="회원 이름을 검색하세요" style="width:150px;height:20px;display:none" id="nameArea">
+								</p>
+								<p class="control" id="search" style="margin-left:1%;display:inline-block;float:right;">
+									<a class="button is-primary" style="width:60px;height:20px;">
+										<i class='fas fa-search' style='font-size:15px'></i>검색
+									</a>
+								</p>
+								<a class="button is-primary is-outlined" style="width:120px;height:20px;margin-left:2%;" href="toAdRefundView.po">환불내역 보러가기</a>
+							</div>
 						</div>
-					</div>
-		         	<div style="width:100%;height:25px;"></div>
-		         </div>
-		         <div style="width:100%;height:100%;" id="aPointArea">
-					<table id="aPointTB" class="table is-narrow" align="center"style="width:100%;height:100%;" >
-						<thead>
-							<tr style="background:#ccccff;">
-								<th width="5%"> No. </th>
-								<th width="15%"> 이름 </th>
-								<th width="15%"> 이메일 </th>
-								<th width="30%"> 총 포인트 </th>
-								<th width="30%"> 총 수익금 </th>
-							</tr>
-						</thead>
-						<tbody id="aPointTBody">
-						</tbody>
-					</table>
-		         </div>
+			         	<div style="width:100%;height:25px;"></div>
+			         </div>
+			         <div style="width:100%;height:100%;" id="aPointArea">
+						<table id="aPointTB" class="table is-narrow" align="center"style="width:100%;height:100%;" >
+							<thead>
+								<tr style="background:#ccccff;">
+									<th width="5%"> No. </th>
+									<th width="15%"> 이름 </th>
+									<th width="15%"> 이메일 </th>
+									<th width="30%"> 총 포인트 </th>
+									<th width="30%"> 총 수익금 </th>
+								</tr>
+							</thead>
+							<tbody id="aPointTBody">
+							</tbody>
+						</table>
+			         </div>
+						
+					<div align="center" class="pagingBtnArea" style="margin-top:3%;">
 					
-				<div align="center" class="pagingBtnArea" style="margin-top:3%;">
-				
-				</div>
-				</div>
-			</section>
-			<section class="section" id="modal2">
-					<div class="modal" id="myModal2">
-						<div class="modal-background" id="back2"></div>
-						<div class="modal-card">
-							<header class="modal-card-head">
-								<p class="modal-card-title" id="modalHeader2" style="font-size:15px;text-align:center"></p>
-								<button class="delete" id="del2"></button>
-							</header>
-							<footer class="modal-card-foot">
-								<div style="margin-left:auto;margin-right:auto;">
-									<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" id="okay"> 확인 </a>
-								</div>
-							</footer>
-						</div>
+					</div>
 					</div>
 				</section>
+				<section class="section" id="modal2">
+						<div class="modal" id="myModal2">
+							<div class="modal-background" id="back2"></div>
+							<div class="modal-card">
+								<header class="modal-card-head">
+									<p class="modal-card-title" id="modalHeader2" style="font-size:15px;text-align:center"></p>
+									<button class="delete" id="del2"></button>
+								</header>
+								<footer class="modal-card-foot">
+									<div style="margin-left:auto;margin-right:auto;">
+										<a class="button is-success" style="border-radius:5px; height:25px;width:60px;" id="okay"> 확인 </a>
+									</div>
+								</footer>
+							</div>
+						</div>
+					</section>
+			</div>
 		</div>
-	</div>
+	</c:if>
 	<script>
 		$(function(){
 			$(".apointPo").parent().addClass('is-active');

@@ -30,6 +30,9 @@
 	    	<typeAlias type="com.kh.ti.penalty.model.vo.PenaltyAttachment" alias="PenaltyAttachment"/>
 	    	<typeAlias type="com.kh.ti.penalty.model.vo.PenaltyType" alias="PenaltyType"/>
 	    	<typeAlias type="com.kh.ti.myRequest.model.vo.Inquiry" alias="Inquiry"/>
+	    	<typeAlias type="com.kh.ti.adminCallCenter.model.vo.Board" alias="Board"/>
+	    	<typeAlias type="com.kh.ti.adminCallCenter.model.vo.BoardAttachment" alias="BoardAttachment"/>
+	    	<typeAlias type="com.kh.ti.adminCallCenter.model.vo.Total" alias="Total"/>
 	    <!-- 민지 추가 -->
 			<typeAlias type="com.kh.ti.travel.model.vo.Travel" alias="Travel" />
 			<typeAlias type="com.kh.ti.travel.model.vo.Country" alias="Country" />
@@ -50,6 +53,11 @@
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TourReview" alias="TourReview"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelCost" alias="TravelCost"/>
 			<typeAlias type="com.kh.ti.travelBoard.model.vo.Gallary" alias="Gallary"/>
+		  <!-- Statistics Part (예랑) -->
+			<typeAlias type="com.kh.ti.statistics.model.vo.UserStatistics" alias="UserStatistics"/>
+			<typeAlias type="com.kh.ti.statistics.model.vo.TravelStatistics" alias="TravelStatistics"/>
+			<typeAlias type="com.kh.ti.statistics.model.vo.RevenueStatistics" alias="RevenueStatistics"/>
+
 	</typeAliases>
 	<mappers>
 		<!-- 세령 -->
@@ -61,10 +69,13 @@
 	    	<mapper resource="mappers/travelRequest-mapper.xml"/>
 	    	<mapper resource="mappers/penalty-mapper.xml"/>
 	    	<mapper resource="mappers/inquiry-mapper.xml"/>
+	    	<mapper resource="mappers/callCenter-mapper.xml"/>
+	    	<mapper resource="mappers/total-mapper.xml"/>
 	    <!-- 민지 추가 -->
 			<mapper resource="mappers/travel-mapper.xml" />
     	<!-- TravelBoard Part (예랑) -->
 			<mapper resource="mappers/travelBoard-mapper.xml"/>
+			<mapper resource="mappers/statistics-mapper.xml"/>
 		<!-- 지원  채팅  -->
 			<mapper resource="mappers/chatting-mapper.xml"/>
 	</mappers>

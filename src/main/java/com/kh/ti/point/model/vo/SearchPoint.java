@@ -9,11 +9,13 @@ public class SearchPoint {
 	private int refundStatus;	//10: 대기중, 20: 승인, 30: 거절
 	private int rebateStatus;
 	private int condition;
+	private int month;
+	private int memberId;
 	
 	public SearchPoint() {}
 
-	public SearchPoint(String userName, Date startDate, Date endDate, int refundStatus, int rebateStatus,
-			int condition) {
+	public SearchPoint(String userName, Date startDate, Date endDate, int refundStatus, int rebateStatus, int condition,
+			int month, int memberId) {
 		super();
 		this.userName = userName;
 		this.startDate = startDate;
@@ -21,6 +23,8 @@ public class SearchPoint {
 		this.refundStatus = refundStatus;
 		this.rebateStatus = rebateStatus;
 		this.condition = condition;
+		this.month = month;
+		this.memberId = memberId;
 	}
 
 	public String getUserName() {
@@ -47,6 +51,14 @@ public class SearchPoint {
 		return condition;
 	}
 
+	public int getMonth() {
+		return month;
+	}
+
+	public int getMemberId() {
+		return memberId;
+	}
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
@@ -71,11 +83,19 @@ public class SearchPoint {
 		this.condition = condition;
 	}
 
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
 	@Override
 	public String toString() {
 		return "SearchPoint [userName=" + userName + ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", refundStatus=" + refundStatus + ", rebateStatus=" + rebateStatus + ", condition=" + condition
-				+ "]";
+				+ ", month=" + month + ", memberId=" + memberId + "]";
 	}
 	
 }

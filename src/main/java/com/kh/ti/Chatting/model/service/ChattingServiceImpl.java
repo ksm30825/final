@@ -1,6 +1,7 @@
 package com.kh.ti.Chatting.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,12 @@ public class ChattingServiceImpl implements ChattingService{
 	public ArrayList<Tag> selectTagList() {
 		// TODO Auto-generated method stub
 		return cd.selectTagList(sqlSession);
+	}
+
+	@Override
+	public HashMap<String, ArrayList> selectRankTagList() {
+
+		return cd.selectRankTagList(sqlSession);
 	}
 	
 	

@@ -1,5 +1,6 @@
 package com.kh.ti.travelBoard.controller;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -295,9 +297,8 @@ public class TravelBoardController {
 	
 	//여행일정 상세 / 가계부 / 가계부 다운로드 - 예랑
 	@RequestMapping("costDownload.tb")
-	public String costDownload() {
-		
-		return "travelBoard/travelDetail";
+	public void costDownload(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		tbs.costDownload(trvId, request, response);
 	}
 	
 	//여행일정 상세 / 리뷰 작성 - 예랑
@@ -394,7 +395,6 @@ public class TravelBoardController {
 		HashMap tbMap = tbs.myBuyTravelListView(memberId);
 		
 		model.addAttribute("tbList", tbMap.get("tbList"));
-		model.addAttribute("cityList", tbMap.get("cityList"));
 		
 		return "travelBoard/myBuyTravelList";
 	}
@@ -410,6 +410,15 @@ public class TravelBoardController {
 		model.addAttribute("tbList", tbMap.get("tbList"));
 		
 		return "travelBoard/myLikeyTravelList";
+	}
+	
+	//마이페이지 / 좋아요, 구매수 카운트 조회 - 예랑
+	@RequestMapping("selectMyCount.tb")
+	public ResponseEntity selectMyCount(int memberId) {
+		
+		TravelBoard tb = tbs.selectMyCount(memberId);
+		
+		return new ResponseEntity(tb, HttpStatus.OK);
 	}
 	
 }
