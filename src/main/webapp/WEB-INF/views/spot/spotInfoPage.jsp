@@ -198,7 +198,7 @@
 	      <li>
 	      	<a class="button is-info is-outlined" onclick="tabClick(1);">
 	      		<span class="icon"> <i class="fas fa-plane-departure"></i> </span>
-	      		가볼만한 곳 (${ listCount })
+	      		가볼만한 곳 (${ fn:length(spotList) })
 	      	 </a>
 	      </li>
 	      
@@ -227,8 +227,8 @@
 	    </ul>
 	  </div> <!-- end spot menu area -->
 	  
-	<div class="columns" id="spotsArea">
-		<div class="column">
+	<div class="columns" id="spotsArea" >
+		<div class="column" style="overflow: scroll; height: 600px;">
 			<!-- list area -->
 			<section class="section">
 			 	<c:forEach var="cityInfo" items="${ spotList }">
@@ -258,7 +258,7 @@
 			 	</c:forEach>
 			 	
 			 	<!-- paging -->
-				<div class="field" >
+				<%-- <div class="field" >
 					<nav class="pagination">
 				  	<ul class="pagination-list" style="justify-content: center;">
 				  		
@@ -302,7 +302,7 @@
 
 				  	</ul>
 				  </nav>
-				</div> <!-- end paging -->
+				</div> --%> <!-- end paging -->
 				
 			</section> <!-- end list area -->
 		</div> <!-- end column -->

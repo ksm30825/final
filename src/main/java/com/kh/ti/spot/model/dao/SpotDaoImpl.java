@@ -21,11 +21,9 @@ public class SpotDaoImpl implements SpotDao {
 
 	//도시 상세보기용 - 세령
 	@Override
-	public ArrayList<HashMap> selectSpotList(SqlSessionTemplate sqlSession, int cityId, PageInfo pi) {
+	public ArrayList<HashMap> selectSpotList(SqlSessionTemplate sqlSession, int cityId) {
 		ArrayList<HashMap> spotList = null;
-		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
-		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
-		spotList = (ArrayList) sqlSession.selectList("Spot.selectSpotList", cityId, rowBounds);
+		spotList = (ArrayList) sqlSession.selectList("Spot.selectSpotList", cityId);
 		return spotList;
 	}
 

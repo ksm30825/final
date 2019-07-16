@@ -183,16 +183,12 @@ public class SpotController {
 	@RequestMapping("selectSpotInfoUser.sp")
 	public String selectSpotInfoFromUser(@RequestParam("cityId") int cityId, Model model,
 										@RequestParam("currentPage") int currentPage) {
-		int listCount = ss.getSpotListCountCity(cityId);
-		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
 		
-		ArrayList<HashMap> spotList = ss.selectSpotList(cityId, pi);
+		ArrayList<HashMap> spotList = ss.selectSpotList(cityId);
 		Country countryInfo = ss.selectCountryOneInfo(cityId);
 		ArrayList<SpotFile> cityFile = ss.selectCityFile(cityId);
 		City city = ss.selectCity(cityId);
 		
-		model.addAttribute("listCount", listCount);
-		model.addAttribute("pi", pi);
 		model.addAttribute("spotList", spotList);
 		model.addAttribute("countryInfo", countryInfo);
 		model.addAttribute("cityFile", cityFile);

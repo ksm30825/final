@@ -76,7 +76,7 @@
 				<div class="field is-horizontal">
 					<div class="field-body">
 						<label class="label">전체회원 수 : ${ listCount } 명</label>
-						<div class="field is-grouped" style="justify-content: flex-end;">
+						<!-- <div class="field is-grouped" style="justify-content: flex-end;">
 							<div class="field-label is-normal">
 					          <label class="label">상세보기</label>
 					        </div>
@@ -87,7 +87,7 @@
 					        	<a class="button is-danger is-rounded">신고 내역</a>
 					        	<a class="button is-link is-rounded">문의 내역</a>
 					        </div>
-				        </div>
+				        </div> -->
 					</div>
 				</div><!-- end page forward brn -->
 				
