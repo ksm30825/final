@@ -640,6 +640,7 @@ public class TravelServiceImpl implements TravelService {
 	@Override
 	public SchFile selectSchFile(int fileId) {
 		return td.selectSchFile(sqlSession, fileId);
+		
 	}
 	
 	
@@ -710,7 +711,6 @@ public class TravelServiceImpl implements TravelService {
 //-------------excelDown-------------------------------------------------------------
 	@Override
 	public void selectDownloadSch(int trvId, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
 		SXSSFWorkbook wb = new SXSSFWorkbook();
 		SXSSFSheet sheet = wb.createSheet("schedule");
 		for(int i = 0; i <= 7; i++) {
@@ -718,10 +718,7 @@ public class TravelServiceImpl implements TravelService {
 		}
 		
 		OutputStream fileOut = response.getOutputStream();
-		
 		ArrayList<HashMap> schList = td.selectDownloadSch(sqlSession, trvId);
-		
-			
 		Map<String, CellStyle> styles = CommonUtils.createStyles(wb);
 			
 		Row title = sheet.createRow(0);
@@ -732,11 +729,7 @@ public class TravelServiceImpl implements TravelService {
 		title.createCell(5).setCellValue("AUTHOR : ");
 		title.createCell(6).setCellValue(schList.get(0).get("userName").toString());
 		Row header = sheet.createRow(2);
-			
 		header.setHeightInPoints(20f);
-			
-			
-			
 			
 		for (int i = 1; i <= 7; i++) {
 			Cell cell = header.createCell(i);
@@ -751,13 +744,10 @@ public class TravelServiceImpl implements TravelService {
 	        }
 	        cell.setCellStyle(styles.get("header"));
 	    }
-		
 			
 		for(int i = 0; i < schList.size(); i++) {
 			HashMap schMap = schList.get(i);
 			Row row = sheet.createRow(i + 3);
-				
-				
 				
 			row.createCell(1).setCellValue(schMap.get("dayNumber").toString());
 			row.createCell(2).setCellValue(schMap.get("dayDate").toString());
@@ -775,15 +765,14 @@ public class TravelServiceImpl implements TravelService {
 				row.createCell(7).setCellValue(schMap.get("schTransp").toString());
 			}
 		}
-
 			
 		for(int i = 0; i <= 7; i++) {
 			sheet.autoSizeColumn(i);
 		}
 		response.setContentType("Application/Msexcel");
-		response.setHeader("Content-Disposition", String.format("attachment; filename=\"schedule.xlsx\""));
+		response.setHeader("Content-Disposition", 
+				String.format("attachment; filename=\"schedule.xlsx\""));
 		wb.write(fileOut);
-			
 		fileOut.close();
 		
 	}
@@ -874,14 +863,13 @@ public class TravelServiceImpl implements TravelService {
 		
 		int result = td.insertOverrideTrv(sqlSession, overrideTrv);
 		int ovTrvId = td.selectTrvId(sqlSession);
-		int result1 = 0;
 		
 		ArrayList<TrvCity> trvCityList = td.selectTrvCityList(sqlSession, trvId);
 		for(int i = 0; i < trvCityList.size(); i++) {
 			TrvCity trvCity = new TrvCity();
 			trvCity.setCityId(trvCityList.get(i).getCityId());
 			trvCity.setTrvId(ovTrvId);
-			result1 += td.insertTrvCity(sqlSession, trvCity);
+			result += td.insertTrvCity(sqlSession, trvCity);
 		}
 		
 		ArrayList<TrvDay> trvDayList = td.selectTrvDayList(sqlSession, trvId);
@@ -890,10 +878,11 @@ public class TravelServiceImpl implements TravelService {
 			trvDay.setDayNumber(trvDayList.get(i).getDayNumber());
 			trvDay.setDayDate(trvDayList.get(i).getDayDate());
 			trvDay.setTrvId(ovTrvId);
-			result1 += td.insertTrvDay(sqlSession, trvDay);
+			result += td.insertTrvDay(sqlSession, trvDay);
 			int dayId = td.selectTrvDayId(sqlSession);
 			
-			ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, trvDayList.get(i).getDayId());
+			ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, 
+													trvDayList.get(i).getDayId());
 			for(int j = 0; j < schList.size(); j++) {
 				TrvSchedule sch = schList.get(j);
 				sch.setSchContent("");
@@ -903,34 +892,31 @@ public class TravelServiceImpl implements TravelService {
 				if(sch.getPlcName() == null) sch.setPlcName("");
 				if(sch.getStartTime() == null) sch.setStartTime("");
 				if(sch.getEndTime() == null) sch.setEndTime("");
-				result1 += td.insertTrvSchedule(sqlSession, sch);
+				result += td.insertTrvSchedule(sqlSession, sch);
 				int schId = td.selectSchId(sqlSession);
 				
 				TrvCost cost = td.selectSchCost(sqlSession, schList.get(j).getSchId());
 				if(cost != null) {
 					cost.setSchId(schId);
 					cost.setDayId(dayId);
-					result1 += td.insertSchCost(sqlSession, cost);
+					result += td.insertSchCost(sqlSession, cost);
 				}
 			}
-			
-			ArrayList<TrvCost> costList = td.selectCostList(sqlSession, trvDayList.get(i).getDayId());
+			ArrayList<TrvCost> costList = td.selectCostList(sqlSession, 
+													trvDayList.get(i).getDayId());
 			for(int j = 0; j < costList.size(); j++) {
 				TrvCost cost = costList.get(j);
 				cost.setDayId(dayId);
-				result1 += td.insertTrvCost(sqlSession, cost);
+				result += td.insertTrvCost(sqlSession, cost);
 			}
-			
-			
 		}
 		ArrayList<TrvTag> trvTagList = td.selectTrvTagList(sqlSession, trvId);
 		for(int i = 0; i < trvTagList.size(); i++) {
 			TrvTag trvTag = new TrvTag();
 			trvTag.setTagId(trvTagList.get(i).getTagId());
 			trvTag.setTrvId(ovTrvId);
-			result1 += td.insertTag(sqlSession, trvTag);
+			result += td.insertTag(sqlSession, trvTag);
 		}
-		
 		return ovTrvId;
 	}
 

@@ -20,7 +20,7 @@
 	.column .columns {
 		margin:0 !important;
 	}
-	.trvCard:hover {
+	.privateTrvCard, .publicTrvCard {
 		cursor:pointer;
 	}
 </style>
@@ -100,7 +100,7 @@
 											<img src="resources/uploadFiles/${ trv.mainImage.changeName }">
 										</c:if>
 										<c:if test="${ trv.mainImage eq null }">
-											<img src="resources/images/logo2.png">
+											<img src="resources/images/logo3.png">
 										</c:if>
 									</figure>
 								</div>
