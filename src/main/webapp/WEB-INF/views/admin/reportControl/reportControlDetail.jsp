@@ -161,6 +161,11 @@
 	</div>
 </body>
 <script>
-	
+	$(function() {
+		var nav = $(".navbar-item").eq(9);
+		console.log(nav);
+		nav.addClass('is-active');
+		nav.siblings().removeClass('is-active');
+	});
 </script>
 </html>

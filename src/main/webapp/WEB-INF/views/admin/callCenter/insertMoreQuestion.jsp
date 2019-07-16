@@ -105,6 +105,10 @@ textarea {
 </body>
 <script>
 	$(function() {
+		var nav = $(".navbar-item").eq(2);
+		   nav.css("background", "#118fe4");
+		   nav.siblings().css("background", "rgb(32, 156, 238)");
+		
 		$(".is-link").click(function() {
 			location = "adminMoreQuestionList.ad";
 		});

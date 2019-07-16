@@ -50,6 +50,9 @@
 	margin-right: auto;
 	margin-left: auto;
 }
+.field a {
+	margin-left: 0.5em;
+}
 </style>
 </head>
 <body>
@@ -59,7 +62,7 @@
 			<section class="section" id="table">
 			<br><br>
 				<h1 class="title" style="text-align: center;">자주 묻는 질문</h1>
-				<div class="field">
+				<div class="field table" align="right">
 					<a class="button is-primary is-rounded" href="adminNoticeList.ad">공지사항</a>
 					<a class="button is-info is-rounded" href="adminMoreQuestionList.ad">자주 묻는 질문</a>
 				</div>
@@ -142,6 +145,10 @@
 </body>
 <script>
 	$(function() {
+		var nav = $(".navbar-item").eq(2);
+		   nav.css("background", "#118fe4");
+		   nav.siblings().css("background", "rgb(32, 156, 238)");
+		
 		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",

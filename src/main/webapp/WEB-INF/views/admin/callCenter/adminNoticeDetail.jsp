@@ -54,6 +54,7 @@
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="table">
+			<br><br>
 				<h1 class="title" style="text-align: center;">공지 사항</h1>
 				<hr>
 				<table class="table">
@@ -112,6 +113,11 @@
 	</div>
 </body>
 <script>
+	$(function() {
+		var nav = $(".navbar-item").eq(2);
+		   nav.css("background", "#118fe4");
+		   nav.siblings().css("background", "rgb(32, 156, 238)");
+	});
 	$(".is-link").click(function() {
 		location = "adminNoticeList.ad"
 	});
