@@ -1174,35 +1174,27 @@
 		function updateCost(cost) {
 			var dayId = cost.dayId;
 			var type = cost.costType;
-			
-			
     	   	var li = $("#cost_" + cost.costId);
 			
 			switch(type) {
 			case '숙박': if(!li.children().eq(0).children().is(".accomm")) {
 							li.children().eq(0).children().remove();
-							li.children().eq(0).append($('<span class="icon costType accomm"><i class="fas fa-bed"></i></span>'));
-						};break;
+							li.children().eq(0).append($('<span class="icon costType accomm"><i class="fas fa-bed"></i></span>'));};break;
 			case '교통':if(!li.children().eq(0).children().is(".transp")) {
 							li.children().eq(0).children().remove();
-							li.children().eq(0).append($('<span class="icon costType transp"><i class="fas fa-taxi"></i></span>'));
-						};break;
+							li.children().eq(0).append($('<span class="icon costType transp"><i class="fas fa-taxi"></i></span>'));};break;
 			case '식비':if(!li.children().eq(0).children().is(".food")) {
 							li.children().eq(0).children().remove();
-							li.children().eq(0).append($('<span class="icon costType food"><i class="fas fa-utensils"></i></span>'));
-						};break;
+							li.children().eq(0).append($('<span class="icon costType food"><i class="fas fa-utensils"></i></span>'));};break;
 			case '쇼핑':if(!li.children().eq(0).children().is(".shopping")) {
 							li.children().eq(0).children().remove();
-							li.children().eq(0).append($('<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>'));
-						};break;
+							li.children().eq(0).append($('<span class="icon costType shopping"><i class="fas fa-shopping-bag"></i></span>'));};break;
 			case '관광':if(!li.children().eq(0).children().is(".tour")) {
 							li.children().eq(0).children().remove();
-							li.children().eq(0).append($('<span class="icon costType tour"><i class="fas fa-tripadvisor"></i></span>'));
-						};break;
+							li.children().eq(0).append($('<span class="icon costType tour"><i class="fas fa-tripadvisor"></i></span>'));};break;
 			case '기타':if(!li.children().eq(0).children().is(".etc")) {
 							li.children().eq(0).children().remove();
-							li.children().eq(0).append($('<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>'));
-						};break;
+							li.children().eq(0).append($('<span class="icon costType etc"><i class="fas fa-ellipsis-h"></i></span>'));};break;
 			}
 			
 			li.find(".costAmount").text(cost.costAmount);
@@ -1210,21 +1202,25 @@
 			li.find(".costContent").text(cost.costContent);
 			
 			var ul = li.parent();
-			
 			if(ul.parent().attr("id") != "day" + dayId + "Cost") {
 				$("#day" + dayId + "Cost").find(".costList").append(li);
 			}        					
-			
 			updateSummary();
 			
 			if(cost.schId != 0) {
 				var schId = cost.schId;
-				$(".sch" + schId + "Block").find(".costType").text(type + " : ");
-				$(".sch" + schId + "Block").find(".costAmount").text(parseFloat(cost.costAmount));
-				$(".sch" + schId + "Block").find(".costCurrency").text("(" + cost.currency + ") /");
-				$("#sch" + schId + "CardSection").find(".costType").text(type);
-				$("#sch" + schId + "CardSection").find(".costAmount").text(parseFloat(cost.costAmount));
-				$("#sch" + schId + "CardSection").find(".costCurrency").text(cost.currency);
+				$(".sch" + schId + "Block")
+					.find(".costType").text(type + " : ");
+				$(".sch" + schId + "Block")
+					.find(".costAmount").text(parseFloat(cost.costAmount));
+				$(".sch" + schId + "Block")
+					.find(".costCurrency").text("(" + cost.currency + ") /");
+				$("#sch" + schId + "CardSection")
+					.find(".costType").text(type);
+				$("#sch" + schId + "CardSection")
+					.find(".costAmount").text(parseFloat(cost.costAmount));
+				$("#sch" + schId + "CardSection")
+					.find(".costCurrency").text(cost.currency);
 			}
 		}
 		

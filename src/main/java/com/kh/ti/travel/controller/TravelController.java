@@ -426,7 +426,7 @@ public class TravelController {
 		String root = request.getSession().getServletContext().getRealPath("resources");
 		String filePath = root + "\\uploadFiles";
 		new File(filePath + "\\" + originFile.getChangeName()).delete();
-		
+	
 		mv.setViewName("jsonView");
 		return mv;
 	}

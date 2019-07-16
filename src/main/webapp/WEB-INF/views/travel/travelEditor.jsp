@@ -30,7 +30,11 @@
 </style>
 </head>
 <body>
-	<%-- <c:set var="trv" value="${ sessionScopetrv }" /> --%>
+<c:set var = "contextPath" value = "${pageContext.servletContext.contextPath }" scope = "application"/>
+	<c:if test="${ empty loginUser || trv.completeDate ne null }" >
+		<jsp:forward page="/WEB-INF/views/main/main.jsp"/>
+	</c:if>
+
 	<nav class="navbar is-white is-fixed-top" style="border-bottom:1px solid skyblue">
     	<div class="navbar-brand">
     		<div class="navbar-item field is-grouped" style="margin:0">
@@ -753,25 +757,12 @@
 				if(places.length === 0) {
 					return;
 				}
-				markers.forEach(function(m) {
-					m.setMap(null);
-				});
-				if(dayPath != undefined) {
-					dayPath.setMap(null);
-				}
 				markers = [];
 				var bounds = new google.maps.LatLngBounds();
 				places.forEach(function (p) {
 					if(!p.geometry) {
 						return;
 					}
-					addMarker({
-						location:p.geometry.location,
-						icon:icons.basic.icon,
-						map_icon_label:icons.basic.map_icon_label,
-						place_id:p.place_id,
-						info: '<h5 class="title is-5">' + p.name + "'</h5>" + p.formatted_address
-					});
 					
 					if(p.geometry.viewport) {
 						bounds.union(p.geometry.viewport);
@@ -1046,7 +1037,6 @@
 				
 			});
 		}
-	
 	
 		function addMarker(props) {
 			var marker = new mapIcons.Marker({

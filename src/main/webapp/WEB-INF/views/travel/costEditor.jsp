@@ -353,7 +353,6 @@
 							success:function(data) {
 								
 								getLocalBudget(budgetWon);
-								
 								socket.emit('updateBudget', {
 									budget:budgetWon,
 									room:"${ trv.trvId }"
@@ -447,8 +446,6 @@
 								schId:schId,
 								room:"${ trv.trvId }"
 							});
-							
-							
 						},
 						error:function(err) {
 							alert("err");
@@ -466,7 +463,6 @@
 		
 		//환율 조회	, 전체예산 적용
 		function getLocalBudget(amount) {
-			
 			$.ajax({
 				url:'http://data.fixer.io/api/latest?access_key=bcc03ec033fd62b9b165b44ecf64e9c2',
 				dataType:'jsonp',
@@ -474,9 +470,10 @@
 					var krw = json.rates.KRW;
 					var local = json.rates.${ trvCityList[0].currencyUnit };
 					
+					budgetWon = amount;
 					rate = Math.round((krw / local) * 1000) / 1000;
 					$("#exchangeRate").text(rate);
-					budgetLocal = Math.round((amount / rate) * 100) / 100;
+					budgetLocal = Math.round((budgetWon / rate) * 100) / 100;
 					$("#budgetLocal").val(budgetLocal);
 					formatCurrency($("#budgetLocal"), "budgetLocal", "blur");
 					updateSummary();
@@ -523,7 +520,6 @@
 					+ shoppingCostLocal + etcCostLocal;
 			var balanceLocal = Math.round((budgetLocal - totalCostLocal) * 100) / 100;
 			
-			//$("#accommCostLocal").text(accommCostLocal + ' ${ trvCityList[0].currencyUnit }');
 			$("#accommCostLocal").val(accommCostLocal);
 			formatCurrency($("#accommCostLocal"), "budgetLocal", "blur");
 			$("#transpCostLocal").val(transpCostLocal);
@@ -551,6 +547,7 @@
 			var totalCostWon = accommCostWon + transpCostWon + foodCostWon + tourCostWon
 					+ shoppingCostWon + etcCostWon;
 			var balanceWon = budgetWon - totalCostWon;
+			console.log(balanceWon);
 			
 			$("#accommCostWon").val(accommCostWon);
 			formatCurrency($("#accommCostWon"), "budgetWon", "blur");
@@ -584,32 +581,25 @@
 			}
 		}
 	
-	
 		function formatCurrency(input, id, blur) {
 		  	var input_val = input.val();
 		  	if (input_val === "") { 
 				return; 
 			}
-		 	// original length
 		  	var original_len = input_val.length;
-		  	// initial caret position 
 		  	var caret_pos = input.prop("selectionStart");
 		  	
 		  	if (input_val.indexOf(".") >= 0) {
 		    	var decimal_pos = input_val.indexOf(".");
-	
 		    	var left_side = input_val.substring(0, decimal_pos);
 		    	var right_side = input_val.substring(decimal_pos);
 	
 		    	left_side = formatNumber(left_side);
-		   		//right_side = formatNumber(right_side);
 		    
-			    // On blur make sure 2 numbers after decimal
 			    if (blur === "blur") {
 			      right_side += "00";
 		    	}
 		    
-		    	// Limit decimal to only 2 digits
 		    	right_side = right_side.substring(0, 3);
 	
 		    	if(id == 'budgetWon') {
@@ -619,13 +609,9 @@
 		    	}
 	
 		  	} else {
-		    	// no decimal entered
-		    	// add commas to number
-		    	// remove all non-digits
 		    	input_val = formatNumber(input_val);
 		    	input_val = input_val ;
 		    
-		    	// final formatting
 		    	if (blur === "blur") {
 		    		if(id == 'budgetWon') {
 		      			input_val += " 원";
@@ -635,10 +621,8 @@
 		    	}
 		  	}
 		  
-		  	// send updated string to input
 		  	input.val(input_val);
 	
-		  	// put caret back in the right position
 		  	var updated_len = input_val.length;
 		  	caret_pos = updated_len - original_len + caret_pos;
 		  	input[0].setSelectionRange(caret_pos, caret_pos);
