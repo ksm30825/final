@@ -57,8 +57,8 @@
 			<section class="section" id="cardSection">
 				<div class="columns">
 					
-					<div class="statisticsArea" >
-						<canvas id="genderChart" width="1000"></canvas>	
+					<div class="statisticsArea" style="width: 100%;">
+						<canvas id="genderChart" width="900"></canvas>	
 					</div>
 					
 				</div>
@@ -68,6 +68,10 @@
 	
 <script>
 $(function(){
+	var nav = $(".navbar-item").eq(16);
+	nav.css("background", "#118fe4");
+	nav.siblings().css("background", "rgb(32, 156, 238)");
+	
 	var menu = $(".userStaNav li").eq(1);
     menu.addClass('is-active');
     menu.find('span').css("color", "#209cee");

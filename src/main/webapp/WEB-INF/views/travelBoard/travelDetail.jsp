@@ -108,13 +108,11 @@
 				        		</a>
 							</c:otherwise>
 						</c:choose>
-						
-						&nbsp;
-						
+						<!-- &nbsp;
 						<a class="button is-primary" onclick="linkCopy();">
 							<span class="icon"><i class="fas fa-share-alt"></i></span>
 				          	<span> &nbsp;링크공유 </span>
-				        </a>
+				        </a> -->
 					</div>
 				</div>
 			</section>

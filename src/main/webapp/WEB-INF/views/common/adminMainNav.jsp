@@ -34,7 +34,7 @@
       <div id="mainNav" class="navbar-menu">
          <div class="navbar-start">
 
-            <a class="navbar-item is-active" href="adminMemberListForm.me?currentPage=1&status=ALL"> <strong>회원관리</strong> </a> <!-- href 경로수정(세령) -->
+            <a class="navbar-item" href="adminMemberListForm.me?currentPage=1&status=ALL"> <strong>회원관리</strong> </a> <!-- href 경로수정(세령) -->
 
             <div class="navbar-item has-dropdown is-hoverable">
 	            <a class="navbar-link " href="adminNoticeList.ad"> <strong>고객센터관리</strong> </a>
@@ -62,7 +62,7 @@
                   <a class="navbar-item subnav" href="toAdRebateView.po" style="font-size:0.8em;margin-left:7%;" > 환급 관리</a> 
                 </div>
           	</div>
-            <a class="navbar-item " href="genderStatistics.sta"> <strong>통계관리</strong> </a>
+            <a class="navbar-item" href="genderStatistics.sta"> <strong>통계관리</strong> </a>
          </div>
          <div class="navbar-end">
             

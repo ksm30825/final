@@ -107,6 +107,9 @@ var month;
 var day = "";
 
 $(function(){
+	var nav = $(".navbar-item").eq(16);
+	nav.css("background", "#118fe4");
+	nav.siblings().css("background", "rgb(32, 156, 238)");
 	
 	var menu = $(".statisticsNav li").eq(1);
     menu.addClass('is-active');

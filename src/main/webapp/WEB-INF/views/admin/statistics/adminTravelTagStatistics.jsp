@@ -76,20 +76,21 @@
 						</div>
 						
 						<div class="statisticsArea" style="display: flex; width: 100%;">
-							<div class="column is-1" style="justify-content: flex-start;" onclick="yearTag('left')">
+							<div class="column is-1" style="justify-content: flex-start;" onclick="yearTag('left')" align="center">
 								<a><i class="title is-2 fas fa-caret-left"></i></a>
 							</div>
 							
 							<div class="column is-10" style="justify-content: center;">
-							<canvas id="tagStatistics" width="1000"></canvas>
+							<canvas id="tagStatistics" width="900"></canvas>
 							</div>
 							
-							<div class="column is-1" style="justify-content: flex-end;" onclick="yearTag('right')">
+							<div class="column is-1" style="justify-content: flex-end;" onclick="yearTag('right')" align="center">
 								<a><i class="title is-2 fas fa-caret-right"></i></a>
 							</div>
-					</div>
+						</div>
 					
-				</div>
+					</div><!-- class="statisticsArea" -->
+				</div><!-- class="columns" -->
 			</section>
 		</div>
 	</div>
@@ -102,6 +103,9 @@ var year;
 var month;
 
 $(function(){
+	var nav = $(".navbar-item").eq(16);
+	nav.css("background", "#118fe4");
+	nav.siblings().css("background", "rgb(32, 156, 238)");
 	
 	var menu = $(".statisticsNav li").eq(1);
     menu.addClass('is-active');

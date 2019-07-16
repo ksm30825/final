@@ -56,7 +56,7 @@
 						</div>
 						<input id="yearValue" value="${ rs.year }" style="display: none" type="number">
 						<div class="column is-10" style="justify-content: center;">
-							<canvas id="paymentChart" width="1000"></canvas>
+							<canvas id="paymentChart" width="900"></canvas>
 						</div>
 						<div class="column is-1" style="justify-content: flex-end;" onclick="yearPayment('right')">
 							<a><i class="title is-2 fas fa-caret-right"></i></a>
@@ -75,6 +75,9 @@ var today;
 var year;
 
 $(function(){
+	var nav = $(".navbar-item").eq(16);
+	nav.css("background", "#118fe4");
+	nav.siblings().css("background", "rgb(32, 156, 238)");
 	
 	var menu = $(".statisticsNav li").eq(2);
     menu.addClass('is-active');
