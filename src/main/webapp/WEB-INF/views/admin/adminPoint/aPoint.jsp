@@ -127,6 +127,9 @@
 	</c:if>
 	<script>
 		$(function(){
+			var nav = $(".navbar-item").eq(10);
+			   nav.css("background", "#118fe4");
+			   nav.siblings().css("background", "rgb(32, 156, 238)");
 			$(".apointPo").parent().addClass('is-active');
 			$(".apointPo").children().css({"color":"#209cee"});
 			$("#searchNameCheck").change(function(){

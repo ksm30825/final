@@ -1003,11 +1003,15 @@ public class PointController {
 		//-> 승인 ->환불한 사람 포인트 해당포인트만큼 증가
 		//->	->환불한 게시글의 수익금(해당포인트만큼) 차감
 	@RequestMapping("/updateAdRefund.po")
-	public String adUpdateRefund(String refId, String bid, String cond) {
-		int refundId = Integer.parseInt(refId);
-		int boardId = Integer.parseInt(bid);
-		int condition = Integer.parseInt(cond);
-		
+	public String adUpdateRefund(@RequestParam("refId") int refId, 
+			@RequestParam("bid") int  bid, 
+			@RequestParam("cond") int  cond) {
+		int refundId = refId;
+		int boardId = bid;
+		int condition = cond;
+		System.out.println("refId :" + refId);
+		System.out.println("bid : " + bid);
+		System.out.println("cond : " + cond);
 		//환불 상태 바꿔주기
 		Refund refund = new Refund();
 		refund.setRefundId(refundId);//환불코드를 이용하여
