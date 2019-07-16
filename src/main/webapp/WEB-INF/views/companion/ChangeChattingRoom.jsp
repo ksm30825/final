@@ -17,6 +17,11 @@
 <link rel = "stylesheet" type = "text/css" href = "resources/css/companion/changechattingroom.css">
 
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+	#okcontent{
+		padding : 30px;
+	}
+</style>
 
 </head>
 <body>
@@ -127,7 +132,7 @@
 	        <h4 align="center" >채팅방 수정</h4>
 	      </header>
 	      <div class="w3-container">
-	      		<h4 align="center" >채팅 정보가 수정되었습니다.</h4>
+	      		<label  id = "okcontent">채팅 정보가 수정되었습니다.</label>
 	      </div>
 	      <footer class="w3-container w3-teal" style = "background : #f09eda !important;">
 	       	 <button  class="w3-button w3-black" style = "float : right; background-color: #f09eda !important;"
@@ -155,19 +160,9 @@
 		          ,maxDate: "+1Y" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
 		      });
 				 		
-		
-		 	 
-		 	//set datePicker
-			var startDate;
-		    $("#trStartDate").datepicker({
-		        onSelect:function(selectedDate) {
-					startDate = $(this).datepicker('getDate');
-					$("#trEndDate").datepicker("option", "minDate", startDate);
-				}, 
-		    });
+		 
 		       
-			$("#trEndDate").datepicker();
-		 	
+			
 		 	$(document).ready(function() { //start
 				
 				var userId = ${ loginUser.memberId };
@@ -251,6 +246,24 @@
 		        	  $("#chatPlace").attr("readonly", "true");
 		        	  $("#trStartDate").attr("readonly", "true"); $("#trEndDate").attr("readonly", "true");
 		        	  $("#peopleNum").attr("readonly", "true"); $("#txtDetail").attr("readonly", "true");
+	        	  }else if (data.status == "여행중"){
+		        	  $("#chatPlace").attr("readonly", "true");
+		        	  $("#trStartDate").attr("readonly", "true"); $("#trEndDate").attr("readonly", "true");
+		        	  $("#peopleNum").attr("readonly", "true"); $("#txtDetail").attr("readonly", "true");
+		        	  
+		        	  
+	        	  }else {
+	        		//set datePicker
+	      			var startDate = $("#trStartDate").val(); 
+	      		    $("#trStartDate").datepicker({
+	      		        onSelect:function(selectedDate) {
+	      					startDate = $(this).datepicker('getDate');
+	      					$("#trEndDate").datepicker("option", "minDate", startDate);
+	      				}, 
+	      		    });
+	      		    
+	      		  	$("#trEndDate").datepicker();
+	  		 	
 	        	  }
 	        	 	   
 		 		});
@@ -366,11 +379,6 @@
 		    	  }
 		      });
 		       
-		    
-		       
-		       
-		       
-	           
 	    		
 		});    //end
 		 	 
