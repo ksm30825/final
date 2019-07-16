@@ -285,7 +285,7 @@ public class MemberController {
 			String recipient = email;
 			String subject = "Travel Interface 비밀번호 찾기";
 			String body = "";
-			String targetPath = "http://127.0.0.1:8001/ti/updatePwdFromFindPwd.me";
+			String targetPath = "http://192.168.30.107:8001/ti/updatePwdFromFindPwd.me";
 
 			body += "<form action='" + targetPath + "' method='post'>";
 			body += "<div style='border: 1px solid gray; background-color: #e6eeff; padding: 20px;'>";
