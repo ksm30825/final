@@ -143,11 +143,11 @@
 	</div>
 </body>
 <script>
-	$(function() {
+	$(function() {   
 		var nav = $(".navbar-item").eq(2);
-		   console.log(nav);
-		   nav.addClass('is-active');
-		   nav.siblings().removeClass('is-active');
+		   nav.css("background", "#118fe4");
+		   nav.siblings().css("background", "rgb(32, 156, 238)");
+		   
 		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",
