@@ -540,13 +540,11 @@
 								success:function(data) {
 									updateSchList(dayNumber, data.updList);
 									
-									//드래그 위아래 socket
 									socket.emit('reorderSchListInADay', {
 										dayNumber:dayNumber,
 										schList:data.updList,
 										room:"${ trv.trvId }"
 									});
-									
 								},
 								error:function(data) {
 									alert('updateSchNumber 서버전송 실패');
@@ -607,8 +605,6 @@
 									costId:data.costId,
 									room:"${ trv.trvId }"
 								});
-								
-									
 							},
 							error:function(data) {
 								alert('changeSchDay 서버전송 실패');

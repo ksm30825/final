@@ -532,9 +532,8 @@
 					toolbar : toolbarOptions
 				},
 				placeholder : '멋진 사진과 함께 여행 후기글을 작성해보세요! ',
-				theme : 'snow' // or 'bubble'
+				theme : 'snow'
 			});
-			//quills.push(quill);
 			
 			$.ajax({
 				url:"selectSchContent.trv",
@@ -573,7 +572,8 @@
 						success:function(data) {
 							console.log('ajax success called');
 							var range = quill.getSelection();
-							quill.insertEmbed(range.index, 'image', 'http://localhost:8001/ti/resources/uploadFiles/' + data.changeName);
+							quill.insertEmbed(range.index, 'image', 
+								'http://localhost:8001/ti/resources/uploadFiles/' + data.changeName);
 							
 							addGallaryImage(dayNumber, data.changeName, data.fileLevel, data.fileId);
 							

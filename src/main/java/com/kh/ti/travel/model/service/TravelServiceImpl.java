@@ -293,7 +293,6 @@ public class TravelServiceImpl implements TravelService {
 	
 	@Override
 	public int insertTrvSchedule(TrvSchedule sch, TrvCost cost) {
-		
 
 		int count = td.selectSchCount(sqlSession, sch.getDayId());
 		if(sch.getIsTimeset() != null) {
@@ -322,6 +321,7 @@ public class TravelServiceImpl implements TravelService {
 		
 		return schId;
 	}
+	
 	@Override
 	public int selectDayNumber(int dayId) {
 		return td.selectDayNumber(sqlSession, dayId);
@@ -329,8 +329,7 @@ public class TravelServiceImpl implements TravelService {
 
 	@Override
 	public int updateTrvSchedule(TrvSchedule sch, TrvCost cost) {
-		int result1 = 0;
-		int result2 = 0;
+		int result = 0;
 		if(sch.getIsTimeset() != null) {
 			sch.setIsTimeset("N");
 		}else {
@@ -338,47 +337,36 @@ public class TravelServiceImpl implements TravelService {
 		}
 		int dayId = sch.getDayId();
 		String startTime = sch.getStartTime();
-		System.out.println("startTime : " + startTime);
 		
 		int count = td.selectSchCount(sqlSession, sch.getDayId());
 		TrvSchedule originSch = td.selectTrvSchedule(sqlSession, sch.getSchId());
-		System.out.println("originSch : " + originSch);
 		int originDayId = originSch.getDayId();
 		int originSchNumber = originSch.getSchNumber();
 		String originStartTime = originSch.getStartTime();
-		System.out.println("originStartTime : " + originStartTime);
 		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, dayId);
 		
-		
-		
-		if(dayId != originDayId) {	//날짜가 변경됐을때
+		if(dayId != originDayId) {	//날짜 변경됐을 때
 			ArrayList<TrvSchedule> originSchList = td.selectSchList(sqlSession, originDayId);
-			
-			//기존day의 schList에서 schNumber 재조정
-			for(int i = 0; i < originSchList.size(); i++) {
+			for(int i = 0; i < originSchList.size(); i++) {  //기존day의 schList에서 schNumber 재조정
 				if(originSchList.get(i).getSchNumber() > originSchNumber) {
 					originSchList.get(i).setSchNumber(originSchList.get(i).getSchNumber() - 1);
 					td.updateSchNumber(sqlSession, originSchList.get(i));
 				}
 			}
 			
-			//새로운 day의 schList에서 들어갈 자리를 찾기
-			if(schList != null) {
-				
-				if(sch.getIsTimeset() == "N") { //시간지정안했을 때
+			if(schList != null) {   //새로운 day의 schList에서 들어갈 자리를 찾기
+				if(sch.getIsTimeset() == "N") { //시간정보없음
 					sch.setSchNumber(count + 1);
-				
-				}else { //시간지정 했을때
+				}else { //시간지정
 					int number = selectSchNumber(schList, startTime);
 					sch.setSchNumber(number);
 				}
-				
 			}else {
 				sch.setSchNumber(1);
 			}
 			
 		
-		}else {	//날짜가 그대로일때
+		}else {	//날짜 그대로일때
 			
 			if(startTime.equals(originStartTime)) {  //startTime이 그대로일때
 				System.out.println("startTime그대로");
@@ -397,37 +385,37 @@ public class TravelServiceImpl implements TravelService {
 					if(schList.get(i).getSchNumber() > originSchNumber) {
 						schList.get(i).setSchNumber(schList.get(i).getSchNumber() - 1);
 						System.out.println(schList.get(i).getSchNumber());
+						td.updateSchNumber(sqlSession, schList.get(i));
 					}
 				}
 				
-				
-				if(sch.getIsTimeset() == "N") {  //시간지정안함
+				if(sch.getIsTimeset() == "N") {  //시간정보없음
 					sch.setSchNumber(count);
 					for(int i = 0; i < schList.size(); i++) {
-						result1 += td.updateSchNumber(sqlSession, schList.get(i));
+						result += td.updateSchNumber(sqlSession, schList.get(i));
 					}
 
-				}else {  //시간지정함
+				}else {  //시간지정
 					int number = selectSchNumber(schList, startTime);
 					sch.setSchNumber(number);
 				}
 			}
 		}
 		
-		int result = td.updateTrvSchedule(sqlSession, sch);
+		result += td.updateTrvSchedule(sqlSession, sch);
 
-		
+		int result2 = 0;
 		TrvCost originCost = td.selectSchCost(sqlSession, sch.getSchId());
 		if(originCost == null) {
 			if(cost.getCostAmount() != 0.0) {
-				result2 = td.insertSchCost(sqlSession, cost);
+				result += td.insertSchCost(sqlSession, cost);
 			}
 		}else {
 			cost.setCostId(originCost.getCostId());
 			if(cost.getCostAmount() == 0.0) {
-				result2 = td.deleteTrvCost(sqlSession, cost.getCostId());
+				result += td.deleteTrvCost(sqlSession, cost.getCostId());
 			}else {
-				result2 = td.updateTrvCost(sqlSession, cost);
+				result += td.updateTrvCost(sqlSession, cost);
 			}
 		}
 		return result;
@@ -533,7 +521,6 @@ public class TravelServiceImpl implements TravelService {
 		
 		int result = td.updateSchDay(sqlSession, trvSch);
 		
-		
 		ArrayList<TrvSchedule> schList = td.selectSchList(sqlSession, trvSch.getDayId());
 		
 		for(int i = 0; i < sch.length; i++) {
@@ -563,15 +550,12 @@ public class TravelServiceImpl implements TravelService {
 						if(time < tm) {
 							updList.get(i).setStartTime(null);
 							updList.get(i).setEndTime(null);
-							System.out.println("startTime, endtime null로 바꿈");
-							int result1 = td.deleteSchTime(sqlSession, updList.get(i));
+							result += td.deleteSchTime(sqlSession, updList.get(i));
 						}
 					}
 				}
 			}
 		}
-		
-				
 		return result;
 	}
 	

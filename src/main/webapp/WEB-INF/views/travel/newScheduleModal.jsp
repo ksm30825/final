@@ -210,14 +210,12 @@
     					for(var key in data.schList) {
     						var sch = data.schList[key];
     						
-    						//가계부는 새로 insert된 일정만 금액이 있을경우에 가계부 리스트에 추가
     						if(sch.schId == data.schId && sch.trvCost != null) {
 		    					insertNewCost(sch.trvCost);
     						}
     					}
     					clearNewSchModal();
     					
-    					//상세일정 작성시 socket
     					socket.emit('insertSchedule', {
     						schId:data.schId,
 	        				dayNumber:data.dayNumber,
