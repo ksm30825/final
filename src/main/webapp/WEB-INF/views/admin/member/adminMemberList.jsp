@@ -197,6 +197,9 @@
 				location.href = "selectCondition.me?condition=" + condition +
 								 "&conditionValue=" + conditionValue;
 			});
+			var nav = $(".navbar-item").eq(1);
+		    nav.css("background", "#118fe4");
+		    nav.siblings().css("background", "rgb(32, 156, 238)");
 		});
 		
 		//tr 클릭시 사용자 정보 저장
