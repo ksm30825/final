@@ -92,7 +92,7 @@
 	  	</div>
 	</div>
 	
-	 <script src="http://localhost:8010/socket.io/socket.io.js"></script>
+	 <script src="http://192.168.30.107:8010/socket.io/socket.io.js"></script>
      <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	  <script>
 	 	var g_count =1;
@@ -197,7 +197,7 @@
 	    		console.log("chatId :" + chatId);
 	    		  		
 	    	   //서버
-			   var socket = io("http://localhost:8010");
+			   var socket = io("http://192.168.30.107:8010");
 	    	   
 	    	   $("#returnBtn").click(function(){
 	    		   location.href = "${contextPath}/enterChatting.ch?num="+ chatId;

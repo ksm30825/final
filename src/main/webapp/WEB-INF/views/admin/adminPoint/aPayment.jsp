@@ -138,6 +138,10 @@
 	
 	<script>
 		$(function(){
+			var nav = $(".navbar-item").eq(10);
+			   nav.css("background", "#118fe4");
+			   nav.siblings().css("background", "rgb(32, 156, 238)");
+		   
 			$(".apointPay").parent().addClass('is-active');
 			$(".apointPay").children().css({"color":"#209cee"});
 			var memberId = ${sessionScope.loginUser.memberId};

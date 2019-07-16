@@ -74,7 +74,7 @@
     
     .item{
     	height : auto;
-    	max-height : 300px;
+    	max-height: 200px;
     	overflow-y: auto;
     }
     
@@ -453,7 +453,7 @@
 	
 	
 	
-	<script src="http://localhost:8010/socket.io/socket.io.js"></script>
+	<script src="http://192.168.30.107:8010/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	<script>
 		function openRightMenu() {
@@ -474,7 +474,7 @@
     		console.log("chatId :" + chatId);
     		  		
     	   //서버
-		   var socket = io("http://localhost:8010");
+		   var socket = io("http://192.168.30.107:8010");
     	  	
 		   //채팅Manager 값 가져오기
 	       socket.emit('preChatManager' , {chatId : chatId , div : "처음"});
@@ -485,6 +485,7 @@
 	       var goodcnt = 0;
 		   var badcnt = 0;
 		   
+	
 		   //채팅 스크롤
 		   $("#chat_box").scroll(function () { 
 			   var scrollValue = $("#chat_box").scrollTop(); console.log(scrollValue); 
@@ -991,7 +992,7 @@
 
 				 var startDate = sy + "/" + sm  + '/' + sd;
 				 
-				 var formattedEndDate = new Date(data.send);
+				 var formattedEndDate = new Date(data.end);
 	        	  var ed = formattedEndDate.getDate();
 	        	  var em =  formattedEndDate.getMonth();
 	        	  em += 1;  // JavaScript months are 0-11

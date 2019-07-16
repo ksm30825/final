@@ -153,6 +153,9 @@
 	</c:if>
 	<script type="text/javascript">
 		$(function() {
+			var nav = $(".navbar-item").eq(10);
+			   nav.css("background", "#118fe4");
+			   nav.siblings().css("background", "rgb(32, 156, 238)");
 			$(".apointReb").parent().addClass('is-active');
 			$(".apointReb").children().css({"color":"#209cee"});
 			

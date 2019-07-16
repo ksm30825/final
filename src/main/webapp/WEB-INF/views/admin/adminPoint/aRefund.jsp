@@ -173,6 +173,9 @@
 	</c:if>
 	<script type="text/javascript">
 		$(function() {
+			var nav = $(".navbar-item").eq(10);
+			   nav.css("background", "#118fe4");
+			   nav.siblings().css("background", "rgb(32, 156, 238)");
 			$(".apointRef").parent().addClass('is-active');
 			$(".apointRef").children().css({"color":"#209cee"});
 			$('.modal-background, .modal-close').click(function() {
@@ -282,7 +285,7 @@
 				var refundStatus = list.refundStatus;
 				
 				//console.log(refundStatus);
-				if(refundStatus != 10){
+				if(refundStatus != 10){//대기중이 아닐시 
 					$processBtnYes = $('<button id="toApprove" disabled="true" class="button is-success is-outlined yes" style="width:70px;height:20px;line-height:50%;"> 승인 </button>');
 					$processBtnNo = $('<button id="toRefuse" disabled="true" class="button is-danger is-outlined no" style="width:70px;height:20px;line-height:50%;"> 거절 </button>');
 				}else{
@@ -403,9 +406,9 @@
 			var refId = $(this).parent().parent().children().eq(0).val();
 			var bid = $(this).parent().parent().children().eq(1).val();
 			var cond = 10;
-			console.log(refId);
-			console.log(bid);
-			console.log(cond);
+			//console.log(refId);
+			//console.log(bid);
+			//console.log(cond);
 			$('#myModal').removeClass('is-active');
 			approve(refId, bid, cond);
 		});
@@ -414,14 +417,17 @@
 			var refId = $(this).parent().parent().children().eq(0).val();
 			var bid = $(this).parent().parent().children().eq(1).val();
 			var cond = 20;
-			console.log(refId);
-			console.log(bid);
-			console.log(cond);
+			//console.log(refId);
+			//console.log(bid);
+			//console.log(cond);
 			$('#myModal').removeClass('is-active');
 			refuse(refId, bid, cond);
 		});
 		//승인
 		function approve(refId, bid, cond){
+			console.log(refId);
+			console.log(bid);
+			console.log(cond);
 			location.href="updateAdRefund.po?refId="+refId+"&bid="+bid+"&cond="+cond;
 		}
 		//거절

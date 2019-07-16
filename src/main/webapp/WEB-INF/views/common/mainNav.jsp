@@ -169,7 +169,7 @@
 			var top  = (($(window).height()-700)/2+$(window).scrollTop()) + "px";
             var left = (($(window).width()-400)/2+$(window).scrollLeft()) + "px";
             //window.resizeTo(400,700);
-       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=700, left="+left+", top="+top+", resizable= 0");        	
+       		window.open("${contextPath}/openCompanion.ch", "a", "width=400, height=650, left="+left+", top="+top+", resizable= 0");        	
        		
 		}
 		

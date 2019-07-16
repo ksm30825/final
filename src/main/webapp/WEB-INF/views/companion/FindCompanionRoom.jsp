@@ -176,7 +176,7 @@
       
     </div>
 	  
-	  <script src="http://localhost:8010/socket.io/socket.io.js"></script>
+	  <script src="http://192.168.30.107:8010/socket.io/socket.io.js"></script>
       <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	  <script>
@@ -193,7 +193,7 @@
 		          ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
 		          ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
 		          ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-		         // ,minDate: "0D" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+		          ,minDate: "0D" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
 		          ,maxDate: "+1Y" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
 		      });
 	  		
@@ -225,7 +225,7 @@
 	        //여기서부터 서버
 	        $(document).ready(function() { //start
 	        	//서버
-				var socket = io("http://localhost:8010");
+				var socket = io("http://192.168.30.107:8010");
 	        				
 				var user = "";
 	    	 	if ($("#userId").val() == ""){

@@ -22,7 +22,7 @@
 	}
 	
 	#errorImg{
-    max-height: 400px;
+    max-height: 300px;
     width: 100%;
     height: 100%;
 	}
