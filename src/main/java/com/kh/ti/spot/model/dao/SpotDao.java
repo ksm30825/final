@@ -16,7 +16,7 @@ import com.kh.ti.travel.model.vo.Country;
 
 public interface SpotDao {
 
-	ArrayList<HashMap> selectSpotList(SqlSessionTemplate sqlSession, int cityId, PageInfo pi);
+	ArrayList<HashMap> selectSpotList(SqlSessionTemplate sqlSession, int cityId);
 
 	int insertSpotLikey(SqlSessionTemplate sqlSession, Likey likey);
 

@@ -33,8 +33,8 @@ public class SpotServiceImpl implements SpotService{
 
 	//도시 상세보기용 - 세령
 	@Override
-	public ArrayList<HashMap> selectSpotList(int cityId, PageInfo pi) {
-		return sd.selectSpotList(sqlSession, cityId, pi);
+	public ArrayList<HashMap> selectSpotList(int cityId) {
+		return sd.selectSpotList(sqlSession, cityId);
 	}
 	
 	//명소 좋아요 추가용 - 세령

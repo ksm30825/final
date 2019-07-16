@@ -57,7 +57,7 @@
 						</div> <!-- end condition button area 1 -->
 						
 						<!-- condition keyword -->
-						<div class="field has-addons" style="justify-content: flex-end;">
+						<!-- <div class="field has-addons" style="justify-content: flex-end;">
 					      <p class="control">
 					        <span class="select">
 					          <select>
@@ -73,7 +73,7 @@
 					      <p class="control">
 					        <a class="button"><i class="fas fa-search"></i></a>
 					      </p>
-					    </div>
+					    </div> -->
 					</div><!-- end condition keyword -->
 				</div> <!-- end spot condition search -->
 				

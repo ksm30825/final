@@ -95,7 +95,7 @@
 				<!-- 리스트 반복문처리! -->
 				<c:forEach var="country" items="${ countryList }">
 					<!-- city name area -->
-					<div class="field is-horizontal" style="margin-top: 30px;">
+					<div class="field is-horizontal" style="margin-top: 30px; margin-left: 30px;">
 						<div class="field-body">
 							<i class="fas fa-map" style="color: purple; font-size: 30px; margin-right: 10px;"></i>
 							<div class="field">

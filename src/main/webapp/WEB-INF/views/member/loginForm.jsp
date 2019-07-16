@@ -184,7 +184,7 @@
 				      	<label class="label colWhite">* 인증번호 입력</label>
 				      	<div class="field has-addons" style="width:100%;">
 					          <input class="input" type="text" placeholder="발송된 인증번호를 입력하세요" id="confirmNumber">
-					          <a class="button" onclick="checkSms();">인증 하기</a>
+					          <a class="button" id="checkSms">인증 하기</a>
 				      	</div>
 				      </div>
 				      <div class="field is-horizontal">
@@ -258,7 +258,28 @@
 			}
 			return true;
 		}
+		
+		
 		$(function(){
+
+			$("#checkSms").click(function(){
+					var inputNum = $("#confirmNumber").val();
+					if(sendConfirmNum == inputNum){
+						//alert("인증이 완료 되었습니다.");
+						$("#confirmNumberArea").hide();
+						$("#confirmPhoneResult").text("인증 완료!");
+						checkSms = true;
+					} else {
+						alert("인증번호를 다시 확인해 주세요.");
+						$("#confirmNumber").css({
+							"border" : "1px solid red",
+							"color" : "red"
+						});
+						checkSms = false;
+					}
+				}
+			);
+			
 			$("#email").click(function(){
 				$(this).select();
 			});
@@ -272,6 +293,7 @@
 				$("#kakao-login-btn").click();
 				return false;
 			});
+			
 			$("#confirmNumberArea").hide();
 			
 			checkPass = false;
@@ -371,22 +393,6 @@
 		      });//end ajax
 		} //end func
 		
-		function checkSms(){
-			var inputNum = $("#confirmNumber").val();
-			if(sendConfirmNum == inputNum){
-				//alert("인증이 완료 되었습니다.");
-				$("#confirmNumberArea").hide();
-				$("#confirmPhoneResult").text("인증 완료!");
-				checkSms = true;
-			} else {
-				alert("인증번호를 다시 확인해 주세요.");
-				$("#confirmNumber").css({
-					"border" : "1px solid red",
-					"color" : "red"
-				});
-				checkSms = false;
-			}
-		}
 	</script>
 	<!-- end script -->
 </body>

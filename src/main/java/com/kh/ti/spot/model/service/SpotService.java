@@ -15,7 +15,7 @@ import com.kh.ti.travel.model.vo.Country;
 
 public interface SpotService {
 
-	ArrayList<HashMap> selectSpotList(int cityId, PageInfo pi);
+	ArrayList<HashMap> selectSpotList(int cityId);
 
 	String insertSpotLikey(Likey likey);
 
