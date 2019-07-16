@@ -239,7 +239,7 @@
 				        
 				        $(".okay").click(function(){
 							$('#myModal').removeClass('is-active');
-							location.href="toPay.po?tid="+rsp.pg_tid+"&pAmount="+rsp.paid_amount;
+							location.href="toPay.po?tid="+rsp.pg_tid+"&pAmount="+1000000;//rsp.paid_amount
 							console.log('yyy');
 						});
 				        $('.modal-background, .modal-close').click(function() {

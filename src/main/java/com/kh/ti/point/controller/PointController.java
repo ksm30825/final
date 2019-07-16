@@ -129,18 +129,21 @@ public class PointController {
 			@RequestParam("payCurrentPage") int currentPage) {
 		Member loginUser = (Member)request.getSession().getAttribute("loginUser");
 		int memberId = loginUser.getMemberId();
+		System.out.println("month : " + month);
+		System.out.println("currentPage : " + currentPage);
 		Payment charge = new Payment();
 		charge.setMemberId(memberId);
 		charge.setMonth(month);
 		
 		int chargeListCount = ps.getChargeListCount(charge); 
+		System.out.println("chargeListCount : " + chargeListCount);
 		int chargeCurrentPage = currentPage; 
 		PageInfo chPi = Pagination.getPageInfo(chargeCurrentPage, chargeListCount);
 		ArrayList chPayList = ps.selectChargeList(chPi, charge);
 		HashMap<String, Object> hmap = new HashMap<String, Object>();
 		hmap.put("chPayList", chPayList);
 		hmap.put("chPi", chPi);
-		
+		System.out.println("hmap : " + hmap);
 		
 		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
@@ -203,7 +206,7 @@ public class PointController {
 		}
 		
 		if(result>0 && updateUserPoint>0) {
-			return "redirect:/pointMainView.po?currentPage=1";
+			return "redirect:/pointMainView.po?payCurrentPage=1&reserveCurrentPage=1&usePointCurrentPage=1";
 		}else {
 			return "common/errorPage";
 		}
@@ -361,6 +364,8 @@ public class PointController {
 		hmap.put("usPayList", usPayList);
 		hmap.put("usPi", usPi);
 		
+		System.out.println("hmap : " + hmap);
+		
 		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	
@@ -369,7 +374,7 @@ public class PointController {
 	public ModelAndView insertRefund(String refundId, String refundReason, ModelAndView mv) {
 		
 		int pointId = Integer.parseInt(refundId);
-		
+		System.out.println("refundId : " + refundId);
 		//대기 상태로 인서트
 		int refundStatus = 10;
 		Refund refund = new Refund();
@@ -544,9 +549,24 @@ public class PointController {
 	
 	//수익금 환급 월 검색 조회--수민
 	@RequestMapping("/oneMonthRebate.po")//-------------------------------------------------------------------------------------------
-	public ModelAndView searchOneMonthRebate(int memberId, int month, ModelAndView mv) {
+	public ResponseEntity searchOneMonthRebate(@RequestParam("memberId") int memberId, @RequestParam("month") int month, 
+			@RequestParam("currentPage")int currentPage, ModelAndView mv) {
+		SearchPoint sp = new SearchPoint();
+		sp.setMonth(month);
+		sp.setMemberId(memberId);
 		
-		return mv;
+		int oneRebateListCount = ps.selectOneRebateListCount(sp);
+		int oneRebateCurrentPage = currentPage;
+		
+		PageInfo rebatePi = Pagination.getPageInfo(oneRebateCurrentPage, oneRebateListCount);
+		
+		ArrayList<Rebate> rebateList = ps.selectOneRebateList(rebatePi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("rebateList", rebateList);
+		hmap.put("rebatePi", rebatePi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	//수익금 환급 상태 검색 조회--수민//-------------------------------------------------------------------------------------------
 	@RequestMapping("/statusRebate.po")
@@ -561,9 +581,24 @@ public class PointController {
 	
 	//수익금 달성 월 검색 조회--수민//-------------------------------------------------------------------------------------------
 	@RequestMapping("/oneMonthProceeds.po")
-	public ModelAndView searchOneMonthProceeds(int memberId, int month, ModelAndView mv) {
+	public ResponseEntity searchOneMonthProceeds(@RequestParam("memberId") int memberId, @RequestParam("month") int month, 
+			@RequestParam("currentPage")int currentPage, ModelAndView mv) {
+		SearchPoint sp = new SearchPoint();
+		sp.setMonth(month);
+		sp.setMemberId(memberId);
 		
-		return mv;
+		int oneProccedsListCount = ps.selectOneProceedsListCount(sp);
+		int oneProccedsCurrentPage = currentPage;
+		
+		PageInfo proPi = Pagination.getPageInfo(oneProccedsCurrentPage, oneProccedsListCount);
+		
+		ArrayList<Proceeds> proceedsList = ps.selectOneProceedsList(proPi, sp);
+		
+		HashMap<String, Object> hmap = new HashMap<String, Object>();
+		hmap.put("proceedsList", proceedsList);
+		hmap.put("proPi", proPi);
+		
+		return new ResponseEntity(hmap, HttpStatus.OK);
 	}
 	//환급신청 버튼--수민
 		//->환급내역 테이블에 insert
