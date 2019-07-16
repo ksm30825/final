@@ -115,7 +115,7 @@
 	}
 	
 	
-	.reputbtn{
+	.reputMemssagebtn{
 		background : none;
 		float : right;
 		border : none;
@@ -691,12 +691,14 @@
 	                if (data.sep == "나감"){
 	                	output += "<input type = 'hidden' value = '"+data.userId+"' id = 'outUserId'>"
 	                	output += "<button class = 'penaltybtn' id = 'chatoutbtn'> 신고 </button>";
-				        output += "<button class = 'reputbtn' id = 'messagereputBtn'> 평판관리 </button>";
+				        output += "<button class = 'reputMemssagebtn' id = 'reputMemssagebtn'> 평판관리 </button>";
 	                }
 	                
 	                output += '</div>';
 	              
 	                $(output).appendTo('#chat_box');
+	                
+	                $(".reputMemssagebtn").hide();
 	                
 	                $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
 	            });
@@ -770,18 +772,20 @@
 	  	  		 $("#chatStatusLabel").text(chatStatus);
 	  	  		 if (chatStatus == "여행중"){
 	  	  		 	$("#Recruitingicon").css("background" , "orange");
+	  	  			$(".reputMemssagebtn").show();
 	  	  		 }else if (chatStatus == "모집종료"){
 	  	  			$("#Recruitingicon").css("background","green");
 	  	  			temp = "다시 모집을 하시겠습니까?";
 	  	  			$("#chatSatusDetail").text(temp);
 	  	  			$("#changeBtn").text("모집하기");
+	  	  			
 	  	  		 }else if (chatStatus == "여행종료"){
 	  	  			$("#Recruitingicon").css("background" , "#aa65a8");
 	  	  			//document.getElementById('reputModal').style.display='block';
 	  	  			
 	  	  			 //설문조사 이력이 있을경우 모달창 없애기 
 	  			 	 socket.emit('selectReputhistory' , {chatId : chatId , userId : userId});
-	  	  		 	
+	  			 	 $(".reputMemssagebtn").show();
 	  	  		 }else if (chatStatus == "모집중"){
 	  	  			temp = "모집종료를 하시겠습니까?";
 	  	  			$("#chatSatusDetail").text(temp);
@@ -878,7 +882,11 @@
 				            output += data.message;
 				        	output += "<input type = 'hidden' value = '"+data.userId+"' id = 'outUserId'>"
 		                	output += "<button class = 'penaltybtn' id = 'chatoutbtn'> 신고 </button>";
-					        output += "<button class = 'reputbtn'> 평판관리 </button>";
+					        if ($("#Recruitingicon").text() == "여행중"){
+			                	output += "<button class = 'reputMemssagebtn' id = 'reputMemssagebtn'> 평판관리 </button>";
+					        }else if ($("#Recruitingicon").text() == "여행종료"){
+					        	output += "<button class = 'reputMemssagebtn' id = 'reputMemssagebtn'> 평판관리 </button>";
+					        }
 				            output += '</div>';
 				            $(output).appendTo('#chat_box');
 				            
@@ -962,7 +970,8 @@
 	          
 	          //채팅방 정보 수정
 	          socket.on('updateChatInfo' , function(data){
-	        	  $("#RoomInfoDIV").remove();
+	        	  console.log("???")
+	        	  $("#RoomInfoDIV").empty();
 	        	  
  				  var title = data.title;
 	        	  
@@ -982,7 +991,7 @@
 
 				 var startDate = sy + "/" + sm  + '/' + sd;
 				 
-				 var formattedEndDate = new Date(data.end);
+				 var formattedEndDate = new Date(data.send);
 	        	  var ed = formattedEndDate.getDate();
 	        	  var em =  formattedEndDate.getMonth();
 	        	  em += 1;  // JavaScript months are 0-11
@@ -1049,6 +1058,7 @@
 	 	  	  		 $("#chatStatusLabel").text(chatStatus);
 	 	  	  		 if (chatStatus == "여행중"){
 	 	  	  		 	$("#Recruitingicon").css("background" , "orange");
+	 	  	  			 $(".reputMemssagebtn").show();
 	 	  	  		 }else if (chatStatus == "모집종료"){
 	 	  	  			$("#Recruitingicon").css("background","green");
 	 	  	  			temp = "다시 모집을 하시겠습니까?";
@@ -1056,6 +1066,7 @@
 	 	  	  			$("#changeBtn").text("모집하기");
 	 	  	  		 }else if (chatStatus == "여행종료"){
 	 	  	  			$("#Recruitingicon").css("background" , "#aa65a8");
+	 	  	  		 	$(".reputMemssagebtn").show();
 	 	  	  		 }else if (chatStatus == "모집중"){
 	 	  	  			temp = "모집종료를 하시겠습니까?";
 	 	  	  			$("#Recruitingicon").css("background" , "red");
@@ -1086,6 +1097,7 @@
  	  	  			temp = "다시 모집을 하시겠습니까?";
  	  	  			$("#chatSatusDetail").text(temp);
  	  	  			$("#changeBtn").text("모집하기");
+ 	  	  			$(".reputMemssagebtn").hide();
  	  	  		 }else if (chatStatus == "여행종료"){
  	  	  			$("#Recruitingicon").css("background" , "#aa65a8");
  	  	  		 }else if (chatStatus == "모집중"){
@@ -1093,6 +1105,7 @@
  	  	  			temp = "모집종료를 하시겠습니까?";
  	  	  			$("#chatSatusDetail").text(temp);
  	  	  			$("#changeBtn").text("모집종료");
+ 	  	  			$(".reputMemssagebtn").hide();
  	  	  		 }
         		  
         	  });
@@ -1271,7 +1284,7 @@
 		 	 });
 			  
 			  //메세지에서 평판관리 클릭시 
-			  $(document).on("click" , "#messagereputBtn" , function(){
+			  $(document).on("click" , ".reputMemssagebtn" , function(){
 				  var outUser = $(this).parent().children("#outUserId").val();
 				  
 				  $("#PutUserId").val(outUser);
