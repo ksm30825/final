@@ -57,7 +57,7 @@
                   	<img src="resources/uploadFiles/${ tbList.schFiles[0].changeName }">
                   </c:if>
                   <c:if test="${ empty tbList.schFiles[0] }">
-                  	<img src="resources/images/sample1.jpg">
+                  	<img src="resources/images/logo1.png">
                   </c:if>
                   </div>
                </div>

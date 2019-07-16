@@ -35,5 +35,12 @@
 		</div>
 	</div>
 
+<script>
+$(function(){
+	var nav = $(".navbar-item").eq(16);
+	nav.css("background", "#118fe4");
+	nav.siblings().css("background", "rgb(32, 156, 238)");
+});
+</script>
 </body>
 </html>
