@@ -174,7 +174,6 @@
 	/* 나라태그 선택 */
 	$('#countryAdd').click(function() {
 		
-		
 		var country = $("#travelCountry").children("option:selected").text();
 		var tag = '<div class="tags has-addons"><a class="countryTag tag is-link style" style="background-color: #8e44ad;">' + country 
 					+ ',</a><a class="tag is-delete">　</a></div>';
@@ -197,7 +196,6 @@
 		
 		location.href="searchTagTravelList.tb?trvTags="+trvTags+"&cityTags="+cityTags;
 	}
-	
 	
 </script>
 </html>

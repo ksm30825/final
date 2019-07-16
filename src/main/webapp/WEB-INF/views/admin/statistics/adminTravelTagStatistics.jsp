@@ -5,7 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="resources/js/statistics/Chart.bundle.min.js"></script>
+<script src="resources/js/statistics/Chart.min.js"></script>
 </head>
 <style>
 	.column .columns {
@@ -34,12 +35,12 @@
 						<ul class="travelStaNav">
 							<li>
 								<a href="travelCountryStatisticsView.sta">
-									<span style="color:#ccccff;"><i class="fas fa-venus-mars"></i>&nbsp;나라별</span>
+									<span style="color:#ccccff;"><i class="fas fa-globe-americas"></i>&nbsp;나라별</span>
 								</a>
 							</li>
 							<li>
 								<a href="travelTagStatisticsView.sta">
-									<span style="color:#ccccff;"><i class="fas fa-user-clock"></i>&nbsp;여행스타일별</span>
+									<span style="color:#ccccff;"><i class="fas fa-tags"></i>&nbsp;여행스타일별</span>
 								</a>
 							</li>
 						</ul>
@@ -50,6 +51,9 @@
 				<div class="columns">
 					
 					<div class="statisticsArea">
+						<div align="center">
+							<span class="title is-4" style="color: #424242; vertical-align: middle;"><span id="monthText"></span> 인기 여행태그 10</span>
+						</div>
 						<div class="field has-addons" style="justify-content: flex-end; margin-top: 1em;" align="right">
 							<p class="control">
 								<span class="select">
@@ -71,8 +75,18 @@
 							</p>
 						</div>
 						
-						<canvas id="tagStatistics" width="1000">
-						</canvas>	
+						<div class="statisticsArea" style="display: flex; width: 100%;">
+							<div class="column is-1" style="justify-content: flex-start;" onclick="yearTag('left')">
+								<a><i class="title is-2 fas fa-caret-left"></i></a>
+							</div>
+							
+							<div class="column is-10" style="justify-content: center;">
+							<canvas id="tagStatistics" width="1000"></canvas>
+							</div>
+							
+							<div class="column is-1" style="justify-content: flex-end;" onclick="yearTag('right')">
+								<a><i class="title is-2 fas fa-caret-right"></i></a>
+							</div>
 					</div>
 					
 				</div>
@@ -116,7 +130,9 @@ $(function(){
     
     day = year + '-' + month;
     
-    /* 차트 초기화 */
+   $("#monthText").text(year + '년 ' + month + '월');
+    
+	//차트 초기화
 	ctx = document.getElementById('tagStatistics').getContext('2d');
     myChart = new Chart(ctx, {
         type: 'pie',
@@ -147,11 +163,6 @@ $(function(){
                         beginAtZero: true
                     }
                 }]
-            },
-            title: {
-            	display: true,
-            	text: '월별 인기 여행태그 10',
-            	fontSize: 25
             }
         }
     });
@@ -161,7 +172,6 @@ $(function(){
     	data : {month : day},
     	type : "post",
     	success : function(data) {
-    		console.log(data);
     		
     		for(var i in data) {
     			
@@ -177,6 +187,7 @@ $(function(){
     });
 });
 
+//월검색
 $("#monthSelect").change(function() {
 	month = $(this).val();
 	if(month < 10) {
@@ -184,28 +195,24 @@ $("#monthSelect").change(function() {
     }
 	day = year + '-' + month;
 	
-	console.log(day);
-	
 	$.ajax({
     	url : "travelTagStatistics.sta",
     	data : {month : day},
     	type : "post",
     	success : function(data) {
-    		console.log(data);
     		
-    		if(data.length <= 0) {
-    			myChart.reset();
-    		}
+    		$("#monthText").text(year + '년 ' + month + '월');
+    		
+    		myChart.config.data.datasets[0].data = new Array();
+    		myChart.config.data.labels = new Array();
     		
     		for(var i in data) {
-    			myChart.data.labels.pop();
-    			myChart.data.datasets[0].data.pop();
     			
-    			myChart.data.labels.push(data[i].tagName);
+    			myChart.data.labels.push(data[i].rownum + "위 : " + data[i].tagName);
     			myChart.data.datasets[0].data.push(data[i].tagCount);
-    			
-    			myChart.update();
-    		}
+    		};
+    		
+    		myChart.update();
     	},
     	error : function(data) {
     		alert("접속에러");
@@ -213,7 +220,59 @@ $("#monthSelect").change(function() {
     });
 });
 
-
+//년도검색
+function yearTag(text) {
+	var today = new Date();
+	var todayYear = today.getFullYear();
+	var searchYear = year;
+	
+	if(text == 'right' && searchYear == todayYear) {
+		alert("가장 최근 년도입니다.");
+	}else {
+		if(text == 'left') {
+			searchYear = year - 1;
+		}else {
+			searchYear = Number(year) + 1;
+		}
+		
+		var month = $("#monthSelect option:selected").val();
+		
+		if(month < 10) {
+	    	month = '0' + month;
+	    }
+		
+		var searchDay = searchYear + "-" + month;
+		
+		$.ajax({
+	    	url : "travelTagStatistics.sta",
+	    	data : {month : searchDay},
+	    	type : "post",
+	    	success : function(data) {
+	    		
+	    		$("#yearValue").val(searchYear);
+				year = searchYear;
+				
+				myChart.options.tooltips.title='dd';
+	    		
+	    		myChart.config.data.datasets[0].data = new Array();
+	    		myChart.config.data.labels = new Array();
+	    		
+	    		for(var i in data) {
+	    			
+	    			myChart.data.labels.push(data[i].rownum + "위 : " + data[i].tagName);
+	    			myChart.data.datasets[0].data.push(data[i].tagCount);
+	    		};
+	    		
+	    		myChart.update();
+	    		
+	    		$("#monthText").text(year + '년 ' + month + '월');
+	    	},
+	    	error : function(data) {
+	    		alert("접속에러");
+	    	}
+	    });
+	}
+}
 </script>
 	
 </body>

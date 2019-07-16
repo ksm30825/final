@@ -19,12 +19,10 @@
    #pagination {
 		display: flex;
    }
-   
    #imgDiv{
   	 width : 100%;
   	 height : 300px;
    }
-   
    #imgDiv img{
    	position: absolute; top:0; left: 0;
 	width: 100%;

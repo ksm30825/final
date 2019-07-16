@@ -8,7 +8,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="resources/js/statistics/Chart.bundle.min.js"></script>
+<script src="resources/js/statistics/Chart.min.js"></script>
 </head>
 <style>
 	.column .columns {
@@ -109,7 +110,7 @@ $(function(){
             },
             title: {
             	display: true,
-            	text: '연령별 회원수',
+            	text: '연령대별 회원 수',
             	fontSize: 25
             }
         }
