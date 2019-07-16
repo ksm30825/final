@@ -38,6 +38,7 @@
          			<a class="icon is-rounded is-large" onclick="goToMyTravel();"> 
                         <i class="fas fa-3x fa-chevron-circle-left"></i>
                     </a>
+                    
             	</p>
             	<p class="control">
                     <a class="button is-rounded" onclick="showTrvInfoModal();"> 
@@ -752,7 +753,6 @@
 				if(places.length === 0) {
 					return;
 				}
-				//clear out the old markers
 				markers.forEach(function(m) {
 					m.setMap(null);
 				});
@@ -760,13 +760,11 @@
 					dayPath.setMap(null);
 				}
 				markers = [];
-				//for each place, get the icon, name, and location
 				var bounds = new google.maps.LatLngBounds();
 				places.forEach(function (p) {
 					if(!p.geometry) {
 						return;
 					}
-					//create marker for each place
 					addMarker({
 						location:p.geometry.location,
 						icon:icons.basic.icon,
@@ -775,9 +773,7 @@
 						info: '<h5 class="title is-5">' + p.name + "'</h5>" + p.formatted_address
 					});
 					
-					
 					if(p.geometry.viewport) {
-						//only geocodes have viewport
 						bounds.union(p.geometry.viewport);
 					}else {
 						bounds.extend(p.geometry.location);
@@ -949,7 +945,6 @@
 						}
 					}
 					
-					
 					var m = new google.maps.Marker({
 						map:map,
 						title: place.name,
@@ -986,7 +981,7 @@
 			});
 		}
 	
-	
+		var typeMarkers = [];
 		function placeTypeSearch(placeType, map) {
 			
 			var getNextPage = null;
@@ -996,13 +991,10 @@
 				if(getNextPage) getNextPage();
 			};
 			
-			markers.forEach(function(marker) {
+			typeMarkers.forEach(function(marker) {
 				marker.setMap(null);
 			});
-			if(dayPath != undefined) {
-				dayPath.setMap(null);
-			}
-			markers = [];
+			typeMarkers = [];
 			var request = {
 					location: map.getCenter(),
 					radius: '1000',
@@ -1014,8 +1006,11 @@
 				if (status === google.maps.places.PlacesServiceStatus.OK) {
 					for (var i = 0; i < results.length; i++) {
 						var li = document.createElement('li');
-						li.innerHTML += '<input type="hidden" name="placeId" value="' + results[i].place_id + '" />' + '<p><strong>' 
-										+ results[i].name + '<small style="color:purple"> review:' + results[i].rating + '/5.0 </small></strong></p><p class="help">' + results[i].formatted_address  + '</p>'
+						li.innerHTML += '<input type="hidden" name="placeId" value="' 
+										+ results[i].place_id + '" />' + '<p><strong>' 
+										+ results[i].name + '<small style="color:purple"> review:' 
+										+ results[i].rating + '/5.0 </small></strong></p><p class="help">' 
+										+ results[i].formatted_address  + '</p>'
 						placeList.appendChild(li);
 						bounds.extend(results[i].geometry.location);
 						addMarker({
@@ -1023,7 +1018,8 @@
 							icon:icons[placeType].icon,
 							map_icon_label:icons[placeType].map_icon_label,
 							place_id:results[i].place_id,
-							info: '<h5 class="title is-5">' + results[i].name + "'</h5>" + results[i].formatted_address
+							info: '<h5 class="title is-5">' + results[i].name + "'</h5>" 
+									+ results[i].formatted_address
 						});
 					}
 					map.fitBounds(bounds);
@@ -1041,10 +1037,10 @@
 				});
 				
 				$("#typeSearchDelete").click(function() {
-					markers.forEach(function(marker) {
+					typeMarkers.forEach(function(marker) {
 						marker.setMap(null);
 					});
-					markers = [];
+					typeMarkers = [];
 					$("#placeList").empty();
 				});
 				
@@ -1061,7 +1057,7 @@
 				map: map
 			});
 			
-			markers.push(marker);
+			typeMarkers.push(marker);
 			if(props.info) {
 				var infoWindow = new google.maps.InfoWindow({
 					content:props.info

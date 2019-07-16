@@ -326,7 +326,7 @@
 				$('#newCostModal').toggleClass('is-active');
 			});
 		
-		
+			
 			$("input[data-type='currency']").on({
 			    keyup: function() {
 			      	formatCurrency($(this), $(this).attr("id"));
@@ -395,7 +395,6 @@
 				}else if(span.is(".etc")) {
 					costType = "기타";
 				}
-				console.log(costType);
 				$("#costUpdateContent").val(costContent);
 				$("#costUpdateId").val(costId);
 				$("#costUpdateAmount").val(costAmount);
@@ -435,7 +434,6 @@
 						type:"POST",
 						data:{costId:costId},
 						success:function(data) {
-							console.log(data);
 							li.remove();
 							if(schId != 0) {
 								$(".sch" + schId + "Block").find(".costType").remove();
@@ -569,7 +567,6 @@
 			$("#totalCostWon").val(totalCostWon);
 			formatCurrency($("#totalCostWon"), "budgetWon", "blur");
 			$("#balanceWon").val(balanceWon);
-			console.log(balanceWon);
 			formatCurrency($("#balanceWon"), "budgetWon", "blur");
 			
 		}
@@ -580,7 +577,6 @@
 		
 		//formatting
 		function formatNumber(n) {
-			console.log(n);
 			if(n.charAt(0) == '-') {
 				return '-' + n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}else {

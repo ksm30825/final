@@ -380,8 +380,6 @@ public class TravelController {
 		String originName = image.getOriginalFilename();
 		String ext = originName.substring(originName.lastIndexOf("."));
 		String changeName = CommonUtils.getRandomString();
-		System.out.println("image: " + image.getOriginalFilename());
-		System.out.println("schId : " + schId);
 
 		try {
 			image.transferTo(new File(filePath + "\\" + changeName + ext));
@@ -404,7 +402,6 @@ public class TravelController {
 			new File(filePath + "\\" + changeName + ext).delete();
 			e.printStackTrace();
 		}
-
 		mv.setViewName("jsonView");
 		return mv;
 	}
