@@ -53,6 +53,9 @@
 .request:hover {
 	cursor: pointer;
 }
+.content {
+	margin-left:0.4em;
+}
 </style>
 </head>
 <body>
@@ -122,10 +125,10 @@
 							<div class="column">
 								<div class="card request">
 									<div class="card-image">
-										<figure class="image is-4by3" id="map">
-											<!-- <img src="https://source.unsplash.com/random/800x600"
-												alt="Image"> -->
-										</figure>
+										<!-- <figure class="image is-4by3" id="map">
+											<img src="https://source.unsplash.com/random/800x600"
+												alt="Image">
+										</figure> -->
 									</div>
 									<div class="card-content">
 										<div class="media">
@@ -139,7 +142,7 @@
 											</div>
 										</div>
 										<div class="content">
-											<textarea class="col-lg-12" style="width: 100%; resize: none;"
+											<textarea class="col-lg-12 content" style="width: 100%; resize: none;"
 												readonly>${ plan.planContent }</textarea>
 										</div>
 									</div>

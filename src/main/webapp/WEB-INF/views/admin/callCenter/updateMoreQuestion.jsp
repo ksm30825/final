@@ -141,6 +141,11 @@ textarea {
 </body>
 <script>
 	$(function () {
+		var nav = $(".navbar-item").eq(2);
+		console.log(nav);
+		nav.addClass('is-active');
+		nav.siblings().removeClass('is-active');
+		
 		$(".is-link").click(function() {
 			location = "adminMoreQuestionList.ad"
 		});

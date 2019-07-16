@@ -68,6 +68,9 @@ textarea {
 	margin-right:auto !important;
 	padding-left:30%;
 }
+.field a {
+	margin-left:0.5em;
+}
 </style>
 </head>
 <body>
@@ -77,7 +80,7 @@ textarea {
 			<section class="section" id="table">
 			<br><br>
 				<h1 class="title" style="text-align: center;">게시판</h1>
-				<div class="field">
+				<div class="field table" align="right">
 					<a class="button is-primary is-rounded" href="reqTotalList.ad">여행 의뢰</a> &nbsp; &nbsp;
 					<a class="button is-success is-rounded" href="planTotalList.ad">의뢰 설계</a> &nbsp; &nbsp;
 					<a class="button is-info is-rounded" href="trvTotalList.ad">여행 일정</a> &nbsp; &nbsp;
@@ -259,6 +262,11 @@ textarea {
 </body>
 <script>
 	$(function() {
+		var nav = $(".navbar-item").eq(6);
+		console.log(nav);
+		nav.addClass('is-active');
+		nav.siblings().removeClass('is-active');
+		
 		$(".table").find("td").mouseenter(function() {
 			$(this).parents("tr").css({
 				"background" : "#209CEE",

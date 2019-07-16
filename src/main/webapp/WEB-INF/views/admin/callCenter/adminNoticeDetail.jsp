@@ -54,6 +54,7 @@
 	<div class="columns">
 		<div class="column">
 			<section class="section" id="table">
+			<br><br>
 				<h1 class="title" style="text-align: center;">공지 사항</h1>
 				<hr>
 				<table class="table">
@@ -112,6 +113,12 @@
 	</div>
 </body>
 <script>
+	$(function() {
+		var nav = $(".navbar-item").eq(2);
+		console.log(nav);
+		nav.addClass('is-active');
+		nav.siblings().removeClass('is-active');
+	});
 	$(".is-link").click(function() {
 		location = "adminNoticeList.ad"
 	});

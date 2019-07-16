@@ -161,6 +161,11 @@
 </body>
 <script>
 	$(function () {
+		var nav = $(".navbar-item").eq(2);
+		console.log(nav);
+		nav.addClass('is-active');
+		nav.siblings().removeClass('is-active');
+		
 		$(".table").find("td").mouseenter(function () {
 			$(this)
 			.parents("tr")
