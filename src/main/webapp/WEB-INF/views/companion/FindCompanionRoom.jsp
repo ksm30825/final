@@ -49,6 +49,7 @@
 <body>
 	 <jsp:include page = "../companion/CompanionMenu.jsp"/>
 	 <input type = "hidden" value = "${loginUser.userName}" id = "UserName">
+	 <input type = "hidden" value = "${loginUser.memberId}" id = "userId">
 		
 	<div id = "container">	
 		<div id="view">
@@ -226,7 +227,12 @@
 	        	//서버
 				var socket = io("http://localhost:8010");
 	        				
-	        	var user = ${ loginUser.memberId };
+				var user = "";
+	    	 	if ($("#userId").val() == ""){
+	    			location.href = "${contextPath}/error.ch";
+	    	 	}else { 	    	 		
+	    		 	 user = $("#userId").val();
+	    	 	}
 				
 	        	 $.ajax({
 	        		   url : "${contextPath}/trBoardList.ch",

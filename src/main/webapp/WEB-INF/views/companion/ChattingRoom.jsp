@@ -182,7 +182,28 @@
 		float : right ; 
 	}
 	
-
+	#downDiv{
+		width : 100%;
+		height : 50px;
+	}
+	
+	#downbtn {
+    width: 40px;
+    height: 40px;
+    float: right;
+    margin-right: 10px;
+    border: none;
+    border-radius: 50px;
+    background: #79aaf7;
+	}
+	
+	#footer{
+		height : 20%;
+	}
+	
+	#message {
+    margin-left: 10px;
+	}
     
 	
 </style>
@@ -242,6 +263,9 @@
 	</div>
 	<div class="w3-container" id = "chat_box"></div>
 	<div id="footer" >
+		<div id = "downDiv">
+			<button id = "downbtn" style = "float : right"><i class="material-icons">arrow_drop_down</i></button> 
+		</div>
 		<textarea rows="3" cols="30" name = "message" id = "message"></textarea>
 		<button type="button" class="btn btn-primary" id = "sendbtn">전송</button>
 	</div>
@@ -314,7 +338,7 @@
     			<br>
     			<label id = "reputid"></label>
     			<br>
-    			<label id = "reputinfor">20대 (여)</label>
+    			<label id = "reputinfor"></label>
     			<div class="w3-bar w3-black">
 				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Like')" >좋아요 <span id = "goodCount"></span></button>
 				  <button class="w3-bar-item w3-button itembtn" onclick="openItem('Bad')">싫어요 <span id = "badCount"></span></button>
@@ -442,11 +466,10 @@
 		
 		
 		$(document).ready(function() { //start
-	
 			var userId = ${ loginUser.memberId };
 			var userName = $("#UserName").val();
 			var chatId = $("#ReChatID").val();
-    	 	
+			
     		console.log("userId :"+userId);
     		console.log("chatId :" + chatId);
     		  		
@@ -461,6 +484,21 @@
 	       var  count = 0;
 	       var goodcnt = 0;
 		   var badcnt = 0;
+		   
+		   //채팅 스크롤
+		   $("#chat_box").scroll(function () { 
+			   var scrollValue = $("#chat_box").scrollTop(); console.log(scrollValue); 
+			   if (scrollValue < 300){
+				   $("#downbtn").show();
+			   }else {
+				   $("#downbtn").hide();
+			   }
+			});
+
+		   //채팅 아래로 내리기 
+		   $("#downbtn").click(function(){
+			   $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight); 
+		   });
 	      
 	       socket.on('preChatManager', function(data){
 	        	   console.log(data);
@@ -788,15 +826,7 @@
 	    				   output += '<input type = "hidden" value = "'+ userInfo.age +'" name = "userAge" id = "userAge">';
 	    				   output += '<input type = "hidden" value = "'+ userInfo.gender +'" name = "usergender" id = "usergender">';
 	    				   output += '<label id = "chUserInfo">'+ userInfo.userName +'('+userInfo.email+')</label></td>';					
-	    				   output += '</tr><tr><td>';
-	    				   output += '<i id = "goodicon" class="material-icons">thumb_up_alt</i>';
-	    				   output += '<p id = "good">0</p>';
-	    				   output += '</td>';
-	    				   output += '<td>';
-	    				   output += '<i id = "badicon" class="material-icons">thumb_down_alt</i>';
-	    				   output += '<p id = "bad">0</p>';
-	    				   output +=  '</td>';
-	    				   output += '</tr>';	  		
+	    				   output += '</tr>';
 	    		  		   output += '</table>';
 	    		  		   $(output).appendTo("#MemberInfoDiv");
 	    		  	

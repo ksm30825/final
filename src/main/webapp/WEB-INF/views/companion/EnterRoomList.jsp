@@ -95,6 +95,7 @@
 </head>
 <body>
 	<jsp:include page = "../companion/CompanionMenu.jsp"/>
+	 <input type = "hidden" value = "${loginUser.memberId}" id = "userId">
 	<div id = "container">
 	    <div id="home" >
 	    	 <div id = "listWrap" ></div>
@@ -161,14 +162,19 @@
 	     $(document).ready(function() {
 	    	 	LoadingWithMask();
 	    	 	
-	    		var user = ${ loginUser.memberId };
+	    	 	var user = "";
+	    	 	if ($("#userId").val() == ""){
+	    			location.href = "${contextPath}/error.ch";
+	    	 	}else { 	    	 		
+	    		 	 user = $("#userId").val();
+	    	 	}
 	    	 	
-	    		//console.log("user :"+user);
+	    		console.log("user :"+user);
 	    		
 	        	//서버
 				var socket = io("http://localhost:8010");
 	        	
-	        	if (user != null){
+	        	if (user != ""){
 	        		socket.emit('mychatting', {user : user});
 		        	
 					 socket.on('mychatting' , function(data){
@@ -363,7 +369,10 @@
 		 		 		 socket.emit('mychatting', {user : user});
 		 		 	});
 			 		
-	        	} //if end 
+	        	}else {
+	        		location.href = "${contextPath}/error.ch";
+	        	}
+	        	//if end 
 	        	
 	        	
 	        	
