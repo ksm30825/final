@@ -33,8 +33,8 @@ public class SpotServiceImpl implements SpotService{
 
 	//도시 상세보기용 - 세령
 	@Override
-	public ArrayList<HashMap> selectSpotList(int cityId) {
-		return sd.selectSpotList(sqlSession, cityId);
+	public ArrayList<HashMap> selectSpotList(int cityId, PageInfo pi) {
+		return sd.selectSpotList(sqlSession, cityId, pi);
 	}
 	
 	//명소 좋아요 추가용 - 세령
@@ -207,18 +207,17 @@ public class SpotServiceImpl implements SpotService{
 		  ReadOption readOption = new ReadOption();
 		  readOption.setFilePath(destFile.getAbsolutePath());
 		  readOption.setOutputColumns("A","B","C","D", "E", "F", "G", 
-				  					  "F", "H", "I", "M", "N", "O", "P");
+				  					  "F", "H", "I", "M", "N", "O", "P", "Q");
 		  readOption.setStartRow(2);
 		  
 		  List<Map<String, String>> excelContent = ExcelRead.read(readOption);
 		  
 		  SpotList spot = null;
 		  for(Map<String, String> article : excelContent){
-			 // int spotId = Integer.parseInt(article.get("A"));
-			  //int cityId = Integer.parseInt(article.get("N")+"");
-			 // int plyTypeId = Integer.parseInt(article.get("P")+"");
 			  spot = new SpotList();
-			//  spot.setSpotId(spotId);
+			  
+			  int spotId = Integer.parseInt(article.get("A"));
+			  spot.setSpotId(spotId);
 			  spot.setSpotNameKo(article.get("B"));
 			  spot.setSpotNameEn(article.get("C"));
 			  spot.setSpotContent(article.get("D"));
@@ -226,10 +225,13 @@ public class SpotServiceImpl implements SpotService{
 			  spot.setOpeningHours(article.get("F"));
 			  spot.setSpotPhone(article.get("G"));
 			  spot.setWebAddress(article.get("H"));
-			//  spot.setCityId(cityId);
-			//  spot.setPlcTypeId(plyTypeId);
-		   //this.insertArticleInBoard(spot);
-			  System.out.println(spot);
+			  int cityId = Integer.parseInt(article.get("N"));
+			  spot.setCityId(cityId);
+			  int plyTypeId = Integer.parseInt(article.get("P"));
+			  spot.setPlcTypeId(plyTypeId);
+			  spot.setFilePath(article.get("Q"));
+
+		      this.insertSpotList(spot);
 			  
 			  //데이터를 추가하는 아이를 만들면 됨
 		  }
@@ -270,5 +272,10 @@ public class SpotServiceImpl implements SpotService{
 		return resultFile;
 	}
 
+	//도시의 명소 수 조회용 - 세령
+	@Override
+	public int getSpotListCountCity(int cityId) {
+		return sd.getSpotListCount(sqlSession, cityId);
+	}
 
 }

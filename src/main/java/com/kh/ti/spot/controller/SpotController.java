@@ -85,8 +85,9 @@ public class SpotController {
 	//입력폼으로여행지추가용메소드
 	@RequestMapping("insertOneSpot.sp")
 	public String insertSpotFromForm(@ModelAttribute SpotList spotList) {
+		System.out.println(spotList.toString());
 		int result = ss.insertSpotList(spotList);
-		return null;
+		return "redirect:/selectAllSpotAdmin.sp?currentPage=1";
 	}
 	
 	//관리자여행지전체조회용메소드 --세령
@@ -105,12 +106,24 @@ public class SpotController {
 	//관리자여행지조건조회용메소드
 	@RequestMapping("selectConditionSpotAdmin.sp")
 	public String selectConditionSpotListForAdmin() {
-		return null;
+		return "admin/spot/adminSpotList";
 	}
 	
 	//관리자여행지상세보기용메소드 --세령
 	@RequestMapping("selectSpotInfoAdmin.sp")
-	public String selectSpotDetailInfoForAdmin() {
+	public String selectSpotDetailInfoForAdmin(@RequestParam("spotId") int spotId, Model model) {
+		SpotList spotList = ss.selectSpotListOne(spotId);
+		ArrayList<SpotFile> spotFile = ss.selectSpotFile(spotId);
+		City city = ss.selectCityOne(spotId);
+		Country country = null;
+		if(spotList != null) {
+			country = ss.selectCountryOneInfo(city.getCityId());
+		}
+
+		model.addAttribute("spotList", spotList);
+		model.addAttribute("spotFile", spotFile);
+		model.addAttribute("city", city);
+		model.addAttribute("country", country);
 		return "admin/spot/adminSpotDetail";
 	}
 	
@@ -168,12 +181,18 @@ public class SpotController {
 	
 	//사용자여행지상세보기용메소드 --세령
 	@RequestMapping("selectSpotInfoUser.sp")
-	public String selectSpotInfoFromUser(@RequestParam("cityId") int cityId, Model model) {
-		ArrayList<HashMap> spotList = ss.selectSpotList(cityId);
+	public String selectSpotInfoFromUser(@RequestParam("cityId") int cityId, Model model,
+										@RequestParam("currentPage") int currentPage) {
+		int listCount = ss.getSpotListCountCity(cityId);
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount);
+		
+		ArrayList<HashMap> spotList = ss.selectSpotList(cityId, pi);
 		Country countryInfo = ss.selectCountryOneInfo(cityId);
 		ArrayList<SpotFile> cityFile = ss.selectCityFile(cityId);
 		City city = ss.selectCity(cityId);
 		
+		model.addAttribute("listCount", listCount);
+		model.addAttribute("pi", pi);
 		model.addAttribute("spotList", spotList);
 		model.addAttribute("countryInfo", countryInfo);
 		model.addAttribute("cityFile", cityFile);

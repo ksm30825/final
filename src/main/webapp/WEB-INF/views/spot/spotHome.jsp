@@ -93,7 +93,8 @@
 	<script>
 		//카드 클릭했을 때
 		function clickCard(cityId){
-			location.href='selectSpotInfoUser.sp?cityId=' + cityId;
+			location.href='selectSpotInfoUser.sp?cityId=' + cityId
+					+ "&currentPage=1";
 		}
 		
 		//대륙으로 조회하기 위한 함수

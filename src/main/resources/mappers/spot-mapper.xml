@@ -364,19 +364,19 @@
 		SPOT_COUNT, CITY_ID, SPOT_STATUS, PLCTYPE_ID) VALUES
 		(SPOT_SEQ.NEXTVAL, #{ spotNameKo }, #{ spotNameEn }, #{ spotContent }, #{ spotAddress },
 		<choose>
-			<when test="openingHours != null and openingHours != '' and openingHours != ' '">
+			<when test="openingHours != null">
 				#{ openingHours }
 			</when>
 			<otherwise>NULL</otherwise>
 		</choose>,
 		<choose>
-			<when test="spotPhone != null and spotPhone != ' ' and spotPhone != ''">
+			<when test="spotPhone != null">
 				#{ spotPhone }
 			</when>
 			<otherwise>NULL</otherwise>
 		</choose>,
 		<choose>		
-			<when test="webAddress != null and webAddress != '' and webAddress != ' '">
+			<when test="webAddress != null">
 				#{ webAddress }
 			</when>
 			<otherwise>NULL</otherwise>
@@ -395,7 +395,14 @@
 	
 	<!-- 현제 spot_id 시퀀스 값 조회 세령 -->
 	<select id="getSpotCurrval" resultType="_int">
-		SELECT SPOT_SEQ.NEXTVAL FROM DUAL
+		SELECT SPOT_SEQ.CURRVAL FROM DUAL
+	</select>
+	
+	<!-- 여행지의 명소 수 조회 세령 -->
+	<select id="selectListCount2" resultType="_int" parameterType="_int">
+		SELECT COUNT(*) FROM SPOTLIST
+		WHERE CITY_ID = #{ cityId }
+		AND SPOT_STATUS = 'Y'
 	</select>
 	
  </mapper>

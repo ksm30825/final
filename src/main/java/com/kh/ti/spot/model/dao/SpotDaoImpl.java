@@ -21,8 +21,12 @@ public class SpotDaoImpl implements SpotDao {
 
 	//도시 상세보기용 - 세령
 	@Override
-	public ArrayList<HashMap> selectSpotList(SqlSessionTemplate sqlSession, int cityId) {
-		return (ArrayList) sqlSession.selectList("Spot.selectSpotList", cityId);
+	public ArrayList<HashMap> selectSpotList(SqlSessionTemplate sqlSession, int cityId, PageInfo pi) {
+		ArrayList<HashMap> spotList = null;
+		int offset = (pi.getCurrentPage() - 1) * pi.getLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getLimit());
+		spotList = (ArrayList) sqlSession.selectList("Spot.selectSpotList", cityId, rowBounds);
+		return spotList;
 	}
 
 	//명소 좋아요 추가용 - 세령
@@ -203,6 +207,12 @@ public class SpotDaoImpl implements SpotDao {
 	@Override
 	public int getSpotCurrval(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("Spot.getSpotCurrval");
+	}
+
+	//도시의 명소 수 조회용 - 세령
+	@Override
+	public int getSpotListCount(SqlSessionTemplate sqlSession, int cityId) {
+		return sqlSession.selectOne("Spot.selectListCount", cityId);
 	}
 
 }

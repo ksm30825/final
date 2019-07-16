@@ -179,9 +179,9 @@
 						</div>
 						
 						<!-- 환율 -->
-						<div class="field" style="width: 100%; height: 100px; background-color: yellow;">
+						<!-- <div class="field" style="width: 100%; height: 100px; background-color: yellow;">
 						
-						</div>
+						</div> -->
 					</div>
 				</div>
 				
@@ -198,7 +198,7 @@
 	      <li>
 	      	<a class="button is-info is-outlined" onclick="tabClick(1);">
 	      		<span class="icon"> <i class="fas fa-plane-departure"></i> </span>
-	      		가볼만한 곳
+	      		가볼만한 곳 (${ listCount })
 	      	 </a>
 	      </li>
 	      
@@ -217,12 +217,12 @@
 	      </li> -->
 	      
 	      <!-- <li><a class="button is-info is-outlined"> 호텔 </a></li> -->
-	      <li>
+	      <!-- <li>
 	      	<a class="button is-info is-outlined" onclick="tabClick(4);">
 	      		<span class="icon"> <i class="fas fa-map-marked-alt"></i> </span>
 	      		지도
 	      	 </a>
-	      </li>
+	      </li> -->
 	      
 	    </ul>
 	  </div> <!-- end spot menu area -->
@@ -243,7 +243,7 @@
 		      					<div class="content">
 							        <p>
 							          <strong style="font-size: 20px;">${ cityInfo.spotNameKo }</strong> <br>
-							          <strong style="color: gray;">${ cityInfo.spotAddress }</strong> &nbsp;&nbsp;&nbsp; <a href="#">google 지도</a>
+							          <strong style="color: gray;">${ cityInfo.spotAddress }</strong>
 							          <br><br> ${ cityInfo.spotContent } 
 							        </p>
 		      					</div>
@@ -261,12 +261,45 @@
 				<div class="field" >
 					<nav class="pagination">
 				  	<ul class="pagination-list" style="justify-content: center;">
-				  		<li><button class="pageingBtn"> << </button></li>
-				  		<li><button class="pageingBtn"> < </button></li>
-				  		<li><button class="pageingBtn"> 1 </button></li>
-				  		<li><button class="pageingBtn"> 2 </button></li>
-				  		<li><button class="pageingBtn"> > </button></li>
-				  		<li<button class="pageingBtn"> >> </button>></li>
+				  		
+				  		<!-- 이전 -->
+				  		<c:if test="${ pi.currentPage <= 1 }"> 
+				  			<li><button class="pageingBtn" style="border-color: gray;"> < </button></li>
+				  		</c:if>
+				  		<c:if test="${ pi.currentPage > 1 }">
+				  			<c:url var="mListBack" value="selectSpotInfoUser.sp">
+				  				<c:param name="cityId" value="${ city.cityId }"/>
+				  				<c:param name="currentPage" value="${ pi.currentPage - 1 }"/>
+				  			</c:url>
+				  			<li><button class="pageingBtn" onclick="location.href='${ mListBack }'"> < </button></li>
+				  		</c:if><!-- end 이전 -->
+				  		
+				  		<!-- page number -->
+				  		<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				  			<c:if test="${ p eq pi.currentPage }">
+				  				<li><button class="pageingBtn" style="border-color: gray;"> ${ p } </button></li>
+				  			</c:if>
+				  			<c:if test="${ p ne pi.currentPage }">
+				  				<c:url var="mListCheck" value="selectSpotInfoUser.sp">
+				  					<c:param name="cityId" value="${ city.cityId }"/>
+				  					<c:param name="currentPage" value="${ p }"/>
+				  				</c:url>
+				  				<li><button class="pageingBtn" onclick="location.href='${ mListCheck }'"> ${ p } </button></li>
+				  			</c:if>
+				  		</c:forEach> <!-- end page number -->
+				  		
+				  		<!-- 다음 -->
+				  		<c:if test="${ pi.currentPage >= pi.maxPage }">
+				  			<li><button class="pageingBtn" style="border-color: gray;"> > </button></li>
+				  		</c:if>
+				  		<c:if test="${ pi.currentPage < pi.maxPage }">
+				  			<c:url var="mListEnd" value="selectSpotInfoUser.sp">
+				  				<c:param name="cityId" value="${ city.cityId }"/>
+				  				<c:param name="currentPage" value="${ pi.currentPage + 1 }"/>
+				  			</c:url>
+				  			<li><button class="pageingBtn" onclick="location.href='${ mListEnd }'"> > </button></li>
+				  		</c:if> <!-- end 다음 -->
+
 				  	</ul>
 				  </nav>
 				</div> <!-- end paging -->

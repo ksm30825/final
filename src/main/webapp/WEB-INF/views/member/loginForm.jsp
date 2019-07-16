@@ -126,7 +126,7 @@
 				      <div class="field">
 				        <label class="label colWhite">* 사용자 이름</label>
 				        <p class="control has-icons-left has-icons-right">
-				          <input class="input is-success" type="text" placeholder="User Name" name="userName">
+				          <input class="input is-success" type="text" placeholder="User Name" name="userName" id="userName2">
 				          <span class="icon is-small is-left">
 				            <i class="fa fa-user"></i>
 				          </span>
@@ -138,7 +138,7 @@
 				      <div class="field">
 				        <label class="label colWhite">* 이메일</label>
 				        <p class="control has-icons-left has-icons-right">
-				          <input class="input is-danger" type="text" placeholder="Email" name="email">
+				          <input class="input is-danger" type="text" placeholder="Email" name="email" id="email2">
 				          <span class="icon is-small is-left">
 				            <i class="fa fa-envelope"></i>
 				          </span>
@@ -205,7 +205,7 @@
 				      <div class="field">
 				        <p class="control">
 				          <label class="checkbox">
-				            <input type="checkbox" style="color:white;">
+				            <input type="checkbox" style="color:white;" id="check">
 							<a>개인정보 처리 방침</a> 및 <a>구매 약관</a>, <a>홈페이지 약관</a>에 대해 동의합니다.
 				          </label>
 				        </p>
@@ -213,7 +213,7 @@
 				       <input type="hidden" value="자사가입" name="enrollType">
 				      <div class="field">
 				        <p class="control">
-				          <button class="button is-primary" type="submit"><b>SIGN UP</b></button>
+				          <button class="button is-primary" type="submit" onclick="return checkUserInfo();"><b>SIGN UP</b></button>
 				        </p>
 				      </div>
 				  </div>
@@ -228,7 +228,36 @@
 		
 	<!-- script -->
 	<script>
+		var checkPass = false;
+		var checkSms = false;
 		var sendConfirmNum = "000000";
+		
+		function checkUserInfo(){
+			console.log("checkPass : " + checkPass);
+			console.log("checkSms : " + checkSms);
+			console.log("sendConfirmNum : " + sendConfirmNum);
+			if($("#userName2").val() == null || $("#userName2").val() == "" || $("#userName2").val() == " "){
+				alert("사용자 이름은 필수 입력 사항입니다.");
+				return false;
+			}
+			if($("#email2").val() == null ||$("#email2").val() == "" || $("#email2").val() == " "){
+				alert("이메일은 필수 입력 사항입니다.");
+				return false;
+			}
+			if(checkPass == false){
+				alert("비밀번호가 일치 하지 않습니다!");
+				return false;
+			}
+			if(checkSms == false) {
+				alert("휴대폰 인증이 필요합니다.");
+				return false;
+			}
+			if($("#check").prop("checked") == false){
+				alert("약관에 동의해 주세요!");
+				return false;
+			}
+			return true;
+		}
 		$(function(){
 			$("#email").click(function(){
 				$(this).select();
@@ -245,6 +274,8 @@
 			});
 			$("#confirmNumberArea").hide();
 			
+			checkPass = false;
+			checkSms = false;
 			//비밀번호 일치여부 확인
 			//비밀번호 일치여부 감지
 			$("#password2").on("change paste keyup", function(){
@@ -253,11 +284,13 @@
 					$("#confirmResult").addClass("help is-success");
 					$("#confirmResult").text("비밀번호 일치");
 					$("#submitBtn").attr("disabled", false);
+					checkPass = true;
 				} else {
 					$("#confirmResult").removeClass();
 					$("#confirmResult").addClass("help is-danger");
 					$("#confirmResult").text("비밀번호 불일치");
 					$("#submitBtn").attr("disabled", true);
+					checkPass = false;
 				}
 			});
 		});
@@ -344,12 +377,14 @@
 				//alert("인증이 완료 되었습니다.");
 				$("#confirmNumberArea").hide();
 				$("#confirmPhoneResult").text("인증 완료!");
+				checkSms = true;
 			} else {
 				alert("인증번호를 다시 확인해 주세요.");
 				$("#confirmNumber").css({
 					"border" : "1px solid red",
 					"color" : "red"
 				});
+				checkSms = false;
 			}
 		}
 	</script>
