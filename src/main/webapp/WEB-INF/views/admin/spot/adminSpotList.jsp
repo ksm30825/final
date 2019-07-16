@@ -29,6 +29,12 @@
 		margin:0 auto;
 		min-height:768px;
 	}
+	tr {
+		cursor: pointer;
+	}
+	tr:hover {
+		background-color: skyblue;
+	}
 </style>
 </head>
 <body onload="checkAler('${msg}');">	
@@ -98,7 +104,7 @@
 					<table id="memberListTB" class="table is-narrow"style="width:100%;height:100%; margin:0 auto;" >
 						<thead>
 							<tr style="background:#ccccff;">
-								<th width="5%"><input type="checkbox" onclick="allCheckedCb();"></th>
+								<th width="5%"><input type="checkbox" onclick="allCheckedCb();" id="allCheck"></th>
 								<th width="10%"> 국가/도시 </th>
 								<th width="10%"> 명소명 </th>
 								<th width="20%"> 주소 </th>
@@ -111,15 +117,15 @@
 							<c:forEach var="spot" items="${ spotList }">
 								<tr>
 									<td><input type="checkbox" value="${ spot.spotId }"></td>
-									<td onclick="location.href='selectSpotInfoAdmin.sp'">${ spot.countryNameKo }/${ spot.cityNameKo }</td>
-									<td>${ spot.spotNameKo }</td>
-									<td>${ spot.spotAddress }</td>
-									<td>${ spot.enrollDate }</td>
+									<td onclick="sendSpotId('${ spot.spotId}');">${ spot.countryNameKo }/${ spot.cityNameKo }</td>
+									<td  onclick="sendSpotId('${ spot.spotId}');">${ spot.spotNameKo }</td>
+									<td  onclick="sendSpotId('${ spot.spotId}');">${ spot.spotAddress }</td>
+									<td  onclick="sendSpotId('${ spot.spotId}');">${ spot.enrollDate }</td>
 									<c:if test="${ spot.plctypeId eq 1 }">
-										<td>명소</td>
+										<td  onclick="sendSpotId('${ spot.spotId}');">명소</td>
 									</c:if>
 									<c:if test="${ spot.plctypeId eq 2 }">
-										<td>맛집</td>
+										<td  onclick="sendSpotId('${ spot.spotId}');">맛집</td>
 									</c:if>									
 									<%-- <td>${ spot.spotStatus }</td> --%>
 								</tr>
@@ -181,6 +187,7 @@
 	
 	
 	<script>
+		
 		//alert
 		function checkAler(msg){
 			if(msg != null && msg != "" && msg != " "){
@@ -188,11 +195,19 @@
 			}
 		}
 		
-		//check box 전체 선택
+		var checkedAll = false;
+		//check box 전체 선택 / 전체 선택 해제
 		function allCheckedCb(){
-			$("input:checkbox").each(function(index){
-				$(this).attr("checked", "checked");
-			});
+			if($("#allCheck").prop("checked") == true){
+				$("input:checkbox").each(function(index){
+						$(this).prop("checked", true);
+				});
+			} else {
+				$("input:checkbox").each(function(index){
+						$(this).prop("checked", false);
+				});
+			}
+			
 		}
 		function deleteSpot() {
 			var str = "";
@@ -205,6 +220,12 @@
 			
 			location.href = "deleteOneSpot.sp?spotIds=" +  str;
 		} //end func
+		
+		//tr 클릭시
+		function sendSpotId(spotId) {
+			console.log(spotId);
+			location.href = "selectSpotInfoAdmin.sp?spotId=" + spotId;
+		}
 	</script>
 </body>
 </html>

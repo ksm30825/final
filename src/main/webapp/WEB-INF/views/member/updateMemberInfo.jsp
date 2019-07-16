@@ -100,7 +100,7 @@
 				      </div> <!-- end change member password btn -->
 				      
 				      <!-- member phone -->
-				      <div class="field is-horizontal">
+				     <%--  <div class="field is-horizontal">
 				        <div class="field-body">
 					        <div class="field-label is-normal">
 					          <label class="label">연락처</label>
@@ -117,7 +117,7 @@
 					          <p class="help is-success" style="margin-left:10px; padding-top:6px;">인증 완료</p>
 				          </div>
 				        </div>
-				      </div> <!-- end member phone -->
+				      </div>  --%><!-- end member phone -->
 				      
 				      <!-- member gender -->
 				      <div class="field is-horizontal">

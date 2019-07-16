@@ -68,10 +68,10 @@
 		
 		<!-- 본문 -->
 		<!-- spot likey condition search -->
-		<section class="section" style="padding-top:0;">
+		<!-- <section class="section" style="padding-top:0;">
 			<div class="field is-horizontal">
 				<div class="field-body">				
-					<!-- condition keyword -->
+					condition keyword
 					<div class="field has-addons" style="justify-content: flex-end; padding-right: 20px;">
 				      <p class="control">
 				        <span class="select">
@@ -88,8 +88,8 @@
 				        <a class="button" id="conditionBtn"><i class="fas fa-search"></i></a>
 				      </p>
 				    </div>
-				</div><!-- end condition keyword -->
-			</div> <!-- end spot likey condition search -->
+				</div>end condition keyword
+			</div>  --><!-- end spot likey condition search -->
 			
 			<c:if test="${ !empty spotList }">
 				<!-- 리스트 반복문처리! -->

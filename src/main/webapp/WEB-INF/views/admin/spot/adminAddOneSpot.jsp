@@ -160,7 +160,7 @@
 						<div class="field">
 							<label class="label">웹사이트</label>
 							<p class="control is-expanded">
-					          <input class="input" type="text" placeholder="Text input" name="webAddress">
+					          <input class="input" type="url" placeholder="Text input" name="webAddress">
 					        </p>
 						</div> <!-- end web address -->
 					</div> <!-- end field-body -->
@@ -186,7 +186,7 @@
 						</div>
 						<div class="field is-grouped" style="float: bottom;">
 							<p class="control"> * 이미지 주소를 넣어주세요. </p>
-							<input class="input" type="text" placeholder="이미지 주소" id="imgAddress" name="filePath">
+							<input class="input" type="url" placeholder="이미지 주소" id="filePath" name="filePath">
 						</div>
 					</div> <!-- end field-body -->
 				</div> <!-- end picture area -->
@@ -209,12 +209,12 @@
 	<script>
 		var id = 0;
 		$(function(){
-			$("#imgAddress").click(function(){
-				$("#imgAddress").select();
+			$("#filePath").click(function(){
+				$("#filePath").select();
 			});
 			
-			$("#imgAddress").bind("paste", function(){
-				var text = String($("#imgAddress").val());
+			$("#filePath").bind("paste", function(){
+				var text = String($("#filePath").val());
 				console.log(text);
 				$("#picArea").attr("src", text);
 			
