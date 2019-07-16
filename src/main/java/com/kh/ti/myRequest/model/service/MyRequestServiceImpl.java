@@ -77,8 +77,10 @@ public class MyRequestServiceImpl implements MyRequestService{
 		int result1 = mrd.updateParticipation(sqlSession, planId);
 		//의뢰글 채택상태 업데이트
 		int result2 = mrd.updateRequest(sqlSession, code);
+		//설계글 오픈상태 업데이트
+		int result3 = mrd.updatePlanOpenStatus(sqlSession, planId);
 		
-		if(result1 > 0 && result2 > 0) {
+		if(result1 > 0 && result2 > 0 && result3 > 0) {
 			result = 1;
 		} else {
 			result = 0;

@@ -207,32 +207,33 @@ input {
 				</header>
 				<section class="modal-card-body">
 					<div class="column">
-						<h1 class="title">신고번호</h1>
-						<h3 class="subtitle is-3" id="listId"></h3>
+						<!-- <h3 class="title">신고번호</h3> -->
+						<h4 class="subtitle is-4">신고번호</h4>
+						<h4 class="subtitle is-4" id="listId"><b></b></h4>
 						<textarea name="listId" id="hidden"></textarea>
-						<hr>
+						<hr style="border: solid 1px lightgray;">
 					</div>
 					<div class="column">
-						<h1 class="title">대상자</h1>
-						<h3 class="subtitle is-3" id="userName"></h3>
+						<h4 class="subtitle is-4">대상자</h4>
+						<h4 class="subtitle is-4" id="userName"></h4>
 						<textarea name="userName" id="hiddenName"></textarea>
-						<hr>
+						<hr style="border: solid 1px lightgray;">
 					</div>
 					<div class="column">
-						<h1 class="title" id="title">구분</h1>
-						<h3 class="subtitle is-3" id="list"></h3>
-						<hr>
+						<h4 class="subtitle is-4" id="title">구분</h4>
+						<h4 class="subtitle is-4" id="list"></h4>
+						<hr style="border: solid 1px lightgray;">
 					</div>
 					<!-- <section class="section" id="box"> -->
 					<div class="column">
-						<h1 class="title">신고 사유</h1>
-						<h3 class="subtitle is-3" id="penaltyName"></h3>
-						<hr>
+						<h4 class="subtitle is-4">신고 사유</h4>
+						<h4 class="subtitle is-4" id="penaltyName"></h4>
+						<hr style="border: solid 1px lightgray;">
 					</div>
 					<div class="column">
 						<!-- <h1 class="title">벌점/패널티</h1>
 						<h3 class="subtitle is-3">15점/15일 정지</h3> -->
-						<h1 class="title">벌점/패널티</h1>
+						<h4 class="subtitle is-4">벌점/패널티</h4>
 						<label>벌점</label>
 						<input type="number" id="penalty" min="5" step="5" value="5" required> &nbsp;
 						<label>패널티</label>

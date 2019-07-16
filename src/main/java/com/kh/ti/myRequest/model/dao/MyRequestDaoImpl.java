@@ -83,6 +83,12 @@ public class MyRequestDaoImpl implements MyRequestDao{
 	public int updateRequest(SqlSessionTemplate sqlSession, int code) {
 		return sqlSession.update("TravelRequest.updateRequest", code);
 	}
+	
+	//설계글 오픈상태 업데이트
+	@Override
+	public int updatePlanOpenStatus(SqlSessionTemplate sqlSession, int planId) {
+		return sqlSession.update("TravelRequest.updatePlanOpenStatus", planId);
+	}
 
 
 	//채택후 나의 의뢰목록 조회

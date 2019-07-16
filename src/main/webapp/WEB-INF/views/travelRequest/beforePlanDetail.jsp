@@ -93,6 +93,10 @@ th, td {
 #loadTable {
 	width:100% !important;
 }
+
+.hidden {
+	display:none;
+}
 </style>
 </head>
 <body>
@@ -108,7 +112,7 @@ th, td {
 			<textarea id="placeAddress" name="PplaceAddress" class="hidden"></textarea>
 			<input type="hidden" value="${ planId }" name="planId" id="planId">
 			<input type="hidden" value="${ loginUser.memberId }" name="memberId">
-			<input type="text" value="${ loginUser.userName }" name="userName">
+			<input type="hidden" value="${ loginUser.userName }" name="userName">
 				<h1 class="title">일정작성</h1>
 				<hr>
 				<div class="columns">

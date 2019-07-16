@@ -16,30 +16,25 @@ public class PlanPlace implements Serializable {
 	
 	public PlanPlace() {}
 
+
+	// new PlanPlace(placeTitle[i], placeAddress[i], placeLat[i], placeLng[i])
+
+
+	
 	public PlanPlace(int pplaceId, String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng,
 			int pdayId, int pplanId, int count) {
 		super();
-		this.PplaceId = pplaceId;
-		this.PplaceTitle = pplaceTitle;
-		this.PplaceAddress = pplaceAddress;
-		this.PplaceLat = pplaceLat;
-		this.PplaceLng = pplaceLng;
-		this.PdayId = pdayId;
-		this.PplanId = pplanId;
+		PplaceId = pplaceId;
+		PplaceTitle = pplaceTitle;
+		PplaceAddress = pplaceAddress;
+		PplaceLat = pplaceLat;
+		PplaceLng = pplaceLng;
+		PdayId = pdayId;
+		PplanId = pplanId;
 		this.count = count;
 	}
 
-	public PlanPlace(String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng) {
-		super();
-		this.PplaceTitle = pplaceTitle;
-		this.PplaceAddress = pplaceAddress;
-		this.PplaceLat = pplaceLat;
-		this.PplaceLng = pplaceLng;
-	}
-
-
-	public PlanPlace(String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng,
-			int pdayId) {
+	public PlanPlace(String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng, int pdayId) {
 		super();
 		PplaceTitle = pplaceTitle;
 		PplaceAddress = pplaceAddress;
@@ -47,6 +42,15 @@ public class PlanPlace implements Serializable {
 		PplaceLng = pplaceLng;
 		PdayId = pdayId;
 	}
+
+	public PlanPlace(String pplaceTitle, String pplaceAddress, String pplaceLat, String pplaceLng) {
+		super();
+		PplaceTitle = pplaceTitle;
+		PplaceAddress = pplaceAddress;
+		PplaceLat = pplaceLat;
+		PplaceLng = pplaceLng;
+	}
+
 
 	public int getPplaceId() {
 		return PplaceId;

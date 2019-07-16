@@ -65,7 +65,7 @@
 	<br>
 	<br>
 	<article class="message is-info">
-		<div class="message-header">
+		<div class="notification is-info" style="text-align: center;">
 			<b>여행 의뢰 게시판</b>
 		</div>
 	</article>
