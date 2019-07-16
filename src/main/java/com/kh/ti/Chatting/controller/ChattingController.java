@@ -166,7 +166,12 @@ public class ChattingController {
 			return new ResponseEntity(taglist,HttpStatus.OK);
 		}
 		
-		
+		//채팅에러 페이지 
+		@RequestMapping("/error.ch")
+		public String errorPage() {
+			
+			return "companion/errorChatting";
+		}
 	
 	
 }
